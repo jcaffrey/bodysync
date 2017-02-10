@@ -1,43 +1,6 @@
 var modal = document.getElementById('js-success');
 var form = document.forms[0];
 
-// generate dates for forms
-var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var dateFields = document.getElementsByClassName('js-date-input');
-for (var i = 0; i < dateFields.length; i++) {
-    // months
-    var field = dateFields[i];
-    var monthSelect = document.createElement('select');
-    monthSelect.setAttribute('class', 'month-select');
-    for (var j = 0; j < months.length; j++) {
-        var month = document.createElement('option');
-        month.value = j + 1;
-        month.innerHTML = months[j];
-        monthSelect.appendChild(month);
-    }
-
-    // days
-    var daySelect = document.createElement('select');
-    daySelect.setAttribute('class', 'day-select');
-
-    // years
-    var yearSelect = document.createElement('select');
-    yearSelect.setAttribute('class', 'year-select');
-    for (var j = new Date().getFullYear(), k = 0; k < 5; k++) {
-        var year = document.createElement('option');
-        year.value = j + k;
-        year.innerHTML = year.value;
-        yearSelect.appendChild(year);
-    }
-
-    field.appendChild(monthSelect);
-    monthSelect.addEventListener('change', generateDaysSelect.bind(field));
-    field.appendChild(daySelect);
-    field.appendChild(yearSelect);
-    yearSelect.addEventListener('change', generateDaysSelect.bind(field));
-    generateDaysSelect.call(field);
-}
-
 // close modal if click outside
 window.onclick = function(event) {
     if (event.target === modal) modal.style.display = 'none';
@@ -207,60 +170,4 @@ function displayError(message) {
     var errorDiv = document.getElementById('js-error-message');
     errorDiv.innerHTML = message;
     errorDiv.style.visibility = 'visible';
-}
-
-// =============================================================
-// Date helper functions
-// =============================================================
-
-function generateDaysSelect() {
-    var children = this.childNodes;
-    for (var i = 0; i < children.length; i++) {
-        var child = children[i];
-        if (child.className === 'month-select')
-            var month = child.value;
-        else if (child.className === 'year-select')
-            var year = child.value;
-        else if (child.className === 'day-select')
-            var days = child;
-    }
-    if (!month || !year || !days) return;
-    var numDays = new Date(year, month, 0).getDate();
-
-    while (days.hasChildNodes()) days.removeChild(days.lastChild);
-    for (var i = 0; i < numDays; i++) {
-        var day = document.createElement('option');
-        day.value = i + 1;
-        day.innerHTML = day.value;
-        days.appendChild(day);
-    }
-}
-
-function getDate(target) {
-    var children = target.childNodes;
-    for (var i = 0; i < children.length; i++) {
-        var child = children[i];
-        if (child.className === 'month-select')
-            var month = child.value;
-        else if (child.className === 'year-select')
-            var year = child.value;
-        else if (child.className === 'day-select')
-            var day = child.value;
-    }
-    if (!month || !year || !day) return null;
-    return new Date(year, month - 1, day);
-}
-
-function toggleEndDate() {
-    var div = document.getElementsByName('endDate')[0];
-    if (div.style.display !== 'inline-block')
-        return div.style.display = 'inline-block';
-    return div.style.display = '';
-}
-
-function toggleAdminInfo() {
-    if (form.isAdmin.checked || form.isSuperAdmin.checked)
-        document.getElementById('js-admin-info').style.display = 'block';
-    else
-        document.getElementById('js-admin-info').style.display = '';
 }

@@ -1,11 +1,11 @@
 {
-  "name": "hsa-coupon-frontend",
+  "name": "bodysync-frontend",
   "version": "0.0.0",
-  "author": "Jordan Hayashi <jhhayashi@gmail.com>",
+  "author": "HSA Dev <dev@hsa.net>",
   "private": true,
   "scripts": {
     "build": "npm install && grunt publish",
-    "dev": "grunt & nodemon coupon-frontend.js"
+    "dev": "grunt & nodemon frontend-server.js"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
