@@ -1,0 +1,78 @@
+@require "helpers"
+
+$mainColor = #2e3192
+$inactiveColor = #cccccc
+
+text-color = #000000
+mobile-width = 600px
+
+@font-face
+    font-family GothamBold
+    src url(/fonts/Gotham-Bold.ttf)
+
+@font-face
+    font-family GothamLight
+    src url(/fonts/Gotham-Light.ttf)
+
+*
+    margin 0
+    padding 0
+
+#header
+    height 15%
+    width 95%
+
+#profileName
+    font-family 'GothamBold'
+    text-align right
+    font-weight bold
+    color $mainColor
+    display inline-block
+    width 100%
+    height 50%
+    padding 5px
+    font-size 1.5em
+    text-transform uppercase
+
+.profileAction
+    background-color $mainColor
+    float right
+
+#profileImg
+    height 80%
+    width 80%
+    margin 10%
+    border-radius 50%
+
+#navbar
+    height 10%
+    width 90%
+    margin 5%
+    padding-bottom 10px
+    border-bottom 2px solid $inactiveColor
+
+.navButton
+    font-family 'GothamBold'
+    font-size 2em
+    text-transform uppercase
+    color $inactiveColor
+    padding-right 20px
+
+.active
+    color $mainColor
+
+#content
+    height 65%
+    width 100%
+    margin 5%
+
+#footer
+    height 10%
+    width 100%
+    position fixed
+    z-index 9999
+    bottom 0
+    left 0
+    background-color $mainColor
+    font-family 'GothamBold'
+    color #ffffff

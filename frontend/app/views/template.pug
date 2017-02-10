@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+        title= title || "Body Sync"
+        link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src='/js/fetch.js')
+  body
+        div#header
+            div.col-md-6
+            div.col-md-6
+                div.col-md-10
+                    span#profileName #{firstName}
+                    a(href='BLAH')
+                        button.btn.profileAction#logOutButton Log Out
+                    a(href='BLAH')
+                        button.btn.profileAction#settingsButton Settings
+                div.col-md-2
+                    img(src='#{iconUrl}' id='profileImg')
+
+        div#navbar
+            if userType === 'patient'
+                a(href='BLAH' class='navButton active') Exercises
+                a(href='BLAH' class='navButton') Overview
+            else
+                a(href='BLAH' class='navButton active') Patients
+                a(href='BLAH' class='navButton') Exercise Sets
+
+        div#content
+            block content
+
+        div#footer
+            block footer
+
+        script(src='/js/bootstrap.js')
+        script(src='/js/script.min.js')
+        if token
+            script localStorage.token = "#{token}"
+        block postScript
+        if dev
+            script(src='//localhost:10000/livereload.js')
