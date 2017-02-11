@@ -2,6 +2,7 @@
 
 $mainColor = #2e3192
 $inactiveColor = #cccccc
+$inactiveColor2 = #fafafa
 
 text-color = #000000
 mobile-width = 600px
@@ -22,10 +23,12 @@ body
     margin 0
     padding 0
     height 100vh
+    background-color $inactiveColor2
 
 #header
-    height 15%
+    height 10%
     width 100%
+    background-color #ffffff
 
 .outerContainer
     height 100%
@@ -62,16 +65,18 @@ body
     border-radius 50%
 
 #navbar
-    height 7%
+    height 6%
     width 90%
     margin 1% 5%
-    padding-bottom 1%
     border-bottom 2px solid $inactiveColor
+
+.nav
 
 .navButton
     font-family 'GothamBold'
     font-size 2em
     text-transform uppercase
+    text-decoration none
     color $inactiveColor
     padding-right 20px
 
@@ -79,7 +84,7 @@ body
     color $mainColor
 
 #content
-    height 65%
+    height 72%
     width 100%
     margin 5%
 
