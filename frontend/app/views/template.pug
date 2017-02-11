@@ -28,7 +28,15 @@ html
             block content
 
         div#footer
-            block footer
+            div.outerContainer
+                div.footernav1
+                    div.footernav1text
+                        block nav1
+                div.footernav2
+                    div.footernav2text
+                        block nav2
+
+
 
         script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
