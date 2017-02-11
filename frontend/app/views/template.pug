@@ -10,9 +10,11 @@ html
                 div.innerContainerWide
                     span#profileName #{firstName}
                     a(href='BLAH')
-                        button.btn.profileAction#logOutButton Log Out
+                        button.border-right
+                        button.profileAction#settingsButton Settings
                     a(href='BLAH')
-                        button.btn.profileAction#settingsButton Settings
+                        button.profileAction#logOutButton Log Out
+                        button.border-left
                 div.innerContainerSmall
                     img(src='#{iconUrl}' id='profileImg')
 
