@@ -2,20 +2,18 @@ doctype html
 html
   head
         title= title || "Body Sync"
-        link(rel='stylesheet', href='/stylesheets/bootstrap.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
         script(src='/js/fetch.js')
   body
         div#header
-            div.col-md-6
-            div.col-md-6
-                div.col-md-10
+            div.outerContainer
+                div.innerContainerWide
                     span#profileName #{firstName}
                     a(href='BLAH')
                         button.btn.profileAction#logOutButton Log Out
                     a(href='BLAH')
                         button.btn.profileAction#settingsButton Settings
-                div.col-md-2
+                div.innerContainerSmall
                     img(src='#{iconUrl}' id='profileImg')
 
         div#navbar
