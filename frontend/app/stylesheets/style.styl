@@ -3,6 +3,7 @@
 $mainColor = #2e3192
 $inactiveColor = #cccccc
 $inactiveColor2 = #fafafa
+$white = #ffffff
 
 text-color = #000000
 mobile-width = 600px
@@ -26,9 +27,9 @@ body
     background-color $inactiveColor2
 
 #header
-    height 10%
+    height 12%
     width 100%
-    background-color #ffffff
+    background-color $white
 
 .outerContainer
     height 100%
@@ -56,7 +57,39 @@ body
 
 .profileAction
     background-color $mainColor
+    border-color $mainColor
     float right
+    font-family 'GothamBold'
+
+#logOutButton
+    color $white
+    padding 4px 20px 4px 0px
+
+.border-left
+    float right
+    height 25px
+    width 25px
+    background-color $mainColor
+    border-color $mainColor
+    border-right none
+    border-top-left-radius 50%
+    border-bottom-left-radius 50%
+
+.border-right
+    float right
+    height 25px
+    width 25px
+    background-color $white
+    border-color $mainColor
+    border-left none
+    border-top-right-radius 50%
+    border-bottom-right-radius 50%
+
+#settingsButton
+    color $mainColor
+    background-color $white
+    border-right none
+    padding 4px 0px 4px 20px
 
 #profileImg
     height 80%
@@ -84,7 +117,7 @@ body
     color $mainColor
 
 #content
-    height 72%
+    height 70%
     width 100%
     margin 5%
 
@@ -97,4 +130,21 @@ body
     left 0
     background-color $mainColor
     font-family 'GothamBold'
-    color #ffffff
+    color $white
+
+.footernav1, .footernav2
+    width 50%
+    display inline-block
+    height 100%
+    text-align center
+    vertical-align middle
+
+.footernav1
+    background-color $mainColor
+
+.footernav2
+    background-color $white
+    color $mainColor
+
+.footernav1text, .footernav2text
+    margin-top 2%
