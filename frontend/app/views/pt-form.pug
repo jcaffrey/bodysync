@@ -1,0 +1,28 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/pt-form.css')
+
+block content
+
+    form
+        h1 Create your account.
+        br
+        .inputs
+            .input-name Full Name
+            input.input-top(type='full-name' name='full-name' placeholder='John Smith')
+            br
+            .input-name Email
+            input.form-input(type='email' name='email' placeholder='abc@xyz.com')
+            br
+            .input-name Password
+            .input-label 8 Characters Min
+            input.form-input(type='password' name='password' placeholder='********')
+            br
+            .input-name Confirm PW
+            input.input-bottom(type='password' name='confirm-pw' placeholder='********')
+
+block nav1
+    button.pt-button.button-1(type='button') Cancel
+block nav2
+    button.pt-button.button-2(type='button') Submit
