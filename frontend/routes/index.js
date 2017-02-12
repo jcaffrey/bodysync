@@ -15,6 +15,10 @@ router.get('/login', function(req, res, next) {
     return res.render('login');
 });
 
+router.get('/pt-form', function(req, res, next) {
+    return res.render('pt-form');
+});
+
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
 });
