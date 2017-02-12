@@ -6,7 +6,8 @@ module.exports = function(grunt) {
             compile: {
                 options: {},
                 files: {
-                    'public/stylesheets/style.css': 'app/stylesheets/style.styl'
+                    'public/stylesheets/style.css': 'app/stylesheets/style.styl',
+                    'public/stylesheets/pt-form.css': 'app/stylesheets/pt-form.styl'
                 }
             }
         },
