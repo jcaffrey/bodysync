@@ -1,0 +1,43 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/rom-form.css')
+
+block content
+
+    form
+        h1 Range of Motion.
+        br
+        .inputs
+            .input-name-top Neck Twist
+            br
+            .input-box
+                .input-name.left Reps/Duration
+                .num-flex.right
+                    .input-box
+                        button.num-button 30
+                        button.num-button sec
+                        .arith-flex
+                            button.num-button +
+                            button.num-button -
+            br
+            .input-name Sets
+            .num-flex.right
+                button.num-button 03
+                .arith-flex
+                    button.num-button +
+                    button.num-button -
+            br
+            .input-name Media
+            br
+            a(href='MEDIA')
+                button.media-button Upload Image/Video
+            br
+            .input-name Notes
+            br
+            input.form-input(type='notes' name='notes' placeholder='Type any notes, special requirements, etc. on this exercise here...')
+
+block nav1
+    button.pt-button.button-1(type='button') Cancel
+block nav2
+    button.pt-button.button-2(type='button') Submit
