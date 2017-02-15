@@ -19,28 +19,15 @@ form h1
   box-shadow: 0px 0px 25px 0px $inactiveColor;
   border-radius: $formRadius
   width: $formWidth px
+  background-color $white
 
-form input
-  padding: 20px
-  outline: none
-  border: none
-  text-align: right
-  font-size: 200px
-  width: ($formWidth - 40)px
-form input::-webkit-input-placeholder
-  color: $inactiveColor
-  font-style: italic
-form input:focus
-  outline: none
-
-.border
+.input-box
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  border-width: $formWidth px
   border-top: 1px solid $inactiveColor
-
-.form-input
-  border-bottom: 1px solid $inactiveColor
-  border-bottom-right-radius: $formRadius
-  border-bottom-left-radius: $formRadius
-  font-size: 0.4em
 
 .input-name
   font-family: 'GothamBold'
@@ -48,50 +35,65 @@ form input:focus
   text-transform: uppercase
   color: $mainColor
   text-align: left
-  margin-top: 0px
-  margin-left: 0px
-  padding: 20px 20px 4px 5px
-  border-width: ($formWidth - 25) px
-  border-top: 1px solid $inactiveColor
-
-.input-name-top
-  font-family: 'GothamBold'
-  font-weight: bold
-  text-transform: uppercase
-  color: $mainColor
-  text-align: left
-  margin-top: 0px
-  margin-left: 0px
-  padding: 15px 15px 4px 5px
-  width: ($formWidth - 25) px
-
-.input-label
-  font-family: 'GothamLight'
-  color: $inactiveColor
-  font-size: 0.1em
-  text-transform: uppercase
-  position: absolute
-  margin-top: 40px
+  margin: 20px
   margin-left: 20px
-  font-style: italic
 
-.pt-button
+.num-box
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row; 
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+
+.num-button
   width: 100%
   height: 100%
   border: none
   font-family: 'GothamBold'
-  font-size: 1.5em
-  text-transform: uppercase
-.pt-button:focus
-  outline: none
-.pt-button:hover
-  cursor: pointer
-.button-1
+  font-size: 0.8em
   background: $mainColor
+  margin: 1px
   color: #fff
-.button-2
-  background: #fff
-  color: $mainColor
+.num-button:focus
+  outline: none
+.num-button:hover
+  cursor: pointer
+
+.arith-box
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column; 
+  flex-direction: column;
+  -webkit-align-items: stretch;
+  align-items: stretch;
+
+form input
+  padding: 20px
+  text-align: left
+  width: ($formWidth - 40)px
+form input::-webkit-input-placeholder
+  color: $inactiveColor
+  font-style: italic
+form input:focus
+  outline: none
+
+.form-input
+  border-bottom: 1px solid $inactiveColor
+  border-bottom-right-radius: $formRadius
+  border-bottom-left-radius: $formRadius
+  font-size: 0.4em
+  border: none
+
+.media-button-box
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  border-width: $formWidth px
+  border-top: 1px solid $inactiveColor
+  margin: 0 auto
+  padding-bottom: 100px
 
 .media-button
   width: 75%
@@ -112,47 +114,20 @@ form input:focus
 .media-button:hover
   cursor: pointer
 
-.num-button
-  width: 25%
-  height: 25%
+.pt-button
+  width: 100%
+  height: 100%
   border: none
   font-family: 'GothamBold'
-  font-size: 0.8em
-  background: $mainColor
-  margin: 1px
-  color: #fff
-.num-button:focus
+  font-size: 1.5em
+  text-transform: uppercase
+.pt-button:focus
   outline: none
-.num-button:hover
+.pt-button:hover
   cursor: pointer
-
-.left
-  -webkit-align-self: flex-start;
-  align-self: flex-start;
-
-.right
-  -webkit-align-self: flex-end;
-  align-self: flex-end;
-
-.input-box
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-
-.num-flex
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: row; 
-  flex-direction: row;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
-
-.arith-flex
-  width: 30%
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column; 
-  flex-direction: column;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
+.button-1
+  background: $mainColor
+  color: #fff
+.button-2
+  background: #fff
+  color: $mainColor
