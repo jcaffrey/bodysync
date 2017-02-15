@@ -19,7 +19,6 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form');
 });
 
-// Added for ROM form
 router.get('/rom-form', function(req, res, next) {
     return res.render('rom-form');
 });
