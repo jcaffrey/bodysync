@@ -44,35 +44,48 @@ form h1
   margin: 20px
   margin-left: 20px
 
-.num-box
-  display: -webkit-flex;
+ul
   display: flex;
-  -webkit-flex-direction: row; 
-  flex-direction: row;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
+  flex-direction: row
+  width: 50%
 
-.num-button
-  width: 100%
+.rd-num-button
+  width: 60%
   height: 100%
   border: none
   font-family: 'GothamBold'
   font-size: 0.8em
   background: $mainColor
-  margin: 1px
+  margin: 0% 1% 1% 0%
   color: #fff
 .num-button:focus
   outline: none
 .num-button:hover
   cursor: pointer
 
-.arith-box
-  display: -webkit-flex;
+.sets-num-button
+  width: 30%
+  height: 100%
+  border: none
+  font-family: 'GothamBold'
+  font-size: 0.8em
+  background: $mainColor
+  margin: 0% 1% 1% 0%
+  color: #fff
+.num-button:focus
+  outline: none
+.num-button:hover
+  cursor: pointer
+
+.rd-arith-box
+  height: 50%
+  width: 80%
+
+.sets-arith-box
+  height: 102%
+  width: 80%
   display: flex;
-  -webkit-flex-direction: column; 
   flex-direction: column;
-  -webkit-align-items: stretch;
-  align-items: stretch;
 
 form input
   padding: 20px
@@ -92,29 +105,23 @@ form input:focus
   border: none
 
 .media-button-box
-  display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: row;
   flex-direction: row;
   border-width: $formWidth px
-  border-top: 1px solid $inactiveColor
   margin: 0 auto
   padding-bottom: 100px
-
-.media-button
   width: 75%
-  height: 75%
+  height: 85%
   border: none
   font-family: 'GothamBold'
   font-size: 0.8em
   text-transform: uppercase
-  text-align: center
   color $mainColor
   background-color $white
   border-right none
   box-shadow: 0px 0px 25px 0px $inactiveColor;
   border-radius: $formRadius
-  padding 4px 0px 4px 5px
+  padding 4px 4px 4px 4px
 .media-button:focus
   outline: none
 .media-button:hover
