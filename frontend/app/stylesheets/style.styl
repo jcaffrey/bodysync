@@ -1,7 +1,7 @@
 @require "helpers"
 
 $mainColor = #2e3192
-$inactiveColor = #cccccc
+$inactiveColor = #AAA
 $inactiveColor2 = #fafafa
 $white = #ffffff
 
@@ -60,10 +60,11 @@ body
     border-color $mainColor
     float right
     font-family 'GothamBold'
+    padding: 4px 20px 4px 20px
 
 #logOutButton
     color $white
-    padding 4px 20px 4px 0px
+    border-radius 11px 0px 0px 11px
 
 .border-left
     float right
@@ -88,8 +89,7 @@ body
 #settingsButton
     color $mainColor
     background-color $white
-    border-right none
-    padding 4px 0px 4px 20px
+    border-radius: 0 11px 11px 0
 
 #profileImg
     height 80%

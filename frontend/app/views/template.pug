@@ -11,11 +11,9 @@ html
                 div.innerContainerWide
                     span#profileName #{firstName}
                     a(href='BLAH')
-                        button.border-right
                         button.profileAction#settingsButton Settings
                     a(href='BLAH')
                         button.profileAction#logOutButton Log Out
-                        button.border-left
                 div.innerContainerSmall
                     img(src='#{iconUrl}' id='profileImg')
 
@@ -31,13 +29,8 @@ html
             block content
 
         div#footer
-            div.outerContainer
-                div.footernav1
-                    div.footernav1text
-                        block nav1
-                div.footernav2
-                    div.footernav2text
-                        block nav2
+            block nav1
+            block nav2
 
 
 
