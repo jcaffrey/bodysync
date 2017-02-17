@@ -98,11 +98,15 @@ form input:focus
   outline: none
 
 .form-input
+  width: calc(100% - 40px)
   border-bottom: 1px solid $inactiveColor
-  border-bottom-right-radius: $formRadius
-  border-bottom-left-radius: $formRadius
-  font-size: 0.4em
+  margin: 0px 20px 0px 20px
+  //border-bottom-right-radius: $formRadius
+  //border-bottom-left-radius: $formRadius
+  font-size 1em
   border: none
+.form-input:focus
+  outline none
 
 .media-button-box
   display: flex;
