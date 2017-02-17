@@ -10,20 +10,20 @@ html
             div.outerContainer
                 div.innerContainerWide
                     span#profileName #{firstName}
-                    a(href='BLAH')
+                    a(href='#')
                         button.profileAction#settingsButton Settings
-                    a(href='BLAH')
+                    a(href='#')
                         button.profileAction#logOutButton Log Out
                 div.innerContainerSmall
                     img(src='#{iconUrl}' id='profileImg')
 
         div#navbar
             if userType === 'patient'
-                a(href='BLAH' class='navButton active') Exercises
-                a(href='BLAH' class='navButton') Overview
+                a(href='#' class='navButton active') Exercises
+                a(href='#' class='navButton') Overview
             else
-                a(href='BLAH' class='navButton active') Patients
-                a(href='BLAH' class='navButton') Exercise Sets
+                a(href='#' class='navButton active') Patients
+                a(href='#' class='navButton') Exercise Sets
 
         div#content
             block content
