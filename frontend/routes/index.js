@@ -4,7 +4,7 @@ const config = require('../app/models/config');
 const auth = require('./auth');
 
 router.get('/', (req, res, next) => {
-    return res.render('index', { firstName: 'Josh', iconUrl: '#' });
+    return res.render('index', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'});
 });
 
 router.post('/', function(req, res, next) {
@@ -16,7 +16,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form');
+    return res.render('pt-form', { footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/rom-form', function(req, res, next) {
