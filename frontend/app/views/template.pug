@@ -10,34 +10,27 @@ html
             div.outerContainer
                 div.innerContainerWide
                     span#profileName #{firstName}
-                    a(href='BLAH')
-                        button.border-right
+                    a(href='#')
                         button.profileAction#settingsButton Settings
-                    a(href='BLAH')
+                    a(href='#')
                         button.profileAction#logOutButton Log Out
-                        button.border-left
                 div.innerContainerSmall
                     img(src='#{iconUrl}' id='profileImg')
 
         div#navbar
             if userType === 'patient'
-                a(href='BLAH' class='navButton active') Exercises
-                a(href='BLAH' class='navButton') Overview
+                a(href='#' class='navButton active') Exercises
+                a(href='#' class='navButton') Overview
             else
-                a(href='BLAH' class='navButton active') Patients
-                a(href='BLAH' class='navButton') Exercise Sets
+                a(href='#' class='navButton active') Patients
+                a(href='#' class='navButton') Exercise Sets
 
         div#content
             block content
 
         div#footer
-            div.outerContainer
-                div.footernav1
-                    div.footernav1text
-                        block nav1
-                div.footernav2
-                    div.footernav2text
-                        block nav2
+            block nav1
+            block nav2
 
 
 

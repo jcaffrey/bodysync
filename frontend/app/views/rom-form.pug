@@ -1,0 +1,43 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/rom-form.css')
+
+block content
+
+    form
+        h1 NEW EXERCISE
+        br
+        .inputs
+            .input-box-top
+                .input-name NAME
+                br
+            .input-box
+                .input-name Reps/Duration
+                ul
+                    button.rd-num-button 30
+                    button.rd-num-button sec
+                    .rd-arith-box
+                        button.rd-num-button +
+                        button.rd-num-button -
+            .input-box
+                .input-name Sets
+                ul
+                    button.sets-num-button 03
+                    .sets-arith-box
+                        button.sets-num-button +
+                        button.sets-num-button -
+                br
+            .input-box
+                .input-name Media
+                br
+            button.media-button-box Upload Image/Video
+            br
+            .input-box
+                .input-name Notes
+            textarea.form-input(cols='40' rows='5' type='notes' name='notes' placeholder='Type any notes, special requirements, etc. on this exercise here...')
+
+block nav1
+    button.pt-button.button-1(type='button') Cancel
+block nav2
+    button.pt-button.button-2(type='button') Submit
