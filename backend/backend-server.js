@@ -1,7 +1,6 @@
 // copies from dorm supplies api, code has not been touched
 
 const express = require('express');
-const mongoose = require('mongoose');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -9,12 +8,17 @@ const bodyParser = require('body-parser');
 
 const config = require('./models/config');
 
-const users = require('./controllers/users');
 const items = require('./controllers/items');
 const auth = require('./controllers/auth');
 
-mongoose.Promise = global.Promise;
-mongoose.connect(config.dbUrl, {server: {socketOptions: {keepAlive: 120}}});
+
+// sequelize
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize('mysql://localhost:5000/database', {});
+
+
+
+
 
 var app = express();
 var router = express.Router();
