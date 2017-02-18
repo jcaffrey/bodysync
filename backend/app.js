@@ -1,5 +1,5 @@
 //==============================
-// non-local imports
+// non-local dependencies
 //==============================
 var express = require('express');
 var path = require('path');
@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 //==============================
-// local imports
+// local dependencies
 //==============================
 // db object 
 var models = require('./models/index');
