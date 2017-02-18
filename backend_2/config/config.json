@@ -2,7 +2,8 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "database_development",
+    "_comment": "connect w/ a mysql client to a running instance of mysql server and be sure there's a db bodysync",
+    "database": "bodysync",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
