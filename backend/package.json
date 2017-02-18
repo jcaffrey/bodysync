@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-      "predev": "if [ -f .mongo_pid ]; then (kill $(cat .mongo_pid) || true)  && rm .mongo_pid; echo \"killed old server!\"; fi",
-      "dev": "echo \"starting new server...\" && mongod -f models/mongodb/mongod.conf & echo $! > .mongo_pid && node dorm-supplies-api.js",
-      "start": "node dorm-supplies-api.js"
+    "predev": "if [ -f .mongo_pid ]; then (kill $(cat .mongo_pid) || true)  && rm .mongo_pid; echo \"killed old server!\"; fi",
+    "dev": "echo \"starting new server...\" && mongod -f models/mongodb/mongod.conf & echo $! > .mongo_pid && node dorm-supplies-api.js",
+    "start": "node dorm-supplies-api.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -15,9 +15,11 @@
     "email-validator": "^1.0.7",
     "express": "~4.13.1",
     "jwt-simple": "^0.5.1",
-    "mongoose": "^4.7.2",
     "morgan": "~1.6.1",
+    "mysql": "^2.13.0",
     "nodemailer": "^2.7.0",
-    "serve-favicon": "~2.3.0"
+    "sequelize": "^3.30.2",
+    "sequelize-cli": "^2.5.1",
+    "serve-favicon": "~2.3.0",
   }
 }
