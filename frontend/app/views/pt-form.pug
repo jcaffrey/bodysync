@@ -9,18 +9,20 @@ block content
         h1 Create your account.
         br
         .inputs
-            .input-name Full Name
-            input.input-top(type='full-name' name='full-name' placeholder='John Smith')
-            br
-            .input-name Email
-            input.form-input(type='email' name='email' placeholder='abc@xyz.com')
-            br
-            .input-name Password
-            .input-label 8 Characters Min
-            input.form-input(type='password' name='password' placeholder='********')
-            br
-            .input-name Confirm PW
-            input.input-bottom(type='password' name='confirm-pw' placeholder='********')
+            .input-box.input-top
+                .input-name Full Name
+                input.text-input(type='full-name' name='full-name' placeholder='John Smith')
+            .input-box
+                .input-name Email
+                input.text-input(type='email' name='email' placeholder='abc@xyz.com')
+            .input-box
+                .input-name 
+                    span Password
+                    span.input-label 8 Characters Min
+                input.text-input(type='password' name='password' placeholder='********')
+            .input-box.input-bottom
+                .input-name Confirm Pass
+                input.text-input(type='password' name='confirm-pw' placeholder='********')
 
 block nav1
     button.pt-button.button-1(type='button') Cancel

@@ -7,7 +7,8 @@ module.exports = function(grunt) {
                 options: {},
                 files: {
                     'public/stylesheets/style.css': 'app/stylesheets/style.styl',
-                    'public/stylesheets/pt-form.css': 'app/stylesheets/pt-form.styl'
+                    'public/stylesheets/pt-form.css': 'app/stylesheets/pt-form.styl',
+                    'public/stylesheets/rom-form.css': 'app/stylesheets/rom-form.styl'
                 }
             }
         },
