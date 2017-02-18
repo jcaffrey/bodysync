@@ -133,19 +133,27 @@ body
     font-family 'GothamBold'
     color $white
 
-.footernav1, .footernav2
-    width 50%
-    display inline-block
-    height 100%
+.footerButton
+    display: inline-block
+    width: 50%
+    height: 100%
+    border: none
+    font-family: 'GothamBold'
+    font-size: 1.5em
+    text-transform: uppercase
     text-align center
-    vertical-align middle
 
-.footernav1
-    background-color $mainColor
+.footerButton:focus
+    outline: none
+.footerButton:hover
+    cursor: pointer
 
-.footernav2
-    background-color $white
-    color $mainColor
+#buttonLeft
+    background: $mainColor
+    color: #fff
+    width: 50%
+#buttonRight
+    background: #fff
+    color: $mainColor
+    width: 50%
 
-.footernav1text, .footernav2text
-    margin-top 2%

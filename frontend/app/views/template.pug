@@ -29,8 +29,12 @@ html
             block content
 
         div#footer
-            block nav1
-            block nav2
+                button.footerButton#buttonLeft(type='button') #{footerButton}
+                button.footerButton#buttonRight(type='button') #{footerButton2}
+                if !footerButton2
+                    script.
+                        document.getElementById('buttonLeft').style.width = "100%";
+                        document.getElementById('buttonRight').style.display = "none";
 
 
 
@@ -41,3 +45,5 @@ html
         block postScript
         if dev
             script(src='//localhost:10000/livereload.js')
+
+
