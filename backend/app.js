@@ -1,3 +1,6 @@
+//==============================
+// non-local dependencies
+//==============================
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,15 +8,28 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// ?
-var users = require('./routes/users');
-
-// ?
+//==============================
+// local dependencies
+//==============================
+// db object 
 var models = require('./models/index');
 
-var app = express();
+// Controllers
+// ./controllers/ contain CRUD / non-CRUD logic for each object 
+var pts = require('./controllers/pts')
 
-var tempRouter = express.Router()
+// ADD REMAINING CONTROLLERs
+
+//==============================
+// app
+//==============================
+var app = express();
+var router = express.Router()
+
+
+//==============================
+// 3rd-party / built-in middleware
+//==============================
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -22,21 +38,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-tempRouter.route('/pts')
-    .post(function(req, res) {
-        models.PT.create({
-            name: req.body.name
-        }).then(function(pt) {
-            res.json(pt);
-        });
-    })
-    .get(function(req, res) {
-        models.PT.findAll({}).then(function(PTs) {
-            res.json(PTs);
-        });
-    });
+//==============================
+//  Routes
+//==============================
 
-app.use('/', tempRouter);
+router.route('/pts')
+    .post(pts.createPT)
+    .get(pts.getPTS);
+
+
+
+
+// ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
+
+
+
+
+app.use('/', router);
+
+//==============================
+// Error-handling middleware
+//==============================
+
+// CAN REWRITE BELOW USING BOOTCAMP APPROACH
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -56,4 +80,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// send to ./bin/www
 module.exports = app;
