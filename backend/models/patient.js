@@ -5,7 +5,16 @@
 module.exports = function(sequelize, DataTypes) {
     var Patient = sequelize.define("Patient", {
         // schema
-        name: DataTypes.STRING
+        name: {type: DataTypes.STRING, allowNull: false},
+        phoneNumber: {type: DataTypes.STRING, allowNull: false },
+        email: {type: DataTypes.STRING, allowNull: false},
+        //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
+        surgeryType: {type: DataTypes.STRING, allowNull: false},
+        age: DataTypes.INTEGER,
+        weight: DataTypes.INTEGER,
+        phoneProvider: DataTypes.STRING,
+        surgeryNotes: DataTypes.TEXT,
+        ptNotes: DataTypes.TEXT
     }, {
         classMethods: {
             associate: function(models) {
@@ -15,6 +24,7 @@ module.exports = function(sequelize, DataTypes) {
                         allowNull: false
                     }
                 });
+                Patient.hasMany(models.Injury);
             }
         }
     });
