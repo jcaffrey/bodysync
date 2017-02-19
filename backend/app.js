@@ -46,6 +46,9 @@ router.route('/pts')
     .post(pts.createPT)
     .get(pts.getPTS);
 
+
+
+
 // ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
 
 
