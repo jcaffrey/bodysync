@@ -5,11 +5,23 @@
 module.exports = function(sequelize, DataTypes) {
     var Patient = sequelize.define("Patient", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
-        phoneNumber: {type: DataTypes.STRING, allowNull: false },
-        email: {type: DataTypes.STRING, allowNull: false},
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        phoneNumber: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
-        surgeryType: {type: DataTypes.STRING, allowNull: false},
+        surgeryType: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         age: DataTypes.INTEGER,
         weight: DataTypes.INTEGER,
         phoneProvider: DataTypes.STRING,

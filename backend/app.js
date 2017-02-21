@@ -46,10 +46,60 @@ router.route('/pts')
     .post(pts.createPT)
     .get(pts.getPTS);
 
-
-
-
 // ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
+router.route('/pts/:id')
+    .get(pts.getPTById)
+   // .put(pts.updatePT)
+    .delete(pts.deletePT)
+
+// router.route('/patients')
+//     .post()
+//     .get();
+// router.route('/patients/:id')
+//     .get()
+//     .put()
+//     .delete()
+//
+// router.route('/injuries')
+//     .post()
+//     .get();
+// router.route('/injuries/:id')
+//     .get()
+//     .put()
+//     .delete()
+//
+// router.route('/sets')
+//     .post()
+//     .get();
+// router.route('/sets/:id')
+//     .get()
+//     .put()
+//     .delete()
+//
+// router.route('/exercises')
+//     .post()
+//     .get();
+// router.route('/exercises/:id')
+//     .get()
+//     .put()
+//     .delete()
+//
+// router.route('/romMetrics')
+//     .post()
+//     .get();
+// router.route('/romMetrics/:id')
+//     .get()
+//     .put()
+//     .delete()
+//
+// router.route('/romMetricMeasurements')
+//     .post()
+//     .get();
+//
+// router.route('/exerciseCompletions')
+//     .post()
+//     .get();
+
 
 
 

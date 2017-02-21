@@ -7,12 +7,36 @@
 module.exports = function(sequelize, DataTypes) {
     var Exercise = sequelize.define("Exercise", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
-        numRepsOrDuration: {type: DataTypes.INTEGER, allowNull: false},
-        numSets: {type: DataTypes.INTEGER, allowNull: false},
-        assignedFrequency: {type: DataTypes.INTEGER, allowNull: false},
-        ptNotes: {type: DataTypes.TEXT},
-        mediaUrl: {type: DataTypes. STRING}
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        numRepsOrDuration: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        numSets: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        assignedFrequency: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        isCurrentlyAssigned: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        dateAssigned: {
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
+        ptNotes: {
+            type: DataTypes.TEXT
+        },
+        mediaUrl: {
+            type: DataTypes. STRING
+        }
     }, {
         classMethods: {
             associate: function(models) {

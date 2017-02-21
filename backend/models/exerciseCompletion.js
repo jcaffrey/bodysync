@@ -7,8 +7,13 @@
 module.exports = function(sequelize, DataTypes) {
     var exerciseCompletion = sequelize.define("exerciseCompletion", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
-        dateCompleted: {type: DataTypes.DATEONLY} // date without time
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        dateCompleted: {
+            type: DataTypes.DATEONLY
+        } // date without time
     }, {
         classMethods: {
             associate: function(models) {
