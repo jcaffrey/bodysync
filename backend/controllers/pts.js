@@ -2,12 +2,6 @@ var models = require('../models/index');
 // import instantiated db
 
 
-module.exports.getPTS = (req, res, next) => {
-    models.PT.findAll({}).then(function(PTs) {
-        res.json(PTs);
-    });
-};
-
 module.exports.createPT = (req, res, next) => {
     models.PT.create({
         name: req.body.name,
@@ -18,9 +12,14 @@ module.exports.createPT = (req, res, next) => {
         res.json(pt);
     });
 };
-// need to catch errors when email is not valid..
 
-// Jeremy: we should talk about how we will do error handling..not sure if it will be exactly the same as in mongoose.
+module.exports.getPTS = (req, res, next) => {
+    models.PT.findAll({}).then(function(PTs) {
+        res.json(PTs);
+    });
+};
+
+
 module.exports.getPTById = (req, res, next) => {
     models.PT.findAll({
         where: {
@@ -31,13 +30,6 @@ module.exports.getPTById = (req, res, next) => {
     });
 };
 
-// module.exports.updatePT = (req, res, next) => {
-
-//     models.PT.udpate({
-//
-//         res.sendStatus(200);
-//     })
-// }
 
 module.exports.deletePT = (req, res, next) => {
     models.PT.destroy({
@@ -51,3 +43,11 @@ module.exports.deletePT = (req, res, next) => {
             res.status(404).send('sorry not found');
     });
 }
+
+// module.exports.updatePT = (req, res, next) => {
+
+//     models.PT.udpate({
+//
+//         res.sendStatus(200);
+//     })
+// }

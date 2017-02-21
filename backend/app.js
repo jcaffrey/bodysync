@@ -16,7 +16,8 @@ var models = require('./models/index');
 
 // Controllers
 // ./controllers/ contain CRUD / non-CRUD logic for each object 
-var pts = require('./controllers/pts')
+var pts = require('./controllers/pts');
+var patients = require('./controllers/patients');
 
 // ADD REMAINING CONTROLLERs
 
@@ -43,8 +44,8 @@ app.use(cookieParser());
 //==============================
 
 router.route('/pts')
-    .get(pts.getPTS)
-    .post(pts.createPT);
+    .post(pts.createPT)
+    .get(pts.getPTS);
 
 // ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
 router.route('/pts/:id')
@@ -52,14 +53,20 @@ router.route('/pts/:id')
    // .put(pts.updatePT)
     .delete(pts.deletePT);
 
-// router.route('/patients')
-//     .post()
-//     .get();
-// router.route('/patients/:id')
-//     .get()
-//     .put()
-//     .delete()
+router.route('/pts/:id/patients')
+    .post(patients.createPatient)
+    .get(patients.getPatients);
+
+
 //
+// router.route('/patients')
+//     .post(patients.createPatientByPTId)
+//     .get(patients.getPatientsByPTId);
+// router.route('/patients/:id')
+//     .get(patients.getPatientByPTId)
+//     .put(patients.updatePatientByPTId)
+//     .delete(patients.deletePatientByPTId)
+
 // router.route('/injuries')
 //     .post()
 //     .get();
