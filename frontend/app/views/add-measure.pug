@@ -1,0 +1,27 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/add-measure.css')
+block content
+    form
+        .inputs
+            .input-box.input-header
+                .input-name
+                    span SHOULDER
+                    .input-label
+                .progress-icon
+            .input-box.input-bottom 
+                .measure-container
+                    .m-old
+                        .num
+                            span 25
+                        .m-label PREVIOUS
+                    .m-new
+                        .num
+                            input(type='text' name='new-measure' placeholder='NEW')
+                        .m-label NEW
+            .input-box.action-box.input-bottom.submit SUBMIT
+        
+        
+
+            
