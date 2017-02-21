@@ -15,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
+        isCurrentlyAssigned: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
         intendedInjuryType: {
             type: DataTypes.STRING,
             allowNull: false
