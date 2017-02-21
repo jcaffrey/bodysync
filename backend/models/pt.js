@@ -5,9 +5,18 @@
 module.exports = function(sequelize, DataTypes) {
     var PT = sequelize.define("PT", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
-        phoneNumber: {type: DataTypes.STRING, allowNull: false },
-        email: {type: DataTypes.STRING, allowNull: false},
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        phoneNumber: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
         phoneProvider: DataTypes.STRING,
     }, {

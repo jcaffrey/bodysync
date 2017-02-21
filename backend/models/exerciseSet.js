@@ -7,9 +7,18 @@
 module.exports = function(sequelize, DataTypes) {
     var exerciseSet = sequelize.define("exerciseSet", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
-        isTemplate: {type: DataTypes.BOOLEAN, allowNull: false},
-        intendedInjuryType: {type: DataTypes.STRING, allowNull: false}
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        isTemplate: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        intendedInjuryType: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     }, {
         classMethods: {
             associate: function(models) {

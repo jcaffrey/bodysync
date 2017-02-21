@@ -1,6 +1,7 @@
+#!/usr/bin/env node
+
 // http://docs.sequelizejs.com/en/1.7.0/articles/express/
 
-#!/usr/bin/env node
 
 // dependencies
 var app = require('../app');

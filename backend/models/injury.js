@@ -7,7 +7,13 @@
 module.exports = function(sequelize, DataTypes) {
     var Injury = sequelize.define("Injury", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        injuryFromSurgery: {
+            type: DataTypes.BOOLEAN
+        }
     }, {
         classMethods: {
             associate: function(models) {

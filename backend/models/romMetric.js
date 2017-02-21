@@ -7,7 +7,10 @@
 module.exports = function(sequelize, DataTypes) {
     var romMetric = sequelize.define("romMetric", {
         // schema
-        name: {type: DataTypes.STRING, allowNull: false},
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
     }, {
         classMethods: {
             associate: function(models) {
