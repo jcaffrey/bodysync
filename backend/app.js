@@ -50,7 +50,7 @@ router.route('/pts')
 router.route('/pts/:id')
     .get(pts.getPTById)
    // .put(pts.updatePT)
-    .delete(pts.deletePT)
+    .delete(pts.deletePT);
 
 // router.route('/patients')
 //     .post()
@@ -68,10 +68,10 @@ router.route('/pts/:id')
 //     .put()
 //     .delete()
 //
-// router.route('/sets')
+// router.route('/exerciseSets')
 //     .post()
 //     .get();
-// router.route('/sets/:id')
+// router.route('/exerciseSets/:id')
 //     .get()
 //     .put()
 //     .delete()
@@ -83,6 +83,10 @@ router.route('/pts/:id')
 //     .get()
 //     .put()
 //     .delete()
+// router.route('/exercises/:id/exerciseCompletions')  // only patient can post
+//     .post()
+//     .get();
+
 //
 // router.route('/romMetrics')
 //     .post()
@@ -92,13 +96,11 @@ router.route('/pts/:id')
 //     .put()
 //     .delete()
 //
-// router.route('/romMetricMeasurements')
+// router.route('/romMetrics/:id/romMetricMeasurements')
 //     .post()
 //     .get();
 //
-// router.route('/exerciseCompletions')
-//     .post()
-//     .get();
+
 
 
 

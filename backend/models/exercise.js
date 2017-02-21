@@ -23,10 +23,6 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        isCurrentlyAssigned: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
-        },
         dateAssigned: {
             type: DataTypes.DATEONLY,
             allowNull: false
