@@ -43,8 +43,8 @@ app.use(cookieParser());
 //==============================
 
 router.route('/pts')
-    .post(pts.createPT)
-    .get(pts.getPTS);
+    .get(pts.getPTS)
+    .post(pts.createPT);
 
 // ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
 router.route('/pts/:id')
