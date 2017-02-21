@@ -9,16 +9,28 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        hash: {
+            type: DataTypes.STRING
+        },
+        token: {
+            type: DataTypes.STRING
+        },
         phoneNumber: {
             type: DataTypes.STRING,
             allowNull: false
         },
         email: {
             type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isEmail : true
+            }
+        },
+          //proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
+        phoneProvider: {
+            type: DataTypes.STRING,
             allowNull: false
         },
-        //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
-        phoneProvider: DataTypes.STRING,
     }, {
         classMethods: {
             associate: function(models) {
