@@ -1,0 +1,131 @@
+@require "style"
+
+$formRadius = 15px
+$formWidth = 315
+
+form
+  text-align: center
+  font-family: 'GothamBold'
+
+form h1
+  text-transform: uppercase
+  font-size: 1.5em
+  color: $mainColor
+
+.inputs
+  margin: 0px auto
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px $inactiveColor;
+  border-radius: $formRadius
+  width: $formWidth px
+  background-color $white
+
+.input-box
+  padding: 20px
+  outline: none
+  border: none
+  text-align: right
+  border-bottom: solid 1px $inactiveColor
+  width: ($formWidth - 40)px
+
+.input-header
+  background-color $mainColor
+  border-radius $formRadius $formRadius 0px 0px
+  color white
+  font-size 1.4em
+  padding: 10px 20px
+  width: ($formWidth - 40)px
+
+.input-name
+  font-family: 'GothamBold'
+  font-weight: bold
+  text-transform: uppercase
+  text-align: left
+
+.input-label
+  font-family: 'GothamLight'
+  color: $darkgray
+  font-size: 0.5em
+  text-transform: uppercase
+  font-style: italic
+  color white
+.input-top
+  border-top-right-radius: $formRadius
+  border-top-left-radius: $formRadius
+.input-bottom
+  border-bottom-right-radius: $formRadius
+  border-bottom-left-radius: $formRadius
+  border-bottom: none
+.action-box
+  font-family 'GothamBold'
+  font-weight bold
+  color white
+  text-align center
+  padding 10px 20px
+.submit
+  background-color #22B573
+.progress-icon
+    float right
+    height 20px
+
+.measure-container
+    display inline-block
+    width 100%
+    padding 0
+    margin 0
+.m-old
+    display inline-block
+    width 50% - 2px
+    height 100%
+    margin 0
+    border-right 2px $inactiveColor dashed
+.m-new
+    display inline-block
+    width 50%
+    height 100%
+    margin 0
+    background-color white
+.m-label
+    display inline-block
+    height 20px
+    font-size 0.7em
+    width 100%
+.m-new .m-label
+    text-align right
+    color $mainColor
+.m-old .m-label
+    text-align left
+.num
+    display inline-block
+    width 100%
+    height 50px
+    padding 0
+    margin 0 
+    font-family 'GothamBold'
+    font-weight bold
+.m-old .num span
+    height 100%
+    float left
+    text-align left
+    font-size 45px
+.num input
+    text-align right
+    color $mainColor
+    font-size 100%
+    width 100%
+    height 100%
+    font-family 'GothamBold'
+    text-decoration underline
+    font-size 45px
+    color $mainColor
+    margin 0
+    padding 0
+    outline none
+    border none
+.num input:focus
+    outline none
+
+    
+    
+    

@@ -19,10 +19,12 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-router.get('/rom-form', function(req, res, next) {
-    return res.render('rom-form');
+router.get('/new-exercise', function(req, res, next) {
+    return res.render('new-exercise');
 });
-
+router.get('/add-measure', function(req, res, next) {
+    return res.render('add-measure');
+});
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
 });
