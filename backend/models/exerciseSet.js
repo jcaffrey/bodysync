@@ -26,19 +26,19 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                exerciseSet.belongsTo(models.Injury, {
+                exerciseSet.belongsTo(models.injury, {
                     //onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false  // if not null, exercise set has been assigned
                        // defaultValue: null
                     }
                 });
-                exerciseSet.belongsTo(models.PT, {
+                exerciseSet.belongsTo(models.pt, {
                     foreignKey: {
                         allowNull: false      // exercise set should always belong to a PT
                     }
                 });
-                exerciseSet.hasMany(models.Exercise);
+                exerciseSet.hasMany(models.exercise);
             }
         }
     });
