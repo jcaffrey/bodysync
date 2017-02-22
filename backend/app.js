@@ -46,13 +46,14 @@ app.use(cookieParser());
 //  Routes
 //==============================
 
+// ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
+// TODO: implement update
+// TODO: implement error checking
+
 router.route('/pts')
     .post(pts.createPT)
     .get(pts.getPTS);
 
-// ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
-// TODO: implement update
-// TODO: implement error checking
 router.route('/pts/:id')
     .get(pts.getPTById)
    // .put(pts.updatePT)
@@ -67,7 +68,7 @@ router.route('/patients/:id')
     //.put(patients.updatePatient)
     .delete(patients.deletePatient);
 
-router.route('/patients/:id/injuries') //creat, read
+router.route('/patients/:id/injuries')
     .post(injuries.createInjury)
     .get(injuries.getInjuries);
 
@@ -90,59 +91,24 @@ router.route('/romMetrics/:id/romMetricMeasures')
     .post(romMetricMeasures.createMeasure)
     .get(romMetricMeasures.getMeasures);
 
+/*
+Comments on routing structure: 
+This is a CRUD app, with repeated data nested with other data (pts have patients have 
+injuries have exerciseSets for those injuries and romMetrics to track those injuries, etc.) 
+which is captured here:
 
-//
-// router.route('/patients')
-//     .post(patients.createPatientByPTId)
-//     .get(patients.getPatientsByPTId);
-// router.route('/patients/:id')
-//     .get(patients.getPatientByPTId)
-//     .put(patients.updatePatientByPTId)
-//     .delete(patients.deletePatientByPTId)
+/pts/:id/patients/:id/injuries/:id/exerciseSets/:id/exercises/:id/exerciseCompletions
+/pts/:id/patients/:id/injuries/:id/romMetrics/:id/romMetricMeasures
 
-// router.route('/injuries')
-//     .post()
-//     .get();
-// router.route('/injuries/:id')
-//     .get()
-//     .put()
-//     .delete()
-//
-// router.route('/exerciseSets')
-//     .post()
-//     .get();
-// router.route('/exerciseSets/:id')
-//     .get()
-//     .put()
-//     .delete()
-//
-// router.route('/exercises')
-//     .post()
-//     .get();
-// router.route('/exercises/:id')
-//     .get()
-//     .put()
-//     .delete()
-// router.route('/exercises/:id/exerciseCompletions')  // only patient can post
-//     .post()
-//     .get();
+These are all 1:M relationships, so we can simplify the routes a lot.
+e.g. 
+/exerciseSets/:id is sufficient for /pts/:id/patients/:id/injuries/:id/exerciseSets/:id/
+since we'd only ever access a specific exerciseSet with id :id if we are the pt with 
+the specific patient with the speciific injury, so we're removing redundancy. 
 
-//
-// router.route('/romMetrics')
-//     .post()
-//     .get();
-// router.route('/romMetrics/:id')
-//     .get()
-//     .put()
-//     .delete()
-//
-// router.route('/romMetrics/:id/romMetricMeasurements')
-//     .post()
-//     .get();
-//
+There are additional routes we have to implement, this is simply take 1.
 
-
-
+*/
 
 
 
