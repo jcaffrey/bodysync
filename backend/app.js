@@ -18,6 +18,9 @@ var models = require('./models/index');
 // ./controllers/ contain CRUD / non-CRUD logic for each object 
 var pts = require('./controllers/pts');
 var patients = require('./controllers/patients');
+var injuries = require('./controllers/injuries');
+var romMetrics = require('./controllers/romMetrics');
+var romMetricMeasurements = require('./controllers/romMetricMeasurements')
 
 // ADD REMAINING CONTROLLERs
 
@@ -48,6 +51,8 @@ router.route('/pts')
     .get(pts.getPTS);
 
 // ADD REMAINING ROUTES W/ ASSOCIATED CONTROLLERS
+// TODO: implement update
+// TODO: implement error checking
 router.route('/pts/:id')
     .get(pts.getPTById)
    // .put(pts.updatePT)
@@ -56,6 +61,34 @@ router.route('/pts/:id')
 router.route('/pts/:id/patients')
     .post(patients.createPatient)
     .get(patients.getPatients);
+
+router.route('/patients/:id')
+    .get(patients.getPatientById)
+    //.put(patients.updatePatient)
+    .delete(patients.deletePatient);
+
+router.route('/patients/:id/injuries') //creat, read
+    .post(injuries.createInjury)
+    .get(injuries.getInjuries);
+
+router.route('/injuries/:id')
+    .get(injuries.getInjuryById)
+    //.put(patients.updatePatient)
+    .delete(injuries.deleteInjury);
+
+
+router.route('/injuries/:id/romMetrics')
+    .post(romMetrics.createRomMetric)
+    .get(romMetrics.getRomMetrics);
+
+router.route('/romMetrics/:id')
+    .get(romMetrics.getRomMetricById)
+    //.put(patients.updatePatient)
+    .delete(romMetrics.deleteRomMetric);
+
+router.route('/romMetrics/:id/romMetricMeasurements')
+    .post(romMetricMeasurements.createMeasure)
+    .get(romMetricMeasurements.getMeasures);
 
 
 //

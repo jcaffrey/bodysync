@@ -28,3 +28,28 @@ module.exports.getPatients = (req, res, next) => {
         res.json(patients);
     });
 };
+
+module.exports.getPatientById = (req, res, next) => {
+    models.PT.findAll({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(pt) {
+        res.json(pt);
+    });
+};
+
+
+module.exports.deletePatient = (req, res, next) => {
+    models.PT.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(instance) {
+        if (instance)
+            res.sendStatus(200);
+        else
+            res.status(404).send('sorry not found');
+    });
+}
+
