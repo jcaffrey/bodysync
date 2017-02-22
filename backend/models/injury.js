@@ -5,7 +5,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-    var Injury = sequelize.define("Injury", {
+    var injury = sequelize.define("injury", {
         // schema
         name: {
             type: DataTypes.STRING,
@@ -17,14 +17,14 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                Injury.belongsTo(models.Patient, {
+                injury.belongsTo(models.patient, {
                     //onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }
                 });
-                Injury.hasMany(models.romMetric);
-                Injury.hasMany(models.exerciseSet, {
+                injury.hasMany(models.romMetric);
+                injury.hasMany(models.exerciseSet, {
                     allowNull: false
                    // defaultValue: null   // injuryId within ExerciseSet initialized to null
                 });
@@ -32,5 +32,5 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    return Injury;
+    return injury;
 };

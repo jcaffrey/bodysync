@@ -3,7 +3,7 @@ var models = require('../models/index');
 
 
 module.exports.createPT = (req, res, next) => {
-    models.PT.create({
+    models.pt.create({
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
@@ -14,14 +14,14 @@ module.exports.createPT = (req, res, next) => {
 };
 
 module.exports.getPTS = (req, res, next) => {
-    models.PT.findAll({}).then(function(PTs) {
+    models.pt.findAll({}).then(function(PTs) {
         res.json(PTs);
     });
 };
 
 
 module.exports.getPTById = (req, res, next) => {
-    models.PT.findAll({
+    models.pt.findAll({
         where: {
             id: req.params.id
         }
@@ -32,7 +32,7 @@ module.exports.getPTById = (req, res, next) => {
 
 
 module.exports.deletePT = (req, res, next) => {
-    models.PT.destroy({
+    models.pt.destroy({
         where: {
             id: req.params.id
         }
@@ -46,7 +46,7 @@ module.exports.deletePT = (req, res, next) => {
 
 // module.exports.updatePT = (req, res, next) => {
 
-//     models.PT.udpate({
+//     models.pt.udpate({
 //
 //         res.sendStatus(200);
 //     })

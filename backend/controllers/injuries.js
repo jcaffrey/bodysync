@@ -9,7 +9,7 @@
 var models = require('../models/index');
 
 module.exports.createInjury = (req, res, next) => {
-    models.Injury.create({
+    models.injury.create({
         name: req.body.name,
         injuryFromSurgery: req.body.injuryFromSurgery,
         PatientId: req.params.id
@@ -20,7 +20,7 @@ module.exports.createInjury = (req, res, next) => {
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getInjuries = (req, res, next) => {
-    models.Injury.findAll({
+    models.injury.findAll({
         where: {
             PatientId: req.params.id
         }
@@ -32,7 +32,7 @@ module.exports.getInjuries = (req, res, next) => {
 
 
 module.exports.getInjuryById = (req, res, next) => {
-    models.Injury.findAll({
+    models.injury.findAll({
         where: {
             id: req.params.id
         }
@@ -43,7 +43,7 @@ module.exports.getInjuryById = (req, res, next) => {
 
 
 module.exports.deleteInjury = (req, res, next) => {
-    models.Injury.destroy({
+    models.injury.destroy({
         where: {
             id: req.params.id
         }

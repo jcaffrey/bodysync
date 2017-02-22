@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-    var Patient = sequelize.define("Patient", {
+    var patient = sequelize.define("patient", {
         // schema
         name: {
             type: DataTypes.STRING,
@@ -39,16 +39,16 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                Patient.belongsTo(models.PT, {
+                patient.belongsTo(models.pt, {
                     //onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }
                 });
-                Patient.hasMany(models.Injury);
+                patient.hasMany(models.injury);
             }
         }
     });
    
-    return Patient;
+    return patient;
 };

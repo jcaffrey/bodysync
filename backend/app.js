@@ -20,7 +20,7 @@ var pts = require('./controllers/pts');
 var patients = require('./controllers/patients');
 var injuries = require('./controllers/injuries');
 var romMetrics = require('./controllers/romMetrics');
-var romMetricMeasurements = require('./controllers/romMetricMeasurements');
+var romMetricMeasures = require('./controllers/romMetricMeasures');
 
 // ADD REMAINING CONTROLLERs
 
@@ -86,9 +86,9 @@ router.route('/romMetrics/:id')
     //.put(patients.updatePatient)
     .delete(romMetrics.deleteRomMetric);
 
-router.route('/romMetrics/:id/romMetricMeasurements')
-    .post(romMetricMeasurements.createMeasure)
-    .get(romMetricMeasurements.getMeasures);
+router.route('/romMetrics/:id/romMetricMeasures')
+    .post(romMetricMeasures.createMeasure)
+    .get(romMetricMeasures.getMeasures);
 
 
 //

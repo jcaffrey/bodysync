@@ -5,13 +5,13 @@
 var models = require('../models/index');
 
 module.exports.createPatient = (req, res, next) => {
-    models.Patient.create({
+    models.patient.create({
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         phoneProvider: req.body.phoneProvider, // add hash and token
         surgeryType: req.body.surgeryType,
-        PTId: req.params.id
+        ptId: req.params.id
     }).then(function(patient) {
         res.json(patient);
     });
@@ -19,9 +19,9 @@ module.exports.createPatient = (req, res, next) => {
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getPatients = (req, res, next) => {
-    models.Patient.findAll({
+    models.patient.findAll({
         where: {
-            PTId: req.params.id
+            ptId: req.params.id
         }
 
     }).then(function(patients) {
@@ -30,7 +30,7 @@ module.exports.getPatients = (req, res, next) => {
 };
 
 module.exports.getPatientById = (req, res, next) => {
-    models.PT.findAll({
+    models.patient.findAll({
         where: {
             id: req.params.id
         }
@@ -41,7 +41,7 @@ module.exports.getPatientById = (req, res, next) => {
 
 
 module.exports.deletePatient = (req, res, next) => {
-    models.PT.destroy({
+    models.patient.destroy({
         where: {
             id: req.params.id
         }

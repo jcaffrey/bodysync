@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-    var PT = sequelize.define("PT", {
+    var pt = sequelize.define("pt", {
         // schema
         name: {
             type: DataTypes.STRING,
@@ -34,11 +34,11 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                PT.hasMany(models.Patient);
-                PT.hasMany(models.exerciseSet);
+                pt.hasMany(models.patient);
+               // PT.hasMany(models.exerciseSet);
             }
         }
     });
    
-    return PT;
+    return pt;
 };

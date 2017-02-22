@@ -5,7 +5,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-    var Exercise = sequelize.define("Exercise", {
+    var exercise = sequelize.define("exercise", {
         // schema
         name: {
             type: DataTypes.STRING,
@@ -36,16 +36,16 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                Exercise.belongsTo(models.exerciseSet, {
+                exercise.belongsTo(models.exerciseSet, {
                     //onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }
                 });
-                Exercise.hasMany(models.exerciseCompletion);
+                exercise.hasMany(models.exerciseCompletion);
             }
         }
     });
 
-    return Exercise;
+    return exercise;
 };

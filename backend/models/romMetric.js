@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                romMetric.belongsTo(models.Injury, {
+                romMetric.belongsTo(models.injury, {
                     //onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
