@@ -20,7 +20,7 @@ var pts = require('./controllers/pts');
 var patients = require('./controllers/patients');
 var injuries = require('./controllers/injuries');
 var romMetrics = require('./controllers/romMetrics');
-var romMetricMeasurements = require('./controllers/romMetricMeasurements')
+var romMetricMeasurements = require('./controllers/romMetricMeasurements');
 
 // ADD REMAINING CONTROLLERs
 
