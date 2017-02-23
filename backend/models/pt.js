@@ -10,12 +10,6 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         hash: {
-            type: DataTypes.STRING
-        },
-        token: {
-            type: DataTypes.STRING
-        },
-        phoneNumber: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -26,10 +20,15 @@ module.exports = function(sequelize, DataTypes) {
                 isEmail : true
             }
         },
+        token: {
+            type: DataTypes.STRING
+        },
+        phoneNumber: {
+            type: DataTypes.STRING
+        },
           //proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
         phoneProvider: {
-            type: DataTypes.STRING,
-            allowNull: false
+            type: DataTypes.STRING
         },
     }, {
         classMethods: {

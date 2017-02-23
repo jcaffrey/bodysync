@@ -10,12 +10,11 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         hash: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false
         },
-        token: {
-            type: DataTypes.STRING
-        },
-        phoneNumber: {
+        //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
+        surgeryType: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -26,10 +25,11 @@ module.exports = function(sequelize, DataTypes) {
                 isEmail : true
             }
         },
-        //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
-        surgeryType: {
-            type: DataTypes.STRING,
-            allowNull: false
+        token: {
+            type: DataTypes.STRING
+        },
+        phoneNumber: {
+            type: DataTypes.STRING
         },
         age: DataTypes.INTEGER,
         weight: DataTypes.INTEGER,
