@@ -1,7 +1,3 @@
-/**
- * Created by joeyc on 2/22/17.
- */
-
 
 var models = require('../models/index');
 

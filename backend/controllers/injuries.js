@@ -1,10 +1,4 @@
-/**
- * Created by joeyc on 2/22/17.
- */
 
-/**
- * Created by hsadev2 on 2/21/17.
- */
 
 var models = require('../models/index');
 
