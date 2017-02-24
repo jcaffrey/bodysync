@@ -21,6 +21,9 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        assignedDuration: {
+            type: DataTypes.INTEGER
+        },
         dateAssigned: {
             type: DataTypes.DATEONLY,
             allowNull: false
