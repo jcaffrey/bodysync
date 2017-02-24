@@ -1,10 +1,5 @@
-var modal = document.getElementById('js-success');
+var success = document.getElementById('success');
 var form = document.forms[0];
-
-// close modal if click outside
-window.onclick = function(event) {
-    if (event.target === modal) modal.style.display = 'none';
-}
 
 // =============================================================
 // Form submit functions
@@ -20,7 +15,7 @@ function submitOnEnterKey(submitFunction, targetForm) {
             submitOnEnterKey(submitFunction, child);
         var type = child.getAttribute('type');
         if (type === 'text' || type === 'email' || type === 'password' ||
-                type === 'number' || type === 'phone')
+            type === 'number' || type === 'phone')
             child.onkeydown = runOnKeydown;
     }
 }
@@ -28,37 +23,21 @@ function submitOnEnterKey(submitFunction, targetForm) {
 function submitForm() {
     var data = {};
     var errorMessage = '';
-    if (form.firstName.value) data.firstName = form.firstName.value;
-    if (form.lastName.value) data.lastName = form.lastName.value;
-    if (form.classYear.value) data.classYear = form.classYear.value;
+    if (form.fullName.value) data.name = form.fullName.value;
+    if (form.password.value == form.confirmPassword) data.hash = form.password.value;
     if (form.email.value && !validateEmail(form.email)) {
         errorMessage += 'Email address is invalid.';
     }
     data.email = form.email.value;
 
-    var phone = validatePhone(form.phone, true);
-    if (!phone) {
-        if (errorMessage) errorMessage += '</br>';
-        errorMessage += 'Please enter valid phone number.';
-    }
-    if (!validateProvider(true)) {
-        if (errorMessage) errorMessage += '</br>';
-        errorMessage += 'Please select phone provider.';
-    }
-    if (errorMessage) return displayError(errorMessage);
-    data.phone = phone;
-    data.phoneProvider = form.phoneProvider.value;
-    if (data.phoneProvider === 'other')
-        data['other-provider'] = form['other-provider'].value;
-
-    fetch('/', {
+    fetch('/pts', {
         headers: {
             'Content-Type': 'application/json'
         },
         method: 'POST',
         body: JSON.stringify(data)
     }).then(submitSuccess)
-    .catch(submitError);
+        .catch(submitError);
 }
 
 // TODO
@@ -154,8 +133,8 @@ function clearForm() {
 
 function submitSuccess(res) {
     if (!res.ok) return submitError(res);
-    modal.style.display = 'block';
-    clearForm();
+    p.innterHTML = 'Sucess!';
+    //clearForm();
 }
 
 function submitError(res, message) {
