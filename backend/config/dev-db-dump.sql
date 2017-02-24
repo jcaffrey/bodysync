@@ -5,10 +5,10 @@
 
 -- pts
 insert into 
-    pts (name, phoneNumber, phoneProvider, email, createdAt, updatedAt) \
+    pts (name, phoneNumber, phoneProvider, email, hash, createdAt, updatedAt) \
 values 
-    ('Jeremy Welborn', '16174627953', 'att', 'asdf@asdf.com', now(), now()),
-    ('Joey Caffrey', '12017254565', 'att', 'asdf@asdf.com', now(), now());
+    ('Jeremy Welborn', '16174627953', 'att', 'asdf@asdf.com', 'hojkjh', now(), now()),
+    ('Joey Caffrey', '12017254565', 'att', 'asdf@asdf.com', 'hojkjh', now(), now());
 
 -- patients
 
