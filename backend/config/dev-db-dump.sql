@@ -5,17 +5,17 @@
 
 -- pts
 insert into 
-    pts (name, phoneNumber, phoneProvider, email, createdAt, updatedAt) \
+    pts (name, hash, phoneNumber, phoneProvider, email, createdAt, updatedAt) \
 values 
-    ('Jeremy Welborn', '16174627953', 'att', 'asdf@asdf.com', now(), now()),
-    ('Joey Caffrey', '12017254565', 'att', 'asdf@asdf.com', now(), now());
+    ('Jeremy Welborn', 'jeremypw', '16174627953', 'att', 'asdf@gmail.com', now(), now()),
+    ('Joey Caffrey', 'joeypw', '12017254565', 'att', 'asdf@gmail.com', now(), now());
 
 -- patients
 
 insert into patients 
-    (name, phoneNumber, phoneProvider, email, surgeryType, age, ptId, createdAt, updatedAt)
+    (name, hash, phoneNumber, phoneProvider, email, surgeryType, age, ptId, createdAt, updatedAt)
 values 
-    ('Josh Seides', '16788233590', 'att', 'asdf@asdf.com', 'BeingABaby', 12, (select id from pts where name = 'Joey Caffrey'), now(), now());  
+    ('Josh Seides', 'joshpw', '16788233590', 'att', 'asdf@gmail.com', 'BeingABaby', 12, (select id from pts where name = 'Joey Caffrey'), now(), now());
 
 -- injuries 
 insert into injuries 
