@@ -1,6 +1,4 @@
-/**
- * Created by hsadev2 on 2/18/17.
- */
+
 
 "use strict";
 
