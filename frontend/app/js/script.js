@@ -24,7 +24,8 @@ function submitForm() {
     var data = {};
     var errorMessage = '';
     if (form.fullName.value) data.name = form.fullName.value;
-    if (form.password.value == form.confirmPassword) data.hash = form.password.value;
+    // data.hash = form.password.value;
+    if (form.password.value == form.confirmPassword.value) data.hash = form.password.value;
     if (form.email.value && !validateEmail(form.email)) {
         errorMessage += 'Email address is invalid.';
     }
@@ -36,8 +37,10 @@ function submitForm() {
         },
         method: 'POST',
         body: JSON.stringify(data)
-    }).then(submitSuccess)
-        .catch(submitError);
+    }).then(console.log('Success!'))
+        .catch(console.log('Error!'))
+    // }).then(submitSuccess)
+    //     .catch(submitError)
 }
 
 // TODO
@@ -133,7 +136,7 @@ function clearForm() {
 
 function submitSuccess(res) {
     if (!res.ok) return submitError(res);
-    p.innterHTML = 'Sucess!';
+    p.innerHTML = 'Success!';
     //clearForm();
 }
 
