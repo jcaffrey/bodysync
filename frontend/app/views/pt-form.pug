@@ -35,7 +35,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.height = "0%";
+                    errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    errorDiv.style.height = "0";
                 }
             }
             function checkEmail(str) {
@@ -46,7 +50,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.height = "0%";
+                    errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    errorDiv.style.height = "0";
                 }
             }
             function checkPassword(str) {
@@ -57,7 +65,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.height = "0%";
+                    errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    errorDiv.style.height = "0";
                 }
             }
             function checkPasswordConfirm(str) {
@@ -67,6 +79,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.height = "0%";
-            }}
+                    errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    errorDiv.style.height = "0";
+                }
+            }
 
