@@ -5,6 +5,7 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
         block cssSheets
         script(src='/js/fetch.js')
+        
     body
         div#header
             div.outerContainer
@@ -35,14 +36,13 @@ html
                 div#passwordError.validationError
                 div#passwordConfirmError.validationError
             button.footerButton#buttonLeft(type='button') #{footerButton}
-            button.footerButton#buttonRight(type='button' onclick='submitForm') #{footerButton2}
+            button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
             if !footerButton2
                 script.
                     document.getElementById('buttonLeft').style.width = "100%";
                     document.getElementById('buttonRight').style.display = "none";
-
-        script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
+
         if token
             script localStorage.token = "#{token}"
         block postScript
