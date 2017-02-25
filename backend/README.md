@@ -7,7 +7,7 @@ This file contains some comments on set up instructions, what we've done, and th
 Talk to Jeremy or Joey for further details. 
 This is intended only for devs. 
 
-We relied heavily on Sequelize for Express [docs](http://docs.sequelizejs.com/en/1.7.0/articles/express/) to set things up. 
+We relied heavily on Sequelize for Express [docs](http://docs.sequelizejs.com/en/1.7.0/articles/express/) to set things up.
 
 
 Starting up the api with some dummy data from `/bodysync/backend/`: 
@@ -27,4 +27,4 @@ $ npm start # will sync tables w/ sequelize
 mysql> # back in the connected client
 mysql> source ~/Desktop/hsadev/bodysync/backend/config/dev-db-dump.sql # will create some dummy data to view on the front end
 
-```l
+```
