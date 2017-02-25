@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
 const auth = require('./auth');
+const request = require('request');
 
 router.get('/', (req, res, next) => {
     return res.render('index', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'});
@@ -17,6 +18,13 @@ router.get('/login', function(req, res, next) {
 
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.post('/pts', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/pts',
+        form: req.body
+    }).pipe(res);
 });
 
 router.get('/new-exercise', function(req, res, next) {

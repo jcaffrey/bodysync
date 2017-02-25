@@ -1,11 +1,11 @@
 doctype html
 html
-  head
+    head
         title= title || "Body Sync"
         link(rel='stylesheet', href='/stylesheets/style.css')
         block cssSheets
         script(src='/js/fetch.js')
-  body
+    body
         div#header
             div.outerContainer
                 div.innerContainerWide
@@ -29,14 +29,17 @@ html
             block content
 
         div#footer
-                button.footerButton#buttonLeft(type='button') #{footerButton}
-                button.footerButton#buttonRight(type='button') #{footerButton2}
-                if !footerButton2
-                    script.
-                        document.getElementById('buttonLeft').style.width = "100%";
-                        document.getElementById('buttonRight').style.display = "none";
-
-
+            div#errorContainer
+                div#nameError.validationError
+                div#emailError.validationError
+                div#passwordError.validationError
+                div#passwordConfirmError.validationError
+            button.footerButton#buttonLeft(type='button') #{footerButton}
+            button.footerButton#buttonRight(type='button' onclick='submitForm') #{footerButton2}
+            if !footerButton2
+                script.
+                    document.getElementById('buttonLeft').style.width = "100%";
+                    document.getElementById('buttonRight').style.display = "none";
 
         script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
