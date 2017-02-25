@@ -27,4 +27,4 @@ $ npm start # will sync tables w/ sequelize
 mysql> # back in the connected client
 mysql> source ~/Desktop/hsadev/bodysync/backend/config/dev-db-dump.sql # will create some dummy data to view on the front end
 
-```
+```l

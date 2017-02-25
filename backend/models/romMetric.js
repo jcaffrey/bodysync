@@ -1,6 +1,3 @@
-/**
- * Created by hsadev2 on 2/18/17.
- */
 
 "use strict";
 
@@ -11,6 +8,13 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        startRange: {
+            type: DataTypes.INTEGER
+        },
+        endRangeGoal: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
     }, {
         classMethods: {
             associate: function(models) {
