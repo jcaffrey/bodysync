@@ -6,6 +6,12 @@ $formWidth = 315
 form
   text-align: center
   font-family: 'GothamBold'
+  @media screen and (max-width: 600px)
+    margin-top: 25%
+  @media screen and (min-width: 601px), (max-width: 1100px)
+    margin-top: 10%
+  @media screen and (min-width: 1101px)
+    margin-top: 0
 
 form h1
   text-transform: uppercase
@@ -105,7 +111,7 @@ form h1
     width 100%
     height 50px
     padding 0
-    margin 0 
+    margin 0
     font-family 'GothamBold'
     font-weight bold
 .m-old .num span
@@ -120,7 +126,7 @@ form h1
     width 100%
     height 100%
     font-family 'GothamBold'
-    text-decoration underline
+    //text-decoration underline
     font-size 45px
     color $mainColor
     margin 0
@@ -130,6 +136,5 @@ form h1
 .num input:focus
     outline none
 
-    
-    
-    
+
+
