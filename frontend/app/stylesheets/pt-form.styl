@@ -55,10 +55,12 @@ form input::-webkit-input-placeholder
   @media screen and (min-width: 1700px)
     font-size: 1.5vw
 form input:focus
-  outline: none
+  outline: nonet
 .text-input
+  position relative
   width 50%
   text-align right
+  //float right
   color $darkgray
   background none
   border none
@@ -82,7 +84,8 @@ form input:focus
   text-transform: uppercase
   color: $mainColor
   text-align: left
-  position: absolute
+  float: left
+  position relative
   text-decoration: none
 .input-name:before
   content: ""
@@ -97,7 +100,7 @@ form input:focus
   transform: scaleX(0)
   -webkit-transition: all 0.3s ease-in-out 0s
   transition: all 0.3s ease-in-out 0s
-.input-box:hover > .input-name:before
+.text-input:focus + .input-name:before
   visibility: visible
   -webkit-transform: scaleX(1)
   transform: scaleX(1)
