@@ -76,7 +76,7 @@ body
     border-radius 11px 0px 0px 11px
 
 #logOutButton:hover
-    background #ebd9ff
+    background $inactiveColor
     color $mainColor
 
 .border-left
@@ -105,7 +105,7 @@ body
     border-radius: 0 11px 11px 0
 
 #settingsButton:hover
-    background #ebd9ff
+    background $inactiveColor
     color $mainColor
 
 #profileImg
@@ -129,21 +129,75 @@ body
 
 @media all and (max-width: 325px)
     #profileImg
-        height 110%
-        width 110%
-        padding-left 2px
-
-@media all and (min-width: 325px) and (max-width: 400px)
-    #profileImg
         height 100%
         width 100%
 
-@media all and (min-width: 400px) and (max-width: 475px)
+@media all and (min-width: 325px) and (max-width: 400px)
     #profileImg
         height 90%
         width 90%
 
-@media all and (min-width: 550px) and (max-width: 700px)
+@media all and (min-width: 400px) and (max-width: 500px)
+    #profileImg
+        height 85%
+        width 85%
+
+@media all and (min-width: 500px) and (max-width: 550px)
+    #profileImg
+        height 75%
+        width 75%
+
+@media all and (min-width: 550px) and (max-width: 575px)
+    #profileImg
+        height 70%
+        width 70%
+
+@media all and (min-width: 575px) and (max-width: 650px)
+    #profileImg
+        height 60%
+        width 60%
+
+@media all and (min-width: 650px) and (max-width: 700px)
+    #profileImg
+        height 55%
+        width 55%
+
+@media all and (min-width: 700px) and (max-width: 775px)
+    #profileImg
+        height 60%
+        width 60%
+
+@media all and (min-width: 775px) and (max-width: 850px)
+    #profileImg
+        height 55%
+        width 55%
+
+@media all and (min-width: 850px) and (max-width: 1000px)
+    #profileImg
+        height 70%
+        width 70%
+
+@media all and (min-width: 1000px) and (max-width: 1100px)
+    #profileImg
+        height 65%
+        width 65%
+
+@media all and (min-width: 1100px) and (max-width: 1250px)
+    #profileImg
+        height 55%
+        width 55%
+
+@media all and (min-width: 1250px) and (max-width: 1475px)
+    #profileImg
+        height 45%
+        width 45%
+
+@media all and (min-width: 1475px) and (max-width: 1700px)
+    #profileImg
+        height 40%
+        width 40%
+
+@media all and (min-width: 1700px)
     #profileImg
         height 35%
         width 35%
@@ -246,6 +300,19 @@ body
     font-size: 1.5em
     text-transform: uppercase
     text-align center
+
+@media all and (max-width: 500px)
+    #footer
+        height 6%
+    .footerButton
+        font-size 18px
+
+@media all and (min-width: 500px) and (max-width: 800px)
+    #footer
+        height 7%
+    .footerButton
+        font-size 22px
+
 
 .footerButton:focus
     outline: none
