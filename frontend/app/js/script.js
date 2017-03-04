@@ -43,6 +43,30 @@ function submitForm() {
     //     .catch(submitError)
 }
 
+// surgeryType, romStart, romEnd, notes in schema????
+function submitPatient(id) {
+    var data = {};
+    var errorMessage = '';
+    if (form.name.value) data.name = form.name.value;
+    if (form.email.value && !validateEmail(form.email)) {
+        errorMessage += 'Email address is invalid.';
+    }
+    data.email = form.email.value;
+
+    if (form.phone.value) data.phoneNumber = form.phone.value;
+    if (form.rom1.value) data.hash = form.rom1.value;
+    if (form.rom2.value) data.surgeryType = form.rom2.value;
+    // if (form.notes.value) data.notes = form.notes.value;
+    fetch('/pts/' + id + '/patients', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(console.log('Success!'))
+        .catch(console.log('Error!'))
+}
+
 // TODO
 function submitLogin() {
 }
