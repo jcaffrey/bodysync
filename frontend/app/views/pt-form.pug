@@ -10,10 +10,10 @@ block content
         h1 Create your account.
         br
         .inputs
-            .input-box.input-top
+            .input-box.input-top#name
                 input.text-input(type='full-name' name='fullName' placeholder='John Smith' onblur="checkName(this.value)")
                 .input-name Full Name
-            .input-box
+            .input-box#email
                 input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")            
                 .input-name Email
             .input-box#pass1
@@ -31,8 +31,16 @@ block content
                 var errorDiv = document.getElementById('nameError');
                 var re = /[A-Za-z -']$/;
                 if (!re.test(str) && str != "") {
+                    document.getElementById('name').className = 'input-box invalid';
                     errorDiv.innerHTML = "Invalid name entered";
                     errorDiv.style.height = "6%";
+                }
+                else if (str != 0) {
+                    document.getElementById('name').className = 'input-box input-top valid';
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+
                 }
                 else {
                     //errorDiv.style.innerHTML = ""
@@ -46,8 +54,16 @@ block content
                 var errorDiv = document.getElementById('emailError');
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if ((!re.test(str)) && (str != "")) {
+                    document.getElementById('email').className = 'input-box invalid';
                     errorDiv.innerHTML = "Invalid email entered";
                     errorDiv.style.height = "6%";
+                }
+                else if (str != 0) {
+                    document.getElementById('email').className = 'input-box valid';
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+
                 }
                 else {
                     //errorDiv.style.innerHTML = ""
@@ -61,8 +77,16 @@ block content
                 var errorDiv = document.getElementById('passwordError');
                 var re = /[a-zA-Z0-9]{8}/;
                 if ((!re.test(str)) && (str != "")) {
+                    document.getElementById('pass1').className = 'input-box invalid';
                     errorDiv.innerHTML = "Password must have 8 valid characters";
                     errorDiv.style.height = "6%";
+                }
+                else if (str != 0) {
+                    document.getElementById('pass1').className = 'input-box valid';
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+
                 }
                 else {
                    // errorDiv.style.innerHTML = ""
@@ -74,19 +98,23 @@ block content
             }
             function checkPasswordConfirm(str) {
                 var errorDiv = document.getElementById('passwordConfirmError');
-                if ((str != document.getElementById('password').value) && (str != "")) {
-                    document.getElementById('pass1').classList.remove('passCheck');
-                    document.getElementById('pass2').classList.remove('passCheck');
-                    errorDiv.innerHTML = "Passwords do not match";
+                var re = /[a-zA-Z0-9]{8}/;
+                if (((str != document.getElementById('password').value) || (!re.test(str))) && (str != ""))  {
+                    document.getElementById('pass1').className = 'input-box invalid';
+                    document.getElementById('pass2').className = 'input-box input-bottom invalid';
                     errorDiv.style.height = "6%";
                 }
-                else {
-                    document.getElementById('pass1').classList.add('passCheck');
-                    document.getElementById('pass2').classList.add('passCheck');
-                    errorDiv.style.innerHTML = ""
+                else if (str != "") {
+                    document.getElementById('pass1').className = 'input-box valid';
+                    document.getElementById('pass2').className = 'input-box input-bottom valid';
+                    //errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
                 }
             }
