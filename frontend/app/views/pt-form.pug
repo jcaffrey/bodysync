@@ -2,6 +2,7 @@ extends template
 
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/pt-form.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
 
 block content
 
@@ -10,19 +11,19 @@ block content
         br
         .inputs
             .input-box.input-top
-                .input-name Full Name
                 input.text-input(type='full-name' name='fullName' placeholder='John Smith' onblur="checkName(this.value)")
+                .input-name Full Name
             .input-box
+                input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")            
                 .input-name Email
-                input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")
             .input-box#pass1
+                input.text-input(type='password' id='password' name='password' placeholder='********' onblur="checkPassword(this.value)")
                 .input-name
                     span Password
                     span.input-label 8 Characters Min
-                input.text-input(type='password' id='password' name='password' placeholder='********' onblur="checkPassword(this.value)")
             .input-box.input-bottom#pass2
-                .input-name Confirm
                 input.text-input(type='password' name='confirmPassword' placeholder='********' onblur="checkPasswordConfirm(this.value)")
+                .input-name Confirm
     p#success
 
         script.

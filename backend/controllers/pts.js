@@ -7,7 +7,8 @@ module.exports.createPT = (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        phoneProvider: req.body.phoneProvider // add hash and token
+        phoneProvider: req.body.phoneProvider,
+        hash: req.body.hash // add hash and token
     }).then(function(pt) {
         res.json(pt);
     });
