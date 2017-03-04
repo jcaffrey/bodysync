@@ -16,12 +16,12 @@ block content
             .input-box
                 input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")            
                 .input-name Email
-            .input-box
+            .input-box#pass1
                 input.text-input(type='password' id='password' name='password' placeholder='********' onblur="checkPassword(this.value)")
                 .input-name
                     span Password
                     span.input-label 8 Characters Min
-            .input-box.input-bottom
+            .input-box.input-bottom#pass2
                 input.text-input(type='password' name='confirmPassword' placeholder='********' onblur="checkPasswordConfirm(this.value)")
                 .input-name Confirm
     p#success
@@ -35,11 +35,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.innerHTML = ""
+                    //errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkEmail(str) {
@@ -50,11 +50,11 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.innerHTML = ""
+                    //errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkPassword(str) {
@@ -65,20 +65,24 @@ block content
                     errorDiv.style.height = "6%";
                 }
                 else {
-                    errorDiv.style.innerHTML = ""
+                   // errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkPasswordConfirm(str) {
-                var errorDiv = document.getElementById('emailError');
+                var errorDiv = document.getElementById('passwordConfirmError');
                 if ((str != document.getElementById('password').value) && (str != "")) {
+                    document.getElementById('pass1').classList.remove('passCheck');
+                    document.getElementById('pass2').classList.remove('passCheck');
                     errorDiv.innerHTML = "Passwords do not match";
                     errorDiv.style.height = "6%";
                 }
                 else {
+                    document.getElementById('pass1').classList.add('passCheck');
+                    document.getElementById('pass2').classList.add('passCheck');
                     errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
@@ -86,4 +90,3 @@ block content
                     errorDiv.style.height = "0";
                 }
             }
-
