@@ -24,8 +24,10 @@ form h1
   -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 25px 0px $inactiveColor;
   border-radius: $formRadius
-  width: $formWidth px
   background-color $white
+  width: 95%
+  @media all and (min-width: 770px)
+    width: 60%
 
 .input-box
   padding: 20px
@@ -33,7 +35,6 @@ form h1
   border: none
   text-align: right
   border-bottom: solid 1px $inactiveColor
-  width: ($formWidth - 40)px
 
 .input-header
   background-color $mainColor
@@ -41,7 +42,6 @@ form h1
   color white
   font-size 1.4em
   padding: 10px 20px
-  width: ($formWidth - 40)px
 
 .input-name
   font-family: 'GothamBold'
