@@ -32,3 +32,21 @@ block content
 			.input-box.input-bottom
 				.rom-name.notes Notes
 				textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement.")
+	p#success
+		script.
+			function checkEmail(str) {
+				var errorDiv = document.getElementById('emailError');
+				var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				if ((!re.test(str)) && (str != "")) {
+					errorDiv.innerHTML = "Invalid email entered";
+					errorDiv.style.height = "6%";
+				}
+				else {
+					while (errorDiv.firstChild) {
+						errorDiv.removeChild(errorDiv.firstChild);
+					}
+				}
+			}
+
+block submitForm
+	button.footerButton#buttonRight(type='button' onclick='submitPatient(' + ptId + ')') #{footerButton2}

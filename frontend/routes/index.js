@@ -35,7 +35,14 @@ router.get('/add-measure', function(req, res, next) {
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1 });
+});
+
+router.post('/pts/:id/patients', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/pts/' + req.params.id + '/patients',
+        form: req.body
+    }).pipe(res);
 });
 
 router.post('/login', function(req, res, next) {
