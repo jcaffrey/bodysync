@@ -33,6 +33,11 @@ router.get('/new-exercise', function(req, res, next) {
 router.get('/add-measure', function(req, res, next) {
     return res.render('add-measure', {firstName: 'Josh'});
 });
+
+router.get('/create-patient', function(req, res, next) {
+    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
 });
