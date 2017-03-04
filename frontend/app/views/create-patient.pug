@@ -1,0 +1,34 @@
+extends template
+
+block cssSheets
+	link(rel='stylesheet', href='/stylesheets/create-patient.css')
+	meta(name="viewport", content="width=device-width, initial-scale=1")
+
+block content
+
+	form
+		.inputs
+			.input-box.input-top
+				input.text-input(type='name' name='name' placeholder='John Smith' onblur="checkName(this.value)")
+				img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
+			.input-box
+				input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")
+				.input-name Email
+			.input-box.input-bottom
+				input.text-input(type='phone' id='phone' name='phone' placeholder='(123)456-789' onblur="checkPassword(this.value)")
+				.input-name Phone #
+		br
+		.inputs
+			.input-box.input-top.rom-top
+				h2 Targeted Motion
+			.input-box.rom-box
+				.rom1
+					.rom-name Starting Range of Motion
+					input.rom-input(type='rom' name='rom1' placeholder='___°' onblur="checkEmail(this.value)")
+				.rom2
+					.rom-name Ending Range of Motion
+					input.text-input(type='rom' name='rom2' placeholder='___°' onblur="checkEmail(this.value)")
+			h2.input-box.rom-box Add Motion
+			.input-box.input-bottom
+				.rom-name.notes Notes
+				textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement.")

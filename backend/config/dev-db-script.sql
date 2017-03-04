@@ -1,4 +1,4 @@
--- source ~/Desktop/hsadev/bodysync/backend/config/dev-db-start.sql
+-- source ~/Documents/Harvard/Extracurricular/HSA\ Dev/bodysync/backend/config/dev-db-script.sql
 
 DROP DATABASE bodysync;
 
