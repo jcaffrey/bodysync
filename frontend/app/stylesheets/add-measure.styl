@@ -6,6 +6,12 @@ $formWidth = 315
 form
   text-align: center
   font-family: 'GothamBold'
+  @media screen and (max-width: 600px)
+    margin-top: 25%
+  @media screen and (min-width: 601px), (max-width: 1100px)
+    margin-top: 10%
+  @media screen and (min-width: 1101px)
+    margin-top: 0
 
 form h1
   text-transform: uppercase
@@ -18,8 +24,10 @@ form h1
   -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 25px 0px $inactiveColor;
   border-radius: $formRadius
-  width: $formWidth px
   background-color $white
+  width: 95%
+  @media all and (min-width: 770px)
+    width: 60%
 
 .input-box
   padding: 20px
@@ -27,7 +35,6 @@ form h1
   border: none
   text-align: right
   border-bottom: solid 1px $inactiveColor
-  width: ($formWidth - 40)px
 
 .input-header
   background-color $mainColor
@@ -35,7 +42,6 @@ form h1
   color white
   font-size 1.4em
   padding: 10px 20px
-  width: ($formWidth - 40)px
 
 .input-name
   font-family: 'GothamBold'
@@ -64,7 +70,11 @@ form h1
   text-align center
   padding 10px 20px
 .submit
-  background-color #22B573
+    background-color #22B573
+    -webkit-transition background-color 0.3s
+    transition background-color 0.3s
+    &:hover
+        background-color #1A924C
 .progress-icon
     float right
     height 20px
@@ -101,7 +111,7 @@ form h1
     width 100%
     height 50px
     padding 0
-    margin 0 
+    margin 0
     font-family 'GothamBold'
     font-weight bold
 .m-old .num span
@@ -116,7 +126,7 @@ form h1
     width 100%
     height 100%
     font-family 'GothamBold'
-    text-decoration underline
+    //text-decoration underline
     font-size 45px
     color $mainColor
     margin 0
@@ -126,6 +136,5 @@ form h1
 .num input:focus
     outline none
 
-    
-    
-    
+
+

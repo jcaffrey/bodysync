@@ -17,7 +17,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form', { footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.post('/pts', function(req, res, next) {
@@ -31,7 +31,7 @@ router.get('/new-exercise', function(req, res, next) {
     return res.render('new-exercise');
 });
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure');
+    return res.render('add-measure', {firstName: 'Josh'});
 });
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
