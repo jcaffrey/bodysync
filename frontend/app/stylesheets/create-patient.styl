@@ -45,12 +45,16 @@ form h2
         font-size: 1.5vw
         padding: 25px
         border-bottom: solid 1px $inactiveColor
-.rom-top
-    border-bottom: none
-    margin-bottom: -30px
-    padding-botton: 0px
-.rom-box
-    border-bottom 2px dashed $inactiveColor
+#rom-add
+    border-top 2px dashed $inactiveColor
+    text-align center
+    text-transform uppercase
+    color $inactiveColor
+    transition 0.3s
+    cursor pointer
+#rom-add:hover
+    background-color #EEE
+    
 form input::-webkit-input-placeholder
     color: $inactiveColor
     font-style: italic
@@ -99,7 +103,7 @@ form h2.rom-box
         font-size: 2vw
     @media screen and (min-width: 1700px)
         font-size: 1.5vw
-.rom-name
+.rom-label
     font-size 3vw
     color $mainColor
     text-transform uppercase
@@ -107,7 +111,9 @@ form h2.rom-box
         font-size: 1.25vw
     @media screen and (min-width: 1700px)
         font-size: 1vw
-.rom-name.notes
+.rom-label + input
+    margin-top 10px
+.rom-label#notes
     text-align: left
 form textarea.text-input
     resize: none
@@ -119,13 +125,13 @@ form textarea.text-input
         font-size: 1vw
     height: 70px
 
-.input-top
+.input-box:first-child
     border-top-right-radius: $formRadius
     border-top-left-radius: $formRadius
-.input-bottom
+.input-bottom:last-child
     border-bottom-right-radius: $formRadius
     border-bottom-left-radius: $formRadius
-    border-bottom: none
+    border-bottom none
 
 .input-name
     font-family: 'GothamBold'
@@ -198,3 +204,11 @@ form img
 .button-2
     background: #fff
     color: $mainColor
+
+.rom-name-input
+    width 100%
+    font-weight bold
+    text-align left
+    font-style normal
+    color $mainColor
+    margin-bottom 10px

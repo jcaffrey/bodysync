@@ -8,29 +8,30 @@ block content
 
 	form
 		.inputs
-			.input-box.input-top
+			.input-box
 				input.text-input(type='name' name='name' placeholder='John Smith' onblur="checkName(this.value)")
 				img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
 			.input-box
 				input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")
 				.input-name Email
-			.input-box.input-bottom
+			.input-box
 				input.text-input(type='phone' id='phone' name='phone' placeholder='(123)456-789' onblur="checkPassword(this.value)")
 				.input-name Phone #
 		br
-		.inputs
-			.input-box.input-top.rom-top
-				h2 Targeted Motion
-			.input-box.rom-box
+		.inputs#rom-inputs
+			.input-box
+				input.text-input.rom-name-input(type='text' name='motion-name' placeholder='TARGETED MOTION')
 				.rom1
-					.rom-name Starting Range of Motion
-					input.rom-input(type='rom' name='rom1' placeholder='___°' onblur="checkEmail(this.value)")
+					.rom-label Starting Range of Motion
+					input.rom-input(type='rom' name='rom1' placeholder='___°' onblur="#")
 				.rom2
-					.rom-name Ending Range of Motion
+					.rom-label Ending Range of Motion
 					input.text-input(type='rom' name='rom2' placeholder='___°' onblur="checkEmail(this.value)")
-			h2.input-box.rom-box Add Motion
-			.input-box.input-bottom
-				.rom-name.notes Notes
+			.input-box#rom-add(onclick="addMotion()") Add Motion
+		br
+		.inputs
+			.input-box
+				.rom-label#notes Notes
 				textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement.")
 	p#success
 		script.
@@ -46,6 +47,14 @@ block content
 						errorDiv.removeChild(errorDiv.firstChild);
 					}
 				}
+			}
+			function addMotion(){
+				var inputs = document.getElementById('rom-inputs')
+				var romadd = document.getElementById('rom-add')
+				var newMotion = document.createElement("div")
+				newMotion.setAttribute('class','input-box')
+				newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='TARGETED MOTION'><div class='rom1'><div class='rom-label'>Starting Range of Motion</div><input class='rom-input' type='rom' name='rom1' placeholder='___°' onblur='#'></div><div class='rom2'><div class='rom-label'>Ending Range of Motion</div><input class='text-input' type='rom' name='rom2' placeholder='___°' onblur='#'></div>"
+				inputs.insertBefore(newMotion,romadd)
 			}
 
 block submitForm
