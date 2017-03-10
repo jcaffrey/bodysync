@@ -7,14 +7,14 @@ html
         script(src='/js/fetch.js')
     body
         div#header
-            div.outerContainer
-                div.innerContainerWide
+            div.profile-box
+                div.profile-box-left
                     span#profileName #{firstName}
                     a(href='#')
                         button.profileAction#settingsButton Settings
                     a(href='#')
                         button.profileAction#logOutButton Log Out
-                div.innerContainerSmall
+                div.profile-box-right
                     img(src='img/profile_pic.jpg' id='profileImg')
 
         div#navbar
@@ -35,7 +35,7 @@ html
                 div#passwordError.validationError
                 div#passwordConfirmError.validationError
             button.footerButton#buttonLeft(type='button') #{footerButton}
-            button.footerButton#buttonRight(type='button' onclick='submitForm') #{footerButton2}
+            block submitForm
             if !footerButton2
                 script.
                     document.getElementById('buttonLeft').style.width = "100%";

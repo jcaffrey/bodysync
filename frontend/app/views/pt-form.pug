@@ -10,18 +10,18 @@ block content
         h1 Create your account.
         br
         .inputs
-            .input-box.input-top
+            .input-box.input-top#name
                 input.text-input(type='full-name' name='fullName' placeholder='John Smith' onblur="checkName(this.value)")
                 .input-name Full Name
-            .input-box
+            .input-box#email
                 input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")            
                 .input-name Email
-            .input-box
+            .input-box#pass1
                 input.text-input(type='password' id='password' name='password' placeholder='********' onblur="checkPassword(this.value)")
                 .input-name
                     span Password
                     span.input-label 8 Characters Min
-            .input-box.input-bottom
+            .input-box.input-bottom#pass2
                 input.text-input(type='password' name='confirmPassword' placeholder='********' onblur="checkPasswordConfirm(this.value)")
                 .input-name Confirm
     p#success
@@ -31,59 +31,93 @@ block content
                 var errorDiv = document.getElementById('nameError');
                 var re = /[A-Za-z -']$/;
                 if (!re.test(str) && str != "") {
+                    document.getElementById('name').className = 'input-box invalid';
                     errorDiv.innerHTML = "Invalid name entered";
                     errorDiv.style.height = "6%";
                 }
-                else {
-                    errorDiv.style.innerHTML = ""
+                else if (str != 0) {
+                    document.getElementById('name').className = 'input-box input-top valid';
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+
+                }
+                else {
+                    //errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkEmail(str) {
                 var errorDiv = document.getElementById('emailError');
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if ((!re.test(str)) && (str != "")) {
+                    document.getElementById('email').className = 'input-box invalid';
                     errorDiv.innerHTML = "Invalid email entered";
                     errorDiv.style.height = "6%";
                 }
-                else {
-                    errorDiv.style.innerHTML = ""
+                else if (str != 0) {
+                    document.getElementById('email').className = 'input-box valid';
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+
+                }
+                else {
+                    //errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkPassword(str) {
                 var errorDiv = document.getElementById('passwordError');
                 var re = /[a-zA-Z0-9]{8}/;
                 if ((!re.test(str)) && (str != "")) {
+                    document.getElementById('pass1').className = 'input-box invalid';
                     errorDiv.innerHTML = "Password must have 8 valid characters";
                     errorDiv.style.height = "6%";
                 }
-                else {
-                    errorDiv.style.innerHTML = ""
+                else if (str != 0) {
+                    document.getElementById('pass1').className = 'input-box valid';
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+
+                }
+                else {
+                   // errorDiv.style.innerHTML = ""
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                    //errorDiv.style.height = "0";
                 }
             }
             function checkPasswordConfirm(str) {
-                var errorDiv = document.getElementById('emailError');
-                if ((str != document.getElementById('password').value) && (str != "")) {
-                    errorDiv.innerHTML = "Passwords do not match";
+                var errorDiv = document.getElementById('passwordConfirmError');
+                var re = /[a-zA-Z0-9]{8}/;
+                if (((str != document.getElementById('password').value) || (!re.test(str))) && (str != ""))  {
+                    document.getElementById('pass1').className = 'input-box invalid';
+                    document.getElementById('pass2').className = 'input-box input-bottom invalid';
                     errorDiv.style.height = "6%";
                 }
-                else {
-                    errorDiv.style.innerHTML = ""
+                else if (str != "") {
+                    document.getElementById('pass1').className = 'input-box valid';
+                    document.getElementById('pass2').className = 'input-box input-bottom valid';
+                    //errorDiv.style.innerHTML = ""
                     while (errorDiv.firstChild) {
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
-                    errorDiv.style.height = "0";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
                 }
             }
 
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
