@@ -8,6 +8,7 @@ module.exports = function(grunt) {
                 files: {
                     'public/stylesheets/style.css': 'app/stylesheets/style.styl',
                     'public/stylesheets/pt-form.css': 'app/stylesheets/pt-form.styl',
+                    'public/stylesheets/create-patient.css': 'app/stylesheets/create-patient.styl',
                     'public/stylesheets/rom-form.css': 'app/stylesheets/rom-form.styl',
                     'public/stylesheets/add-measure.css': 'app/stylesheets/add-measure.styl',
                     'public/stylesheets/patients.css': 'app/stylesheets/patients.styl'

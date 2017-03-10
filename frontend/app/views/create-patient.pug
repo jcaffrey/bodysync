@@ -1,0 +1,61 @@
+extends template
+
+block cssSheets
+	link(rel='stylesheet', href='/stylesheets/create-patient.css')
+	meta(name="viewport", content="width=device-width, initial-scale=1")
+
+block content
+
+	form
+		.inputs
+			.input-box
+				input.text-input(type='name' name='name' placeholder='John Smith' onblur="checkName(this.value)")
+				img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
+			.input-box
+				input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)")
+				.input-name Email
+			.input-box
+				input.text-input(type='phone' id='phone' name='phone' placeholder='(123)456-789' onblur="checkPassword(this.value)")
+				.input-name Phone #
+		br
+		.inputs#rom-inputs
+			.input-box
+				input.text-input.rom-name-input(type='text' name='motion-name' placeholder='TARGETED MOTION')
+				.rom1
+					.rom-label Starting Range of Motion
+					input.rom-input(type='rom' name='rom1' placeholder='___°' onblur="#")
+				.rom2
+					.rom-label Ending Range of Motion
+					input.text-input(type='rom' name='rom2' placeholder='___°' onblur="checkEmail(this.value)")
+			.input-box#rom-add(onclick="addMotion()") Add Motion
+		br
+		.inputs
+			.input-box
+				.rom-label#notes Notes
+				textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement.")
+	p#success
+		script.
+			function checkEmail(str) {
+				var errorDiv = document.getElementById('emailError');
+				var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				if ((!re.test(str)) && (str != "")) {
+					errorDiv.innerHTML = "Invalid email entered";
+					errorDiv.style.height = "6%";
+				}
+				else {
+					while (errorDiv.firstChild) {
+						errorDiv.removeChild(errorDiv.firstChild);
+					}
+				}
+			}
+			function addMotion(){
+				var inputs = document.getElementById('rom-inputs')
+				var romadd = document.getElementById('rom-add')
+				var newMotion = document.createElement("div")
+				newMotion.setAttribute('class','input-box')
+				newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='TARGETED MOTION'><div class='rom1'><div class='rom-label'>Starting Range of Motion</div><input class='rom-input' type='rom' name='rom1' placeholder='___°' onblur='#'></div><div class='rom2'><div class='rom-label'>Ending Range of Motion</div><input class='text-input' type='rom' name='rom2' placeholder='___°' onblur='#'></div>"
+				inputs.insertBefore(newMotion,romadd)
+			}
+
+block submitForm
+	button.footerButton#buttonRight(type='button' onclick='submitPatient(' + ptId + ')') #{footerButton2}
