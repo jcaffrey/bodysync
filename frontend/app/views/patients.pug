@@ -16,7 +16,11 @@ block content
                 .num-box 70%
         .plus-button
             a(href='/create-patient').add +
-//- block postscript
+        //- button(type='button' onclick='fetchPatients()') Fetch
+        //- #js-patients
+//- block submitForm
+//-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
+//- block postScript
 //-     script fetchPatients();
 
             

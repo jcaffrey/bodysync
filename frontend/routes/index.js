@@ -25,14 +25,12 @@ router.get('/pt/patients', (req, res, next) => {
     request.get(config.apiUrl + '/patients', (err, response, body) => {
         if (!err && response.statusCode == 200)
             return res.render('patients', {patients: JSON.parse(body)});
-        else return res.render('patients', {patients: []});
+        else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
     });
 });
 
 router.get('/pt/getpatients', (req, res, next) => {
-    request.get(config.apiUrl + '/patients', {
-        headers: { 'x-access-token': req.headers['x-access-token'] }
-    }).pipe(res);
+    request.get(config.apiUrl + '/patients/1').pipe(res);
 });
 
 // router.post('/pt/patients', (req, res, next) => {

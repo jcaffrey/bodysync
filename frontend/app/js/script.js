@@ -177,3 +177,42 @@ function displayError(message) {
     errorDiv.innerHTML = message;
     errorDiv.style.visibility = 'visible';
 }
+
+// =============================================================
+// Patient fetching (in progress)
+// =============================================================
+
+// function fetchPatients() {
+//     if(!localStorage.token) window.location = '/';
+//     fetch('/pt/getpatients', {method: 'GET'})
+//     .then(function(res) {
+//         if (!res.ok) return console.log('Admin error');
+//         res.json().then(function(patients) { populatePatientsPage(patients) })
+//     }).catch(console.log('Error!'));
+// }
+
+// function populatePatientsPage(patients) {
+//     var patientDiv = document.getElementById('js-patients');
+//     patients.forEach(function(u) {
+//         var div = document.createElement('div');
+//         div.setAttribute('class', 'patient');
+        
+//         var name = document.createElement('div');
+//         name.setAttribute('class', 'patient-name');
+//         name.innerHTML = u.name.type;
+//         div.appendChild(name);
+        
+//         // var admin = document.createElement('div');
+//         // admin.setAttribute('class', 'patient-button button button-inline');
+//         // div.appendChild(admin);
+        
+//         // var del = document.createElement('div');
+//         // del.setAttribute('class', 'patient-button button button-inline warning');
+//         // del.innerHTML = 'Delete';
+//         // del.setAttribute('onclick', 'deletePatient("' + u._id + '", this)');
+//         // div.appendChild(del);
+        
+//         patientDiv.appendChild(div);
+//     });
+// }
+
