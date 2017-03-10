@@ -1,0 +1,22 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+block content
+    form
+        h1 Sort By:
+        .pt-box
+            .pic-box
+                img(src='img/profile_pic.jpg' id='profileImg')
+            .info-box
+                .name Abdul
+                .input-label Shoulder, Back
+            .percent-box 
+                .num-box 70%
+        .plus-button
+            a(href='/create-patient').add +
+//- block postscript
+//-     script fetchPatients();
+
+            

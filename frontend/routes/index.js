@@ -29,32 +29,32 @@ router.get('/pt/patients', (req, res, next) => {
     });
 });
 
-router.post('/pt/patients', (req, res, next) => {
-    request.post(config.apiUrl + '/patients', {
-        headers: { 'x-access-token': req.headers['x-access-token'] },
-        form: req.body
-    }).pipe(res);
-});
-
-router.put('/pt/patients', (req, res, next) => {
-    request.put(config.apiUrl + '/patients/' + req.body.id, {
-        headers: { 'x-access-token': req.headers['x-access-token'] },
-        form: req.body
-    }).pipe(res);
-});
-
 router.get('/pt/getpatients', (req, res, next) => {
     request.get(config.apiUrl + '/patients', {
         headers: { 'x-access-token': req.headers['x-access-token'] }
     }).pipe(res);
 });
 
-router.post('/pt/deletepatient', (req, res, next) => {
-    if (!req.body.id) return res.sendStatus(400);
-    request.delete(config.apiUrl + '/patients/' + req.body.id, {
-        headers: { 'x-access-token': req.headers['x-access-token'] }
-    }).pipe(res);
-});
+// router.post('/pt/patients', (req, res, next) => {
+//     request.post(config.apiUrl + '/patients', {
+//         headers: { 'x-access-token': req.headers['x-access-token'] },
+//         form: req.body
+//     }).pipe(res);
+// });
+
+// router.put('/pt/patients', (req, res, next) => {
+//     request.put(config.apiUrl + '/patients/' + req.body.id, {
+//         headers: { 'x-access-token': req.headers['x-access-token'] },
+//         form: req.body
+//     }).pipe(res);
+// });
+
+// router.post('/pt/deletepatient', (req, res, next) => {
+//     if (!req.body.id) return res.sendStatus(400);
+//     request.delete(config.apiUrl + '/patients/' + req.body.id, {
+//         headers: { 'x-access-token': req.headers['x-access-token'] }
+//     }).pipe(res);
+// });
 
 router.get('/patients', function(req, res, next) {
     return res.render('patients', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
