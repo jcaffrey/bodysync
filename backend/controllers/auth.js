@@ -12,11 +12,11 @@ var secret = 'asfg'
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.hash !== 'string') // hash vs pw?
+    if (typeof req.body.password !== 'string') // hash vs pw?
         return res.status(400).send('No password');
 
     models.pt.findOne({
-        where: { email: req.body.email, password: req.body.password } // havent implemented hashing via bcrypt yet
+        where: { email: req.body.email, hash: req.body.password } // havent implemented hashing via bcrypt yet
     })
     .then(function(pt) {
     
@@ -65,8 +65,8 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
         }).then(function(pt) {
             if (!pt) return res.status(403).send('Invalid token');
             var expired = false;
-            if decoded.id !== pt.id expired = true;
-            if (expired !! token !== pt.token) 
+            if (decoded.id !== pt.id) expired = true;
+            if (expired || token !== pt.token)
                 return res.status(403).send('Expired token');
 
             next();
@@ -78,8 +78,8 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
         }).then(function(patient) {
             if (!patient) return res.status(403).send('Invalid token');
             var expired = false;
-            if decoded.id !== patient.id expired = true;
-            if (expired !! token !== pt.token) 
+            if (decoded.id !== patient.id) expired = true;
+            if (expired || token !== pt.token)
                 return res.status(403).send('Expired token');
 
             next();
