@@ -5,10 +5,12 @@
 
 -- pts
 insert into 
-    pts (name, hash, phoneNumber, phoneProvider, email, createdAt, updatedAt) \
+    pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
 values 
-    ('Jeremy Welborn', 'jeremypw', '16174627953', 'att', 'asdf@gmail.com', now(), now()),
-    ('Joey Caffrey', 'joeypw', '12017254565', 'att', 'asdf@gmail.com', now(), now());
+    ('Jeremy Welborn', 'jeremypw', '16174627953', 'att', 'asdf@gmail.com', false, now(), now()),
+    ('Joey Caffrey', 'joeypw', '12017254565', 'att', 'asdf@gmail.com', false, now(), now()),
+    -- temp admin, change if schema changes
+    ('David Malan', 'davidpw', '1234567890', 'att', 'asdf@gmail.com', true, now(), now());
 
 -- patients
 
@@ -26,6 +28,5 @@ values
 
 
 -- romMetrics
-
 
 -- romMetricMeasures
