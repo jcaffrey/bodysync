@@ -20,7 +20,7 @@ $ brew services start mysql # start daemon
 $ mysql -uroot # connect client (depends on your machine's mysql config)
 mysql> source ~/Desktop/hsadev/bodysync/backend/config/dev-db-script.sql # will create the db bodysync, has to be an abs path
 
-$ in some other shell, start app
+$ # in some other shell, start app
 $ npm install
 $ npm start # will sync tables w/ sequelize
 

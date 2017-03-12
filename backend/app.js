@@ -19,8 +19,10 @@ var models = require('./models/index');
 var pts = require('./controllers/pts');
 var patients = require('./controllers/patients');
 var injuries = require('./controllers/injuries');
-var romMetrics = require('./controllers/romMetrics');
+var romMetrics  = require('./controllers/romMetrics');
 var romMetricMeasures = require('./controllers/romMetricMeasures');
+
+var auth = require('./controllers/auth');
 
 // ADD REMAINING CONTROLLERs
 
@@ -50,46 +52,64 @@ app.use(cookieParser());
 // TODO: implement update
 // TODO: implement error checking
 
+
+// temp 
+router.route('/')
+    .get(function(req, res) {
+        res.send('Welcome to the bodysync API. See /backend/app.js for useful endpoints!');
+     })
+
+// for now... assumes only one practice to which all pts belong
+
+router.route('/login/pt')
+    .post(auth.loginPt); 
+//router.route('/login/patient')
+//    .post(auth.loginPatient); 
+
 router.route('/pts')
-    .post(pts.createPT)
-    .get(pts.getPTS);
+    .get(auth.adminRequired, pts.getPTS) // not a view, Access: admin
+    .post(pts.createPT); // Access: admin
 
 router.route('/pts/:id')
-    .get(pts.getPTById)
-   // .put(pts.updatePT)
-    .delete(pts.deletePT);
+    .get(pts.getPTById) // not a view, Access: pt
+   // .put(pts.updatePT) Access: pt
+    .delete(pts.deletePT); // Access: admin
 
 router.route('/pts/:id/patients')
-    .post(patients.createPatient)
-    .get(patients.getPatients);
+    .get(patients.getPatients) // Access: pt
+    .post(patients.createPatient); // Access: pt
 
 router.route('/patients/:id')
-    .get(patients.getPatientById)
-    //.put(patients.updatePatient)
-    .delete(patients.deletePatient);
+    .get(patients.getPatientById) // Access: pt, with verification on id
+    //.put(patients.updatePatient) // Access: same
+    .delete(patients.deletePatient); // Access: same
 
 router.route('/patients/:id/injuries')
-    .post(injuries.createInjury)
-    .get(injuries.getInjuries);
+    .get(injuries.getInjuries) // Access: pt, patient, views handled differently on frontend using token
+    .post(injuries.createInjury); // Access: pt
 
 router.route('/injuries/:id')
-    .get(injuries.getInjuryById)
-    //.put(patients.updatePatient)
-    .delete(injuries.deleteInjury);
+    .get(injuries.getInjuryById) // Access: pt, patient
+    //.put(injuries.updateInjury) // Access: pt 
+    .delete(injuries.deleteInjury); // Access: pt
 
 
 router.route('/injuries/:id/romMetrics')
-    .post(romMetrics.createRomMetric)
-    .get(romMetrics.getRomMetrics);
+    .get(romMetrics.getRomMetrics) // Access: pt, patient
+    .post(romMetrics.createRomMetric); // Access: pt
+   
 
 router.route('/romMetrics/:id')
-    .get(romMetrics.getRomMetricById)
-    //.put(patients.updatePatient)
-    .delete(romMetrics.deleteRomMetric);
+    .get(romMetrics.getRomMetricById) // Access: pt
+    //.put(romMetrics.updateRomMetric) // Access: pt
+    .delete(romMetrics.deleteRomMetric); // Access: pt
 
 router.route('/romMetrics/:id/romMetricMeasures')
-    .post(romMetricMeasures.createMeasure)
-    .get(romMetricMeasures.getMeasures);
+    .get(romMetricMeasures.getMeasures) // Access: pt, patient
+    .post(romMetricMeasures.createMeasure); // Access: pt
+
+
+
 
 /*
 Comments on routing structure: 

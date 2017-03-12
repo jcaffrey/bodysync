@@ -30,6 +30,11 @@ module.exports = function(sequelize, DataTypes) {
         phoneProvider: {
             type: DataTypes.STRING
         },
+        // temp
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        }
     }, {
         classMethods: {
             associate: function(models) {
