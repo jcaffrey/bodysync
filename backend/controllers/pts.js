@@ -1,10 +1,25 @@
+/**
+
+    dependencies
+
+ */
+
 // import instantiated db
 var models = require('../models/index');
 var jwt = require('jsonwebtoken');
+var auth = require('./auth');
+
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];  
 
+
+
+/**
+
+    CREATE (HTTP POST)
+
+ */
 
 
 module.exports.createPt = (req, res, next) => {
@@ -20,44 +35,60 @@ module.exports.createPt = (req, res, next) => {
     });
 };
 
+
+/**
+
+    READ (HTTP GET)
+
+ */
+
 module.exports.getPts = (req, res, next) => {
     models.pt.findAll({}).then(function(pts) {
         res.json(pts);
     });
 };
 
-/*
-function checkRequestIdAgainstId(req, res) { 
-    var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    var decoded = jwt.verify(token, config.secret);
-    // debugging
-    console.log('token id: ' + String(decoded.id));
-    console.log('query id: ' + String(req.params.id));
-    if (req.params.id != decoded.id) {
-        return res.status(401).send('You are not authorized to see this resource');
-    }
-}
-*/
+
 module.exports.getPtById = (req, res, next) => {
   
-    // already retrieved and verified the token, so skipping error handling for the time being
-
-/*    var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    var decoded = jwt.verify(token, 'thisisthesecret');
-    if (req.params.id != decoded.id) {
-        return res.status(401).send('You are not authorized to see this resource');
+    if(auth.checkRequestIdAgainstId(req, res)) {
+        models.pt.findAll({ // should not be find all!!! this returns an array
+            where: {
+                id: req.params.id
+            }
+        }).then(function(pt) {
+            res.json(pt);
+        });
     }
-*/
-    checkAgainstToken(req, res);
+    
+    return;
 
-    models.pt.findAll({
-        where: {
-            id: req.params.id
-        }
-    }).then(function(pt) {
-        res.json(pt);
-    });
 };
+
+
+/**
+
+    UPDATE (HTTP PUT)
+    
+ */
+
+// module.exports.updatePt = (req, res, next) => {
+//      // add auth via checkRequestIdAgainstId...      
+//
+//
+//     // TBU???  
+//     models.pt.udpate({
+//
+//         res.sendStatus(200);
+//     })
+// }
+
+
+/**
+
+    DELETE (HTTP DELETE)
+
+ */
 
 
 module.exports.deletePt = (req, res, next) => {
@@ -73,10 +104,4 @@ module.exports.deletePt = (req, res, next) => {
     });
 }
 
-// module.exports.updatePt = (req, res, next) => {
 
-//     models.pt.udpate({
-//
-//         res.sendStatus(200);
-//     })
-// }
