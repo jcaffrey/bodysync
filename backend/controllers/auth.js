@@ -31,7 +31,7 @@ exports.loginPt = (req, res, next) => {
              
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
              
             pt.token = token;
             pt.save()
@@ -67,7 +67,7 @@ exports.loginPatient = (req, res, next) => {
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
 
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
          
             patient.token = token;
             patient.save()
@@ -112,7 +112,10 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
-
+    console.log(isPtRequired);
+    console.log(isAdminRequired);
+    console.log(decoded.isPt);
+    console.log(decoded.isAdmin);
     if (isPtRequired && !decoded.isPt)
         return res.status(403).send('You do not have access');
 
@@ -169,4 +172,27 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
             })
         }
     }
-} 
+}
+
+
+// helper function
+// call to authorize when requester's id appears in the query
+// i.e. check that request (query) id is same as requester (token) id
+// already retrieved and verified the token, so skipping error handling for the time being
+exports.checkRequestIdAgainstId = (req, res) => { 
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+    
+    // debugging
+    console.log('token id: ' + String(decoded.id));
+    console.log('query id: ' + String(req.params.id));
+    
+    if (req.params.id != decoded.id) {
+        res.status(401).send('You are not authorized to see this resource');
+        return false;
+    } else { 
+        return true;
+    }
+    // is bool best way to do this?
+}
+

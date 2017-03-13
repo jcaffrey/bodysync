@@ -16,7 +16,13 @@ var romMetricMeasures = require('../controllers/romMetricMeasures');
 
 // TODO: import exercise controllers
 
+
+// N.B.: 
+// role-specific auth (are you at pt? a patient?) containing in ../controllers/auth,js 
+// requester-specific auth (are you a pt asking for your patients?) containing in controllers
 var auth = require('../controllers/auth');
+
+
 
 //============================== 
 // routes 
@@ -53,23 +59,23 @@ router.route('/login/patient')
 
 // routes for admin
 router.route('/pts')
-    .get(auth.adminRequired, pts.getPts) // not a view, Access: admin
-    .post(auth.adminRequired, pts.createPt); // Access: admin
+    .get(auth.adminRequired, pts.getPts) // not a view
+    .post(auth.adminRequired, pts.createPt); 
 router.route('/patients') 
     .get(auth.adminRequired, patients.getAllPatients); // now a view, just for development 
 router.route('/pts/:id')
-    .get(auth.ptRequired, pts.getPtById) // not a view, Access: pt       ** 
-   // .put(auth.ptRequired, pts.updatePt) Access: pt should be able to self update?
-    .delete(auth.adminRequired, pts.deletePt); // Access: admin
+    .get(auth.ptRequired, pts.getPtById) // not a view  
+   // .put(auth.ptRequired, pts.updatePt) // Access: pt should be able to self update?
+    .delete(auth.adminRequired, pts.deletePt); 
 
 // routes for pts to see patients
 router.route('/pts/:id/patients')
-    .get(auth.ptRequired, patients.getPatients) // Access: pt  ** 
-    .post(auth.ptRequired, patients.createPatient); // Access: pt  **
+    .get(auth.ptRequired, patients.getPatients)     
+    .post(auth.ptRequired, patients.createPatient);   // should patients have any access?
 
 router.route('/patients/:id')
-    .get(auth.ptRequired, patients.getPatientById) // Access: pt  **w/query
-    //.put(auth.ptRequired, patients.updatePatient) // Access: pt   **w/query
+    .get(auth.tokenRequired, patients.getPatientById) // Access: pt  **w/query
+    //.put(auth.tokenRequired, patients.updatePatient) // Access: pt   **w/query
     .delete(auth.ptRequired, patients.deletePatient); // Access: pt  **w/query
 
 // routes for pts, patients to see injuries
