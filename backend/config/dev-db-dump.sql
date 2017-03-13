@@ -4,13 +4,26 @@
 -- source ~/Documents/Harvard/Extracurricular/HSA\ Dev/bodysync/backend/config/dev-db-dump.sql
 
 -- pts
+
+/* notes on passwords and hashed passwords:
+ * when testing the api (in postman or with curl at the command line), you should sign in
+ * to get a token (which you should store as 'x-access-token':token in the header to simulate
+ * the browser's storage) for subsequent resource requests, and you should sign in using a
+ * plaintext password. We have inserted hashes into the db because these are not 
+ * created using the controller of course (see the schema for bcrypt functionality).
+ *
+ * https://bcrypt-generator.com
+ * $2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti is bcrypted jeremypw
+ * $2a$08$2yDwkwaNfQIK3yD9Hyc72upxGR3eliOfC3OYvHsvtJoDUYOfRpWSe is bcrypted joeypw
+ * $2a$08$KyePVbpTFRdPaDcc1xAtOOCacEh6X.e.6Ud0Z/AKLJHsMHNYkqKku is brypted davidpw
+ */
 insert into 
     pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
 values 
-    ('Jeremy Welborn', 'jeremypw', '16174627953', 'att', 'asdf@gmail.com', false, now(), now()),
-    ('Joey Caffrey', 'joeypw', '12017254565', 'att', 'asdf@gmail.com', false, now(), now()),
+    ('Jeremy Welborn', '$2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti', '16174627953', 'att', 'asdf1@gmail.com', false, now(), now()), 
+    ('Joey Caffrey', '$2a$08$2yDwkwaNfQIK3yD9Hyc72upxGR3eliOfC3OYvHsvtJoDUYOfRpWSe', '12017254565', 'att', 'asdf2@gmail.com', false, now(), now()),
     -- temp admin, change if schema changes
-    ('David Malan', 'davidpw', '1234567890', 'att', 'asdf@gmail.com', true, now(), now());
+    ('David Malan', '$2a$08$KyePVbpTFRdPaDcc1xAtOOCacEh6X.e.6Ud0Z/AKLJHsMHNYkqKku', '1234567890', 'att', 'asdf3@gmail.com', true, now(), now());
 
 -- patients
 

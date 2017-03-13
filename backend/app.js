@@ -62,13 +62,14 @@ router.route('/')
 // for now... assumes only one practice to which all pts belong
 
 router.route('/login/pt')
-    .post(auth.loginPt); 
+    .post(auth.loginPt);
+
 //router.route('/login/patient')
 //    .post(auth.loginPatient); 
 
 router.route('/pts')
-    .get(auth.adminRequired, pts.getPTS) // not a view, Access: admin
-    .post(auth.adminRequired, pts.createPT); // Access: admin
+    .get(pts.getPTS) // not a view, Access: admin
+    .post(pts.createPT); // Access: admin
 
 router.route('/pts/:id')
     .get(auth.ptRequired, pts.getPTById) // not a view, Access: pt
