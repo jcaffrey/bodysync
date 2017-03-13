@@ -1,7 +1,8 @@
 //
 
 var models = require('../models/index');
-var jwt = require('jwt-simple');
+// var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 
 // temp
 var secret = 'asfg'
@@ -21,11 +22,15 @@ exports.loginPt = (req, res, next) => {
     .then(function(pt) {
     
         var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
-        var token = jwt.encode(payload, secret);
+
+        // fuck with flags as you wish
+        // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
+
+        var token = jwt.sign(payload, secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
         pt.token = token;
         pt.save()
         .then(function() {
-            res.json({token});
+            res.json({token: token});
         })
     })
 }
@@ -47,7 +52,8 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     }
 
     try {
-        var decoded = jwt.decode(token, secret);
+        // can change to async
+        var decoded = jwt.verify(token, secret); // do not use jwt.decode with 'jsonwebtoken', does not check the signature using secret
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
@@ -85,4 +91,4 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
             next();
         })
     }
-}
+} 
