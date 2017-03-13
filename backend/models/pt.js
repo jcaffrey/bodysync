@@ -2,6 +2,9 @@
 
 "use strict";
 
+var bcrypt = require('bcrypt-nodejs');
+
+
 module.exports = function(sequelize, DataTypes) {
     var pt = sequelize.define("pt", {
         // schema
@@ -39,10 +42,50 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 pt.hasMany(models.patient);
-               // PT.hasMany(models.exerciseSet);
+            },
+            generateHash: function(hash) {
+                return bcrypt.hashSync(hash, bcrypt.genSaltSync(8), null);
+            },
+        },
+        instanceMethods: {
+            validHash : function(hash) {
+                return bcrypt.compareSync(hash, this.hash);
             }
         }
     });
+
+
+
+
+
+
+    // ,
+    //     instanceMethods:
+    //         {
+    //             validHash: function (hash) {
+    //                 return bcrypt.compareSync(hash, this.hash);
+    //             }
+    //         }
+    // })
+
+    //
+    //     {
+    //     classMethods: {
+    //         associate: function(models) {
+    //             pt.hasMany(models.patient);
+    //            // PT.hasMany(models.exerciseSet);
+    //         }
+    //     },
+    //         generateHash: function (hash) {
+    //             return bcrypt.hashSync(hash, bcrypt.genSaltSync(8),null);  // think about doing this async if performance becomes noticeable
+    //         }
+    //     },
+    //     instanceMethods: {
+    //         validHash : function(hash) {
+    //             return bcrypt.compareSync(hash, this.hash);
+    //         }
+    //     }
+    // });
    
     return pt;
 };

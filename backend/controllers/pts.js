@@ -8,7 +8,8 @@ module.exports.createPT = (req, res, next) => {
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         phoneProvider: req.body.phoneProvider,
-        hash: req.body.hash // add hash and token
+        isAdmin: req.body.isAdmin,
+        hash: models.pt.generateHash(req.body.hash) // add hash and token
     }).then(function(pt) {
         res.json(pt);
     });

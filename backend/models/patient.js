@@ -1,6 +1,8 @@
 // http://docs.sequelizejs.com/en/1.7.0/articles/express
-
+// for bcyrpt - http://anneblankert.blogspot.com/2015/06/node-authentication-migrate-from.html
 "use strict";
+
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = function(sequelize, DataTypes) {
     var patient = sequelize.define("patient", {
@@ -46,9 +48,17 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 });
                 patient.hasMany(models.injury);
+            },
+            generateHash: function (hash) {
+                return bcrypt.hashSync(hash, bcrypt.genSaltSync(8),null);  // think about doing this async if performance becomes noticeable
+            },
+        },
+        instanceMethods: {
+            validHash : function(hash) {
+                return bcrypt.compareSync(hash, this.hash);
             }
         }
     });
-   
+
     return patient;
 };
