@@ -62,7 +62,8 @@ router.route('/')
 // for now... assumes only one practice to which all pts belong
 
 router.route('/login/pt')
-    .post(auth.loginPt); 
+    .post(auth.loginPt);
+
 //router.route('/login/patient')
 //    .post(auth.loginPatient); 
 

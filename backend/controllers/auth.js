@@ -15,22 +15,30 @@ exports.loginPt = (req, res, next) => {
     if (typeof req.body.password !== 'string') // hash vs pw?
         return res.status(400).send('No password');
 
+
     models.pt.findOne({
-        where: { email: req.body.email, hash: req.body.password } // havent implemented hashing via bcrypt yet
+        where: { email: req.body.email}
     })
     .then(function(pt) {
-    
-        var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
-        var token = jwt.encode(payload, secret);
-        pt.token = token;
-        pt.save()
-        .then(function() {
-            res.json({token});
-        })
-    })
-}
-// .catch(...) implement this in a bit...!
+         if(pt.validHash(req.body.password)) {
+             var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
+             var token = jwt.encode(payload, secret);
+             pt.token = token;
+             pt.save()
+                 .then(function () {
+                     res.json({token});
+                 });
 
+
+         }
+        else {
+            return res.status(401).send('bad hash');
+        }
+    }).catch(function(e) {
+        return res.status(401).send(JSON.stringify(e));
+    })
+
+}
 
 
 exports.adminRequired = (req, res, next) => validateToken(req, res, next, true, true);
