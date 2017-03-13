@@ -30,6 +30,14 @@ module.exports.getPatients = (req, res, next) => {
     });
 };
 
+// not to be used in actual app, unless for an admin
+module.exports.getAllPatients = (req, res, next) => {
+    models.patient.findAll({}).then(function(patients) {
+        res.json(patients);
+    });
+};
+
+
 module.exports.getPatientById = (req, res, next) => {
     models.patient.findAll({
         where: {

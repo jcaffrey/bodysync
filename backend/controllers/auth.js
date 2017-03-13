@@ -1,18 +1,24 @@
 //
-
 var models = require('../models/index');
-// var jwt = require('jwt-simple');
 var jwt = require('jsonwebtoken');
 
-// temp
-var secret = 'asfg'
+// app.locals.config = config not working?
+var env = process.env.NODE_ENV || 'development';
+var config = require('../config/config.json')[env];  
 
-// const jwt_parameters = ['email', 'isVerified', 'isAdmin'];
+
+/*
+
+    Token creation 
+
+    TBU: clean this up, catch
+
+ */
 
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.password !== 'string') // hash vs pw?
+    if (typeof req.body.password !== 'string') // plaintext passworc
         return res.status(400).send('No password');
 
 
@@ -25,9 +31,8 @@ exports.loginPt = (req, res, next) => {
              
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-
-            var token = jwt.sign(payload, secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
-         
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
+             
             pt.token = token;
             pt.save()
                 .then(function () {
@@ -42,9 +47,49 @@ exports.loginPt = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
-
 }
 
+
+exports.loginPatient = (req, res, next) => {
+    if (typeof req.body.email !== 'string')
+        return res.status(400).send('No email');
+    if (typeof req.body.password !== 'string') 
+        return res.status(400).send('No password');
+
+
+    models.patient.findOne({
+        where: { email: req.body.email}
+    })
+    .then(function(patient) {
+        if(patient.validHash(req.body.password)) {
+            var payload = {id: patient.id, isPt: false, isAdmin: false}
+             
+            // fuck with flags as you wish
+            // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
+
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
+         
+            patient.token = token;
+            patient.save()
+                .then(function () {
+                    res.json({token: token});
+                });
+
+
+        }
+        else {
+            return res.status(401).send('bad hash');
+        }
+    }).catch(function(e) {
+        return res.status(401).send(JSON.stringify(e));
+    })
+}
+
+/*
+
+    Token validation
+
+ */
 
 exports.adminRequired = (req, res, next) => validateToken(req, res, next, true, true);
 
@@ -52,7 +97,7 @@ exports.ptRequired = (req, res, next) => validateToken(req, res, next, true, fal
 
 // use for shared resources that pts and patients should both be able to access
 // isPtRequired = false => pt access, patient access
-exports.tokenRequired = (req, res, next) => validateToken(req, res, false, false);
+exports.tokenRequired = (req, res, next) => validateToken(req, res, next, false, false);
 
 function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -63,7 +108,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
 
     try {
         // can change to async
-        var decoded = jwt.verify(token, secret); // do not use jwt.decode with 'jsonwebtoken', does not check the signature using secret
+        var decoded = jwt.verify(token, config.secret); // do not use jwt.decode with 'jsonwebtoken', does not check the signature using secret
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
@@ -76,7 +121,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     
     /*
 
-        should definitely do some factoring here...
+       TBU:  should definitely do some factoring here...
         
      */
 

@@ -15,7 +15,8 @@
  * https://bcrypt-generator.com
  * $2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti is bcrypted jeremypw
  * $2a$08$2yDwkwaNfQIK3yD9Hyc72upxGR3eliOfC3OYvHsvtJoDUYOfRpWSe is bcrypted joeypw
- * $2a$08$KyePVbpTFRdPaDcc1xAtOOCacEh6X.e.6Ud0Z/AKLJHsMHNYkqKku is brypted davidpw
+ * $2a$08$KyePVbpTFRdPaDcc1xAtOOCacEh6X.e.6Ud0Z/AKLJHsMHNYkqKku is bcrypted davidpw
+ * $2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa. is bcrypted joshpw
  */
 insert into 
     pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
@@ -30,7 +31,7 @@ values
 insert into patients 
     (name, hash, phoneNumber, phoneProvider, email, surgeryType, age, ptId, createdAt, updatedAt)
 values 
-    ('Josh Seides', 'joshpw', '16788233590', 'att', 'asdf@gmail.com', 'BeingABaby', 12, (select id from pts where name = 'Joey Caffrey'), now(), now());
+    ('Josh Seides', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'asdf@gmail.com', 'BeingABaby', 12, (select id from pts where name = 'Joey Caffrey'), now(), now());
 
 -- injuries 
 insert into injuries 
