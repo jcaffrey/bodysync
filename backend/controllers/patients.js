@@ -9,10 +9,10 @@ module.exports.createPatient = (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        phoneProvider: req.body.phoneProvider, // add hash and token
+        phoneProvider: req.body.phoneProvider,
         surgeryType: req.body.surgeryType,
         ptId: req.params.id,
-        hash: req.body.hash // add hash and token
+        hash: this.generateHash(req.body.hash) // add hash and token
     }).then(function(patient) {
         res.json(patient);
     });

@@ -9,39 +9,49 @@ var secret = 'asfg'
 
 // const jwt_parameters = ['email', 'isVerified', 'isAdmin'];
 
-
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
     if (typeof req.body.password !== 'string') // hash vs pw?
         return res.status(400).send('No password');
 
+
     models.pt.findOne({
-        where: { email: req.body.email, hash: req.body.password } // havent implemented hashing via bcrypt yet
+        where: { email: req.body.email}
     })
     .then(function(pt) {
-    
-        var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
+        if(pt.validHash(req.body.password)) {
+            var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
+             
+            // fuck with flags as you wish
+            // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
 
-        // fuck with flags as you wish
-        // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
+            var token = jwt.sign(payload, secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
+         
+            pt.token = token;
+            pt.save()
+                .then(function () {
+                    res.json({token: token});
+                });
 
-        var token = jwt.sign(payload, secret, {expiresIn: 60*5 }); // jwt.encode for 'jwt-simple'
-        pt.token = token;
-        pt.save()
-        .then(function() {
-            res.json({token: token});
-        })
+
+        }
+        else {
+            return res.status(401).send('bad hash');
+        }
+    }).catch(function(e) {
+        return res.status(401).send(JSON.stringify(e));
     })
-}
-// .catch(...) implement this in a bit...!
 
+}
 
 
 exports.adminRequired = (req, res, next) => validateToken(req, res, next, true, true);
 
 exports.ptRequired = (req, res, next) => validateToken(req, res, next, true, false);
 
+// use for shared resources that pts and patients should both be able to access
+// isPtRequired = false => pt access, patient access
 exports.tokenRequired = (req, res, next) => validateToken(req, res, false, false);
 
 function validateToken(req, res, next, isPtRequired, isAdminRequired) {
@@ -63,8 +73,14 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
 
     if (isAdminRequired && !decoded.isAdmin)
         return res.status(403).send('You do not have access');
+    
+    /*
 
-    // validate pt
+        should definitely do some factoring here...
+        
+     */
+
+    // resource is restricted to pts, so validate pt
     if (isPtRequired) {
         models.pt.findOne({
             where: {id: decoded.id} 
@@ -77,18 +93,35 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
 
             next();
         })
-    // validate patient
+    // resource is not restricted to pts,  validate patient or pt, depending on the isPt token flag
     } else {
-        models.patient.findOne({
-            where: {id: decoded.id} 
-        }).then(function(patient) {
-            if (!patient) return res.status(403).send('Invalid token');
-            var expired = false;
-            if (decoded.id !== patient.id) expired = true;
-            if (expired || token !== pt.token)
-                return res.status(403).send('Expired token');
+        // query pt table if pt
+        if (decoded.isPt) {
+            models.pt.findOne({
+                where: {id: decoded.id} 
+            }).then(function(pt) {
+                if (!pt) return res.status(403).send('Invalid token');
+                var expired = false;
+                if (decoded.id !== pt.id) expired = true;
+                if (expired || token !== pt.token)
+                    return res.status(403).send('Expired token');
 
-            next();
-        })
+                next();
+            })
+        }
+        // query patient table if not pt
+        else {
+            models.patient.findOne({
+                where: {id: decoded.id} 
+            }).then(function(patient) {
+                if (!patient) return res.status(403).send('Invalid token');
+                var expired = false;
+                if (decoded.id !== patient.id) expired = true;
+                if (expired || token !== patient.token)
+                    return res.status(403).send('Expired token');
+
+                next();
+            })
+        }
     }
 } 
