@@ -68,45 +68,45 @@ router.route('/login/pt')
 
 router.route('/pts')
     .get(auth.adminRequired, pts.getPTS) // not a view, Access: admin
-    .post(pts.createPT); // Access: admin
+    .post(auth.adminRequired, pts.createPT); // Access: admin
 
 router.route('/pts/:id')
-    .get(pts.getPTById) // not a view, Access: pt
-   // .put(pts.updatePT) Access: pt
-    .delete(pts.deletePT); // Access: admin
+    .get(auth.ptRequired, pts.getPTById) // not a view, Access: pt
+   // .put(auth.ptRequired, pts.updatePT) Access: pt should be able to self update?
+    .delete(auth.adminRequired, pts.deletePT); // Access: admin
 
 router.route('/pts/:id/patients')
-    .get(patients.getPatients) // Access: pt
-    .post(patients.createPatient); // Access: pt
+    .get(auth.ptRequired, patients.getPatients) // Access: pt
+    .post(auth.ptRequired, patients.createPatient); // Access: pt
 
 router.route('/patients/:id')
-    .get(patients.getPatientById) // Access: pt, with verification on id
-    //.put(patients.updatePatient) // Access: same
-    .delete(patients.deletePatient); // Access: same
+    .get(auth.ptRequired, patients.getPatientById) // Access: pt, with verification on id
+    //.put(auth.ptRequired, patients.updatePatient) // Access: same
+    .delete(auth.ptRequired, patients.deletePatient); // Access: same
 
 router.route('/patients/:id/injuries')
-    .get(injuries.getInjuries) // Access: pt, patient, views handled differently on frontend using token
-    .post(injuries.createInjury); // Access: pt
+    .get(auth.tokenRequired, injuries.getInjuries) // Access: pt, patient, views handled differently on frontend using token
+    .post(auth.ptRequired, injuries.createInjury); // Access: pt
 
 router.route('/injuries/:id')
-    .get(injuries.getInjuryById) // Access: pt, patient
-    //.put(injuries.updateInjury) // Access: pt 
-    .delete(injuries.deleteInjury); // Access: pt
+    .get(auth.tokenRequired, injuries.getInjuryById) // Access: pt, patient
+    //.put(auth.ptRequired, injuries.updateInjury) // Access: pt 
+    .delete(auth.ptRequired, injuries.deleteInjury); // Access: pt
 
 
 router.route('/injuries/:id/romMetrics')
-    .get(romMetrics.getRomMetrics) // Access: pt, patient
-    .post(romMetrics.createRomMetric); // Access: pt
+    .get(auth.tokenRequired, romMetrics.getRomMetrics) // Access: pt, patient
+    .post(auth.ptRequired, romMetrics.createRomMetric); // Access: pt
    
 
 router.route('/romMetrics/:id')
-    .get(romMetrics.getRomMetricById) // Access: pt
-    //.put(romMetrics.updateRomMetric) // Access: pt
-    .delete(romMetrics.deleteRomMetric); // Access: pt
+    .get(auth.ptRequired, romMetrics.getRomMetricById) // Access: pt
+    //.put(auth.ptRequired, romMetrics.updateRomMetric) // Access: pt
+    .delete(auth.ptRequired, romMetrics.deleteRomMetric); // Access: pt
 
 router.route('/romMetrics/:id/romMetricMeasures')
-    .get(romMetricMeasures.getMeasures) // Access: pt, patient
-    .post(romMetricMeasures.createMeasure); // Access: pt
+    .get(auth.tokenRequired, romMetricMeasures.getMeasures) // Access: pt, patient
+    .post(auth.ptRequired, romMetricMeasures.createMeasure); // Access: pt
 
 
 
