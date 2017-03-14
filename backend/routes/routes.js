@@ -87,7 +87,7 @@ router.route('/patients/:id/injuries')
 
 
 
-// TODO
+// TODO ERROR CATCHING ON ALL OF THESE
 
 router.route('/injuries/:id')
     .get(auth.tokenRequired, injuries.getInjuryById) // error catching
