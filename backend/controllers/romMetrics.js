@@ -101,12 +101,46 @@ module.exports.getRomMetrics = (req, res, next) => {
 
 
 module.exports.getRomMetricById = (req, res, next) => {
-    models.romMetric.findAll({
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.romMetric.findOne({
         where: {
             id: req.params.id
         }
     }).then(function(rom) {
-        res.json(rom);
+        if(Object.keys(rom).length !== 0) {
+            models.injury.findOne({
+                where: {
+                    id: rom.injuryId
+                }
+            }).then(function (injury) {
+                if(Object.keys(injury).length !== 0) {
+                    // is pt
+                    if(decoded.isPt) {
+                        models.patient.findOne({
+                            where: {
+                                id: injury.patientId
+                            }
+                        }).then(function (patient) {
+                            if(Object.keys(patient).length !== 0) {
+                                if(decoded.id == patient.ptId) {
+                                    return res.json(rom);
+                                } else {
+                                    res.status(401).send('PT unauthorized');
+                                }
+                            } else {
+                                res.status(404).send('No patient with that injury');
+                            }
+                        })
+                    }
+                } else {
+                    res.status(404).send('no injury with that rom');
+                }
+            })
+        } else {
+            res.status(404).send('No Metric with that id');
+        }
     });
 };
 
