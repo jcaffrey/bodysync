@@ -97,7 +97,7 @@ router.route('/injuries/:id')
 // routes for injury tracking (rom content)
 router.route('/injuries/:id/rommetrics')
     .get(auth.tokenRequired, romMetrics.getRomMetrics) // error catching
-    .post(auth.ptRequired, romMetrics.createRomMetric); // Access: pt
+    .post(auth.ptRequired, romMetrics.createRomMetric);
    
 
 router.route('/romMetrics/:id')
