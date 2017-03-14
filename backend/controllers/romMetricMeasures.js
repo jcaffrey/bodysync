@@ -10,14 +10,62 @@ var config = require('../config/config.json')[env];
 
 
 module.exports.createMeasure = (req, res, next) => {
-    models.romMetricMeasure.create({
-        name: req.body.name,
-        degreeValue: req.body.degreeValue,
-        dayCompleted: req.body.dayCompleted,
-        romMetricId: req.params.id
-    }).then(function(measure) {
-        res.json(measure);
-    });
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.romMetric.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(rom) {
+        if(Object.keys(rom).length !== 0) {
+            models.injury.findOne({
+                where: {
+                    id: rom.injuryId
+                }
+            }).then(function (injury) {
+                if(Object.keys(injury).length !== 0){
+                    models.patient.findOne({
+                        where: {
+                            id: injury.patientId
+                        }
+                    }).then(function (patient) {
+                        if(Object.keys(patient).length !== 0) {
+                            if(decoded.isPt && decoded.id == patient.ptId) {
+                                // create !
+                                models.romMetricMeasure.create({
+                                    //name, degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId
+                                    name: req.body.name,
+                                    degreeValue: req.body.degreeValue,
+                                    nextGoal: req.body.nextGoal,
+                                    dayOfNextGoal: req.body.dayOfNextGoal,
+                                    dayMeasured: req.body.dayMeasured,
+                                    romMetricId: req.params.id
+                                }).then(function (measure) {
+                                    if(Object.keys(measure).length !== 0){
+                                        return res.json(measure);
+                                    }
+                                    else {
+                                        res.status(500).send('Could not create');
+                                    }
+                                }) // catch here
+                            } else {
+                                res.status(401).send('Unauthorized');
+                            }
+                        } else {
+                            res.status(404).send('No patient with that injury');
+                        }
+
+                    }) // catch here
+                } else {
+                    res.status(404).send('No injury with that rom');
+                }
+
+            }) // catch here
+        } else {
+            res.status(404).send('No ROM with that id');
+        }
+    }) // catch here
 };
 
 // TODO: figure out what to return when patients object below is []
