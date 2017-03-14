@@ -76,11 +76,11 @@ router.route('/pts/:id/patients')
 router.route('/patients/:id')
     .get(auth.tokenRequired, patients.getPatientById)
     //.put(auth.tokenRequired, patients.updatePatient) // Access: pt   **w/query
-    .delete(auth.ptRequired, patients.deletePatient); // Access: pt  **w/query
+    .delete(auth.ptRequired, patients.deletePatient);
 
 // routes for pts, patients to see injuries
 router.route('/patients/:id/injuries') 
-    .get(auth.tokenRequired, injuries.getInjuries) // Access: pt, patient, views handled differently on frontend using token    **w/query
+    .get(auth.tokenRequired, injuries.getInjuries) //  views handled differently on frontend using token
     .post(auth.ptRequired, injuries.createInjury); // Access: pt    **w/query
 
 
