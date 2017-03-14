@@ -101,7 +101,7 @@ router.route('/injuries/:id/rommetrics')
    
 
 router.route('/romMetrics/:id')
-    .get(auth.ptRequired, romMetrics.getRomMetricById) // Access: pt
+    .get(auth.ptRequired, romMetrics.getRomMetricById) // Access: pt  //TODO getting that same bug on auth.ptRequired (only sometimes?)
     //.put(auth.ptRequired, romMetrics.updateRomMetric) // Access: pt
     .delete(auth.ptRequired, romMetrics.deleteRomMetric); // Access: pt
 
