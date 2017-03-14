@@ -81,7 +81,7 @@ router.route('/patients/:id')
 // routes for pts, patients to see injuries
 router.route('/patients/:id/injuries') 
     .get(auth.tokenRequired, injuries.getInjuries) //  views handled differently on frontend using token
-    .post(auth.ptRequired, injuries.createInjury); // Access: pt    **w/query
+    .post(auth.ptRequired, injuries.createInjury);
 
 
 

@@ -9,18 +9,62 @@ var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
 
+/**
+
+ CREATE (HTTP POST)
+ assumes pt is only one hitting this route
+
+ **/
+
 module.exports.createInjury = (req, res, next) => {
-    models.injury.create({
-        name: req.body.name,
-        injuryFromSurgery: req.body.injuryFromSurgery,
-        PatientId: req.params.id
-    }).then(function(injury) {
-        res.json(injury);
-    });
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.patient.findOne({
+        where : {
+            id: req.params.id
+        }
+    }).then(function(patient) {
+        if (Object.keys(patient).length !== 0) {
+            // check the requesting pt has permission to view this patient
+            if(patient.ptId === decoded.id) {
+                models.injury.create({
+                    name: req.body.name,
+                    injuryFromSurgery: req.body.injuryFromSurgery,
+                    patientId: req.params.id
+                }).then(function(injury) {
+                    if(Object.keys(injury).length !== 0) {
+                        res.json(JSON.stringify(injury));
+                    }
+                    else {
+                        res.status(404).send('Could not create that injury')
+                    }
+                }).catch(function(err) {
+                    return next(err);
+                })
+            }
+        }
+        else {
+            res.status(404).send('No patient with that id');
+        }
+    }).catch(function(err) {
+        return next(err);
+    })
+
+
 };
+
+
+/**
+
+ READ (HTTP GET)
+ checks pt, patient
+
+ **/
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getInjuries = (req, res, next) => {
+    console.log('getting injury');
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
@@ -68,6 +112,7 @@ module.exports.getInjuries = (req, res, next) => {
 };
 
 
+
 module.exports.getInjuryById = (req, res, next) => {
     models.injury.findAll({
         where: {
@@ -77,6 +122,21 @@ module.exports.getInjuryById = (req, res, next) => {
         res.json(inj);
     });
 };
+
+
+/**
+
+ UPDATE (HTTP PUT)
+
+ */
+
+// TODO
+
+/**
+
+ DELETE (HTTP DELETE)
+
+ */
 
 
 module.exports.deleteInjury = (req, res, next) => {
