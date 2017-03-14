@@ -114,13 +114,49 @@ module.exports.getInjuries = (req, res, next) => {
 
 
 module.exports.getInjuryById = (req, res, next) => {
-    models.injury.findAll({
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.injury.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(inj) {
-        res.json(inj);
-    });
+    }).then(function(injury) {
+        if(Object.keys(injury).length !== 0) {
+            // if patient...check injury.patientId === decoded.id
+            if (!decoded.isPt) {
+                if (injury.patientId === decoded.id) {
+                    return res.json(injury);
+                } else {
+                    res.status(401).send('Patients are unauthorized to see injuries of others');
+                }
+            }
+            // if pt...find patient where id=injury.patientId
+            else {
+                models.patient.findOne({
+                    where: {
+                        id : injury.patientId
+                    }
+                }).then(function(patient) {
+                    if (Object.keys(patient).length !== 0) {
+                        if (patient.ptId === decoded.id) {
+                            return res.json(injury);
+                        } else {
+                            res.status(401).send('PTs are unauthorized to see injuries of patients who are not their own');
+                        }
+                    } else {
+                        res.status(404).send('No patient with that injury');
+                    }
+                }).catch(function(err) {
+                    return next(err);
+                })
+            }
+        } else {
+            res.status(404).send('No injury with that Id');
+        }
+    }).catch(function(err) {
+        return next(err);
+    })
 };
 
 

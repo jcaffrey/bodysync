@@ -87,7 +87,7 @@ router.route('/patients/:id/injuries')
 
 
 
-
+// TODO
 
 router.route('/injuries/:id')
     .get(auth.tokenRequired, injuries.getInjuryById) // Access: pt, patient
