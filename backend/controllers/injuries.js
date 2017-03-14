@@ -70,7 +70,7 @@ module.exports.getInjuries = (req, res, next) => {
 
     models.injury.findAll({
         where: {
-            PatientId: req.params.id
+            patientId: req.params.id
         }
 
     }).then(function(injuries) {
