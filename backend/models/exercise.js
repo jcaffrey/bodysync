@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 exercise.belongsTo(models.exerciseSet, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

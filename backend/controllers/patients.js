@@ -115,7 +115,9 @@ module.exports.getPatientById = (req, res, next) => {
                 return res.status(401).send('You are not authorized to see this resource');
             }        
         }
-    });
+    }).catch(function(err) {
+        return next(err);
+    })
 };
 
 
@@ -137,15 +139,41 @@ module.exports.getPatientById = (req, res, next) => {
  */
 
 module.exports.deletePatient = (req, res, next) => {
-    models.patient.destroy({
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.patient.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(instance) {
-        if (instance)
-            res.sendStatus(200);
+    }).then(function (patient) {
+        if (patient.length !== 0)
+        {
+            console.log(patient.length);
+            console.log(patient.ptId);
+            // if pt
+            if (decoded.isPt) {
+                // if requesting pt is requested patient's pt
+                if (decoded.id === patient.ptId) {
+                    // DESTROY IF THIS IS THE CASE
+                    patient.destroy();
+                    return res.json(patient);
+                    // return res.json(patient);
+                }
+                else {
+                    return res.status(401).send('You are not authorized to destroy this resource');
+                }
+            }
+        }
         else
-            res.status(404).send('sorry not found');
+            res.status(404).send('Sorry not found');
+    }).catch(function(err) {
+        return next(err);
+                        // doesn't quite catch error how we would want? still get:
+                            // Error: No default engine was specified and no extension was provided.
     });
+    // })
+
+
 };
 

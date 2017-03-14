@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 injury.belongsTo(models.patient, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

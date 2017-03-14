@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 romMetricMeasure.belongsTo(models.romMetric, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

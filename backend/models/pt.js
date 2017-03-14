@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         email: {
             type: DataTypes.STRING,
-            //unique: true,
+            unique: true,
             allowNull: false,
             validate: {
                 isEmail : true
@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                pt.hasMany(models.patient);
+                pt.hasMany(models.patient); //, {onDelete: 'CASCADE'});
             },
             generateHash: function(hash) {
                 return bcrypt.hashSync(hash, bcrypt.genSaltSync(8), null);

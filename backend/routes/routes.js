@@ -74,7 +74,7 @@ router.route('/pts/:id/patients')
     .post(auth.ptRequired, patients.createPatient);   // should patients have any access?
 
 router.route('/patients/:id')
-    .get(auth.tokenRequired, patients.getPatientById) // Access: pt  **w/query
+    .get(auth.tokenRequired, patients.getPatientById)
     //.put(auth.tokenRequired, patients.updatePatient) // Access: pt   **w/query
     .delete(auth.ptRequired, patients.deletePatient); // Access: pt  **w/query
 
