@@ -106,7 +106,7 @@ router.route('/romMetrics/:id')
     .delete(auth.ptRequired, romMetrics.deleteRomMetric);
 
 router.route('/romMetrics/:id/romMetricMeasures')
-    .get(auth.tokenRequired, romMetricMeasures.getMeasures) // Access: pt, patient
+    .get(auth.tokenRequired, romMetricMeasures.getMeasures)  // restricts workers' comp server side
     .post(auth.ptRequired, romMetricMeasures.createMeasure); // Access: pt
 
 // routes for injury training (exercise content)
