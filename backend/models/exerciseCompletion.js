@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 exerciseCompletion.belongsTo(models.exercise, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

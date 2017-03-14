@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 patient.belongsTo(models.pt, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",     // not sure we need this - works with or without
                     foreignKey: {
                         allowNull: false
                     }
