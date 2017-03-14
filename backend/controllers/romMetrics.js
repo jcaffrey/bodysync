@@ -146,14 +146,58 @@ module.exports.getRomMetricById = (req, res, next) => {
 
 
 module.exports.deleteRomMetric = (req, res, next) => {
-    models.romMetric.destroy({
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.romMetric.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(instance) {
-        if (instance)
-            res.sendStatus(200);
-        else
-            res.status(404).send('sorry not found');
-    });
+    }).then(function(rom) {
+        if(Object.keys(rom).length !== 0) {
+            models.injury.findOne({
+                where: {
+                    id: rom.injuryId
+                }
+            }).then(function (injury) {
+                if(Object.keys(injury).length !== 0) {
+                    models.patient.findOne({
+                        where: {
+                            id: injury.patientId
+                        }
+                    }).then(function(patient) {
+                        if(Object.keys(patient).length !== 0) {
+                            if(decoded.id == patient.ptId) {
+                                rom.destroy();
+                                return res.json(rom);
+                            }
+                        } else {
+                            res.status(404).send('No patient with that injury');
+                        }
+
+                    })
+                } else {
+                    res.status(404).send('No injury with that rom');  // this indicates loss of data (as does the one above)..should never trigger
+
+                }
+
+                })
+        } else {
+            res.status(404).send('No rom with that id');
+        }
+
+    })
+
+
+
+    // models.romMetric.destroy({
+    //     where: {
+    //         id: req.params.id
+    //     }
+    // }).then(function(instance) {
+    //     if (instance)
+    //         res.sendStatus(200);
+    //     else
+    //         res.status(404).send('sorry not found');
+    // });
 }
