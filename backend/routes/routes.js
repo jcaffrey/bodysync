@@ -92,7 +92,7 @@ router.route('/patients/:id/injuries')
 router.route('/injuries/:id')
     .get(auth.tokenRequired, injuries.getInjuryById)
     //.put(auth.ptRequired, injuries.updateInjury) // Access: pt 
-    .delete(auth.ptRequired, injuries.deleteInjury); // Access: pt
+    .delete(auth.ptRequired, injuries.deleteInjury);
 
 // routes for injury tracking (rom content)
 router.route('/injuries/:id/romMetrics')

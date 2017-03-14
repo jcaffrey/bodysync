@@ -86,7 +86,7 @@ module.exports.getInjuries = (req, res, next) => {
                 }).then(function(patient) {
                     if(patient.ptId === decoded.id) {
                         // return the injuries!
-                        res.json(injuries);
+                        return res.json(injuries);
                     }
                     else {
                         res.status(401).send('Unauthorized');
@@ -96,7 +96,7 @@ module.exports.getInjuries = (req, res, next) => {
                 })
             }
             else {
-                if(decoded.id === req.params.id) {
+                if(decoded.id == req.params.id) {
                     return res.json(injuries);
                 }
                 else {
@@ -125,7 +125,7 @@ module.exports.getInjuryById = (req, res, next) => {
         if(Object.keys(injury).length !== 0) {
             // if patient...check injury.patientId === decoded.id
             if (!decoded.isPt) {
-                if (injury.patientId === decoded.id) {
+                if (injury.patientId == decoded.id) {
                     return res.json(injury);
                 } else {
                     res.status(401).send('Patients are unauthorized to see injuries of others');
@@ -139,7 +139,7 @@ module.exports.getInjuryById = (req, res, next) => {
                     }
                 }).then(function(patient) {
                     if (Object.keys(patient).length !== 0) {
-                        if (patient.ptId === decoded.id) {
+                        if (patient.ptId == decoded.id) {
                             return res.json(injury);
                         } else {
                             res.status(401).send('PTs are unauthorized to see injuries of patients who are not their own');
@@ -170,21 +170,43 @@ module.exports.getInjuryById = (req, res, next) => {
 
 /**
 
- DELETE (HTTP DELETE)
+ DELETE (HTTP DELETE) - check the requesting pt has permission to delete
+
 
  */
 
-
 module.exports.deleteInjury = (req, res, next) => {
-    models.injury.destroy({
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.injury.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(instance) {
-        if (instance)
-            res.sendStatus(200);
-        else
-            res.status(404).send('sorry not found');
-    });
+    }).then(function (injury) {
+        if(Object.keys(injury).length !== 0) {
+            models.patient.findOne({
+                where: {
+                    id: injury.patientId
+                }
+            }).then(function (patient) {
+                if(Object.keys(patient).length !== 0) {
+                    // check requesting pt is authorized to delete!
+                    if(patient.ptId == decoded.id) {
+                        injury.destroy();
+                        return res.json(injury);
+                    } else {
+                        res.status(401).send('PT unauthorized to delete that injury');
+                    }
+                }
+            }).catch(function (err) {
+                return next(err);
+            })
+        }
+    }).catch(function(err) {
+        next(err);
+    })
+
+
 }
 
