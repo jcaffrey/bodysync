@@ -98,7 +98,7 @@ module.exports.getPatientById = (req, res, next) => {
         // if pt
         if (decoded.isPt) {
             // if requesting pt is requested patient's pt
-            if (decoded.id == patient.ptId) {
+            if (decoded.id == patient.ptId) { // should be === ?
                 return res.json(patient);
             }  
             else {
@@ -108,7 +108,7 @@ module.exports.getPatientById = (req, res, next) => {
         // else if patient
         else {
             // if requesting patient is requested patient
-            if (decoded.id == req.params.id) {
+            if (decoded.id == req.params.id) { // should be === ?
                 return res.json(patient);
             } 
             else {
