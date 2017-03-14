@@ -11,8 +11,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        dayCompleted: {
-            type:DataTypes.DATEONLY
+        nextGoal: {
+            type: DataTypes.INTEGER
+        },
+        dayOfNextGoal: {
+            type: DataTypes.DATEONLY
+        },
+        dayMeasured: {
+            type:DataTypes.DATEONLY,
+            allowNull: false
         }
     }, {
         classMethods: {
