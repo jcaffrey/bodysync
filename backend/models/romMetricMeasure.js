@@ -15,10 +15,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER
         },
         dayOfNextGoal: {
-            type: DataTypes.DATEONLY
+            type: DataTypes.DATEONLY  //  TODO set default value to 1 week from now
         },
         dayMeasured: {
-            type:DataTypes.DATEONLY,
+            type:DataTypes.DATEONLY,  //  TODO set default value to now
             allowNull: false
         }
     }, {

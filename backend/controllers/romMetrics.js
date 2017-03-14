@@ -6,12 +6,12 @@ var auth = require('./auth');
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
-// TODO ERROR CCATCHING
+// TODO ERROR CATCHING
 module.exports.createRomMetric = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.injury.find({
+    models.injury.findOne({
         where: {
             id: req.params.id
         }
