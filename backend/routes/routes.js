@@ -90,13 +90,13 @@ router.route('/patients/:id/injuries')
 // TODO
 
 router.route('/injuries/:id')
-    .get(auth.tokenRequired, injuries.getInjuryById)
+    .get(auth.tokenRequired, injuries.getInjuryById) // error catching
     //.put(auth.ptRequired, injuries.updateInjury) // Access: pt 
     .delete(auth.ptRequired, injuries.deleteInjury);
 
 // routes for injury tracking (rom content)
-router.route('/injuries/:id/romMetrics')
-    .get(auth.tokenRequired, romMetrics.getRomMetrics) // Access: pt, patient
+router.route('/injuries/:id/rommetrics')
+    .get(auth.tokenRequired, romMetrics.getRomMetrics) // error catching
     .post(auth.ptRequired, romMetrics.createRomMetric); // Access: pt
    
 
