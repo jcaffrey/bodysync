@@ -90,6 +90,8 @@ module.exports.createExercise = (req, res, next) => {
  READ (HTTP GET)
 
  */
+
+// NOTE: this could be done more efficiently..update!. set holds the ptId. don't need to query patient
 module.exports.getExercises = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
@@ -152,12 +154,53 @@ module.exports.getExercises = (req, res, next) => {
 };
 
 
-// module.exports.getExerciseById = (req, res, next) => {
-//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-//     var decoded = jwt.verify(token, config.secret);
-//
-//
-// };
+module.exports.getExerciseById = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.exercise.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function (exercise) {
+        if(Object.keys(exercise).length !== 0) {
+            models.exerciseSet.findOne({
+                where: {
+                    id: exercise.exerciseSetId
+                }
+            }).then(function (set) {
+                if(Object.keys(set).length !== 0) {
+                    if(decoded.isPt) {
+                        if (decoded.id == set.ptId) {
+                            return res.json(exercise);
+                        } else {
+                            return res.status(401).send('PT unauthorized');
+                        }
+                    }
+                    // is patient
+                    else {
+                        models.injury.findOne({
+                            where: {
+                                id: set.injuryId
+                            }
+                        }).then(function (injury) {
+                            if(Object.keys(injury).length !== 0) {
+                                if(!decoded.isPt && decoded.id == injury.patientId) {
+                                    return res.json(exercise);
+                                } else {
+                                    return res.status(401).send('Patient unauthorized');
+                                }
+                            }
+                        })
+                    }
+                }
+
+            })
+        }
+    }).catch(function (err) {
+        return next(err);
+    })
+};
 
 
 
@@ -174,3 +217,36 @@ module.exports.getExercises = (req, res, next) => {
  DELETE (HTTP DELETE)
 
  */
+
+
+module.exports.deleteExercise = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.exercise.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function (exercise) {
+        if(Object.keys(exercise).length !== 0) {
+            models.exerciseSet.findOne({
+                where: {
+                    id: exercise.exerciseSetId
+                }
+            }).then(function (set) {
+                if(Object.keys(set).length !== 0) {
+                    if(decoded.isPt && decoded.id == set.ptId) {
+                        exercise.destroy();
+                        return res.json(exercise);
+                    } else {
+                        return res.status(401).send('PT unauthorized');
+                    }
+                }
+            })
+        } else {
+            res.status(404).send('No exercise with that id');
+        }
+    }).catch(function (err) {
+        return next(err);
+    })
+};
