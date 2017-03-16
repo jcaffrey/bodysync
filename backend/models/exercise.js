@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         dateAssigned: {
             type: DataTypes.DATEONLY,
-            allowNull: false
+            //allowNull: false
         },
         ptNotes: {
             type: DataTypes.TEXT
