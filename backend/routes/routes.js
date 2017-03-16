@@ -15,6 +15,7 @@ var romMetrics  = require('../controllers/romMetrics');
 var romMetricMeasures = require('../controllers/romMetricMeasures');
 var exerciseSets = require('../controllers/exerciseSets');
 var exercises = require('../controllers/exercises');
+var exerciseCompletions = require('../controllers/exerciseCompletions');
 
 // TODO: import exercise controllers
 
@@ -127,22 +128,24 @@ router.route('/exerciseSets/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises)
     .post(auth.ptRequired, exercises.createExercise);
 
-// router.route('/exercises/:id')
-//     .get(auth.tokenRequired, exercises.getExerciseById)         // Access: pt, patient
-//     .put(auth.ptRequired, exercises.updateExercise)             // Access: pt
-//     .delete(auth.ptRequired, exercises.deleteExercise);         // Access: pt
+router.route('/exercises/:id')
+    .get(auth.tokenRequired, exercises.getExerciseById)
+    //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
+    .delete(auth.ptRequired, exercises.deleteExercise);
 
-// router.route('/exercises/:id/exerciseCompletions')
-//     .get(auth.tokenRequired, exerciseCompletions.getExerciseCompletions) // Access: pt, patient
-//     .post(exerciseCompletions.createExerciseCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
-//
-// router.route('/exerciseCompletions/Id')
-//     .get(auth.tokenRequired, exerciseCompletions.getExerciseCompletionById)
+router.route('/exercises/:id/exerciseCompletions')
+    .get(auth.tokenRequired, exerciseCompletions.getCompletions)
+    .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+
+router.route('/exerciseCompletions/:id')
+    .get(auth.tokenRequired, exerciseCompletions.getCompletionById)
 //     .put(exerciseCompletions.updateExerciseCompletion)      // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
-//     .delete(exerciseCompletions.deleteExerciseCompletion);  // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+    .delete(auth.tokenRequired, exerciseCompletions.deleteCompletion);  // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
 
 // TBU - routes for templated exercise sets
+
+
 /*
 Comments on routing structure: 
 This is a CRUD app, with repeated data nested with other data (pts have patients have 

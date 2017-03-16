@@ -71,6 +71,7 @@ values
     ('Stubbed Toe Recovery', true, true, 'Shoulder', now(), now(), 2, 2),
     ('Sprained Ankle Recovery', true, true, 'Shoulder', now(), now(), 3, 2);
 
+-- exercises
 insert into exercises
     (name, numRepsOrDuration, numSets, assignedFrequency, assignedDuration, dateAssigned, ptNotes, mediaUrl, createdAt, updatedAt, exerciseSetId)
 values
@@ -82,3 +83,17 @@ values
     ('sprained ankle flexion', 12, 3, 5, null, now(), 'flex ankle while laying on bed of rocks', null, now(), now(), 3),
     ('sprained ankle  flexion', 12, 3, 5, null, now(), 'flex ankle while laying on roof of car', null, now(), now(), 3);
 
+-- exerciseCompletions
+insert into exerciseCompletions
+    (dateCompleted, createdAt, updatedAt, exerciseId)
+values
+    (now(), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 1 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 2 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 3 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 5 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 8 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 9 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 10 DAY), now(), now(), 1),
+    (DATE_ADD(NOW(), INTERVAL 12 DAY), now(), now(), 1);
