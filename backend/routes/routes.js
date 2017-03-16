@@ -14,6 +14,7 @@ var injuries = require('../controllers/injuries');
 var romMetrics  = require('../controllers/romMetrics');
 var romMetricMeasures = require('../controllers/romMetricMeasures');
 var exerciseSets = require('../controllers/exerciseSets');
+var exercises = require('../controllers/exercises');
 
 // TODO: import exercise controllers
 
@@ -114,23 +115,23 @@ router.route('/romMetrics/:id/romMetricMeasures')
 
 // routes for injury training (exercise content)
 router.route('/injuries/:id/exerciseSets')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSets)      // Access: pt, patient
-    .post(auth.ptRequired, exerciseSets.createExerciseSet);     // Access: pt
+    .get(auth.tokenRequired, exerciseSets.getExerciseSets)
+    .post(auth.ptRequired, exerciseSets.createExerciseSet);
 
 router.route('/exerciseSets/:id')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSetById)   // Access: pt, patient
+    .get(auth.tokenRequired, exerciseSets.getExerciseSetById)
     // .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
-    .delete(auth.ptRequired, exerciseSets.deleteExercise);      // Access: pt
+    .delete(auth.ptRequired, exerciseSets.deleteExercise);
 
 router.route('/exerciseSets/:id/exercises')
-    .get(auth.tokenRequired, exercises.getExercises)            // Access: pt, patient
-    .post(auth.ptRequired, exercises.createExercise);           // Access: pt
+    .get(auth.tokenRequired, exercises.getExercises)
+    .post(auth.ptRequired, exercises.createExercise);
 
 // router.route('/exercises/:id')
 //     .get(auth.tokenRequired, exercises.getExerciseById)         // Access: pt, patient
 //     .put(auth.ptRequired, exercises.updateExercise)             // Access: pt
 //     .delete(auth.ptRequired, exercises.deleteExercise);         // Access: pt
-//
+
 // router.route('/exercises/:id/exerciseCompletions')
 //     .get(auth.tokenRequired, exerciseCompletions.getExerciseCompletions) // Access: pt, patient
 //     .post(exerciseCompletions.createExerciseCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
