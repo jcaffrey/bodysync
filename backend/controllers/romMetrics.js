@@ -141,6 +141,8 @@ module.exports.getRomMetricById = (req, res, next) => {
         } else {
             res.status(404).send('No Metric with that id');
         }
+    }).catch(function(err) {
+        return next(err);
     });
 };
 

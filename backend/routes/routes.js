@@ -117,15 +117,15 @@ router.route('/injuries/:id/exerciseSets')
     .get(auth.tokenRequired, exerciseSets.getExerciseSets)      // Access: pt, patient
     .post(auth.ptRequired, exerciseSets.createExerciseSet);     // Access: pt
 
-// router.route('/exerciseSets/:id')
-//     .get(auth.tokenRequired, exerciseSets.getExerciseSetById)   // Access: pt, patient
-//     .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
-//     .delete(auth.ptRequired, exerciseSets.deleteExercise);      // Access: pt
-//
-// router.route('/exerciseSets/:id/exercises')
-//     .get(auth.tokenRequired, exercises.getExercises)            // Access: pt, patient
-//     .post(auth.ptRequired, exercises.createExercise);           // Access: pt
-//
+router.route('/exerciseSets/:id')
+    .get(auth.tokenRequired, exerciseSets.getExerciseSetById)   // Access: pt, patient
+    // .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
+    .delete(auth.ptRequired, exerciseSets.deleteExercise);      // Access: pt
+
+router.route('/exerciseSets/:id/exercises')
+    .get(auth.tokenRequired, exercises.getExercises)            // Access: pt, patient
+    .post(auth.ptRequired, exercises.createExercise);           // Access: pt
+
 // router.route('/exercises/:id')
 //     .get(auth.tokenRequired, exercises.getExerciseById)         // Access: pt, patient
 //     .put(auth.ptRequired, exercises.updateExercise)             // Access: pt
