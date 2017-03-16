@@ -104,6 +104,54 @@ module.exports.getExerciseSets = (req, res, next) => {
         }
     })
 }
+
+
+module.exports.getExerciseSetById = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.exerciseSet.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(set) {
+        if(Object.keys(set).length !== 0) {
+            models.injury.findOne({
+                where: {
+                    id: set.injuryId
+                }
+            }).then(function (injury) {
+                if(Object.keys(injury).length !== 0) {
+                    // is pt
+                    if(decoded.isPt) {
+                        models.patient.findOne({
+                            where: {
+                                id: injury.patientId
+                            }
+                        }).then(function (patient) {
+                            if(Object.keys(patient).length !== 0) {
+                                if(decoded.id == patient.ptId) {
+                                    return res.json(set);
+                                } else {
+                                    res.status(401).send('PT unauthorized');
+                                }
+                            } else {
+                                res.status(404).send('No patient with that injury');
+                            }
+                        })
+                    }
+                } else {
+                    res.status(404).send('no injury with that rom');
+                }
+            })
+        } else {
+            res.status(404).send('No Metric with that id');
+        }
+    }).catch(function(err) {
+        return next(err);
+    });
+};
+
 /**
 
  UPDATE (HTTP PUT)
@@ -116,3 +164,46 @@ module.exports.getExerciseSets = (req, res, next) => {
  DELETE (HTTP DELETE)
 
  */
+
+module.exports.deleteExercise = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.exerciseSet.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(set) {
+        if(Object.keys(set).length !== 0) {
+            models.injury.findOne({
+                where: {
+                    id: set.injuryId
+                }
+            }).then(function (injury) {
+                if(Object.keys(injury).length !== 0) {
+                    models.patient.findOne({
+                        where: {
+                            id: injury.patientId
+                        }
+                    }).then(function(patient) {
+                        if(Object.keys(patient).length !== 0) {
+                            if(decoded.id == patient.ptId) {
+                                set.destroy();
+                                return res.json(set);
+                            }
+                        } else {
+                            res.status(404).send('No patient with that injury');
+                        }
+                    })
+                } else {
+                    res.status(404).send('No injury with that rom');  // this indicates loss of data (as does the one above)..should never trigger
+                }
+            })
+        } else {
+            res.status(404).send('No rom with that id');
+        }
+    }).catch(function(err) {
+        return next(err);
+    });
+
+}
