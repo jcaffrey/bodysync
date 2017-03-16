@@ -62,3 +62,11 @@ values
     ('fifthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
     ('fifthMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
     ('fifthMeasure', 90, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1);
+
+-- exerciseSets
+insert into exerciseSets
+    (name, isTemplate, isCurrentlyAssigned, intendedInjuryType, createdAt, updatedAt, injuryId, ptId)
+values
+    ('Shoulder Recovery', true, true, 'Shoulder', now(), now(), 1, 2),
+    ('Stubbed Toe Recovery', true, true, 'Shoulder', now(), now(), 2, 2),
+    ('Sprained Ankle Recovery', true, true, 'Shoulder', now(), now(), 3, 2);
