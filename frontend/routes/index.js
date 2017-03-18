@@ -71,11 +71,18 @@ router.get('/new-exercise', function(req, res, next) {
     return res.render('new-exercise');
 });
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', {firstName: 'Josh'});
+    return res.render('add-measure', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+});
+
+router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        form: req.body
+    }).pipe(res);
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1 });
+    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1});
 });
 
 router.post('/pts/:id/patients', function(req, res, next) {

@@ -67,6 +67,23 @@ function submitPatient(id) {
         .catch(console.log('Error!'))
 }
 
+function submitMeasure(id) {
+    var data = {};
+    var errorMessage = '';
+    if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
+    // ********************************
+    //  is this the right route?
+    // ********************************
+    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(console.log('Success!'))
+        .catch(console.log('Error!'))
+}
+
 // TODO
 function submitLogin() {
 }
