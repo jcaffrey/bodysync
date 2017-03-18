@@ -178,6 +178,8 @@ function displayError(message) {
     errorDiv.style.visibility = 'visible';
 }
 
+
+
 // =============================================================
 // Patient fetching (in progress)
 // =============================================================

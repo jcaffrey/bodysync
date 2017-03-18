@@ -3,6 +3,44 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        var Collapse = {
+            init: function (element) {
+                if (!element) return false;
+                if (element.indexOf('.') != -1) {
+                    var getName = element;
+                    var getElement = document.querySelector(getName);
+                } else if (element.indexOf('#') != -1) {
+                    var getName = element.replace(/\#/g, '');
+                    var getElement = document.getElementById(getName);
+                }
+                if (!getElement.hasAttribute('data-height')) {
+                    getElement.style.display = 'block';
+                    getElement.dataset.height = getElement.offsetHeight + 'px';
+                    getElement.style.height = '0';
+                }
+                return getElement;
+            },
+            expand: function (element) {
+                var getContent = Collapse.init(element);
+                setTimeout(function () {
+                    getContent.style.height = getContent.dataset.height;
+                }, 20)
+            },
+            collapse: function (element) {
+                var getContent = Collapse.init(element);
+                getContent.style.height = '0';
+            }
+        }
+    style.
+        .collapse, .collapse1 {
+            display: none;
+            transition: height .35s ease-out;
+            -webkit-transition: height .35s ease-out;
+            -moz-transition: height .35s ease-out;
+            -khtml-transition: height .35s ease-out;
+            overflow: hidden;
+        }
 block content
     form
         h1 Sort By:
@@ -12,8 +50,29 @@ block content
             .info-box
                 .name Abdul
                 .input-label Shoulder, Back
-            .percent-box 
-                .num-box 70%
+            .buttonCollapse(data-target=".collapse")
+                .arrow
+                .collapse#collapse
+                    // Collapsible info here!!
+                    .collapse-inner
+                        .name Collapsible Info Here
+                        .input-label Shoulder, Back
+                        p 70%
+        .pt-box
+            .pic-box
+                img(src='img/profile_pic.jpg' id='profileImg')
+            .info-box
+                .name Cameron
+                .input-label Knee
+            .buttonCollapse(data-target=".collapse1")
+                .arrow
+                .collapse1#collapse
+                    // Collapsible info here!!
+                    .collapse-inner
+                        .name Collapsible Info Here
+                        .input-label Knee
+                        p 22%
+
         .plus-button
             a(href='/create-patient').add +
         //- button(type='button' onclick='fetchPatients()') Fetch
@@ -22,5 +81,17 @@ block content
 //-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
 //- block postScript
 //-     script fetchPatients();
+block postScript
+    script.
+        var getButton = document.getElementsByClassName('buttonCollapse');
 
-            
+        for (i = 0; i < getButton.length; i++) {
+            (function(buttons) {
+                buttons.addEventListener('click', function () {
+                    var self = this;
+                    var getTarget = self.getAttribute('data-target');
+                    self.classList.toggle('is-active');
+                    self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
+                });
+            })(getButton[i])
+        };
