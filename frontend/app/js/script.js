@@ -235,6 +235,7 @@ function displayError(message) {
 //     });
 // }
 
+
 // =============================================================
 // Collapse patients, search, sort
 // =============================================================
@@ -254,4 +255,33 @@ for (i = 0; i < getButton.length; i++) {
 
 function pSearch() {
     search(form.patientSearch.value, patients);
+}
+
+// compareFunctions
+function compareAlpha(a, b) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+}
+
+function compareAlphaRev(a, b) {
+    if (a.name > b.name) return -1;
+    if (a.name < b.name) return 1;
+    return 0;
+}
+
+function alphaAscending() {
+    return patients.sort(compareAlpha)
+}
+
+function alphaDescending() {
+    return patients.sort(compareAlphaRev)
+}
+
+function progAscending() {
+    return patients.sort((a, b) => a.progress - b.progress)
+}
+
+function progDescending() {
+    return patients.sort((a, b) => b.progress - a.progress)
 }

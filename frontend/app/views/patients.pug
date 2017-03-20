@@ -53,30 +53,7 @@ block cssSheets
             }
         }
 
-        function compareAlpha(a, b) {
-            if (a.name < b.name) {
-                return -1;
-            }
-            if (a.name > b.name) {
-                return 1;
-            }
-            return 0
-        }
-
-        function compareProg(a, b) {
-            if (a.progress < b.progress) {
-                return -1;
-            }
-            if (a.progress > b.progress) {
-                return 1;
-            }
-            return 0
-        }
-
-
-
-
-block content
+}block content
     form
         .search-bar
             input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
