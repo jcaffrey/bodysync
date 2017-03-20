@@ -235,3 +235,23 @@ function displayError(message) {
 //     });
 // }
 
+// =============================================================
+// Collapse patients, search, sort
+// =============================================================
+
+var getButton = document.getElementsByClassName('buttonCollapse');
+
+for (i = 0; i < getButton.length; i++) {
+    (function(buttons) {
+        buttons.addEventListener('click', function () {
+            var self = this;
+            var getTarget = self.getAttribute('data-target');
+            self.classList.toggle('is-active');
+            self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
+        });
+    })(getButton[i])
+};
+
+function pSearch() {
+    search(form.patientSearch.value, patients);
+}

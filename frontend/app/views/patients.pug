@@ -4,6 +4,9 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
+        // ================================================================
+        //  Collapse button functionality
+        // ================================================================
         var Collapse = {
             init: function (element) {
                 if (!element) return false;
@@ -32,17 +35,52 @@ block cssSheets
                 getContent.style.height = '0';
             }
         }
-    style.
-        .collapse, .collapse1 {
-            display: none;
-            transition: height .35s ease-out;
-            -webkit-transition: height .35s ease-out;
-            -moz-transition: height .35s ease-out;
-            -khtml-transition: height .35s ease-out;
-            overflow: hidden;
+
+        // ================================================================
+        //  Search functionality
+        // ================================================================
+
+        // temporarily hard-coded
+        var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
+            {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
+
+
+        function search(query, array) {
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    return array[i];
+                }
+            }
         }
+
+        function compareAlpha(a, b) {
+            if (a.name < b.name) {
+                return -1;
+            }
+            if (a.name > b.name) {
+                return 1;
+            }
+            return 0
+        }
+
+        function compareProg(a, b) {
+            if (a.progress < b.progress) {
+                return -1;
+            }
+            if (a.progress > b.progress) {
+                return 1;
+            }
+            return 0
+        }
+
+
+
+
 block content
     form
+        .search-bar
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
+            button(onclick="pSearch()") Search
         h1 Sort By:
         .pt-box
             .pic-box
@@ -83,15 +121,4 @@ block content
 //-     script fetchPatients();
 block postScript
     script.
-        var getButton = document.getElementsByClassName('buttonCollapse');
 
-        for (i = 0; i < getButton.length; i++) {
-            (function(buttons) {
-                buttons.addEventListener('click', function () {
-                    var self = this;
-                    var getTarget = self.getAttribute('data-target');
-                    self.classList.toggle('is-active');
-                    self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
-                });
-            })(getButton[i])
-        };
