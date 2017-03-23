@@ -11,14 +11,21 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        dayCompleted: {
-            type:DataTypes.DATEONLY
+        nextGoal: {
+            type: DataTypes.INTEGER
+        },
+        dayOfNextGoal: {
+            type: DataTypes.DATEONLY  //  TODO set default value to 1 week from now
+        },
+        dayMeasured: {
+            type:DataTypes.DATEONLY,  //  TODO set default value to now
+            allowNull: false
         }
     }, {
         classMethods: {
             associate: function(models) {
                 romMetricMeasure.belongsTo(models.romMetric, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

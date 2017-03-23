@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 exerciseSet.belongsTo(models.injury, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false  // if not null, exercise set has been assigned
                        // defaultValue: null

@@ -10,12 +10,15 @@ module.exports = function(sequelize, DataTypes) {
         name: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        injuryFromSurgery: {
+            type:DataTypes.BOOLEAN
         }
     }, {
         classMethods: {
             associate: function(models) {
                 injury.belongsTo(models.patient, {
-                    //onDelete: "CASCADE",
+                    onDelete: "CASCADE",
                     foreignKey: {
                         allowNull: false
                     }

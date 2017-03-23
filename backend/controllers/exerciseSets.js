@@ -1,3 +1,6 @@
+/**
+ * Created by hsadev2 on 3/15/17.
+ */
 
 var models = require('../models/index');
 var jwt = require('jsonwebtoken');
@@ -6,8 +9,13 @@ var auth = require('./auth');
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
-// TODO ERROR CATCHING
-module.exports.createRomMetric = (req, res, next) => {
+
+/**
+
+ CREATE (HTTP POST)
+
+ */
+module.exports.createExerciseSet = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
@@ -25,13 +33,15 @@ module.exports.createRomMetric = (req, res, next) => {
                 if(Object.keys(patient).length !== 0) {
                     if(decoded.id == patient.ptId) {
                         // create!
-                        models.romMetric.create({
+                        models.exerciseSet.create({
                             name: req.body.name,
-                            endRangeGoal: req.body.endRangeGoal,
-                            startRange: req.body.startRange,
-                            injuryId: req.params.id
-                        }).then(function(rom) {
-                            res.json(rom);
+                            isTemplate: req.body.isTemplate,
+                            isCurrentlyAssigned: req.body.isCurrentlyAssigned,
+                            intendedInjuryType: req.body.intendedInjuryType,
+                            injuryId: req.params.id,
+                            ptId: patient.ptId
+                        }).then(function(set) {
+                            res.json(set);
                         });
                     } else {
                         res.status(401).send('PT unauthorized');
@@ -39,38 +49,37 @@ module.exports.createRomMetric = (req, res, next) => {
                 }
             })
         } else {
-            res.status(404).send('No rom');
+            res.status(404).send('No exercise set');
         }
     })
+}
 
-};
+/**
 
+ READ (HTTP GET)
 
+ */
 
-// TODO error catching
-module.exports.getRomMetrics = (req, res, next) => {
+module.exports.getExerciseSets = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
-    console.log(decoded.id);
 
-    models.romMetric.findAll({
+    models.exerciseSet.findAll({
         where: {
             injuryId: req.params.id
         }
-    }).then(function(roms) {
-        if(roms.length !== 0) {
-            var firstRom = roms[0];
-            console.log(roms.injuryId); //should be one id
-
+    }).then(function (sets) {
+        if(sets.length !== 0) {
+            //if patient
+            var firstSet = sets[0];
             models.injury.findOne({
                 where: {
-                    id: firstRom.injuryId
+                    id: firstSet.injuryId
                 }
-            }).then(function(injury) {
-                // is patient
+            }).then(function (injury) {
                 if(!decoded.isPt) {
                     if(decoded.id == injury.patientId) {
-                        return res.json(roms);
+                        return res.json(sets);
                     } else {
                         return res.status(401).send('Patient unauthorized');
                     }
@@ -84,7 +93,7 @@ module.exports.getRomMetrics = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
-                                return res.json(roms);
+                                return res.json(sets);
                             } else {
                                 return res.status(401).send('PT unauthorized');
                             }
@@ -92,27 +101,24 @@ module.exports.getRomMetrics = (req, res, next) => {
                     })
                 }
             })
-        } else {
-            return res.status(404).send('No roms found');
         }
     })
 }
 
 
-
-module.exports.getRomMetricById = (req, res, next) => {
+module.exports.getExerciseSetById = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.romMetric.findOne({
+    models.exerciseSet.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(rom) {
-        if(Object.keys(rom).length !== 0) {
+    }).then(function(set) {
+        if(Object.keys(set).length !== 0) {
             models.injury.findOne({
                 where: {
-                    id: rom.injuryId
+                    id: set.injuryId
                 }
             }).then(function (injury) {
                 if(Object.keys(injury).length !== 0) {
@@ -125,7 +131,7 @@ module.exports.getRomMetricById = (req, res, next) => {
                         }).then(function (patient) {
                             if(Object.keys(patient).length !== 0) {
                                 if(decoded.id == patient.ptId) {
-                                    return res.json(rom);
+                                    return res.json(set);
                                 } else {
                                     res.status(401).send('PT unauthorized');
                                 }
@@ -146,20 +152,32 @@ module.exports.getRomMetricById = (req, res, next) => {
     });
 };
 
+/**
 
-module.exports.deleteRomMetric = (req, res, next) => {
+ UPDATE (HTTP PUT)
+
+ */
+
+
+/**
+
+ DELETE (HTTP DELETE)
+
+ */
+
+module.exports.deleteExercise = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.romMetric.findOne({
+    models.exerciseSet.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(rom) {
-        if(Object.keys(rom).length !== 0) {
+    }).then(function(set) {
+        if(Object.keys(set).length !== 0) {
             models.injury.findOne({
                 where: {
-                    id: rom.injuryId
+                    id: set.injuryId
                 }
             }).then(function (injury) {
                 if(Object.keys(injury).length !== 0) {
@@ -170,36 +188,22 @@ module.exports.deleteRomMetric = (req, res, next) => {
                     }).then(function(patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
-                                rom.destroy();
-                                return res.json(rom);
+                                set.destroy();
+                                return res.json(set);
                             }
                         } else {
                             res.status(404).send('No patient with that injury');
                         }
-
                     })
                 } else {
                     res.status(404).send('No injury with that rom');  // this indicates loss of data (as does the one above)..should never trigger
-
                 }
-
-                })
+            })
         } else {
             res.status(404).send('No rom with that id');
         }
+    }).catch(function(err) {
+        return next(err);
+    });
 
-    })
-
-
-
-    // models.romMetric.destroy({
-    //     where: {
-    //         id: req.params.id
-    //     }
-    // }).then(function(instance) {
-    //     if (instance)
-    //         res.sendStatus(200);
-    //     else
-    //         res.status(404).send('sorry not found');
-    // });
 }

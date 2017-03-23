@@ -19,10 +19,10 @@ block content
                         .m-label PREVIOUS
                     .m-new
                         .num
-                            input(type='text' name='new-measure' placeholder='NEW')
+                            input(type='text' name='newMeasure' placeholder='NEW')
                         .m-label NEW
-            .input-box.action-box.input-bottom.submit SUBMIT
-        
-        
-
-            
+            .input-box.action-box.input-bottom.submit(onclick='submitMeasure(' + Id +')') SUBMIT
+    p#success
+    // How should submission work/where to? SHOULDER? 25?
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='submitMeasure(' + Id +')') #{footerButton2}
