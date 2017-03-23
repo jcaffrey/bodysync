@@ -279,9 +279,9 @@ function alphaDescending() {
 }
 
 function progAscending() {
-    return patients.sort((a, b) => a.progress - b.progress)
+    return patients.sort(function (a, b) { a.progress - b.progress})
 }
 
 function progDescending() {
-    return patients.sort((a, b) => b.progress - a.progress)
+    return patients.sort(function(a, b) { b.progress - a.progress})
 }
