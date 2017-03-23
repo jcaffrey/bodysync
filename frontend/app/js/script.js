@@ -67,6 +67,23 @@ function submitPatient(id) {
         .catch(console.log('Error!'))
 }
 
+function submitMeasure(id) {
+    var data = {};
+    var errorMessage = '';
+    if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
+    // ********************************
+    //  is this the right route?
+    // ********************************
+    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(console.log('Success!'))
+        .catch(console.log('Error!'))
+}
+
 // TODO
 function submitLogin() {
 }
@@ -178,6 +195,8 @@ function displayError(message) {
     errorDiv.style.visibility = 'visible';
 }
 
+
+
 // =============================================================
 // Patient page (in progress)
 // =============================================================
@@ -233,3 +252,52 @@ function toggleDisplay() {
 //     });
 // }
 
+
+// =============================================================
+// Collapse patients, search, sort
+// =============================================================
+
+var getButton = document.getElementsByClassName('buttonCollapse');
+
+for (i = 0; i < getButton.length; i++) {
+    (function(buttons) {
+        buttons.addEventListener('click', function () {
+            var self = this;
+            var getTarget = self.getAttribute('data-target');
+            self.classList.toggle('is-active');
+            self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
+        });
+    })(getButton[i])
+};
+
+function pSearch() {
+    search(form.patientSearch.value, patients);
+}
+
+// compareFunctions
+function compareAlpha(a, b) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+}
+function compareAlphaRev(a, b) {
+    if (a.name > b.name) return -1;
+    if (a.name < b.name) return 1;
+    return 0;
+}
+
+function alphaAscending() {
+    return patients.sort(compareAlpha)
+}
+
+function alphaDescending() {
+    return patients.sort(compareAlphaRev)
+}
+
+function progAscending() {
+    return patients.sort(function (a, b) { return a.progress - b.progress })
+}
+
+function progDescending() {
+    return patients.sort(function (a, b) { return b.progress - a.progress })
+}

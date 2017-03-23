@@ -3,8 +3,61 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        // ================================================================
+        //  Collapse button functionality
+        // ================================================================
+        var Collapse = {
+            init: function (element) {
+                if (!element) return false;
+                if (element.indexOf('.') != -1) {
+                    var getName = element;
+                    var getElement = document.querySelector(getName);
+                } else if (element.indexOf('#') != -1) {
+                    var getName = element.replace(/\#/g, '');
+                    var getElement = document.getElementById(getName);
+                }
+                if (!getElement.hasAttribute('data-height')) {
+                    getElement.style.display = 'block';
+                    getElement.dataset.height = getElement.offsetHeight + 'px';
+                    getElement.style.height = '0';
+                }
+                return getElement;
+            },
+            expand: function (element) {
+                var getContent = Collapse.init(element);
+                setTimeout(function () {
+                    getContent.style.height = getContent.dataset.height;
+                }, 20)
+            },
+            collapse: function (element) {
+                var getContent = Collapse.init(element);
+                getContent.style.height = '0';
+            }
+        }
+
+        // ================================================================
+        //  Search functionality
+        // ================================================================
+
+        // temporarily hard-coded
+        var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
+            {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
+
+
+        function search(query, array) {
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    return array[i];
+                }
+            }
+        }
+
 block content
     form
+        .search-bar
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
+            button(onclick="pSearch()") Search
         h1 Sort By:
         .pt-box
             .pic-box
@@ -12,8 +65,29 @@ block content
             .info-box
                 .name Abdul
                 .input-label Shoulder, Back
-            .percent-box 
-                .num-box 70%
+            .buttonCollapse(data-target=".collapse")
+                .arrow
+                .collapse#collapse
+                    // Collapsible info here!!
+                    .collapse-inner
+                        .name Collapsible Info Here
+                        .input-label Shoulder, Back
+                        p 70%
+        .pt-box
+            .pic-box
+                img(src='img/profile_pic.jpg' id='profileImg')
+            .info-box
+                .name Cameron
+                .input-label Knee
+            .buttonCollapse(data-target=".collapse1")
+                .arrow
+                .collapse1#collapse
+                    // Collapsible info here!!
+                    .collapse-inner
+                        .name Collapsible Info Here
+                        .input-label Knee
+                        p 22%
+
         .plus-button
             a(href='/create-patient').add +
         //- button(type='button' onclick='fetchPatients()') Fetch
@@ -22,5 +96,6 @@ block content
 //-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
 //- block postScript
 //-     script fetchPatients();
+block postScript
+    script.
 
-            

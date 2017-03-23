@@ -1,38 +1,97 @@
-var models = require('../models/index');
+/**
+
+    dependencies
+
+ */
+
 // import instantiated db
+var models = require('../models/index');
+var jwt = require('jsonwebtoken');
+var auth = require('./auth');
+
+// app.locals.config = config not working?
+var env = process.env.NODE_ENV || 'development';
+var config = require('../config/config.json')[env];  
 
 
-module.exports.createPT = (req, res, next) => {
+
+/**
+
+    CREATE (HTTP POST)
+
+ */
+
+
+module.exports.createPt = (req, res, next) => {
     models.pt.create({
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         phoneProvider: req.body.phoneProvider,
-        hash: req.body.hash // add hash and token
-    }).then(function(pt) {
-        res.json(pt);
-    });
-};
-
-module.exports.getPTS = (req, res, next) => {
-    models.pt.findAll({}).then(function(PTs) {
-        res.json(PTs);
-    });
-};
-
-
-module.exports.getPTById = (req, res, next) => {
-    models.pt.findAll({
-        where: {
-            id: req.params.id
-        }
+        isAdmin: req.body.isAdmin,
+        hash: models.pt.generateHash(req.body.hash) // add hash and token
     }).then(function(pt) {
         res.json(pt);
     });
 };
 
 
-module.exports.deletePT = (req, res, next) => {
+/**
+
+    READ (HTTP GET)
+
+ */
+
+module.exports.getPts = (req, res, next) => {
+    models.pt.findAll({}).then(function(pts) {
+        res.json(pts);
+    });
+};
+
+
+module.exports.getPtById = (req, res, next) => {
+  
+    if(auth.checkRequestIdAgainstId(req, res)) {
+        models.pt.findAll({ // should not be find all!!! this returns an array
+            where: {
+                id: req.params.id
+            }
+        }).then(function(pt) {
+            res.json(pt);
+        });
+    }
+    
+    return;
+
+};
+
+
+/**
+
+    UPDATE (HTTP PUT)
+    
+ */
+
+// module.exports.updatePt = (req, res, next) => {
+//      // add auth via checkRequestIdAgainstId...      
+//
+//
+//     // TBU???  
+//     models.pt.udpate({
+//
+//         res.sendStatus(200);
+//     })
+// }
+
+
+/**
+
+    DELETE (HTTP DELETE)
+
+ */
+
+
+module.exports.deletePt = (req, res, next) => {
     models.pt.destroy({
         where: {
             id: req.params.id
@@ -45,10 +104,4 @@ module.exports.deletePT = (req, res, next) => {
     });
 }
 
-// module.exports.updatePT = (req, res, next) => {
 
-//     models.pt.udpate({
-//
-//         res.sendStatus(200);
-//     })
-// }
