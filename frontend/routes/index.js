@@ -20,6 +20,11 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+// new patient page
+router.get('/patients1', function(req, res, next) {
+    return res.render('patients1', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 // added
 router.get('/pt/patients', (req, res, next) => {
     request.get(config.apiUrl + '/patients', (err, response, body) => {
