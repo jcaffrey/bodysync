@@ -263,7 +263,6 @@ function compareAlpha(a, b) {
     if (a.name > b.name) return 1;
     return 0;
 }
-
 function compareAlphaRev(a, b) {
     if (a.name > b.name) return -1;
     if (a.name < b.name) return 1;
@@ -279,9 +278,9 @@ function alphaDescending() {
 }
 
 function progAscending() {
-    return patients.sort((a, b) => a.progress - b.progress)
+    return patients.sort(function (a, b) { return a.progress - b.progress })
 }
 
 function progDescending() {
-    return patients.sort((a, b) => b.progress - a.progress)
+    return patients.sort(function (a, b) { return b.progress - a.progress })
 }
