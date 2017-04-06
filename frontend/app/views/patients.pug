@@ -44,10 +44,11 @@ block cssSheets
         var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
             {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
 
-
+        // TODO: search on key strokes
         function search(query, array) {
             for (var i = 0, len = array.length; i < len; i++) {
                 if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    alert(array[i].name);
                     return array[i];
                 }
             }
@@ -61,7 +62,7 @@ block content
         h1 Sort By:
         .pt-box
             .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/profile_pic.jpg' id='profileImg')
             .info-box
                 .name Abdul
                 .recovery-box
@@ -85,7 +86,7 @@ block content
                     .inspect1 Inspect Patient
         .pt-box
             .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/profile_pic.jpg' id='profileImg')
             .info-box
                 .name Cameron
                 .recovery-box

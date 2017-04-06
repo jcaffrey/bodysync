@@ -12,7 +12,7 @@ module.exports = function(grunt) {
                     'public/stylesheets/rom-form.css': 'app/stylesheets/rom-form.styl',
                     'public/stylesheets/add-measure.css': 'app/stylesheets/add-measure.styl',
                     'public/stylesheets/patients.css': 'app/stylesheets/patients.styl',
-                    'public/stylesheets/patients1.css': 'app/stylesheets/patients1.styl'
+                    'public/stylesheets/patient-status.css': 'app/stylesheets/patient-status.styl'
                 }
             }
         },
