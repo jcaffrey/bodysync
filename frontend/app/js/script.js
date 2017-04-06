@@ -84,11 +84,37 @@ function submitMeasure(id) {
         .catch(console.log('Error!'))
 }
 
-// TODO
+// TODO: form validation
 function submitLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+
+    fetch('/login', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            window.location = '/pts/' + localStorage.id + '/patients';
+        });
+    }).catch(submitError);
 }
 
-function submitCouponForm() {
+function getPatients() {
+    fetch('/patients', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'GET',
+        body: JSON.stringify({
+            id: localStorage.id,
+            token: localStorage.token
+        })
+    }).then(submitSuccess)
+    .catch(submitError);
 }
 
 // =============================================================
@@ -251,7 +277,7 @@ for (i = 0; i < getButton.length; i++) {
             self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
         });
     })(getButton[i])
-};
+}
 
 function pSearch() {
     search(form.patientSearch.value, patients);

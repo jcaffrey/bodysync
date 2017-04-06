@@ -44,10 +44,11 @@ block cssSheets
         var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
             {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
 
-
+        // TODO: search on key strokes
         function search(query, array) {
             for (var i = 0, len = array.length; i < len; i++) {
                 if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    alert(array[i].name);
                     return array[i];
                 }
             }
@@ -57,13 +58,13 @@ block content
     form
         .search-bar
             input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
-            button(onclick="pSearch()") Search
+            button(type='button' onclick='pSearch()') Search
         h1 Sort By:
         .pt-box
             .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/profile_pic.jpg' id='profileImg')
             .info-box
-                .name Abdul
+                .name Abdul #{ptId}
                 .input-label Shoulder, Back
             .buttonCollapse(data-target=".collapse")
                 .arrow
@@ -75,7 +76,7 @@ block content
                         p 70%
         .pt-box
             .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/profile_pic.jpg' id='profileImg')
             .info-box
                 .name Cameron
                 .input-label Knee
