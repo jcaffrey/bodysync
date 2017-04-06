@@ -1,0 +1,338 @@
+@require "style"
+
+$formRadius = 15px
+$formWidth = 315px
+
+content
+  text-align: center
+  font-family: 'GothamBold'
+  @media screen and (max-width: 600px)
+    margin-top: 25%
+  @media screen and (min-width: 601px), (max-width: 1100px)
+    margin-top: 10%
+  @media screen and (min-width: 1101px)
+    margin-top: 0
+
+form h1
+  text-transform: uppercase
+  font-size: 1.5em
+  color: $mainColor
+
+.patient-box
+  margin: 0px auto
+  width 95%
+  height 13%
+  -webkit-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
+  -moz-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
+  box-shadow 0px 0px 25px 0px $inactiveColor
+  border-radius $formRadius $formRadius $formRadius $formRadius
+  margin-bottom 5%
+
+.outer-info-box
+  margin: 0px auto
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px $inactiveColor;
+  border-radius: $formRadius
+  background-color $white
+  width: 95%
+  height 82%
+  @media all and (min-width: 770px)
+    width: 60%
+
+.top-box
+  background-color $mainColor
+  border-radius $formRadius $formRadius 0px 0px
+  color white
+  font-size 120%
+  display inline-block
+  padding-left 4%
+  padding-right 4%
+  width 92%
+  height 15%
+
+.header-left
+  display inline-block
+  width 70%
+  height 100%
+
+.header-right
+  display inline-block
+  width 30%
+  height 100%
+
+.header-left-text
+  display inline-block
+  font-family: 'GothamBold'
+  text-transform: uppercase
+  text-align: left
+  width 80%
+  margin-top 6%
+
+#menuButton
+  background-color $mainColor
+  color $white
+  font-family 'GothamBold'
+  font-weight bold
+  text-transform uppercase
+  border none
+  height 100%
+  width 100%
+  font-size 100%
+
+#menuButton:focus
+  outline none
+
+
+#menuBox
+  font-family 'GothamBold'
+  text-transform uppercase
+  margin: 0px auto
+  box-shadow 0px 0px 25px 0px $inactiveColor
+  border-radius $formRadius $formRadius $formRadius $formRadius
+  display none
+  width 100%
+
+.menu-top
+  font-weight bold
+  font-size 100%
+  background-color $mainColor
+  border-radius $formRadius $formRadius 0 0
+  color $white
+  padding 3%
+  display inline-block
+  width 92%
+
+.menu-title
+  width 60%
+  display inline-block
+
+.exit-sign
+  width 40%
+  display inline-block
+  text-align right
+
+#exitButton
+  background-color $mainColor
+  color $white
+  font-family 'GothamBold'
+  font-weight bold
+  text-transform uppercase
+  border none
+  height 100%
+  width 100%
+  font-size 100%
+
+#exitButton:focus
+  outline none
+
+.menu-options
+  background-color $white
+  color $mainColor
+  border-radius 0 0 $formRadius $formRadius
+  height 120%
+
+.option
+  padding 2%
+  font-size 70%
+  text-align center
+  height 20%
+  background-color $white
+  color $mainColor
+  border-bottom solid 1px $inactiveColor
+
+.option.four
+  border-radius 0 0 $formRadius $formRadius
+
+
+
+.bottom-box
+  height 83%
+  width 100%
+  border-bottom none
+
+.transition-box
+  height 0%
+  background-color $white
+  text-align center
+
+.icon
+  display inline-block
+  width 8px
+  height 8px
+  background $inactiveColor
+  -moz-border-radius 50px
+  -webkit-border-radius 50px
+  border-radius 50px
+  margin-right 10px
+  margin-bottom 2%
+
+.overview-box
+  display none
+  height 100%
+  width 95%
+  padding 2%
+
+.body-parts
+  display inline-block
+  height 35%
+  width 85%
+  padding 0% 5%
+
+.body-part-label
+  display inline-block
+  font-family 'GothamBold'
+  text-transform uppercase
+  text-align left
+  font-size 120%
+  color $darkgray
+  width 100%
+  padding 2% 0%
+
+#percentValue
+  margin-left 5%
+
+.body-part
+  display inline-block
+  width 60%
+
+.graph-symbol-box
+  width 10%
+  height 100%
+  display inline-block
+
+.exercise-set
+  display inline-block
+  height 35%
+  width 85%
+  padding 0% 5%
+
+#exerciseTitle
+  display inline-block
+  margin-bottom 8%
+  font-family 'GothamBold'
+  text-transform uppercase
+  text-align left
+  color $mainColor
+  font-size 90%
+
+.exercise-description-label
+  height 30%
+  -webkit-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
+  -moz-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
+  box-shadow 0px 0px 25px 0px $inactiveColor
+  border-radius $formRadius $formRadius $formRadius $formRadius
+
+#exerciseText
+  display inline-block
+  font-family 'GothamBold'
+  text-transform uppercase
+  text-align center
+  color $mainColor
+  width 100%
+  margin 3% 0%
+  font-size 90%
+
+.notes
+  display inline-block
+  height 30%
+  width 85%
+  padding 0% 5%
+  outline none
+  @media screen and (min-width: 770px)
+    font-size: 2vw
+    padding: 20px
+  @media screen and (min-width: 1700px)
+    font-size: 1.5vw
+    padding: 25px
+    border-bottom: solid 1px $inactiveColor
+
+#noteTitle
+  display inline-block
+  font-family 'GothamBold'
+  text-transform uppercase
+  text-align left
+  color $mainColor
+  font-size 90%
+  width 80%
+  margin-bottom 2%
+
+.note-input
+  position relative
+  width 100%
+  height 65%
+  text-align left
+  color $inactiveColor
+  font-size 4vw
+  font-family 'GothamLight'
+  background none
+  border none
+
+.body-part-box
+  height 95%
+  width 100%
+  display inline-block
+  font-family 'GothamBold'
+  text-transform uppercase
+  text-align center
+  color $mainColor
+
+#percentage
+  color orange
+  font-size 150%
+  margin 3% 0%
+
+#recoveryText
+  font-size 80%
+  color $inactiveColor
+  margin-bottom 3%
+
+.graph-box
+  width 100%
+  height 70%
+
+.axis
+  fill none
+  stroke grey
+  stroke-width 1
+  shape-rendering crispEdges
+
+
+path
+  stroke purple
+  stroke-width 3
+  fill none
+
+
+.axis
+  stroke purple
+  font-family 'Gotham'
+  shape-rendering crispEdges
+
+
+.x.axis line, .y.axis line
+  display none
+
+
+.x.axis path
+  stroke purple
+  stroke-width 1
+
+.y.axis path
+  display none
+
+
+.line2 path
+  stroke: grey;
+
+
+.circles
+  stroke: purple;
+  fill: white;
+  stroke-width: 3;
+
+
+.horizontalLine
+  stroke: grey;
+  stroke-width: 2;
+  stroke-dasharray: 10,10
