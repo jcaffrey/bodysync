@@ -56,7 +56,7 @@ block cssSheets
 block content
     form
         .search-bar
-            input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients")
             button(onclick="pSearch()") Search
         h1 Sort By:
         .pt-box
@@ -64,21 +64,35 @@ block content
                 img(src='img/profile_pic.jpg' id='profileImg')
             .info-box
                 .name Abdul
-                .input-label Shoulder, Back
+                .recovery-box
+                    .percent
+                        span 70%
+                    .recovery
+                        span Recovered
             .buttonCollapse(data-target=".collapse")
                 .arrow
                 .collapse#collapse
                     // Collapsible info here!!
                     .collapse-inner
-                        .name Collapsible Info Here
-                        .input-label Shoulder, Back
-                        p 70%
+                        .input-label Shoulder
+                        .input-percent1 70%
+                    .collapse-inner
+                        .input-label Neck - Side
+                        .input-percent2 50%
+                    .collapse-inner
+                        .input-label Neck - Front
+                        .input-percent3 30%
+                    .inspect1 Inspect Patient
         .pt-box
             .pic-box
                 img(src='img/profile_pic.jpg' id='profileImg')
             .info-box
                 .name Cameron
-                .input-label Knee
+                .recovery-box
+                    .percent
+                        span 70%
+                    .recovery
+                        span Recovered
             .buttonCollapse(data-target=".collapse1")
                 .arrow
                 .collapse1#collapse
@@ -87,6 +101,7 @@ block content
                         .name Collapsible Info Here
                         .input-label Knee
                         p 22%
+                        .inspect2 Inspect Patient
 
         .plus-button
             a(href='/create-patient').add +
