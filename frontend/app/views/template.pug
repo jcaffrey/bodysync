@@ -1,6 +1,7 @@
 doctype html
 html
     head
+        meta(name='viewport', content='width=device-width', initial-scale='1')
         title= title || "Body Sync"
         link(rel='stylesheet', href='/stylesheets/style.css')
         block cssSheets
@@ -34,6 +35,7 @@ html
                 div#emailError.validationError
                 div#passwordError.validationError
                 div#passwordConfirmError.validationError
+                div#phoneError.validationError
             button.footerButton#buttonLeft(type='button') #{footerButton}
             block submitForm
             if !footerButton2
