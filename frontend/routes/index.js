@@ -23,10 +23,10 @@ router.get('/pt-form', function(req, res, next) {
 // added
 router.get('/pt/patients', (req, res, next) => {
     request.get(config.apiUrl + '/patients', (err, response, body) => {
-        if (!err && response.statusCode == 200)
-            return res.render('patients', {patients: JSON.parse(body)});
-        else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
-    });
+    if (!err && response.statusCode == 200)
+return res.render('patients', {patients: JSON.parse(body)});
+else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
+});
 });
 
 // router.post('/pt/patients', (req, res, next) => {
@@ -73,6 +73,10 @@ router.get('/new-exercise', function(req, res, next) {
 });
 router.get('/add-measure', function(req, res, next) {
     return res.render('add-measure', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+});
+
+router.get('/patient-status', function(req, res, next) {
+    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
 });
 
 router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
