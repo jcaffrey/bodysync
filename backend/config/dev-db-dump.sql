@@ -1,7 +1,6 @@
 -- dummy data
 -- created 2/22/17, does not yet include records for exerciseSets, exercises, etc.
 -- N.B.: this is not the best way to do this
--- source ~/Documents/Harvard/Extracurricular/HSA\ Dev/bodysync/backend/config/dev-db-dump.sql
 
 -- pts
 

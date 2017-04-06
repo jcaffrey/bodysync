@@ -29,10 +29,6 @@ router.get('/pt/patients', (req, res, next) => {
     });
 });
 
-router.get('/pt/getpatients', (req, res, next) => {
-    request.get(config.apiUrl + '/patients/1').pipe(res);
-});
-
 // router.post('/pt/patients', (req, res, next) => {
 //     request.post(config.apiUrl + '/patients', {
 //         headers: { 'x-access-token': req.headers['x-access-token'] },
@@ -54,8 +50,13 @@ router.get('/pt/getpatients', (req, res, next) => {
 //     }).pipe(res);
 // });
 
-router.get('/patients', function(req, res, next) {
-    return res.render('patients', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+router.get('/pts/:id/patients', function(req, res, next) {
+    request.get({
+        url: config.apiUrl + '/pts/' + req.params.id + '/patients',
+        headers: {'x-access-token': req.body.token},
+    }, (err, response, body) => {
+        return res.render('patients', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: JSON.stringify(body)});
+    });
 });
 
 router.post('/patients', function(req, res, next) {
@@ -93,21 +94,7 @@ router.post('/pts/:id/patients', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-    request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
-});
-
-router.get('/admin', auth.adminRequired, function(req, res, next) {
-    if (req.user.isAdmin || req.user.isSuperAdmin)
-        return res.redirect('/admin/coupons?token=' + req.token);
-    return res.render('login');
-});
-
-router.get('/admin/coupons', auth.adminRequired, function(req, res, next) {
-    return res.render('coupons', {
-        token: req.token,
-        isAdmin: !!req.user.isAdmin,
-        isSuperAdmin: !!req.user.isSuperAdmin
-    });
+    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
 module.exports = router;
