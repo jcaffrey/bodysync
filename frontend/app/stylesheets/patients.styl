@@ -4,7 +4,6 @@ $formRadius = 15px
 $formWidth = 315
 
 form
-  text-align: center
   font-family: 'GothamBold'
   @media screen and (max-width: 600px)
     margin-top: 25%
@@ -12,29 +11,38 @@ form
     margin-top: 10%
   @media screen and (min-width: 1101px)
     margin-top: 0
+  padding-bottom: 10%
 form h1
   text-transform: uppercase
   font-size: 1.5em
   color: $inactiveColor
   text-align: left
+
 .pt-box
   -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 25px 0px $inactiveColor;
   border-radius: $formRadius
   background-color $white
-  width: 95%
-  @media all and (min-width: 770px)
+  @media screen and (min-width: 300px)
+    width: 70%
+  @media screen and (min-width: 400px)
+    width: 65%
+  @media screen and (min-width: 770px)
     width: 60%
+  @media screen and (min-width: 1700px)
+    width: 30%
+  @media screen and (min-width: 2000px)
+    width: 15%
   margin 5% auto
 .pic-box
   display: inline-block
-  height: 50%
-  width: 20%
-  padding-top: 4%
+  width: 25%
+  text-align: left
+  padding-left: 5%
+  padding-top: 5%
 .info-box
   display inline-block
-  height: 100%
   width: 60%
   text-align: left
 .name
@@ -43,15 +51,101 @@ form h1
   height 50%
   color $mainColor
   text-transform: uppercase
-  font-size: 1.5em
+  @media screen and (min-width: 100px)
+    font-size: 0.8em
+  @media screen and (min-width: 300px)
+    font-size: 1em
+  @media screen and (min-width: 400px)
+    font-size: 1.5em
+  @media screen and (min-width: 770px)
+    font-size: 2em
+  @media screen and (min-width: 1700px)
+    font-size: 3em
+  @media screen and (min-width: 2000px)
+    font-size: 3.5em
+
+.recovery-box
+  height: 50%
+  vertical-align: bottom
+.percent
+  display: inline-block
+  vertical-align: bottom
+  font-family: 'GothamBold'
+  color: #1A924C
+  @media screen and (min-width: 300px)
+    width: 0.5vw
+  @media screen and (min-width: 500px)
+    width: 1.3vw
+  @media screen and (min-width: 770px)
+    font-size: 2.3vw
+  @media screen and (min-width: 1700px)
+    font-size: 3.3vw
+  width: 15%
+.recovery
+  display: inline-block
+  font-family: 'GothamLight'
+  color: $inactiveColor
+  text-transform: uppercase
+  @media screen and (min-width: 100px)
+    font-size: 0.3em
+    padding-left: 10%
+  @media screen and (min-width: 300px)
+    font-size: 0.4em
+    padding-left: 25%
+  @media screen and (min-width: 500px)
+    font-size: 0.7em
+    padding-left: 18%
+  @media screen and (min-width: 770px)
+    font-size: 1em
+    padding-left: 15%
+  @media screen and (min-width: 1700px)
+    font-size: 2em
+  @media screen and (min-width: 2000px)
+    font-size: 2.5em
 .input-label
-  display block
-  width 100%
+  display: table-cell
   height 50%
-  font-family 'GothamLight'
+  font-family: 'GothamBold'
   color $inactiveColor
-  font-style italic
-  font-size 1em
+  text-transform: uppercase
+  text-align: left
+  font-size: 4vw
+  @media screen and (min-width: 770px)
+    font-size: 2vw
+  @media screen and (min-width: 1700px)
+    font-size: 1vw
+  padding-left: 15px
+  width: 90%
+.input-percent1
+  display: table-cell
+  font-size: 4vw
+  @media screen and (min-width: 770px)
+    font-size: 2vw
+  @media screen and (min-width: 1700px)
+    font-size: 1vw
+  color #22B573
+  width: 6%
+  padding-right: 4%
+.input-percent2
+  display: table-cell
+  font-size: 4vw
+  @media screen and (min-width: 770px)
+    font-size: 2vw
+  @media screen and (min-width: 1700px)
+    font-size: 1vw
+  color #f4b342
+  width: 6%
+  padding-right: 4%
+.input-percent3
+  display: table-cell
+  font-size: 4vw
+  @media screen and (min-width: 770px)
+    font-size: 2vw
+  @media screen and (min-width: 1700px)
+    font-size: 1vw
+  color #801a00
+  width: 6%
+  padding-right: 4%
 .arrow
   height 25px
   width 25px
@@ -63,7 +157,7 @@ form h1
   background-repeat no-repeat
   margin-left 90%
   margin-top -50px
-  padding-bottom 50px
+  padding-bottom 45px
 .arrow:hover
   cursor pointer
 .num-box
@@ -79,16 +173,27 @@ form h1
   top 0
   vertical-align top
 .plus-button
-  margin: 0px auto
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px $inactiveColor;
-  border-radius: $formRadius
-  border-style: dashed
+  text-align: center
+  -webkit-box-shadow: 0px 0px 0px 0px
+  -moz-box-shadow: 0px 0px 0px 0px
+  box-shadow: 0px 0px 0px 0px
+  padding-top: 1.5%
+  padding-bottom: 1.5%
   border-color: $inactiveColor
-  width: 95%
-  @media all and (min-width: 770px)
+  border-width: 2px
+  border-style: dashed
+  border-radius: $formRadius
+  background-color: $inactiveColor2
+  @media screen and (min-width: 300px)
+    width: 70%
+  @media screen and (min-width: 400px)
+    width: 65%
+  @media screen and (min-width: 770px)
     width: 60%
+  @media screen and (min-width: 1700px)
+    width: 30%
+  @media screen and (min-width: 2000px)
+    width: 15%
   height: 100%
   margin 5% auto
 .plus-button:hover
@@ -113,7 +218,11 @@ form h1
   font-size 1.2rem
 
 .collapse-inner
-  padding 15px
+  padding-top: 0rem
+  padding-bottom: 0.5rem
+  padding-left: 0rem
+  padding-right: 0rem
+
 
 .collapse, .collapse1
   display none
@@ -122,24 +231,60 @@ form h1
   -moz-transition height .35s ease-out
   -khtml-transition height .35s ease-out
   overflow hidden
+  padding-top: 15px
+  padding-bottom: 0rem
+  padding-left: 0rem
+  padding-right: 0rem
+
+.inspect1
+  color: $white
+  text-transform: uppercase
+  text-align: center
+  padding-top: 2%
+  padding-bottom: 2%
+  border-bottom-right-radius: $formRadius
+  border-bottom-left-radius: $formRadius
+  border-bottom: none
+  background-color: #22B573
+  -webkit-transition: background-color 0.3s
+  transition: background-color 0.3s
+  &:hover
+    background-color: #1A924C
+    cursor: pointer
+
+
+.inspect2
+  color: $white
+  text-transform: uppercase
+  padding-top: 2%
+  padding-bottom: 2%
+  border-bottom-right-radius: $formRadius
+  border-bottom-left-radius: $formRadius
+  border-bottom: none
+  background-color: #b32400
+  -webkit-transition: background-color 0.3s
+  transition: background-color 0.3s
+  &:hover
+    background-color: #801a00
+    cursor: pointer
 
 // ! temporary styling ! only to test search function
 .search-bar
-  padding 15px
+  padding: 15px
+  text-align: center
 .search-bar > input, .search-bar > button
   font-family: 'GothamLight'
+  border none
   outline none
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px $inactiveColor;
-  border-radius $formRadius
-  border: none
-  font-size: 4vw
+  background: transparent
+  border-bottom: 1px solid $mainColor
+  font-size: 3vw
+  padding: 20px
   @media screen and (min-width: 770px)
     font-size: 2vw
     padding: 20px
   @media screen and (min-width: 1700px)
-    font-size: 1.5vw
+    font-size: 1vw
     padding: 25px
 .search-bar > input:focus
   outline none

@@ -84,11 +84,38 @@ function submitMeasure(id) {
         .catch(console.log('Error!'))
 }
 
-// TODO
+// TODO: form validation
 function submitLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+
+    fetch('/login', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            // (!!!) TODO: find better way of using token (!!!)
+            window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
+        });
+    }).catch(submitError);
 }
 
-function submitCouponForm() {
+function getPatients() {
+    fetch('/patients', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'GET',
+        body: JSON.stringify({
+            id: localStorage.id,
+            token: localStorage.token
+        })
+    }).then(submitSuccess)
+    .catch(submitError);
 }
 
 // =============================================================
@@ -198,8 +225,25 @@ function displayError(message) {
 
 
 // =============================================================
-// Patient fetching (in progress)
+// Patient page (in progress)
 // =============================================================
+
+function toggleDisplay() {
+    var x = document.getElementById('toggle-box');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+    // var y = document.getElementById('patient-box');
+    // if (y.style.border-radius-bottom-left == $formRadius) {
+    //     y.style.border-radius-bottom-left = 0%
+    //     y.style.border-radius-bottom-right = 0%
+    // } else {
+    //     y.style.border-radius-bottom-left = $formRadius;
+    //     y.style.border-radius-bottom-right = $formRadius;
+    // }
+}
 
 // function fetchPatients() {
 //     if(!localStorage.token) window.location = '/';
@@ -251,10 +295,10 @@ for (i = 0; i < getButton.length; i++) {
             self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
         });
     })(getButton[i])
-};
+}
 
-function pSearch() {
-    search(form.patientSearch.value, patients);
+function pSearch(lst) {
+    search(form.patientSearch.value, lst);
 }
 
 // compareFunctions
@@ -269,16 +313,16 @@ function compareAlphaRev(a, b) {
     return 0;
 }
 
-function alphaAscending() {
-    return patients.sort(compareAlpha)
+function alphaAscending(lst) {
+    return lst.sort(compareAlpha)
 }
 
-function alphaDescending() {
-    return patients.sort(compareAlphaRev)
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
 }
 
-function progAscending() {
-    return patients.sort(function (a, b) { return a.progress - b.progress })
+function progAscending(lst) {
+    return lst.sort(function (a, b) { return a.progress - b.progress })
 }
 
 function progDescending() {
