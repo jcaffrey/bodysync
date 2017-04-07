@@ -10,11 +10,16 @@ block cssSheets
             box2: document.getElementsByClassName('body-part-box')[0],
             toggleView: function (e) {
                 e.style.display = (e.style.display == 'none') ? 'inline-block' : 'none'
-            }
-        }
+            }}
 
 block content
     .patient-box
+        .pic-box
+            img(src='img/profile_pic.jpg' id='profileImg')
+        .info-box
+            .name Abdul
+            .input-label Shoulder, Back
+            .arrow
     .outer-info-box
         .top-box
             .header-left
@@ -23,7 +28,7 @@ block content
                     span#title OVERVIEW
             .header-right
                 button(id='menuButton' onclick='menuBox.style.display="inline-block"') Menu
-            #menuBox
+            #menuBox.menu-box
                 .menu-top
                     .menu-title
                         span Jump to:
@@ -31,51 +36,98 @@ block content
                         button(id='exitButton' onclick='menuBox.style.display="none"') X
                 .menu-options
                     .option.one
-                        span Overview
+                        span(onclick='overviewBox.style.display="inline-block", bodyBox.style.display="none"') Overview
                     .option.two
-                        span Measurement
+                        span(onclick='overviewBox.style.display="none", bodyBox.style.display="inline-block"') Measurement 1
                     .option.three
                         span Measurement 2
                     .option.four
                         span Measurement 3
         .bottom-box
-            .overview-box
+            #overviewBox.overview-box
                 .body-parts
                     .body-part-label
-                        .body-part
-                            span Shoulder................
-                            span#percentValue1 50%
+                        .text
+                            span Shoulder...............
+                            span#percentValue1  50%
                                 style.
                                     #percentValue1 {
                                         color: orange
                                     }
-                        .graph-symbol-box
+                        #symbol
+                            img(src='img/graph.png' id='graph-symbol')
                     .body-part-label
-                        span Neck - Side..............
-                        span#percentValue2 70%
-                            style.
-                                #percentValue2 {
-                                    color: #74e586
-                                }
+                        .text
+                            span Neck - Side..............
+                            span#percentValue2  70%
+                                style.
+                                    #percentValue2 {
+                                        color: #74e586
+                                    }
+                        #symbol
+                            img(src='img/graph.png' id='graph-symbol')
                     .body-part-label
-                        span Neck - Front..........
-                        span#percentValue3 30%
-                            style.
-                                #percentValue3 {
-                                    color: #a50000
-                                }
+                        .text
+                            span Neck - Front..........
+                            span#percentValue3  30%
+                                style.
+                                    #percentValue3 {
+                                        color: #a50000
+                                    }
+                        #symbol
+                            img(src='img/graph.png' id='graph-symbol')
                 .exercise-set
                     span#exerciseTitle Exercise Set
                     .exercise-description-label
                         span#exerciseText STD Shoulder/Back
                 .notes
                     span#noteTitle Notes
-                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement.")
-            .body-part-box
+                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Add notes.")
+            #bodyBox.body-part-box
                 .span#percentage 50%
                 .span#recoveryText to full recovery
-                .graph-box
+                agraph#graph
                     span Hello
+                    style.
+                        path {
+                            stroke: purple;
+                            stroke-width: 3;
+                        fill: none;
+                        }
+
+                        .axis {
+                            stroke: purple;
+                            font-family: 'Gotham';
+                        shape-rendering: crispEdges;
+                        }
+
+                        .x.axis line, .y.axis line{
+                            display: none;
+                        }
+
+                        .x.axis path {
+                            stroke: purple;
+                            stroke-width: 1;
+                        }
+                        .y.axis path {
+                            display: none;
+                        }
+
+                        .line2 path {
+                            stroke: grey;
+                        }
+
+                        .circles {
+                            stroke: purple;
+                            fill: white;
+                            stroke-width: 3;
+                        }
+
+                        .horizontalLine {
+                            stroke: grey;
+                            stroke-width: 2;
+                        stroke-dasharray: 10,10;
+                        }
                     script(src = 'http://d3js.org/d3.v3.min.js').
                         var m = [100, 100, 100, 100]; // margins
                         var w = 550 - m[1] - m[3]; // width
@@ -121,7 +173,6 @@ block content
                             .append("svg:g")
                             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
                         // create xAxis
-
 
                         var xAxis = d3.svg.axis().scale(x).tickSize(-h);
                         // Add the x-axis.
