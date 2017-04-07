@@ -10,8 +10,7 @@ block cssSheets
             box2: document.getElementsByClassName('body-part-box')[0],
             toggleView: function (e) {
                 e.style.display = (e.style.display == 'none') ? 'inline-block' : 'none'
-            }
-        }
+            }}
 
 block content
     .patient-box
@@ -87,8 +86,48 @@ block content
             #bodyBox.body-part-box
                 .span#percentage 50%
                 .span#recoveryText to full recovery
-                .graph-box
+                agraph#graph
                     span Hello
+                    style.
+                        path {
+                            stroke: purple;
+                            stroke-width: 3;
+                        fill: none;
+                        }
+
+                        .axis {
+                            stroke: purple;
+                            font-family: 'Gotham';
+                        shape-rendering: crispEdges;
+                        }
+
+                        .x.axis line, .y.axis line{
+                            display: none;
+                        }
+
+                        .x.axis path {
+                            stroke: purple;
+                            stroke-width: 1;
+                        }
+                        .y.axis path {
+                            display: none;
+                        }
+
+                        .line2 path {
+                            stroke: grey;
+                        }
+
+                        .circles {
+                            stroke: purple;
+                            fill: white;
+                            stroke-width: 3;
+                        }
+
+                        .horizontalLine {
+                            stroke: grey;
+                            stroke-width: 2;
+                        stroke-dasharray: 10,10;
+                        }
                     script(src = 'http://d3js.org/d3.v3.min.js').
                         var m = [100, 100, 100, 100]; // margins
                         var w = 550 - m[1] - m[3]; // width
