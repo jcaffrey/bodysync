@@ -67,14 +67,14 @@ function submitPatient(id) {
         .catch(console.log('Error!'))
 }
 
-function submitMeasure(id) {
+function submitMeasure() {
     var data = {};
     var errorMessage = '';
     if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
     // ********************************
     //  is this the right route?
     // ********************************
-    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+    fetch('/romMetrics/' + localStorage.id + '/romMetricMeasures', {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -281,8 +281,36 @@ function toggleDisplay() {
 
 
 // =============================================================
-// Collapse patients, search, sort
+// Collapse patients
 // =============================================================
+var Collapse = {
+    init: function (element) {
+        if (!element) return false;
+        if (element.indexOf('.') != -1) {
+            var getName = element;
+            var getElement = document.querySelector(getName);
+        } else if (element.indexOf('#') != -1) {
+            var getName = element.replace(/\#/g, '');
+            var getElement = document.getElementById(getName);
+        }
+        if (!getElement.hasAttribute('data-height')) {
+            getElement.style.display = 'block';
+            getElement.dataset.height = getElement.offsetHeight + 'px';
+            getElement.style.height = '0';
+        }
+        return getElement;
+    },
+    expand: function (element) {
+        var getContent = Collapse.init(element);
+        setTimeout(function () {
+            getContent.style.height = getContent.dataset.height;
+        }, 20)
+    },
+    collapse: function (element) {
+        var getContent = Collapse.init(element);
+        getContent.style.height = '0';
+    }
+}
 
 var getButton = document.getElementsByClassName('buttonCollapse');
 
@@ -295,6 +323,19 @@ for (i = 0; i < getButton.length; i++) {
             self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
         });
     })(getButton[i])
+}
+
+// =============================================================
+// Search, sort patients
+// =============================================================
+
+// TODO: search on key strokes
+function search(query, array) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+            return alert(array[i].name);
+        }
+    }
 }
 
 function pSearch(lst) {
