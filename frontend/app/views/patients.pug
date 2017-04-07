@@ -44,10 +44,11 @@ block cssSheets
         var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
             {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
 
-
+        // TODO: search on key strokes
         function search(query, array) {
             for (var i = 0, len = array.length; i < len; i++) {
                 if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    alert(array[i].name);
                     return array[i];
                 }
             }
@@ -57,30 +58,23 @@ block content
     form
         .search-bar
             input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
-            button(onclick="pSearch()") Search
+            button(type='button' onclick='pSearch(' + patients + ')') Search
         h1 Sort By:
-        .pt-box
-            .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
-            .info-box
-                .name Abdul
-                .input-label Shoulder, Back
-            .buttonCollapse(data-target=".collapse")
-                .arrow
-        .pt-box
-            .pic-box
-                img(src='img/profile_pic.jpg' id='profileImg')
-            .info-box
-                .name Cameron
-                .input-label Knee
-            .buttonCollapse(data-target=".collapse1")
-                .arrow
-                .collapse1#collapse
-                    // Collapsible info here!!
-                    .collapse-inner
-                        .name Collapsible Info Here
-                        .input-label Knee
-                        p 22%
+        each val in patients
+            .pt-box
+                .pic-box
+                    img(src='../../img/profile_pic.jpg' id='profileImg')
+                .info-box
+                    .name= val.name
+                    .input-label= val.phoneNumber
+                .buttonCollapse(data-target=".collapse")
+                    .arrow
+                    .collapse#collapse
+                        // Collapsible info here!!
+                        .collapse-inner
+                            .name Collapsible Info Here
+                            .input-label Shoulder, Back
+                            p 70%
 
         .plus-button
             a(href='/create-patient').add +
@@ -92,4 +86,3 @@ block content
 //-     script fetchPatients();
 block postScript
     script.
-
