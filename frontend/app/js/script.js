@@ -100,7 +100,8 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            window.location = '/pts/' + localStorage.id + '/patients';
+            // (!!!) TODO: find better way of using token (!!!)
+            window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
         });
     }).catch(submitError);
 }
@@ -296,8 +297,8 @@ for (i = 0; i < getButton.length; i++) {
     })(getButton[i])
 }
 
-function pSearch() {
-    search(form.patientSearch.value, patients);
+function pSearch(lst) {
+    search(form.patientSearch.value, lst);
 }
 
 // compareFunctions
@@ -312,20 +313,15 @@ function compareAlphaRev(a, b) {
     return 0;
 }
 
-function alphaAscending() {
-    return patients.sort(compareAlpha)
+function alphaAscending(lst) {
+    return lst.sort(compareAlpha)
 }
 
-function alphaDescending() {
-    return patients.sort(compareAlphaRev)
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
 }
-
 function progAscending() {
     return patients.sort(function (a, b) { a.progress - b.progress})
-}
-
-function progDescending() {
-    return patients.sort(function(a, b) { b.progress - a.progress})
 }
 
 function progDescending() {

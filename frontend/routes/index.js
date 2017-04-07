@@ -58,9 +58,9 @@ else return res.render('patients', {footerButton2: 'Add Patient', patients: []})
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get({
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
-        headers: {'x-access-token': req.body.token},
+        headers: {'x-access-token': req.query.token},
     }, (err, response, body) => {
-        return res.render('patients', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: JSON.stringify(body)});
+        return res.render('patients', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: JSON.parse(body)});
     });
 });
 
