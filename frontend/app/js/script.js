@@ -225,8 +225,25 @@ function displayError(message) {
 
 
 // =============================================================
-// Patient fetching (in progress)
+// Patient page (in progress)
 // =============================================================
+
+function toggleDisplay() {
+    var x = document.getElementById('toggle-box');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+    // var y = document.getElementById('patient-box');
+    // if (y.style.border-radius-bottom-left == $formRadius) {
+    //     y.style.border-radius-bottom-left = 0%
+    //     y.style.border-radius-bottom-right = 0%
+    // } else {
+    //     y.style.border-radius-bottom-left = $formRadius;
+    //     y.style.border-radius-bottom-right = $formRadius;
+    // }
+}
 
 // function fetchPatients() {
 //     if(!localStorage.token) window.location = '/';
