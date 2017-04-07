@@ -118,6 +118,15 @@ function getPatients() {
     .catch(submitError);
 }
 
+function getGraphData(id) {
+    if(!localStorage.token) window.location = '/';
+    fetch('/romMetrics/' + id, {
+        headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
+        method: 'GET'
+    }).then(submitSuccess)
+        .catch(submitError);
+}
+
 // =============================================================
 // Form validation functions
 // =============================================================

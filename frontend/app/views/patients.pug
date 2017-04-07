@@ -67,7 +67,7 @@ block content
                 .info-box
                     .name= val.name
                     .input-label= val.phoneNumber
-                .buttonCollapse(data-target=".collapse")
+                .buttonCollapse(data-target=".collapse" onclick='getGraphData(' + val.id + ')')
                     .arrow
                     .collapse#collapse
                         // Collapsible info here!!
