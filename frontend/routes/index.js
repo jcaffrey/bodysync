@@ -64,6 +64,14 @@ router.get('/pts/:id/patients', function(req, res, next) {
     });
 });
 
+router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
+    request.get({
+        url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.query.token},
+    }, (err, response, body) => {
+        return JSON.parse(body)});
+});
+
 router.post('/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts',
