@@ -10,11 +10,12 @@ html
         div#header
             div.profile-box
                 div.profile-box-left
-                    span#profileName #{firstName}
-                    a(href='#')
-                        button.profileAction#settingsButton Settings
-                    a(href='#')
-                        button.profileAction#logOutButton Log Out
+                    div#profileName #{firstName}
+                    div.profile-buttons
+                        a(href='#')
+                            button.profileAction#settingsButton Settings
+                        a(href='#')
+                            button.profileAction#logOutButton Log Out
                 div.profile-box-right
                     img(src='img/profile_pic.jpg' id='profileImg')
 

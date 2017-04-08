@@ -344,24 +344,29 @@ a
   display: inline-block
   vertical-align: middle
   padding-left: 2%
+  filter grayscale(100%)
   &:hover
     cursor pointer
+    filter grayscale(0%)
 #alphaOrder
   width: 9%
   vertical-align: middle
   padding-right: 2%
   padding-left: 4%
+  filter grayscale(100%)
   &:hover
     cursor pointer
+    filter grayscale(0%)
 .search-bar > input, .search-bar > #searchIcon
   font-family: 'GothamLight'
+  color: #bbb
   border none
   outline none
   background: transparent
   border-bottom: 3px solid $mainColor
   font-size: 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.5vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
 .search-bar > input:focus
