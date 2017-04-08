@@ -55,14 +55,26 @@ else return res.render('patients', {footerButton2: 'Add Patient', patients: []})
 //     }).pipe(res);
 // });
 
+// router.get('/pts/:id/patients', function(req, res, next) {
+//     request.get({
+//         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
+//         headers: {'x-access-token': req.query.token},
+//     }, (err, response, body) => {
+//         return res.render('patients', {
+//             firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: JSON.parse(body)
+//         });
+//     });
+//
+// });
+
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get({
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
         headers: {'x-access-token': req.query.token},
-    }, (err, response, body) => {
-        return res.render('patients', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: JSON.parse(body)});
-    });
+    }).pipe(res)
 });
+
+
 
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get({

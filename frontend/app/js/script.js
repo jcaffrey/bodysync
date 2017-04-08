@@ -101,20 +101,20 @@ function submitLogin() {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
             // (!!!) TODO: find better way of using token (!!!)
-            window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
+            // window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
+            getPatients();
         });
     }).catch(submitError);
 }
 
 function getPatients() {
-    fetch('/patients', {
+    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token, {
         headers: { 'Content-Type': 'application/json' },
-        method: 'GET',
-        body: JSON.stringify({
-            id: localStorage.id,
-            token: localStorage.token
-        })
-    }).then(submitSuccess)
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (pts) {localStorage.patients = pts});
+    })
     .catch(submitError);
 }
 
@@ -340,9 +340,10 @@ for (i = 0; i < getButton.length; i++) {
 
 // TODO: search on key strokes
 function search(query, array) {
+    alert(array[0]);
     for (var i = 0, len = array.length; i < len; i++) {
-        if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
-            return alert(array[i].name);
+        if (!array[i].name.toUpperCase().includes(query.toUpperCase())) {
+            alert(array[i].name);
         }
     }
 }
