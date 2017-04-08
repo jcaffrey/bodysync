@@ -67,14 +67,14 @@ function submitPatient(id) {
         .catch(console.log('Error!'))
 }
 
-function submitMeasure(id) {
+function submitMeasure() {
     var data = {};
     var errorMessage = '';
     if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
     // ********************************
     //  is this the right route?
     // ********************************
-    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+    fetch('/romMetrics/' + localStorage.id + '/romMetricMeasures', {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -100,7 +100,8 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            window.location = '/pts/' + localStorage.id + '/patients';
+            // (!!!) TODO: find better way of using token (!!!)
+            window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
         });
     }).catch(submitError);
 }
@@ -115,6 +116,15 @@ function getPatients() {
         })
     }).then(submitSuccess)
     .catch(submitError);
+}
+
+function getGraphData(id) {
+    if(!localStorage.token) window.location = '/';
+    fetch('/romMetrics/' + id, {
+        headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
+        method: 'GET'
+    }).then(submitSuccess)
+        .catch(submitError);
 }
 
 // =============================================================
@@ -280,8 +290,36 @@ function toggleDisplay() {
 
 
 // =============================================================
-// Collapse patients, search, sort
+// Collapse patients
 // =============================================================
+var Collapse = {
+    init: function (element) {
+        if (!element) return false;
+        if (element.indexOf('.') != -1) {
+            var getName = element;
+            var getElement = document.querySelector(getName);
+        } else if (element.indexOf('#') != -1) {
+            var getName = element.replace(/\#/g, '');
+            var getElement = document.getElementById(getName);
+        }
+        if (!getElement.hasAttribute('data-height')) {
+            getElement.style.display = 'block';
+            getElement.dataset.height = getElement.offsetHeight + 'px';
+            getElement.style.height = '0';
+        }
+        return getElement;
+    },
+    expand: function (element) {
+        var getContent = Collapse.init(element);
+        setTimeout(function () {
+            getContent.style.height = getContent.dataset.height;
+        }, 20)
+    },
+    collapse: function (element) {
+        var getContent = Collapse.init(element);
+        getContent.style.height = '0';
+    }
+}
 
 var getButton = document.getElementsByClassName('buttonCollapse');
 
@@ -296,8 +334,21 @@ for (i = 0; i < getButton.length; i++) {
     })(getButton[i])
 }
 
-function pSearch() {
-    search(form.patientSearch.value, patients);
+// =============================================================
+// Search, sort patients
+// =============================================================
+
+// TODO: search on key strokes
+function search(query, array) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+            return alert(array[i].name);
+        }
+    }
+}
+
+function pSearch(lst) {
+    search(form.patientSearch.value, lst);
 }
 
 // compareFunctions
@@ -312,16 +363,16 @@ function compareAlphaRev(a, b) {
     return 0;
 }
 
-function alphaAscending() {
-    return patients.sort(compareAlpha)
+function alphaAscending(lst) {
+    return lst.sort(compareAlpha)
 }
 
-function alphaDescending() {
-    return patients.sort(compareAlphaRev)
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
 }
 
-function progAscending() {
-    return patients.sort(function (a, b) { return a.progress - b.progress })
+function progAscending(lst) {
+    return lst.sort(function (a, b) { return a.progress - b.progress })
 }
 
 function progDescending() {
