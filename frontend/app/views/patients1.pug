@@ -1,0 +1,143 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        // ================================================================
+        //  Collapse button functionality
+        // ================================================================
+        var Collapse = {
+            init: function (element) {
+                if (!element) return false;
+                if (element.indexOf('.') != -1) {
+                    var getName = element;
+                    var getElement = document.querySelector(getName);
+                } else if (element.indexOf('#') != -1) {
+                    var getName = element.replace(/\#/g, '');
+                    var getElement = document.getElementById(getName);
+                }
+                if (!getElement.hasAttribute('data-height')) {
+                    getElement.style.display = 'block';
+                    getElement.dataset.height = getElement.offsetHeight + 'px';
+                    getElement.style.height = '0';
+                }
+                return getElement;
+            },
+            expand: function (element) {
+                var getContent = Collapse.init(element);
+                setTimeout(function () {
+                    getContent.style.height = getContent.dataset.height;
+                }, 20)
+            },
+            collapse: function (element) {
+                var getContent = Collapse.init(element);
+                getContent.style.height = '0';
+            }
+        }
+
+        // ================================================================
+        //  Search functionality
+        // ================================================================
+
+        // temporarily hard-coded
+        var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
+            {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
+
+        // TODO: search on key strokes
+        function search(query, array) {
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    alert(array[i].name);
+                    return array[i];
+                }
+            }
+        }
+
+block content
+    form
+        .search-bar
+            img(src='../../img/search-icon.png' id='searchIcon')
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients")
+            img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="pSearch()")
+            img(src='../../img/health.png' id='health' onclick="pSearch()")
+        .pt-box
+            .pic-box
+                img(src='../../img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/upIcon.png' id='upIcon')
+            .info-box
+                .name Abdul
+                .recovery-box
+                    .percent1
+                        span 70%
+                    .recovery
+                        span Recovered
+            .buttonCollapse(data-target=".collapse")
+                .arrow ▼
+                .collapse#collapse
+                    // Collapsible info here!!
+                    hr
+                    .space
+                    .collapse-inner
+                        .input-label Shoulder
+                        .input-percent1 70%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph')
+                    .collapse-inner
+                        .input-label Neck - Side
+                        .input-percent2 50%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph')
+                    .collapse-inner
+                        .input-label Neck - Front
+                        .input-percent3 30%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph')
+                    .space
+                    .inspect1 Inspect Patient
+
+        .pt-box
+            .pic-box
+                img(src='../../img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/downIcon.png' id='downIcon')
+            .info-box
+                .name Cameron
+                .recovery-box
+                    .percent2
+                        span 31%
+                    .recovery
+                        span Recovered
+            .buttonCollapse(data-target=".collapse1")
+                .arrow ▼
+                .collapse1#collapse
+                    // Collapsible info here!!
+                    hr
+                    .space
+                    .collapse-inner
+                        .input-label Arm
+                        .input-percent3 22%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph')
+                    .collapse-inner
+                        .input-label Calf
+                        .input-percent2 40%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph')
+                    .space
+                    .inspect2 Inspect Patient
+
+        .plus-button
+            a(href='/create-patient').add +
+
+//- #footerButton2
+//-     button.footerButton#buttonRight(type='button' onclick='location.href = '/create-patient')
+
+        //- button(type='button' onclick='fetchPatients()') Fetch
+        //- #js-patients
+//- block submitForm
+//-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
+//- block postScript
+//-     script fetchPatients();
+//- block postScript
+//-     script.
+
