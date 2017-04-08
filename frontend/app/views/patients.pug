@@ -3,15 +3,16 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    script.
+    script
 
 block content
     form
         .search-bar
             input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
-            button(type='button' onclick='pSearch(' + patients + ')') Search
+            button(type='button' onclick="pSearch(" + patients + ")") Search
         h1 Sort By:
         each val in patients
+            p #{patients}
             .pt-box
                 .pic-box
                     img(src='../../img/profile_pic.jpg' id='profileImg')
