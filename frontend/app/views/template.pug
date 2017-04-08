@@ -10,11 +10,12 @@ html
         div#header
             div.profile-box
                 div.profile-box-left
-                    span#profileName #{firstName}
-                    a(href='#')
-                        button.profileAction#settingsButton Settings
-                    a(href='#')
-                        button.profileAction#logOutButton Log Out
+                    div#profileName #{firstName}
+                    div.profile-buttons
+                        a(href='#')
+                            button.profileAction#settingsButton Settings
+                        a(href='#')
+                            button.profileAction#logOutButton Log Out
                 div.profile-box-right
                     img(src='img/profile_pic.jpg' id='profileImg')
 
@@ -39,9 +40,9 @@ html
             button.footerButton#buttonLeft(type='button') #{footerButton}
             block submitForm
             if !footerButton2
-                script.
-                    document.getElementById('buttonLeft').style.width = "100%";
-                    document.getElementById('buttonRight').style.display = "none";
+                //script.
+                //    document.getElementById('buttonLeft').style.width = "100%";
+                //    document.getElementById('buttonRight').style.display = "none";
 
         //- script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
