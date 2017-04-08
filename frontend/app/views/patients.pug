@@ -4,105 +4,34 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        // ================================================================
-        //  Collapse button functionality
-        // ================================================================
-        var Collapse = {
-            init: function (element) {
-                if (!element) return false;
-                if (element.indexOf('.') != -1) {
-                    var getName = element;
-                    var getElement = document.querySelector(getName);
-                } else if (element.indexOf('#') != -1) {
-                    var getName = element.replace(/\#/g, '');
-                    var getElement = document.getElementById(getName);
-                }
-                if (!getElement.hasAttribute('data-height')) {
-                    getElement.style.display = 'block';
-                    getElement.dataset.height = getElement.offsetHeight + 'px';
-                    getElement.style.height = '0';
-                }
-                return getElement;
-            },
-            expand: function (element) {
-                var getContent = Collapse.init(element);
-                setTimeout(function () {
-                    getContent.style.height = getContent.dataset.height;
-                }, 20)
-            },
-            collapse: function (element) {
-                var getContent = Collapse.init(element);
-                getContent.style.height = '0';
-            }
-        }
-
-        // ================================================================
-        //  Search functionality
-        // ================================================================
-
-        // temporarily hard-coded
-        var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
-            {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
-
-        // TODO: search on key strokes
-        function search(query, array) {
-            for (var i = 0, len = array.length; i < len; i++) {
-                if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
-                    alert(array[i].name);
-                    return array[i];
-                }
-            }
-        }
 
 block content
     form
         .search-bar
-            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients")
-            button(onclick="pSearch()") Search
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
+            button(type='button' onclick='pSearch(' + patients + ')') Search
         h1 Sort By:
-        .pt-box
-            .pic-box
-                img(src='../../img/profile_pic.jpg' id='profileImg')
-            .info-box
-                .name Abdul
-                .recovery-box
-                    .percent
-                        span 70%
-                    .recovery
-                        span Recovered
-            .buttonCollapse(data-target=".collapse")
-                .arrow
-                .collapse#collapse
-                    // Collapsible info here!!
-                    .collapse-inner
-                        .input-label Shoulder
-                        .input-percent1 70%
-                    .collapse-inner
-                        .input-label Neck - Side
-                        .input-percent2 50%
-                    .collapse-inner
-                        .input-label Neck - Front
-                        .input-percent3 30%
-                    .inspect1 Inspect Patient
-        .pt-box
-            .pic-box
-                img(src='../../img/profile_pic.jpg' id='profileImg')
-            .info-box
-                .name Cameron
-                .recovery-box
-                    .percent
-                        span 70%
-                    .recovery
-                        span Recovered
-            .buttonCollapse(data-target=".collapse1")
-                .arrow
-                .collapse1#collapse
-                    // Collapsible info here!!
-                    .collapse-inner
-                        .name Collapsible Info Here
-                        .input-label Knee
-                        p 22%
-                        .inspect2 Inspect Patient
+        each val in patients
+            .pt-box
+                .pic-box
+                    img(src='../../img/profile_pic.jpg' id='profileImg')
+                .info-box
+                    .name= val.name
+                    .input-label= val.phoneNumber
+                .buttonCollapse(data-target=".collapse" onclick='getGraphData(' + val.id + ')')
+                    .arrow
+                    .collapse#collapse
+                        // Collapsible info here!!
+                        .collapse-inner
+                            .input-label Shoulder
+                            .input-percent1 70%
+                        .collapse-inner
+                            .input-label Neck - Side
+                            .input-percent2 50%
+                        .collapse-inner
+                            .input-label Neck - Front
+                            .input-percent3 30%
+                        .inspect1 Inspect Patient
 
         .plus-button
             a(href='/create-patient').add +
@@ -114,4 +43,3 @@ block content
 //-     script fetchPatients();
 block postScript
     script.
-
