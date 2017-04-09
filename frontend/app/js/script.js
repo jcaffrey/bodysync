@@ -113,7 +113,7 @@ function getPatients() {
         method: 'GET'
     }).then(function(res) {
         if (!res.ok) return submitError(res);
-        res.json().then(function (pts) {localStorage.patients = pts});
+        res.json().then(function(pts) {localStorage.patients = pts});
     })
     .catch(submitError);
 }
