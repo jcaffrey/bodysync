@@ -5,5 +5,5 @@ module.exports = {
     apiUrl: 'http://localhost:3000',
 
     // secret for creating tokens
-    secret: 'reughdjfbxmdgvhbgakbhjsadf'
+    secret: 'thisisthesecret'
 };

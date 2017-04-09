@@ -59,17 +59,6 @@ form h1
   font-style italic
   font-size 1em
 
-.arrow
-  height 25px
-  width 25px
-  border-top-right-radius $formRadius
-  border-bottom-right-radius $formRadius
-  background-image url("https://img.clipartfest.com/f3d62c07fd977b11e30d39ef28c8f547_-add-an-up-arrow-to-select-simple-down-arrow-clipart_600-600.png")
-  background-size contain
-  background-repeat no-repeat
-  margin-left 80%
-  margin-top -50px
-  padding-bottom 50px
 
 .arrow:hover
   cursor pointer
@@ -90,7 +79,7 @@ form h1
   background-color $mainColor
   border-radius $formRadius $formRadius 0px 0px
   color white
-  font-size 150%
+  font-size 180%
   display inline-block
   padding-left 4%
   padding-right 4%
@@ -130,25 +119,28 @@ form h1
 #menuButton:focus
   outline none
 
-
-#menuBox
+.menu-box
+  margin 0px auto
   font-family 'GothamBold'
   text-transform uppercase
-  margin: 0px auto
   box-shadow 0px 0px 25px 0px $inactiveColor
   border-radius $formRadius $formRadius $formRadius $formRadius
   display none
-  width 100%
+  position fixed
+  width 90%
+  height 15%
+  z-index 1
 
 .menu-top
   font-weight bold
-  font-size 100%
+  font-size 180%
   background-color $mainColor
   border-radius $formRadius $formRadius 0 0
   color $white
   padding 3%
   display inline-block
   width 94%
+  height 30%
 
 .menu-title
   width 60%
@@ -179,9 +171,22 @@ form h1
   border-radius 0 0 $formRadius $formRadius
   height 120%
 
+.menu-icon
+  display none
+  width 8px
+  height 8px
+  background $mainColor
+  -moz-border-radius 50px
+  -webkit-border-radius 50px
+  border-radius 50px
+  margin-right 3%
+
+#iconOverview
+  display inline-block
+
 .option
   padding 2%
-  font-size 70%
+  font-size 100%
   text-align center
   height 20%
   background-color $white
@@ -196,11 +201,12 @@ form h1
   width 100%
   border-bottom none
 
-
 .transition-box
   height 0%
   background-color $white
   text-align center
+  position fixed
+  left 40%
 
 .icon
   display inline-block
@@ -223,6 +229,7 @@ form h1
   padding-right 2%
   padding-top 2%
   padding-bottom 0%
+  position relative
 
 .body-parts
   display inline-block
@@ -354,6 +361,12 @@ form h1
   font-size 150%
   margin 3% 0%
 
+.percentage-box
+  height 8%
+
+.recovery-box
+  height 5%
+
 #recoveryText
   font-size 80%
   color $inactiveColor
@@ -361,50 +374,39 @@ form h1
 
 .graph-box
   width 100%
-  height 70%
-
-.axis
-  fill none
-  stroke grey
-  stroke-width 1
-  shape-rendering crispEdges
-
+  height 87%
 
 path
-  stroke purple
+  stroke $mainColor
   stroke-width 3
   fill none
 
-
 .axis
-  stroke purple
+  stroke $mainColor
   font-family 'Gotham'
   shape-rendering crispEdges
-
 
 .x.axis line, .y.axis line
   display none
 
 
 .x.axis path
-  stroke purple
+  stroke $mainColor
   stroke-width 1
 
 .y.axis path
   display none
 
-
 .line2 path
-  stroke: grey;
-
+  stroke $mainColor
+  gradient webkit-gradient(radial, 50% 50%, 0, 50% 50%, 350, from(#000), to(#fff));
 
 .circles
-  stroke: purple;
-  fill: white;
-  stroke-width: 3;
-
+  stroke $mainColor
+  fill $white
+  stroke-width 3
 
 .horizontalLine
-  stroke: grey;
-  stroke-width: 2;
-  stroke-dasharray: 10,10
+  stroke $inactiveColor
+  stroke-width 2
+  stroke-dasharray 10 10
