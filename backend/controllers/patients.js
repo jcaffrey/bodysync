@@ -21,7 +21,7 @@ var config = require('../config/config.json')[env];
 
 module.exports.createPatient = (req, res, next) => {
     if(auth.checkRequestIdAgainstId(req, res)) {
-      
+        // TODO: send email to patient, update fields, route them same way the forgot password works?
         models.patient.create({
             name: req.body.name,
             email: req.body.email,

@@ -119,11 +119,13 @@ function getPatients() {
 }
 
 function getGraphData(id) {
-    if(!localStorage.token) window.location = '/';
     fetch('/romMetrics/' + id, {
         headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
         method: 'GET'
-    }).then(submitSuccess)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {localStorage.graphData = data});
+    })
         .catch(submitError);
 }
 

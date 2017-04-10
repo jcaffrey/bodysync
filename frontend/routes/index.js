@@ -34,27 +34,6 @@ router.get('/patients1', function(req, res, next) {
 // })
 // })
 
-// router.post('/pt/patients', (req, res, next) => {
-//     request.post(config.apiUrl + '/patients', {
-//         headers: { 'x-access-token': req.headers['x-access-token'] },
-//         form: req.body
-//     }).pipe(res);
-// });
-
-// router.put('/pt/patients', (req, res, next) => {
-//     request.put(config.apiUrl + '/patients/' + req.body.id, {
-//         headers: { 'x-access-token': req.headers['x-access-token'] },
-//         form: req.body
-//     }).pipe(res);
-// });
-
-// router.post('/pt/deletepatient', (req, res, next) => {
-//     if (!req.body.id) return res.sendStatus(400);
-//     request.delete(config.apiUrl + '/patients/' + req.body.id, {
-//         headers: { 'x-access-token': req.headers['x-access-token'] }
-//     }).pipe(res);
-// });
-
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get({
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
@@ -73,7 +52,6 @@ router.get('/pts/:id/patients', function(req, res, next) {
 //         headers: {'x-access-token': req.query.token},
 //     }).pipe(res)
 // });
-
 
 
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
