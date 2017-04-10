@@ -25,14 +25,14 @@ router.get('/patients1', function(req, res, next) {
     return res.render('patients1', { firstName: 'Josh', footerButton: 'Add Patient', footerButton2: 'Submit' });
 });
 
-// added
-router.get('/pt/patients', (req, res, next) => {
-    request.get(config.apiUrl + '/patients', (err, response, body) => {
-    if (!err && response.statusCode == 200)
-return res.render('patients', {patients: JSON.parse(body), footerButton2: 'Add Patient'});
-else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
-});
-});
+// // added
+// router.get('/pt/patients', (req, res, next) => {
+//     request.get(config.apiUrl + '/patients', (err, response, body) => {
+//     if (!err && response.statusCode == 200)
+// return res.render('patients', {patients: JSON.parse(body), footerButton2: 'Add Patient'});
+// else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
+// })
+// })
 
 // router.post('/pt/patients', (req, res, next) => {
 //     request.post(config.apiUrl + '/patients', {
@@ -61,9 +61,9 @@ router.get('/pts/:id/patients', function(req, res, next) {
         headers: {'x-access-token': req.query.token},
     }, (err, response, body) => {
         return res.render('patients', {
-            firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: res.json()
+            firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: res
         });
-    });
+    })
 
 });
 
