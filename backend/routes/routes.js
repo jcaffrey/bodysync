@@ -18,8 +18,6 @@ var exerciseSets = require('../controllers/exerciseSets');
 var exercises = require('../controllers/exercises');
 var exerciseCompletions = require('../controllers/exerciseCompletions');
 
-// TODO: import exercise controllers
-
 
 // N.B.: 
 // role-specific auth (are you at pt? a patient?) containing in ../controllers/auth,js 
@@ -32,11 +30,8 @@ var auth = require('../controllers/auth');
 // routes 
 //============================== 
 
-// TODO: exercises routes
 // TODO: implement update
 // TODO: implement error checking
-
-
 
 // for now... assumes only one practice to which all pts belong
 
@@ -65,8 +60,8 @@ router.route('/login/patient')
 router.route('/pts')
     .get(auth.adminRequired, pts.getPts) // not a view
     .post(auth.adminRequired, pts.createPt); 
-router.route('/patients') 
-    .get(auth.adminRequired, patients.getAllPatients); // now a view, just for development 
+router.route('/patients')
+    .get(auth.adminRequired, patients.getAllPatients); // not a view, just for development
 router.route('/pts/:id')
     .get(auth.ptRequired, pts.getPtById) // not a view  
    // .put(auth.ptRequired, pts.updatePt) // Access: pt should be able to self update?
@@ -86,9 +81,6 @@ router.route('/patients/:id')
 router.route('/patients/:id/injuries') 
     .get(auth.tokenRequired, injuries.getInjuries) //  views handled differently on frontend using token
     .post(auth.ptRequired, injuries.createInjury);
-
-
-
 
 
 // TODO ERROR CATCHING ON ALL OF THESE
@@ -161,8 +153,6 @@ e.g.
 /exerciseSets/:id is sufficient for /pts/:id/patients/:id/injuries/:id/exerciseSets/:id/
 since we'd only ever access a specific exerciseSet with id :id if we are the pt with 
 the specific patient with the speciific injury, so we're removing redundancy. 
-
-There are additional routes we have to implement, this is simply take 1.
 
 */
 

@@ -36,6 +36,7 @@ exports.loginPt = (req, res, next) => {
             pt.token = token;
             pt.save()
                 .then(function () {
+                    // returns token to frontend..
                     res.json({token: token});
                 });
 
