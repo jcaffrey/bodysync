@@ -100,30 +100,35 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            // (!!!) TODO: find better way of using token (!!!)
-            // window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
             getPatients();
         });
     }).catch(submitError);
 }
 
+// login -> /patients -> request
+
 function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (pts) {localStorage.patients = pts});
+    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
+        });
+        window.location = '/patients';
     })
     .catch(submitError);
 }
 
 function getGraphData(id) {
-    if(!localStorage.token) window.location = '/';
     fetch('/romMetrics/' + id, {
         headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
         method: 'GET'
-    }).then(submitSuccess)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {localStorage.graphData = data});
+    })
         .catch(submitError);
 }
 
@@ -338,18 +343,84 @@ for (i = 0; i < getButton.length; i++) {
 // Search, sort patients
 // =============================================================
 
-// TODO: search on key strokes
-function search(query, array) {
-    alert(array[0]);
-    for (var i = 0, len = array.length; i < len; i++) {
-        if (!array[i].name.toUpperCase().includes(query.toUpperCase())) {
-            alert(array[i].name);
-        }
+function loadPatients(pts) {
+    var psd = JSON.parse(pts);
+    // fetch patient metrics here
+    for (var i = 0; i < psd.length; i++) {
+        var div = document.createElement('div');
+        var picbox = document.createElement('div');
+        var pic = document.createElement('img');
+        var prog = document.createElement('img');
+        pic.src = '../../img/profile_pic.jpg';
+        pic.setAttribute('id', 'profileImg');
+        prog.src = '../../img/upIcon.png';
+        prog.setAttribute('id', 'upIcon');
+        var inner = document.createElement('div');
+        var name = document.createElement('div');
+        var recbx = document.createElement('div');
+        recbx.setAttribute('class', 'recovery-box');
+        var p1 = document.createElement('div');
+        p1.setAttribute('class', 'percent1');
+        // Hard coded
+        p1.innerHTML = "<span>70%</span>";
+        var rec = document.createElement('div');
+        var collapse = document.createElement('div');
+        collapse.setAttribute('class', 'buttonCollapse');
+        collapse.innerHTML = '<div class="arrow">▼</div>' +
+            '<div class="collapse" id="collapse">' +
+                '<hr><div class="space"></div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Shoulder</div>' +
+                    '<div class="input-percent1">70%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div><div class="collapse-inner"><div class="input-label">Neck - Side</div><div class="input-percent2">50%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="collapse-inner"><div class="input-label">Neck - Front</div><div class="input-percent3">30%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="space"></div><div class="inspect1">Inspect Patient</div></div></div>';
+        rec.setAttribute('class', 'recovery');
+        rec.innerHTML = "<span>Recovered</span>";
+        recbx.appendChild(p1);
+        recbx.appendChild(rec);
+        div.setAttribute('class', 'pt-box');
+        picbox.setAttribute('class', 'pic-box');
+        inner.setAttribute('class', 'info-box');
+        name.setAttribute('class', 'name');
+        picbox.appendChild(pic);
+        picbox.appendChild(prog);
+        name.appendChild(document.createTextNode(psd[i].name));
+        inner.appendChild(name);
+        inner.appendChild(recbx);
+        div.appendChild(picbox);
+        div.appendChild(inner);
+        div.appendChild(collapse);
+        document.getElementById('patients').appendChild(div);
     }
 }
 
-function pSearch(lst) {
-    search(form.patientSearch.value, lst);
+function clear() {
+    var list = document.getElementById('patients');
+    for (var i = 0; i < document.getElementsByClassName('pt-box').length; i++) {
+        list.removeChild(list.childNodes[i]);
+    }
+}
+
+function load() {
+    clear();
+    loadPatients(localStorage.display);
+}
+
+// TODO: search on key strokes
+function search(query, array) {
+    var temp = [];
+    var arr = JSON.parse(array);
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (arr[i].name.toUpperCase().includes(query.toUpperCase())) {
+            temp.push(arr[i]);
+        }
+    }
+    localStorage.display = JSON.stringify(temp);
+    load();
+}
+
+function pSearch() {
+    search(form.patientSearch.value, localStorage.patients);
 }
 
 // compareFunctions
@@ -426,24 +497,27 @@ function progDescending() {
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
         .append("svg:g")
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+        .attr("transform", "translate(15,0)");
     // create xAxis
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .ticks(5)
         .tickSize(-h);
 
     // Add the x-axis.
     graph.append("svg:g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + h + ")")
+        .attr("transform", "translate(15,230)")
         .call(xAxis);
 
     // create left yAxis
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(0).orient("left");
-    // Add the y-axis to the left
+    var yAxisLeft = d3.svg.axis().scale(y).ticks(5).orient("left");
+
     graph.append("svg:g")
-        .attr("class", "y axis");
+        .attr("transform", "translate(20,0)")
+        .attr("class", "y axis")
+        .call(yAxisLeft);
 
     graph.append("svg:path").attr("d", line(degreeValue, dayMeasured));
     graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
