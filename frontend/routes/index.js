@@ -35,23 +35,16 @@ router.get('/patients1', function(req, res, next) {
 // })
 
 router.get('/pts/:id/patients', function(req, res, next) {
-    request.get({
-        url: config.apiUrl + '/pts/' + req.params.id + '/patients',
-        headers: {'x-access-token': req.query.token},
-    }, (err, response, body) => {
-        return res.render('patients', {
-            firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: res
-        });
-    })
-
+    request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
 });
 
-// router.get('/pts/:id/patients', function(req, res, next) {
-//     request.get({
-//         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
-//         headers: {'x-access-token': req.query.token},
-//     }).pipe(res)
-// });
+router.get('/patients', function(req, res, next) {
+    return res.render('patients', {
+        firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit'
+    });
+});
 
 
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
@@ -59,7 +52,8 @@ router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
         url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
         headers: {'x-access-token': req.query.token},
     }, (err, response, body) => {
-        return JSON.parse(body)});
+        return JSON.parse(body)
+    })
 });
 
 router.post('/patients', function(req, res, next) {

@@ -3,35 +3,16 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    script
+    script.
+        window.onload = function(){load();}
 
 block content
     form
         .search-bar
-            input(type="search" name="patientSearch" id="patientSearch" placeholder="Find a patient")
-            button(type='button' onclick="pSearch(" + patients + ")") Search
+            input(type="text" name="patientSearch" id="patientSearch" placeholder="Find a patient")
+            button(type='button' onclick="pSearch()") Search
         h1 Sort By:
-        //each val in patients
-        //    .pt-box
-        //        .pic-box
-        //            img(src='../../img/profile_pic.jpg' id='profileImg')
-        //        .info-box
-        //            .name= val
-        //            .input-label= val
-        //        .buttonCollapse(data-target=".collapse" onclick='getGraphData(' + val + ')')
-        //            .arrow
-        //            .collapse#collapse
-        //                // Collapsible info here!!
-        //                .collapse-inner
-        //                    .input-label Shoulder
-        //                    .input-percent1 70%
-        //                .collapse-inner
-        //                    .input-label Neck - Side
-        //                    .input-percent2 50%
-        //                .collapse-inner
-        //                    .input-label Neck - Front
-        //                    .input-percent3 30%
-        //                .inspect1 Inspect Patient
+        #patients
 
         .plus-button
             a(href='/create-patient').add +
