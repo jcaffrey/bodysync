@@ -17,6 +17,7 @@ var romMetricMeasures = require('../controllers/romMetricMeasures');
 var exerciseSets = require('../controllers/exerciseSets');
 var exercises = require('../controllers/exercises');
 var exerciseCompletions = require('../controllers/exerciseCompletions');
+var auditLogs = require('../controllers/ptSessions');
 
 
 // N.B.: 
@@ -52,24 +53,24 @@ router.route('/')
 
 
 router.route('/login/pt')
-    .post(auth.loginPt);
+    .post(auth.loginPt, auditLogs.createSession);
 router.route('/login/patient')
     .post(auth.loginPatient); 
 
 // routes for admin
 router.route('/pts')
-    .get(auth.adminRequired, pts.getPts) // not a view
-    .post(auth.adminRequired, pts.createPt); 
-router.route('/patients')
+    .get(auth.adminRequired, pts.getPts, auditLogs.logSession) // not a view
+    .post(auth.adminRequired, pts.createPt);
+router.route('/patients') 
     .get(auth.adminRequired, patients.getAllPatients); // not a view, just for development
 router.route('/pts/:id')
-    .get(auth.ptRequired, pts.getPtById) // not a view  
+    .get(auth.ptRequired, pts.getPtById, auditLogs.logSession) // not a view
    // .put(auth.ptRequired, pts.updatePt) // Access: pt should be able to self update?
     .delete(auth.adminRequired, pts.deletePt); 
 
 // routes for pts to see patients
 router.route('/pts/:id/patients')
-    .get(auth.ptRequired, patients.getPatients)     
+    .get(auth.ptRequired, patients.getPatients)       // TODO: log this
     .post(auth.ptRequired, patients.createPatient);   // should patients have any access?
 
 router.route('/patients/:id')
@@ -81,6 +82,7 @@ router.route('/patients/:id')
 router.route('/patients/:id/injuries') 
     .get(auth.tokenRequired, injuries.getInjuries) //  views handled differently on frontend using token
     .post(auth.ptRequired, injuries.createInjury);
+
 
 
 // TODO ERROR CATCHING ON ALL OF THESE
