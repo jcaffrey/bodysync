@@ -16,6 +16,10 @@ router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/exercises', function(req, res, next) {
+    return res.render('exercises');
+});
+
 router.get('/loginnew', function(req, res, next) {
     return res.render('loginnew');
 });
