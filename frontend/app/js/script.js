@@ -239,121 +239,18 @@ function displayError(message) {
 
 
 // =============================================================
-// Patient page (in progress)
+// Patients page
 // =============================================================
 
-function toggleDisplay() {
-    var x = document.getElementById('toggle-box');
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
-    }
-    // var y = document.getElementById('patient-box');
-    // if (y.style.border-radius-bottom-left == $formRadius) {
-    //     y.style.border-radius-bottom-left = 0%
-    //     y.style.border-radius-bottom-right = 0%
-    // } else {
-    //     y.style.border-radius-bottom-left = $formRadius;
-    //     y.style.border-radius-bottom-right = $formRadius;
-    // }
-}
-
-// function fetchPatients() {
-//     if(!localStorage.token) window.location = '/';
-//     fetch('/pt/getpatients', {method: 'GET'})
-//     .then(function(res) {
-//         if (!res.ok) return console.log('Admin error');
-//         res.json().then(function(patients) { populatePatientsPage(patients) })
-//     }).catch(console.log('Error!'));
-// }
-
-// function populatePatientsPage(patients) {
-//     var patientDiv = document.getElementById('js-patients');
-//     patients.forEach(function(u) {
-//         var div = document.createElement('div');
-//         div.setAttribute('class', 'patient');
-        
-//         var name = document.createElement('div');
-//         name.setAttribute('class', 'patient-name');
-//         name.innerHTML = u.name.type;
-//         div.appendChild(name);
-        
-//         // var admin = document.createElement('div');
-//         // admin.setAttribute('class', 'patient-button button button-inline');
-//         // div.appendChild(admin);
-        
-//         // var del = document.createElement('div');
-//         // del.setAttribute('class', 'patient-button button button-inline warning');
-//         // del.innerHTML = 'Delete';
-//         // del.setAttribute('onclick', 'deletePatient("' + u._id + '", this)');
-//         // div.appendChild(del);
-        
-//         patientDiv.appendChild(div);
-//     });
-// }
-
-
-// =============================================================
-// Collapse patients
-// =============================================================
-var Collapse = {
-    init: function (element) {
-        if (!element) return false;
-        if (element.indexOf('.') != -1) {
-            var getName = element;
-            var getElement = document.querySelector(getName);
-        } else if (element.indexOf('#') != -1) {
-            var getName = element.replace(/\#/g, '');
-            var getElement = document.getElementById(getName);
-        }
-        if (!getElement.hasAttribute('data-height')) {
-            getElement.style.display = 'block';
-            getElement.dataset.height = getElement.offsetHeight + 'px';
-            getElement.style.height = '0';
-        }
-        return getElement;
-    },
-    expand: function (element) {
-        var getContent = Collapse.init(element);
-        setTimeout(function () {
-            getContent.style.height = getContent.dataset.height;
-        }, 20)
-    },
-    collapse: function (element) {
-        var getContent = Collapse.init(element);
-        getContent.style.height = '0';
-    }
-}
-
-var getButton = document.getElementsByClassName('buttonCollapse');
-
-for (i = 0; i < getButton.length; i++) {
-    (function(buttons) {
-        buttons.addEventListener('click', function () {
-            var self = this;
-            var getTarget = self.getAttribute('data-target');
-            self.classList.toggle('is-active');
-            self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
-        });
-    })(getButton[i])
-}
-
-function displayCollapse (x) {
+function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') {
         elt.style.display = 'block';
-        //- elt.style.transition = "all 1s";
-
     }
     else {
         elt.style.display = 'none';
     }
 }
-
-// =============================================================
-// Search, sort patients
-// =============================================================
 
 function loadPatients(pts) {
     var psd = JSON.parse(pts);
@@ -363,24 +260,25 @@ function loadPatients(pts) {
         var picbox = document.createElement('div');
         var pic = document.createElement('img');
         var prog = document.createElement('img');
+        var inner = document.createElement('div');
+        var name = document.createElement('div');
+        var recbx = document.createElement('div');
+        var p1 = document.createElement('div');
+        var rec = document.createElement('div');
+        var arrow = document.createElement('div');
+        var collapse = document.createElement('div');
+
         pic.src = '../../img/profile_pic.jpg';
         pic.setAttribute('id', 'profileImg');
         prog.src = '../../img/upIcon.png';
         prog.setAttribute('id', 'upIcon');
-        var inner = document.createElement('div');
-        var name = document.createElement('div');
-        var recbx = document.createElement('div');
         recbx.setAttribute('class', 'recovery-box');
-        var p1 = document.createElement('div');
         p1.setAttribute('class', 'percent1');
-        // Hard coded
+        // Hard coded patient data
         p1.innerHTML = "<span>70%</span>";
-        var rec = document.createElement('div');
-        var arrow = document.createElement('div');
         arrow.setAttribute('class', 'arrow');
         arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
         arrow.appendChild(document.createTextNode('▼'));
-        var collapse = document.createElement('div');
         collapse.setAttribute('class', 'buttonCollapse');
         collapse.innerHTML =
             '<div class="collapse" id= "collapse' + i + '">' +
@@ -456,29 +354,23 @@ function pSearch() {
     search(form.patientSearch.value, localStorage.patients);
 }
 
-// compare Functions
 function compareAlpha(a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
 }
-function compareAlphaRev(a, b) {
-    if (a.name > b.name) return -1;
-    if (a.name < b.name) return 1;
-    return 0;
-}
 
-var ctr = 0;
+var ctr1 = 0;
 var ctr2 = 0;
 
 function sortAlpha() {
-    ctr++;
+    ctr1++;
     var lst = JSON.parse(localStorage.display);
-    if (ctr % 2 != 0) {
+    if (ctr1 % 2 != 0) {
         localStorage.display = JSON.stringify(lst.sort(compareAlpha))
     }
     else {
-        localStorage.display = JSON.stringify(lst.sort(compareAlphaRev))
+        localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse())
     }
     load();
 }

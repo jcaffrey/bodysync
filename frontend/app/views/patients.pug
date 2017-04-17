@@ -10,20 +10,12 @@ block content
     form
         .search-bar
             img(src='../../img/search-icon.png' id='searchIcon')
-            input(type="text" name="patientSearch" id="patientSearch" placeholder="Find a patient" onkeypress="return event.keyCode != 13")
-            button(type='button' onclick="pSearch()") Search
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients"
+                    onkeypress="if (event.keyCode != 13) { return pSearch() } else { return false }")
             img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="sortAlpha()")
             img(src='../../img/health.png' id='health' onclick="sortProg()")
-        h1 Sort By:
         #patients
 
         .plus-button
             a(href='/create-patient').add +
-        //- button(type='button' onclick='fetchPatients()') Fetch
-        //- #js-patients
-//- block submitForm
-//-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
-//- block postScript
-//-     script fetchPatients();
-block postScript
-    script.
+        .space
