@@ -339,6 +339,18 @@ for (i = 0; i < getButton.length; i++) {
     })(getButton[i])
 }
 
+function displayCollapse (x) {
+    var elt = document.getElementById(x);
+    if (elt.style.display === 'none') {
+        elt.style.display = 'block';
+        //- elt.style.transition = "all 1s";
+
+    }
+    else {
+        elt.style.display = 'none';
+    }
+}
+
 // =============================================================
 // Search, sort patients
 // =============================================================
@@ -364,16 +376,34 @@ function loadPatients(pts) {
         // Hard coded
         p1.innerHTML = "<span>70%</span>";
         var rec = document.createElement('div');
+        var arrow = document.createElement('div');
+        arrow.setAttribute('class', 'arrow');
+        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
+        arrow.appendChild(document.createTextNode('▼'));
         var collapse = document.createElement('div');
         collapse.setAttribute('class', 'buttonCollapse');
-        collapse.innerHTML = '<div class="arrow">▼</div>' +
-            '<div class="collapse" id="collapse">' +
+        collapse.innerHTML =
+            '<div class="collapse" id= "collapse' + i + '">' +
                 '<hr><div class="space"></div>' +
                 '<div class="collapse-inner">' +
                     '<div class="input-label">Shoulder</div>' +
                     '<div class="input-percent1">70%</div>' +
                     '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div><div class="collapse-inner"><div class="input-label">Neck - Side</div><div class="input-percent2">50%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="collapse-inner"><div class="input-label">Neck - Front</div><div class="input-percent3">30%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="space"></div><div class="inspect1">Inspect Patient</div></div></div>';
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Side</div>' +
+                    '<div class="input-percent2">50%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Front</div>' +
+                    '<div class="input-percent3">30%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="space"></div>' +
+                '<div class="inspect1">Inspect Patient</div>' +
+            '</div>' +
+            '</div>';
         rec.setAttribute('class', 'recovery');
         rec.innerHTML = "<span>Recovered</span>";
         recbx.appendChild(p1);
@@ -389,6 +419,7 @@ function loadPatients(pts) {
         inner.appendChild(recbx);
         div.appendChild(picbox);
         div.appendChild(inner);
+        div.appendChild(arrow);
         div.appendChild(collapse);
         document.getElementById('patients').appendChild(div);
     }
@@ -396,9 +427,12 @@ function loadPatients(pts) {
 
 function clear() {
     var list = document.getElementById('patients');
-    for (var i = 0; i < document.getElementsByClassName('pt-box').length; i++) {
-        list.removeChild(list.childNodes[i]);
-    }
+    list.innerHTML = '';
+}
+
+function loadStart() {
+    clear();
+    loadPatients(localStorage.patients);
 }
 
 function load() {
@@ -406,7 +440,6 @@ function load() {
     loadPatients(localStorage.display);
 }
 
-// TODO: search on key strokes
 function search(query, array) {
     var temp = [];
     var arr = JSON.parse(array);
@@ -423,7 +456,7 @@ function pSearch() {
     search(form.patientSearch.value, localStorage.patients);
 }
 
-// compareFunctions
+// compare Functions
 function compareAlpha(a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
@@ -435,20 +468,31 @@ function compareAlphaRev(a, b) {
     return 0;
 }
 
-function alphaAscending(lst) {
-    return lst.sort(compareAlpha)
+var ctr = 0;
+var ctr2 = 0;
+
+function sortAlpha() {
+    ctr++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr % 2 != 0) {
+        localStorage.display = JSON.stringify(lst.sort(compareAlpha))
+    }
+    else {
+        localStorage.display = JSON.stringify(lst.sort(compareAlphaRev))
+    }
+    load();
 }
 
-function alphaDescending(lst) {
-    return lst.sort(compareAlphaRev)
-}
-
-function progAscending(lst) {
-    return lst.sort(function (a, b) { return a.progress - b.progress })
-}
-
-function progDescending() {
-    return patients.sort(function (a, b) { return b.progress - a.progress })
+function sortProg() {
+    ctr2++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr % 2 != 0) {
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }))
+    }
+    else {
+        localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }))
+    }
+    load();
 }
 
 
