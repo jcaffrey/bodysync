@@ -17,7 +17,6 @@ router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-<<<<<<< HEAD
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises');
 });
@@ -28,10 +27,9 @@ router.get('/loginnew', function(req, res, next) {
 
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
-=======
+
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
->>>>>>> 587645fba8ac42025677329fe166a88dd9209261
 });
 
 router.get('/logind', function(req, res, next) {
