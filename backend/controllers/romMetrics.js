@@ -32,6 +32,7 @@ module.exports.createRomMetric = (req, res, next) => {
                             injuryId: req.params.id
                         }).then(function(rom) {
                             res.json(rom);
+                            return next();
                         });
                     } else {
                         res.status(401).send('PT unauthorized');
@@ -84,7 +85,8 @@ module.exports.getRomMetrics = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
-                                return res.json(roms);
+                                res.json(roms);
+                                return next();
                             } else {
                                 return res.status(401).send('PT unauthorized');
                             }
@@ -125,18 +127,23 @@ module.exports.getRomMetricById = (req, res, next) => {
                         }).then(function (patient) {
                             if(Object.keys(patient).length !== 0) {
                                 if(decoded.id == patient.ptId) {
-                                    return res.json(rom);
+                                    res.json(rom);
+                                    return next();
                                 } else {
                                     res.status(401).send('PT unauthorized');
                                 }
                             } else {
                                 res.status(404).send('No patient with that injury');
                             }
+                        }).catch(function (err) {
+                            return next(err);
                         })
                     }
                 } else {
                     res.status(404).send('no injury with that rom');
                 }
+            }).catch(function (err) {
+                return next(err);
             })
         } else {
             res.status(404).send('No Metric with that id');

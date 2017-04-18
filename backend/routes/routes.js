@@ -17,7 +17,7 @@ var romMetricMeasures = require('../controllers/romMetricMeasures');
 var exerciseSets = require('../controllers/exerciseSets');
 var exercises = require('../controllers/exercises');
 var exerciseCompletions = require('../controllers/exerciseCompletions');
-var auditLogs = require('../controllers/auditLogs');
+var auditLogs = require('../controllers/ptSessions');
 
 
 // N.B.: 
@@ -70,7 +70,7 @@ router.route('/pts/:id')
 
 // routes for pts to see patients
 router.route('/pts/:id/patients')
-    .get(auth.ptRequired, patients.getPatients)     
+    .get(auth.ptRequired, patients.getPatients)       // TODO: log this
     .post(auth.ptRequired, patients.createPatient);   // should patients have any access?
 
 router.route('/patients/:id')

@@ -7,7 +7,7 @@ var form = document.forms[0];
 
 function submitOnEnterKey(submitFunction, targetForm) {
     targetForm = targetForm || form;
-    var runOnKeydown = function(e) { if (e.keyCode === 13) submitFunction(); }
+    var runOnKeydown = function(e) { if (e.keyCode === 13) submitFunction() };
     var children = targetForm.childNodes;
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
@@ -18,6 +18,42 @@ function submitOnEnterKey(submitFunction, targetForm) {
             type === 'number' || type === 'phone')
             child.onkeydown = runOnKeydown;
     }
+}
+
+function submitLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+
+    fetch('/login', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            getPatients();
+        });
+    }).catch(submitError);
+}
+
+function logout() {
+    localStorage.id = '';
+    localStorage.token = '';
+    localStorage.patients = '';
+    localStorage.display = '';
+    localStorage.graphData = '';
+    window.location = '/login';
+}
+
+function headers() {
+    return {
+        'x-access-token': localStorage.token,
+        'Content-Type': 'application/json'
+    };
 }
 
 function submitForm() {
@@ -37,10 +73,8 @@ function submitForm() {
         },
         method: 'POST',
         body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-    // }).then(submitSuccess)
-    //     .catch(submitError)
+    }).then(submitSuccess)
+        .catch(submitError)
 }
 
 // surgeryType, romStart, romEnd, notes in schema????
@@ -63,62 +97,8 @@ function submitPatient(id) {
         },
         method: 'POST',
         body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-}
-
-function submitMeasure() {
-    var data = {};
-    var errorMessage = '';
-    if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
-    // ********************************
-    //  is this the right route?
-    // ********************************
-    fetch('/romMetrics/' + localStorage.id + '/romMetricMeasures', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-}
-
-// TODO: form validation
-function submitLogin() {
-    var data = {
-        email: form.email.value,
-        password: form.password.value
-    };
-
-    fetch('/login', {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        else return res.json().then(function(result) {
-            localStorage.token = result.token;
-            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            getPatients();
-        });
-    }).catch(submitError);
-}
-
-// login -> /patients -> request
-
-function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            // var patients = JSON.parse(localStorage.patients);
-            localStorage.patients = JSON.stringify(pts);
-            localStorage.display = JSON.stringify(pts);
-        });
-        window.location = '/patients';
-    })
-    .catch(submitError);
+    }).then(submitSuccess)
+        .catch(submitError)
 }
 
 function getGraphData(id) {
@@ -236,112 +216,30 @@ function displayError(message) {
     errorDiv.style.visibility = 'visible';
 }
 
-
-
 // =============================================================
-// Patient page (in progress)
+//  Patients
 // =============================================================
 
-function toggleDisplay() {
-    var x = document.getElementById('toggle-box');
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
-    }
-    // var y = document.getElementById('patient-box');
-    // if (y.style.border-radius-bottom-left == $formRadius) {
-    //     y.style.border-radius-bottom-left = 0%
-    //     y.style.border-radius-bottom-right = 0%
-    // } else {
-    //     y.style.border-radius-bottom-left = $formRadius;
-    //     y.style.border-radius-bottom-right = $formRadius;
-    // }
-}
+// JORDAN: login -> /patients -> request
 
-// function fetchPatients() {
-//     if(!localStorage.token) window.location = '/';
-//     fetch('/pt/getpatients', {method: 'GET'})
-//     .then(function(res) {
-//         if (!res.ok) return console.log('Admin error');
-//         res.json().then(function(patients) { populatePatientsPage(patients) })
-//     }).catch(console.log('Error!'));
-// }
-
-// function populatePatientsPage(patients) {
-//     var patientDiv = document.getElementById('js-patients');
-//     patients.forEach(function(u) {
-//         var div = document.createElement('div');
-//         div.setAttribute('class', 'patient');
-        
-//         var name = document.createElement('div');
-//         name.setAttribute('class', 'patient-name');
-//         name.innerHTML = u.name.type;
-//         div.appendChild(name);
-        
-//         // var admin = document.createElement('div');
-//         // admin.setAttribute('class', 'patient-button button button-inline');
-//         // div.appendChild(admin);
-        
-//         // var del = document.createElement('div');
-//         // del.setAttribute('class', 'patient-button button button-inline warning');
-//         // del.innerHTML = 'Delete';
-//         // del.setAttribute('onclick', 'deletePatient("' + u._id + '", this)');
-//         // div.appendChild(del);
-        
-//         patientDiv.appendChild(div);
-//     });
-// }
-
-
-// =============================================================
-// Collapse patients
-// =============================================================
-var Collapse = {
-    init: function (element) {
-        if (!element) return false;
-        if (element.indexOf('.') != -1) {
-            var getName = element;
-            var getElement = document.querySelector(getName);
-        } else if (element.indexOf('#') != -1) {
-            var getName = element.replace(/\#/g, '');
-            var getElement = document.getElementById(getName);
-        }
-        if (!getElement.hasAttribute('data-height')) {
-            getElement.style.display = 'block';
-            getElement.dataset.height = getElement.offsetHeight + 'px';
-            getElement.style.height = '0';
-        }
-        return getElement;
-    },
-    expand: function (element) {
-        var getContent = Collapse.init(element);
-        setTimeout(function () {
-            getContent.style.height = getContent.dataset.height;
-        }, 20)
-    },
-    collapse: function (element) {
-        var getContent = Collapse.init(element);
-        getContent.style.height = '0';
-    }
-}
-
-var getButton = document.getElementsByClassName('buttonCollapse');
-
-for (i = 0; i < getButton.length; i++) {
-    (function(buttons) {
-        buttons.addEventListener('click', function () {
-            var self = this;
-            var getTarget = self.getAttribute('data-target');
-            self.classList.toggle('is-active');
-            self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
+function getPatients() {
+    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
         });
-    })(getButton[i])
+        window.location = '/patients';
+    }).catch(submitError);
 }
 
-// =============================================================
-// Search, sort patients
-// =============================================================
+function displayCollapse(x) {
+    var elt = document.getElementById(x);
+    if (elt.style.display === 'none') elt.style.display = 'block';
+    else elt.style.display = 'none'
+}
 
 function loadPatients(pts) {
     var psd = JSON.parse(pts);
@@ -351,29 +249,48 @@ function loadPatients(pts) {
         var picbox = document.createElement('div');
         var pic = document.createElement('img');
         var prog = document.createElement('img');
+        var inner = document.createElement('div');
+        var name = document.createElement('div');
+        var recbx = document.createElement('div');
+        var p1 = document.createElement('div');
+        var rec = document.createElement('div');
+        var arrow = document.createElement('div');
+        var collapse = document.createElement('div');
+
         pic.src = '../../img/profile_pic.jpg';
         pic.setAttribute('id', 'profileImg');
         prog.src = '../../img/upIcon.png';
         prog.setAttribute('id', 'upIcon');
-        var inner = document.createElement('div');
-        var name = document.createElement('div');
-        var recbx = document.createElement('div');
         recbx.setAttribute('class', 'recovery-box');
-        var p1 = document.createElement('div');
         p1.setAttribute('class', 'percent1');
-        // Hard coded
+        // Hard coded patient data
         p1.innerHTML = "<span>70%</span>";
-        var rec = document.createElement('div');
-        var collapse = document.createElement('div');
+        arrow.setAttribute('class', 'arrow');
+        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
+        arrow.appendChild(document.createTextNode('▼'));
         collapse.setAttribute('class', 'buttonCollapse');
-        collapse.innerHTML = '<div class="arrow">▼</div>' +
-            '<div class="collapse" id="collapse">' +
+        collapse.innerHTML =
+            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
                 '<hr><div class="space"></div>' +
                 '<div class="collapse-inner">' +
                     '<div class="input-label">Shoulder</div>' +
                     '<div class="input-percent1">70%</div>' +
                     '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div><div class="collapse-inner"><div class="input-label">Neck - Side</div><div class="input-percent2">50%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="collapse-inner"><div class="input-label">Neck - Front</div><div class="input-percent3">30%</div><div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div><div class="space"></div><div class="inspect1">Inspect Patient</div></div></div>';
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Side</div>' +
+                    '<div class="input-percent2">50%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Front</div>' +
+                    '<div class="input-percent3">30%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="space"></div>' +
+                '<div class="inspect1">Inspect Patient</div>' +
+            '</div>' +
+            '</div>';
         rec.setAttribute('class', 'recovery');
         rec.innerHTML = "<span>Recovered</span>";
         recbx.appendChild(p1);
@@ -389,6 +306,7 @@ function loadPatients(pts) {
         inner.appendChild(recbx);
         div.appendChild(picbox);
         div.appendChild(inner);
+        div.appendChild(arrow);
         div.appendChild(collapse);
         document.getElementById('patients').appendChild(div);
     }
@@ -396,9 +314,12 @@ function loadPatients(pts) {
 
 function clear() {
     var list = document.getElementById('patients');
-    for (var i = 0; i < document.getElementsByClassName('pt-box').length; i++) {
-        list.removeChild(list.childNodes[i]);
-    }
+    list.innerHTML = '';
+}
+
+function loadStart() {
+    clear();
+    loadPatients(localStorage.patients);
 }
 
 function load() {
@@ -406,14 +327,12 @@ function load() {
     loadPatients(localStorage.display);
 }
 
-// TODO: search on key strokes
 function search(query, array) {
     var temp = [];
     var arr = JSON.parse(array);
     for (var i = 0, len = arr.length; i < len; i++) {
-        if (arr[i].name.toUpperCase().includes(query.toUpperCase())) {
+        if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
-        }
     }
     localStorage.display = JSON.stringify(temp);
     load();
@@ -423,37 +342,88 @@ function pSearch() {
     search(form.patientSearch.value, localStorage.patients);
 }
 
-// compareFunctions
 function compareAlpha(a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
 }
-function compareAlphaRev(a, b) {
-    if (a.name > b.name) return -1;
-    if (a.name < b.name) return 1;
-    return 0;
+
+var ctr1 = 0;
+var ctr2 = 0;
+
+function sortAlpha() {
+    ctr1++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
+    load();
 }
 
-function alphaAscending(lst) {
-    return lst.sort(compareAlpha)
+function sortProg() {
+    ctr2++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr % 2 != 0)
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }));
+    else localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }));
+    load();
 }
-
-function alphaDescending(lst) {
-    return lst.sort(compareAlphaRev)
-}
-
-function progAscending(lst) {
-    return lst.sort(function (a, b) { return a.progress - b.progress })
-}
-
-function progDescending() {
-    return patients.sort(function (a, b) { return b.progress - a.progress })
-}
-
 
 // =============================================================
-// Progress Graph
+//  Add measure
+// =============================================================
+
+function getInjuries(id) {
+    fetch('/patients/' + id + '/injuries?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
+        });
+        window.location = '/patients';
+    }).catch(submitError);
+}
+
+function loadInjuries(inj) {
+    var injuries = JSON.parse(inj);
+    for (injury in injuries) {
+        var div = document.createElement('div');
+        div.setAttribute('class', 'input-box');
+        div.appendChild(document.createTextNode("hi"));
+        document.getElementById('injuries').appendChild(div);
+    }
+}
+
+// JS date to MySQL function from:
+// http://stackoverflow.com/questions/5129624/convert-js-date-time-to-mysql-datetime
+function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+
+Date.prototype.toMysqlFormat = function() {
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+};
+
+function submitMeasure(id, i) {
+    var d = new Date();
+    var data = {
+        dayMeasured: d.toMysqlFormat()
+    };
+    if (form[i].value) data.degreeValue = form[i].value;
+    fetch('/romMetrics/' + id + '/romMetricMeasures?token=' + localStorage.token, {
+        headers: headers(),
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) throw new Error('There was an error sending this measure');
+    }).catch(function (err) { console.log(err); });
+}
+
+// =============================================================
+//  Progress Graph
 // =============================================================
     var m = [0, 0, 0, 0]; // margins
     var w = 300 - m[1] - m[3]; // width

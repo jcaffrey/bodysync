@@ -31,7 +31,7 @@ exports.loginPt = (req, res, next) => {
              
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
              
             pt.token = token;
             pt.save()
