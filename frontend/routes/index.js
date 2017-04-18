@@ -21,22 +21,6 @@ router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
-// patient view
-router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { footerButton: 'Add Patient'});
-});
-
-// exercise form view
-router.get('/exercise-form', function(req, res, next) {
-    return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
-});
-
-
-router.get('/pts/:id/patients', function(req, res, next) {
-    request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
-        headers: {'x-access-token': req.query.token}
-    }).pipe(res);
-
 router.get('/logind', function(req, res, next) {
     return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
@@ -120,6 +104,16 @@ router.get('/new-exercise', function(req, res, next) {
 
 router.get('/patient-status', function(req, res, next) {
     return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+});
+
+// patient view
+router.get('/patients1', function(req, res, next) {
+    return res.render('patients1', { footerButton: 'Add Patient'});
+});
+
+// exercise form view
+router.get('/exercise-form', function(req, res, next) {
+    return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
 module.exports = router;
