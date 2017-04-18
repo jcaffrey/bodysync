@@ -13,7 +13,8 @@ module.exports = function(grunt) {
                     'public/stylesheets/add-measure.css': 'app/stylesheets/add-measure.styl',
                     'public/stylesheets/patients.css': 'app/stylesheets/patients.styl',
                     'public/stylesheets/patient-status.css': 'app/stylesheets/patient-status.styl',
-                    'public/stylesheets/patients.css': 'app/stylesheets/patients1.styl'
+                    'public/stylesheets/patients.css': 'app/stylesheets/patients1.styl',
+                    'public/stylesheets/exercise-form.css': 'app/stylesheets/exercise-form.styl'
                 }
             }
         },

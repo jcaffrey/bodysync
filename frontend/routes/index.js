@@ -24,19 +24,16 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-// new patient page
+// patient view
 router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { firstName: 'Josh', footerButton: 'Add Patient', footerButton2: 'Submit' });
+    return res.render('patients1', { footerButton: 'Add Patient'});
 });
 
-// // added
-// router.get('/pt/patients', (req, res, next) => {
-//     request.get(config.apiUrl + '/patients', (err, response, body) => {
-//     if (!err && response.statusCode == 200)
-// return res.render('patients', {patients: JSON.parse(body), footerButton2: 'Add Patient'});
-// else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
-// })
-// })
+// exercise form view
+router.get('/exercise-form', function(req, res, next) {
+    return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
+});
+
 
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
