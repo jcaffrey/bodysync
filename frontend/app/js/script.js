@@ -410,12 +410,9 @@ Date.prototype.toMysqlFormat = function() {
 function submitMeasure(id, i) {
     var d = new Date();
     var data = {
-        dayMeasured: d.toMysqlFormat(),
-        name: 'why'
+        dayMeasured: d.toMysqlFormat()
     };
     if (form[i].value) data.degreeValue = form[i].value;
-    console.log(i);
-    console.log(id);
     fetch('/romMetrics/' + id + '/romMetricMeasures?token=' + localStorage.token, {
         headers: headers(),
         method: 'POST',
