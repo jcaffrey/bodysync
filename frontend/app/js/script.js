@@ -455,25 +455,30 @@ function progDescending() {
 // =============================================================
 // Progress Graph
 // =============================================================
-    var m = [0, 0, 0, 0]; // margins
+    var m = [50, 20, 0, 0]; // margins
     var w = 300 - m[1] - m[3]; // width
     var h = 250 - m[0] - m[2]; // height
 
-    var degreeValue = [32, 35, 40, 45, 43];
+    var degreeValue = [32, 35, 40, 45];
 
-    var dayMeasured = [1, 2, 3, 4, 5];
+    var dayMeasured = [1, 2, 3, 4];
 
     //var dayMeasured = [2017-04-02, 2017-04-09, 2017-04-016, 2017-04-23, 2017-04-30, 	2017-5-07,  2017-05-14, 2017-05-21];
 
     var goal = 50;
 
-    var points = [[32, 1], [35, 2], [40, 3], [45, 4], [43, 5]];
+    var next_weeks_goal = 50;
 
+    var next_weeks_goal_date = 5;
+
+    var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+
+    var goal_point = [50, 4];
 
     // X scale will fit all values from data[] within pixels 0-w
     var x = d3.scale.linear().domain([0, 6]).range([0, w]);
     // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-    var y = d3.scale.linear().domain([20, 60]).range([h, 0]);
+    var y = d3.scale.linear().domain([20, 60]).range([(h + 10), 0]);
 
 
     var line = d3.svg.line()
@@ -488,8 +493,16 @@ function progDescending() {
         .x(function (d, i) {
             return x(dayMeasured[i]);
         })
-        .y(function (d) {
-            return y(goal)
+        .y(function () {
+            return y(goal);
+        } );
+
+    var line3 = d3.svg.line()
+        .x(function (d, i) {
+            return x(next_weeks_goal_date[i]);
+        })
+        .y(function (d, i) {
+            return y(next_weeks_goal[i]);
         });
 
     // Add an SVG element with the desired dimensions and margin.
@@ -512,7 +525,7 @@ function progDescending() {
         .call(xAxis);
 
     // create left yAxis
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(5).orient("left");
+    var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
 
     graph.append("svg:g")
         .attr("transform", "translate(20,0)")
@@ -522,9 +535,11 @@ function progDescending() {
     graph.append("svg:path").attr("d", line(degreeValue, dayMeasured));
     graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
         .attr("class", "horizontalLine");
+    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date));
 
 
-    graph.selectAll(".point")
+
+graph.selectAll(".point")
         .data(points)
         .enter().append("circle")
         .attr("class", "circles")
@@ -535,3 +550,15 @@ function progDescending() {
             return y(degreeValue[i]);
         })
         .attr("r", 8);
+
+graph.selectAll(".point")
+    .data(goal_point)
+    .enter().append("circle")
+    .attr("class", "goal-point")
+    .attr("cx", function (d, i) {
+        return x(next_weeks_goal_date);
+    })
+    .attr("cy", function (d, i) {
+        return y(next_weeks_goal);
+    })
+    .attr("r", 10);
