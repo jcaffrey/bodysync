@@ -3,10 +3,6 @@
 
 module.exports = function(sequelize, DataTypes) {
     var romMetricMeasure = sequelize.define("romMetricMeasure", {
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         degreeValue: {
             type: DataTypes.INTEGER,
             allowNull: false
