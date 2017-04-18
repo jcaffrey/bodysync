@@ -28,127 +28,139 @@ form h1
       width: 60%
 .pic-box
   display: inline-block
+  position: relative
   width: 25%
   text-align: left
-  padding-left: 5%
-  padding-top: 8%
-  @media screen and (min-width: 770px) and (max-width: 2000px)
-    width: 28%
 .info-box
   display inline-block
-  width: 60%
+  width: 52.5%
   text-align: left
-  vertical-align: top
-  padding-left: 5%
-  padding-top: 10%
-  @media screen and (min-width: 770px) and (max-width: 2000px)
-    padding-left: 0%
+  vertical-align: middle
+  padding-left: 2.5%
 .name
   display block
+  vertical-align: bottom
   width 100%
   height 45%
   color $mainColor
   text-transform: uppercase
   font-size: 4vw
-  @media screen and (min-width: 0px) and (max-width: 499px)
-    height: 40%
-    padding-top: 8%
-    padding-bottom: 2%
-  @media screen and (min-width: 500px) and (max-width: 769px)
-    height: 45%
-    padding-top: 2.5%
-    padding-bottom: 2.5%
-  @media screen and (min-width: 770px) and (max-width: 999px)
-    height: 35%
-    padding-top: 0%
-    padding-bottom: 1%
-  @media screen and (min-width: 1000px) and (max-width: 2000px)
-    height: 45%
-    padding-top: 0%
-    padding-bottom: 2.5%
+  height: 40%
+  padding-top: 1%
+  padding-bottom: 1%
+  @media screen and (max-width: 770px)
+    font-size: 6vw
   
 .recovery-box
-  height: 45%
-  vertical-align: bottom
+  padding-top: 1%
+  padding-bottom: 1%
+  vertical-align: top
+  
 .percent1
   display: inline-block
-  vertical-align: bottom
   font-family: 'GothamBold'
   color: #1A924C
   font-size: 3.5vw
   width: 15%
+  @media screen and (max-width: 770px)
+    font-size: 4vw
+    
 .percent2
   display: inline-block
-  vertical-align: bottom
   font-family: 'GothamBold'
   color #801a00
   font-size: 3.5vw
   width: 15%
+  @media screen and (max-width: 770px)
+    font-size: 4vw
 hr
   border-style: dashed
   color: $inactiveColor
 #upIcon
   position: absolute
   z-index: 1000
-  @media screen and (min-width: 0px) and (max-width: 499px)
-    margin: 13% 1% -70% -6%
-    width: 7%
-  @media screen and (min-width: 500px) and (max-width: 769px)
-    margin: 10% 25% -10% -5%
-    width: 6%
-  @media screen and (min-width: 770px) and (max-width: 999px)
-    margin: 5.5% 25% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1000px) and (max-width: 1099px)
-    margin: 8% 23% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1100px) and (max-width: 1200px)
-    margin: 6% 23% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1100px)
-    margin: 5% 23% -10% -2.5%
-    width: 3%
+  bottom: 10%
+  @media all and (max-width: 375px)
+    width: 25%
+    right: 12%
+  @media all and (min-width: 375px) and (max-width: 500px)
+    width: 27.5%
+    right: 6%
+  @media all and (min-width: 500px) and (max-width: 550px)
+    width: 27%
+    right: 8%
+  @media all and (min-width: 550px) and (max-width: 700px)
+    width: 25%
+    right: 12%
+  @media all and (min-width: 700px) and (max-width: 900px)
+    width: 25%
+    right: 7%
+  @media all and (min-width: 900px)
+    width: 28%
+    right: 3%
   float: right
 #downIcon
   position: absolute
   z-index: 1000
-  @media screen and (min-width: 0px) and (max-width: 499px)
-    margin: 13% 1% -70% -6%
-    width: 7%
-  @media screen and (min-width: 500px) and (max-width: 769px)
-    margin: 10% 25% -10% -5%
-    width: 6%
-  @media screen and (min-width: 770px) and (max-width: 999px)
-    margin: 5.5% 25% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1000px) and (max-width: 1099px)
-    margin: 8% 23% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1100px) and (max-width: 1200px)
-    margin: 6% 23% -10% -3.5%
-    width: 3.5%
-  @media screen and (min-width: 1100px)
-    margin: 5% 23% -10% -2.5%
-    width: 3%
+  bottom: 10%
+  @media all and (max-width: 375px)
+    width: 25%
+    right: 12%
+  @media all and (min-width: 375px) and (max-width: 500px)
+    width: 27.5%
+    right: 6%
+  @media all and (min-width: 500px) and (max-width: 550px)
+    width: 27%
+    right: 8%
+  @media all and (min-width: 550px) and (max-width: 700px)
+    width: 25%
+    right: 12%
+  @media all and (min-width: 700px) and (max-width: 900px)
+    width: 25%
+    right: 7%
+  @media all and (min-width: 900px)
+    width: 28%
+    right: 3%
   float: right
 #profileImg
   position: relative
   z-index: 20
+  vertical-align: middle
+  padding: 12.5%
+  @media all and (max-width: 375px)
+    height 70%
+    width 70%
+  @media all and (min-width: 375px) and (max-width: 500px)
+    height 75%
+    width 75%
+  @media all and (min-width: 500px) and (max-width: 550px)
+    height 72.5%
+    width 72.5%
+  @media all and (min-width: 550px) and (max-width: 700px)
+    height 70%
+    width 70%
+  @media screen and (max-width: 900px) and (min-width: 700px)
+    height: 75%
+    width: 75%
+  @media screen and (min-width: 900px)
+    height: 80%
+    width: 80%
+  
 .recovery
   display: inline-block
   font-family: 'GothamLight'
   color: $inactiveColor
   text-transform: uppercase
-  vertical-align: text-bottom
   font-size: 2.5vw
+  @media screen and (max-width: 770px)
+    font-size: 3vw
   @media screen and (min-width: 100px)
-    padding-left: 1.5%
-  @media screen and (min-width: 300px)
-    padding-left: 2%
+    padding-left: 6%
   @media screen and (min-width: 500px)
-    padding-left: 3%
+    padding-left: 7%
   @media screen and (min-width: 770px)
-    padding-left: 12%
+    padding-left: 14%
+  
 .input-label
   display: inline-block
   font-family: 'GothamBold'
@@ -190,16 +202,14 @@ hr
   color #801a00
   width: 12%
 .arrow
+  display inline-block
   width 20%
   color: $mainColor
-  border-top-right-radius $formRadius
-  border-bottom-right-radius $formRadius
   background-size contain
   background-repeat no-repeat
-  margin-left 88%
-  margin-top -12%
-  padding-bottom 13%
   font-size: 4vw
+  vertical-align: middle
+  text-align: center
 .arrow:hover
   cursor pointer
 .num-box
@@ -230,13 +240,11 @@ hr
   text-align: center
   @media all and (min-width: 770px)
       width: 60%
-
 .plus-button:hover
   cursor: pointer
 .add
   color: $inactiveColor
-  padding 3%
-  font-size 4em
+  font-size 11vw
   font-style bold
 a
   text-decoration: none
@@ -258,15 +266,11 @@ a
   display inline-block
   padding: 0.5%
   width: 100%
-.collapse, .collapse1
+.collapse
+  display: none
   height: auto !important
   width: 100%
-  transition height .35s ease-out
-  -webkit-transition height .35s ease-out
-  -moz-transition height .35s ease-out
-  -khtml-transition height .35s ease-out
   overflow hidden
-
 .graph-box
   width: 10%
   padding-right: 5%
@@ -322,16 +326,13 @@ a
   width: 95%
   display: inline-block
   text-align center
-  padding-bottom: 5%
   padding-left: 2.5%
   padding-right: 2.5%
   @media screen and (min-width: 770px)
-    padding-bottom: 5%
     padding-left: 20%
     padding-right: 20%
     width: 60%
   @media screen and (min-width: 1700px)
-    padding: 25px
     padding-left: 12.5px
     padding-right: 12.5px
 #searchIcon
@@ -379,3 +380,16 @@ a
   border-bottom-right-radius 0
 #buttonLeft
   width: 100%
+#testing
+  width 20%
+  color: $mainColor
+  border-top-right-radius $formRadius
+  border-bottom-right-radius $formRadius
+  background-size contain
+  background-repeat no-repeat
+  margin-left 88%
+  margin-top -12%
+  padding-bottom 13%
+  font-size: 4vw
+#testing:hover
+  cursor pointer

@@ -3,6 +3,8 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/add-measure.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        loadInjuries();
 block content
     form
         .inputs

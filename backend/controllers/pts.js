@@ -32,6 +32,7 @@ module.exports.createPt = (req, res, next) => {
         hash: models.pt.generateHash(req.body.hash) // add hash and token
     }).then(function(pt) {
         res.json(pt);
+        return next();
     });
 };
 
@@ -45,6 +46,7 @@ module.exports.createPt = (req, res, next) => {
 module.exports.getPts = (req, res, next) => {
     models.pt.findAll({}).then(function(pts) {
         res.json(pts);
+        return next();
     });
 };
 
@@ -58,6 +60,7 @@ module.exports.getPtById = (req, res, next) => {
             }
         }).then(function(pt) {
             res.json(pt);
+            return next();
         });
     }
     
@@ -98,7 +101,10 @@ module.exports.deletePt = (req, res, next) => {
         }
     }).then(function(instance) {
         if (instance)
+        {
             res.sendStatus(200);
+            return next();
+        }
         else
             res.status(404).send('sorry not found');
     });

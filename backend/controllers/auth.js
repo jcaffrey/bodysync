@@ -31,13 +31,14 @@ exports.loginPt = (req, res, next) => {
              
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
              
             pt.token = token;
             pt.save()
                 .then(function () {
                     // returns token to frontend..
                     res.json({token: token});
+                    return next();
                 });
 
 
@@ -74,6 +75,7 @@ exports.loginPatient = (req, res, next) => {
             patient.save()
                 .then(function () {
                     res.json({token: token});
+                    return next();
                 });
 
 
@@ -185,8 +187,8 @@ exports.checkRequestIdAgainstId = (req, res) => {
     var decoded = jwt.verify(token, config.secret);
     
     // debugging
-    console.log('token id: ' + String(decoded.id));
-    console.log('query id: ' + String(req.params.id));
+    // console.log('token id: ' + String(decoded.id));
+    // console.log('query id: ' + String(req.params.id));
     
     if (req.params.id != decoded.id) {
         res.status(401).send('You are not authorized to see this resource');

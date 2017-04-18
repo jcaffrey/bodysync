@@ -36,6 +36,18 @@ block cssSheets
             }
         }
 
+        // new collapse
+        function displayCollapse (x) {
+            var elt = document.getElementById(x);
+            if (elt.style.display === 'none') {
+                elt.style.display = 'block';
+                //- elt.style.transition = "all 1s";
+
+            }
+            else {
+                elt.style.display = 'none';
+            }
+        }
         // ================================================================
         //  Search functionality
         // ================================================================
@@ -53,6 +65,13 @@ block cssSheets
                 }
             }
         }
+
+        // ================================================================
+        //  Hover and click functionality
+        // ================================================================
+        //- var hoverOrClick = function () {
+        //-     $('div')
+        //- }
 
 block content
     form
@@ -72,8 +91,9 @@ block content
                         span 70%
                     .recovery
                         span Recovered
-            .buttonCollapse(data-target=".collapse")
-                .arrow ▼
+            .arrow(onclick="displayCollapse('collapse')") ▼
+            //- .buttonCollapse(data-target=".collapse")
+            .buttonCollapse
                 .collapse#collapse
                     // Collapsible info here!!
                     hr
@@ -107,9 +127,9 @@ block content
                         span 31%
                     .recovery
                         span Recovered
-            .buttonCollapse(data-target=".collapse1")
-                .arrow ▼
-                .collapse1#collapse
+            .arrow(onclick="displayCollapse('collapse1')") ▼
+            .buttonCollapse
+                .collapse#collapse1
                     // Collapsible info here!!
                     hr
                     .space

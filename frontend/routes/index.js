@@ -13,7 +13,16 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-    return res.render('login');
+    return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/logind', function(req, res, next) {
+    return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+
+router.get('/loginnew', function(req, res, next) {
+    return res.render('loginnew');
 });
 
 router.get('/pt-form', function(req, res, next) {
@@ -35,23 +44,22 @@ router.get('/patients1', function(req, res, next) {
 // })
 
 router.get('/pts/:id/patients', function(req, res, next) {
-    request.get({
-        url: config.apiUrl + '/pts/' + req.params.id + '/patients',
-        headers: {'x-access-token': req.query.token},
-    }, (err, response, body) => {
-        return res.render('patients', {
-            firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', patients: res
-        });
-    })
-
+    request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
 });
 
-// router.get('/pts/:id/patients', function(req, res, next) {
-//     request.get({
-//         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
-//         headers: {'x-access-token': req.query.token},
-//     }).pipe(res)
-// });
+router.get('/pts/:id/patients', function(req, res, next) {
+    request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.get('/patients', function(req, res, next) {
+    return res.render('patients', {
+        firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit'
+    });
+});
 
 
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
@@ -59,7 +67,8 @@ router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
         url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
         headers: {'x-access-token': req.query.token},
     }, (err, response, body) => {
-        return JSON.parse(body)});
+        return JSON.parse(body)
+    })
 });
 
 router.post('/patients', function(req, res, next) {
@@ -103,5 +112,7 @@ router.post('/pts/:id/patients', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
+
+
 
 module.exports = router;

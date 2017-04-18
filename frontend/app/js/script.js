@@ -100,22 +100,18 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            // (!!!) TODO: find better way of using token (!!!)
-            // window.location = '/pts/' + localStorage.id + '/patients?token=' + localStorage.token;
             getPatients();
         });
     }).catch(submitError);
 }
 
-function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token, {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function(pts) {localStorage.patients = pts});
-    })
-    .catch(submitError);
+function logout() {
+    localStorage.id = '';
+    localStorage.token = '';
+    localStorage.patients = '';
+    localStorage.display = '';
+    localStorage.graphData = '';
+    window.location = '/login';
 }
 
 function getGraphData(id) {
@@ -233,152 +229,176 @@ function displayError(message) {
     errorDiv.style.visibility = 'visible';
 }
 
-
-
 // =============================================================
-// Patient page (in progress)
+// Patients page
 // =============================================================
 
-function toggleDisplay() {
-    var x = document.getElementById('toggle-box');
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
-    }
-    // var y = document.getElementById('patient-box');
-    // if (y.style.border-radius-bottom-left == $formRadius) {
-    //     y.style.border-radius-bottom-left = 0%
-    //     y.style.border-radius-bottom-right = 0%
-    // } else {
-    //     y.style.border-radius-bottom-left = $formRadius;
-    //     y.style.border-radius-bottom-right = $formRadius;
-    // }
-}
+// JORDAN: login -> /patients -> request
 
-// function fetchPatients() {
-//     if(!localStorage.token) window.location = '/';
-//     fetch('/pt/getpatients', {method: 'GET'})
-//     .then(function(res) {
-//         if (!res.ok) return console.log('Admin error');
-//         res.json().then(function(patients) { populatePatientsPage(patients) })
-//     }).catch(console.log('Error!'));
-// }
-
-// function populatePatientsPage(patients) {
-//     var patientDiv = document.getElementById('js-patients');
-//     patients.forEach(function(u) {
-//         var div = document.createElement('div');
-//         div.setAttribute('class', 'patient');
-        
-//         var name = document.createElement('div');
-//         name.setAttribute('class', 'patient-name');
-//         name.innerHTML = u.name.type;
-//         div.appendChild(name);
-        
-//         // var admin = document.createElement('div');
-//         // admin.setAttribute('class', 'patient-button button button-inline');
-//         // div.appendChild(admin);
-        
-//         // var del = document.createElement('div');
-//         // del.setAttribute('class', 'patient-button button button-inline warning');
-//         // del.innerHTML = 'Delete';
-//         // del.setAttribute('onclick', 'deletePatient("' + u._id + '", this)');
-//         // div.appendChild(del);
-        
-//         patientDiv.appendChild(div);
-//     });
-// }
-
-
-// =============================================================
-// Collapse patients
-// =============================================================
-var Collapse = {
-    init: function (element) {
-        if (!element) return false;
-        if (element.indexOf('.') != -1) {
-            var getName = element;
-            var getElement = document.querySelector(getName);
-        } else if (element.indexOf('#') != -1) {
-            var getName = element.replace(/\#/g, '');
-            var getElement = document.getElementById(getName);
-        }
-        if (!getElement.hasAttribute('data-height')) {
-            getElement.style.display = 'block';
-            getElement.dataset.height = getElement.offsetHeight + 'px';
-            getElement.style.height = '0';
-        }
-        return getElement;
-    },
-    expand: function (element) {
-        var getContent = Collapse.init(element);
-        setTimeout(function () {
-            getContent.style.height = getContent.dataset.height;
-        }, 20)
-    },
-    collapse: function (element) {
-        var getContent = Collapse.init(element);
-        getContent.style.height = '0';
-    }
-}
-
-var getButton = document.getElementsByClassName('buttonCollapse');
-
-for (i = 0; i < getButton.length; i++) {
-    (function(buttons) {
-        buttons.addEventListener('click', function () {
-            var self = this;
-            var getTarget = self.getAttribute('data-target');
-            self.classList.toggle('is-active');
-            self.classList.contains('is-active') ? Collapse.expand(getTarget) : Collapse.collapse(getTarget)
+function getPatients() {
+    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
         });
-    })(getButton[i])
+        window.location = '/patients';
+    }).catch(submitError);
 }
 
-// =============================================================
-// Search, sort patients
-// =============================================================
-
-// TODO: search on key strokes
-function search(query, array) {
-    alert(array[0]);
-    for (var i = 0, len = array.length; i < len; i++) {
-        if (!array[i].name.toUpperCase().includes(query.toUpperCase())) {
-            alert(array[i].name);
-        }
+function displayCollapse(x) {
+    var elt = document.getElementById(x);
+    if (elt.style.display === 'none') {
+        elt.style.display = 'block';
+    }
+    else {
+        elt.style.display = 'none';
     }
 }
 
-function pSearch(lst) {
-    search(form.patientSearch.value, lst);
+function loadPatients(pts) {
+    var psd = JSON.parse(pts);
+    // fetch patient metrics here
+    for (var i = 0; i < psd.length; i++) {
+        var div = document.createElement('div');
+        var picbox = document.createElement('div');
+        var pic = document.createElement('img');
+        var prog = document.createElement('img');
+        var inner = document.createElement('div');
+        var name = document.createElement('div');
+        var recbx = document.createElement('div');
+        var p1 = document.createElement('div');
+        var rec = document.createElement('div');
+        var arrow = document.createElement('div');
+        var collapse = document.createElement('div');
+
+        pic.src = '../../img/profile_pic.jpg';
+        pic.setAttribute('id', 'profileImg');
+        prog.src = '../../img/upIcon.png';
+        prog.setAttribute('id', 'upIcon');
+        recbx.setAttribute('class', 'recovery-box');
+        p1.setAttribute('class', 'percent1');
+        // Hard coded patient data
+        p1.innerHTML = "<span>70%</span>";
+        arrow.setAttribute('class', 'arrow');
+        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
+        arrow.appendChild(document.createTextNode('▼'));
+        collapse.setAttribute('class', 'buttonCollapse');
+        collapse.innerHTML =
+            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+                '<hr><div class="space"></div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Shoulder</div>' +
+                    '<div class="input-percent1">70%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Side</div>' +
+                    '<div class="input-percent2">50%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="collapse-inner">' +
+                    '<div class="input-label">Neck - Front</div>' +
+                    '<div class="input-percent3">30%</div>' +
+                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+                '</div>' +
+                '<div class="space"></div>' +
+                '<div class="inspect1">Inspect Patient</div>' +
+            '</div>' +
+            '</div>';
+        rec.setAttribute('class', 'recovery');
+        rec.innerHTML = "<span>Recovered</span>";
+        recbx.appendChild(p1);
+        recbx.appendChild(rec);
+        div.setAttribute('class', 'pt-box');
+        picbox.setAttribute('class', 'pic-box');
+        inner.setAttribute('class', 'info-box');
+        name.setAttribute('class', 'name');
+        picbox.appendChild(pic);
+        picbox.appendChild(prog);
+        name.appendChild(document.createTextNode(psd[i].name));
+        inner.appendChild(name);
+        inner.appendChild(recbx);
+        div.appendChild(picbox);
+        div.appendChild(inner);
+        div.appendChild(arrow);
+        div.appendChild(collapse);
+        document.getElementById('patients').appendChild(div);
+    }
 }
 
-// compareFunctions
+function clear() {
+    var list = document.getElementById('patients');
+    list.innerHTML = '';
+}
+
+function loadStart() {
+    clear();
+    loadPatients(localStorage.patients);
+}
+
+function load() {
+    clear();
+    loadPatients(localStorage.display);
+}
+
+function search(query, array) {
+    var temp = [];
+    var arr = JSON.parse(array);
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (arr[i].name.toUpperCase().includes(query.toUpperCase())) {
+            temp.push(arr[i]);
+        }
+    }
+    localStorage.display = JSON.stringify(temp);
+    load();
+}
+
+function pSearch() {
+    search(form.patientSearch.value, localStorage.patients);
+}
+
 function compareAlpha(a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
 }
-function compareAlphaRev(a, b) {
-    if (a.name > b.name) return -1;
-    if (a.name < b.name) return 1;
-    return 0;
-}
 
-function alphaAscending(lst) {
-    return lst.sort(compareAlpha)
-}
+var ctr1 = 0;
+var ctr2 = 0;
 
+<<<<<<< HEAD
 function alphaDescending(lst) {
     return lst.sort(compareAlphaRev)
 }
 function progAscending() {
     return patients.sort(function (a, b) { a.progress - b.progress})
+=======
+function sortAlpha() {
+    ctr1++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr1 % 2 != 0) {
+        localStorage.display = JSON.stringify(lst.sort(compareAlpha))
+    }
+    else {
+        localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse())
+    }
+    load();
+>>>>>>> d0977b3585360086e07b704ec4b4b97d97b98964
 }
 
-function progDescending() {
-    return patients.sort(function (a, b) { return b.progress - a.progress })
+function sortProg() {
+    ctr2++;
+    var lst = JSON.parse(localStorage.display);
+    if (ctr % 2 != 0) {
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }))
+    }
+    else {
+        localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }))
+    }
+    load();
 }
 
 
@@ -427,24 +447,27 @@ function progDescending() {
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
         .append("svg:g")
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+        .attr("transform", "translate(15,0)");
     // create xAxis
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .ticks(5)
         .tickSize(-h);
 
     // Add the x-axis.
     graph.append("svg:g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + h + ")")
+        .attr("transform", "translate(15,230)")
         .call(xAxis);
 
     // create left yAxis
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(0).orient("left");
-    // Add the y-axis to the left
+    var yAxisLeft = d3.svg.axis().scale(y).ticks(5).orient("left");
+
     graph.append("svg:g")
-        .attr("class", "y axis");
+        .attr("transform", "translate(20,0)")
+        .attr("class", "y axis")
+        .call(yAxisLeft);
 
     graph.append("svg:path").attr("d", line(degreeValue, dayMeasured));
     graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
