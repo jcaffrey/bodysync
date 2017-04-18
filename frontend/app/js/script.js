@@ -105,20 +105,13 @@ function submitLogin() {
     }).catch(submitError);
 }
 
-// login -> /patients -> request
-
-function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            // var patients = JSON.parse(localStorage.patients);
-            localStorage.patients = JSON.stringify(pts);
-            localStorage.display = JSON.stringify(pts);
-        });
-        window.location = '/patients';
-    })
-    .catch(submitError);
+function logout() {
+    localStorage.id = '';
+    localStorage.token = '';
+    localStorage.patients = '';
+    localStorage.display = '';
+    localStorage.graphData = '';
+    window.location = '/login';
 }
 
 function getGraphData(id) {
@@ -236,11 +229,24 @@ function displayError(message) {
     errorDiv.style.visibility = 'visible';
 }
 
-
-
 // =============================================================
 // Patients page
 // =============================================================
+
+// JORDAN: login -> /patients -> request
+
+function getPatients() {
+    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
+        });
+        window.location = '/patients';
+    }).catch(submitError);
+}
 
 function displayCollapse(x) {
     var elt = document.getElementById(x);
@@ -281,7 +287,7 @@ function loadPatients(pts) {
         arrow.appendChild(document.createTextNode('▼'));
         collapse.setAttribute('class', 'buttonCollapse');
         collapse.innerHTML =
-            '<div class="collapse" id= "collapse' + i + '">' +
+            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
                 '<hr><div class="space"></div>' +
                 '<div class="collapse-inner">' +
                     '<div class="input-label">Shoulder</div>' +

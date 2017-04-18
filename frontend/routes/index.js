@@ -16,6 +16,11 @@ router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/logind', function(req, res, next) {
+    return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+
 router.get('/loginnew', function(req, res, next) {
     return res.render('loginnew');
 });
