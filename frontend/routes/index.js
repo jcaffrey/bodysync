@@ -1,3 +1,5 @@
+// CORRECT NEW ONE
+
 const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
@@ -27,6 +29,7 @@ router.get('/loginnew', function(req, res, next) {
 
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
 
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
