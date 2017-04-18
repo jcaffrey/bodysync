@@ -3,11 +3,11 @@ const config = require('../app/models/config');
 
 exports.adminRequired = (req, res, next) => {
     validateToken(req, res, next, {adminRequired: true});
-};
+}
 
 exports.superAdminRequired = (req, res, next) => {
     validateToken(req, res, next, {superAdminRequired: true});
-};
+}
 
 function validateToken(req, res, next, c) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];

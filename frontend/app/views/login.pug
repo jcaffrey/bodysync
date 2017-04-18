@@ -1,16 +1,53 @@
 extends template
 
-block content
-    #navbar.left
-        a(href='/').quiet-link.navbar-item < Back
-    form#js-login-form.form
-        h1.form-title Login
-        #js-error-message.error-message
-        input.form-input(type='email' name='email' placeholder='Email'
-            onfocus='clearError(this)')
-        input.form-input(type='password' name='password' placeholder='Password'
-            onfocus='clearError(this)')
-        button.form-input.button(type='button' onclick='submitLogin()') Submit
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
 
-block postScript
-    script submitOnEnterKey(submitLogin);
+block header
+
+block content
+    #loginTitle LOGIN
+    form#loginForm
+        .inputs
+            button.tablinks#buttonTabPatient(type='button' onclick="changeTab(event, 'tabPatient')") Patient
+            button.tablinks#buttonTabPT(type='button' onclick="changeTab(event, 'tabPT')") PT
+            .tabcontent#tabPatient
+                .input-box
+                    input.text-input(type='email' name='emailname' placeholder='abc@xyz.com' onblur="checkEmail(this.value)" maxlength="24")
+                    .input-name Email
+                .input-box
+                    input.text-input(type='password' name='password' placeholder='********' onblur="checkPassword(this.value)" maxlength="24")
+                    .input-name Password
+            .tabcontent#tabPT
+                .input-box
+                    input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)" maxlength="24")
+                    .input-name PT Email
+                .input-box
+                    input.text-input(type='password' name='password' placeholder='********' onblur="checkPassword(this.value)" maxlength="24")
+                    .input-name Password
+            //button#buttonSubmit Submit
+    p#success
+        script.
+            function changeTab(evt, Tab) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                    }
+
+                // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(Tab).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='submitPatient(' + ptId + ')') #{footerButton2}
