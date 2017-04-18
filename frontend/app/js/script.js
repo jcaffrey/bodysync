@@ -369,13 +369,12 @@ function compareAlpha(a, b) {
 var ctr1 = 0;
 var ctr2 = 0;
 
-<<<<<<< HEAD
 function alphaDescending(lst) {
     return lst.sort(compareAlphaRev)
 }
 function progAscending() {
     return patients.sort(function (a, b) { a.progress - b.progress})
-=======
+}
 function sortAlpha() {
     ctr1++;
     var lst = JSON.parse(localStorage.display);
@@ -386,7 +385,6 @@ function sortAlpha() {
         localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse())
     }
     load();
->>>>>>> d0977b3585360086e07b704ec4b4b97d97b98964
 }
 
 function sortProg() {
