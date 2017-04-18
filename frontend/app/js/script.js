@@ -7,7 +7,7 @@ var form = document.forms[0];
 
 function submitOnEnterKey(submitFunction, targetForm) {
     targetForm = targetForm || form;
-    var runOnKeydown = function(e) { if (e.keyCode === 13) submitFunction(); }
+    var runOnKeydown = function(e) { if (e.keyCode === 13) submitFunction() };
     var children = targetForm.childNodes;
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
@@ -20,71 +20,6 @@ function submitOnEnterKey(submitFunction, targetForm) {
     }
 }
 
-function submitForm() {
-    var data = {};
-    var errorMessage = '';
-    if (form.fullName.value) data.name = form.fullName.value;
-    // data.hash = form.password.value;
-    if (form.password.value == form.confirmPassword.value) data.hash = form.password.value;
-    if (form.email.value && !validateEmail(form.email)) {
-        errorMessage += 'Email address is invalid.';
-    }
-    data.email = form.email.value;
-
-    fetch('/pts', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-    // }).then(submitSuccess)
-    //     .catch(submitError)
-}
-
-// surgeryType, romStart, romEnd, notes in schema????
-function submitPatient(id) {
-    var data = {};
-    var errorMessage = '';
-    if (form.name.value) data.name = form.name.value;
-    if (form.email.value && !validateEmail(form.email)) {
-        errorMessage += 'Email address is invalid.';
-    }
-    data.email = form.email.value;
-
-    if (form.phone.value) data.phoneNumber = form.phone.value;
-    if (form.rom1.value) data.hash = form.rom1.value;
-    if (form.rom2.value) data.surgeryType = form.rom2.value;
-    // if (form.notes.value) data.notes = form.notes.value;
-    fetch('/pts/' + id + '/patients', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-}
-
-function submitMeasure() {
-    var data = {};
-    var errorMessage = '';
-    if (form.newMeasure.value) data.degreeValue = form.newMeasure.value;
-    // ********************************
-    //  is this the right route?
-    // ********************************
-    fetch('/romMetrics/' + localStorage.id + '/romMetricMeasures', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(console.log('Success!'))
-        .catch(console.log('Error!'))
-}
-
-// TODO: form validation
 function submitLogin() {
     var data = {
         email: form.email.value,
@@ -112,6 +47,58 @@ function logout() {
     localStorage.display = '';
     localStorage.graphData = '';
     window.location = '/login';
+}
+
+function headers() {
+    return {
+        'x-access-token': localStorage.token,
+        'Content-Type': 'application/json'
+    };
+}
+
+function submitForm() {
+    var data = {};
+    var errorMessage = '';
+    if (form.fullName.value) data.name = form.fullName.value;
+    // data.hash = form.password.value;
+    if (form.password.value == form.confirmPassword.value) data.hash = form.password.value;
+    if (form.email.value && !validateEmail(form.email)) {
+        errorMessage += 'Email address is invalid.';
+    }
+    data.email = form.email.value;
+
+    fetch('/pts', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(submitSuccess)
+        .catch(submitError)
+}
+
+// surgeryType, romStart, romEnd, notes in schema????
+function submitPatient(id) {
+    var data = {};
+    var errorMessage = '';
+    if (form.name.value) data.name = form.name.value;
+    if (form.email.value && !validateEmail(form.email)) {
+        errorMessage += 'Email address is invalid.';
+    }
+    data.email = form.email.value;
+
+    if (form.phone.value) data.phoneNumber = form.phone.value;
+    if (form.rom1.value) data.hash = form.rom1.value;
+    if (form.rom2.value) data.surgeryType = form.rom2.value;
+    // if (form.notes.value) data.notes = form.notes.value;
+    fetch('/pts/' + id + '/patients', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(submitSuccess)
+        .catch(submitError)
 }
 
 function getGraphData(id) {
@@ -230,13 +217,13 @@ function displayError(message) {
 }
 
 // =============================================================
-// Patients page
+//  Patients
 // =============================================================
 
 // JORDAN: login -> /patients -> request
 
 function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' +localStorage.token
+    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
     ).then(function(res) {
         if (!res.ok) throw(res);
         res.json().then(function(pts) {
@@ -250,12 +237,8 @@ function getPatients() {
 
 function displayCollapse(x) {
     var elt = document.getElementById(x);
-    if (elt.style.display === 'none') {
-        elt.style.display = 'block';
-    }
-    else {
-        elt.style.display = 'none';
-    }
+    if (elt.style.display === 'none') elt.style.display = 'block';
+    else elt.style.display = 'none'
 }
 
 function loadPatients(pts) {
@@ -348,9 +331,8 @@ function search(query, array) {
     var temp = [];
     var arr = JSON.parse(array);
     for (var i = 0, len = arr.length; i < len; i++) {
-        if (arr[i].name.toUpperCase().includes(query.toUpperCase())) {
+        if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
-        }
     }
     localStorage.display = JSON.stringify(temp);
     load();
@@ -372,30 +354,79 @@ var ctr2 = 0;
 function sortAlpha() {
     ctr1++;
     var lst = JSON.parse(localStorage.display);
-    if (ctr1 % 2 != 0) {
-        localStorage.display = JSON.stringify(lst.sort(compareAlpha))
-    }
-    else {
-        localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse())
-    }
+    if (ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
     load();
 }
 
 function sortProg() {
     ctr2++;
     var lst = JSON.parse(localStorage.display);
-    if (ctr % 2 != 0) {
-        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }))
-    }
-    else {
-        localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }))
-    }
+    if (ctr % 2 != 0)
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }));
+    else localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }));
     load();
 }
 
+// =============================================================
+//  Add measure
+// =============================================================
+
+function getInjuries(id) {
+    fetch('/patients/' + id + '/injuries?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            // var patients = JSON.parse(localStorage.patients);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
+        });
+        window.location = '/patients';
+    }).catch(submitError);
+}
+
+function loadInjuries(inj) {
+    var injuries = JSON.parse(inj);
+    for (injury in injuries) {
+        var div = document.createElement('div');
+        div.setAttribute('class', 'input-box');
+        div.appendChild(document.createTextNode("hi"));
+        document.getElementById('injuries').appendChild(div);
+    }
+}
+
+// JS date to MySQL function from:
+// http://stackoverflow.com/questions/5129624/convert-js-date-time-to-mysql-datetime
+function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+
+Date.prototype.toMysqlFormat = function() {
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+};
+
+function submitMeasure(id, i) {
+    var d = new Date();
+    var data = {
+        dayMeasured: d.toMysqlFormat(),
+        name: 'why'
+    };
+    if (form[i].value) data.degreeValue = form[i].value;
+    console.log(i);
+    console.log(id);
+    fetch('/romMetrics/' + id + '/romMetricMeasures?token=' + localStorage.token, {
+        headers: headers(),
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) throw new Error('There was an error sending this measure');
+    }).catch(function (err) { console.log(err); });
+}
 
 // =============================================================
-// Progress Graph
+//  Progress Graph
 // =============================================================
     var m = [0, 0, 0, 0]; // margins
     var w = 300 - m[1] - m[3]; // width
