@@ -10,6 +10,10 @@ router.get('/', function(req, res, next) {
     return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
+router.get('/patient-home', function(req, res, next) {
+    return res.render('patient-home', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+});
+
 router.post('/', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
 });
