@@ -125,6 +125,11 @@ router.get('/patients1', function(req, res, next) {
     return res.render('patients1', { footerButton: 'Add Patient'});
 });
 
+// exercise set view
+router.get('/exercise-set', function(req, res, next) {
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
+});
+
 // exercise form view
 router.get('/exercise-form', function(req, res, next) {
     return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
