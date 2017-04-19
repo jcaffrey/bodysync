@@ -134,4 +134,9 @@ router.get('/exercise-form', function(req, res, next) {
     return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
+// exercise set view
+router.get('/exercise-set', function(req, res, next) {
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
+});
+
 module.exports = router;
