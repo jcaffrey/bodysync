@@ -5,6 +5,7 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
 block content
     form
+<<<<<<< HEAD
         .pt-box
             .pic-box
                 img(src='../../img/profile_pic.jpg' id='profileImg')
@@ -51,5 +52,28 @@ block content
         //-     .input-box.input-bottom#pass2
         //-         input.text-input(type='password' name='confirmPassword' placeholder='********' onblur="checkPasswordConfirm(this.value)")
         //-         .input-name Confirm
+=======
+        button#applyTemplate Apply Template
+        br
+        .inputs
+            .input-box.input-top#exname
+                input.text-input(type='ex-name' name='exerciseName' placeholder='Name of Exercise' onblur="checkName(this.value)")
+                .input-name Name
+            .input-box#reps           
+                .repset-name Reps
+                .repset-box
+                    button.arith-box -
+                    .num-box 15
+                    button.arith-box +
+            .input-box#sets
+                .repset-name Sets
+                .repset-box
+                    button.arith-box -
+                    .num-box 1
+                    button.arith-box +
+            .input-box.input-bottom
+                .input-name#notes Notes
+                textarea.text-input(type='notes' id='notes' name='notes' cols="25" placeholder="Type any notes, special requirements, etc. on this exercise here...")
+>>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
 block submitForm
     button.footerButton#buttonRight(type='button') #{footerButton2}

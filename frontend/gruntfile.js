@@ -14,6 +14,10 @@ module.exports = function(grunt) {
                     'public/stylesheets/patients.css': 'app/stylesheets/patients.styl',
                     'public/stylesheets/patient-status.css': 'app/stylesheets/patient-status.styl',
                     'public/stylesheets/patients.css': 'app/stylesheets/patients1.styl',
+<<<<<<< HEAD
+=======
+                    'public/stylesheets/exercise-set.css': 'app/stylesheets/exercise-set.styl',
+>>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
                     'public/stylesheets/exercise-form.css': 'app/stylesheets/exercise-form.styl'
                 }
             }

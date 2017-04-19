@@ -12,16 +12,18 @@ form
   @media screen and (min-width: 1101px)
     margin-top: 0
   padding-bottom: 10%
-<<<<<<< HEAD
-  text-align center
-=======
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
 form h1
+  font-family: 'GothamBold'
   text-transform: uppercase
-  font-size: 1.5em
-  color: $inactiveColor
-  text-align: left
-<<<<<<< HEAD
+  font-size: 5vw
+  text-align center
+  padding-bottom: 10px
+  @media screen and (min-width: 770px)
+    font-size: 3vw
+    padding-bottom: 10px
+  @media screen and (min-width: 1700px)
+    font-size: 2vw
+  color: $mainColor
 .pt-box
   margin: 5% auto
   -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
@@ -104,7 +106,21 @@ form h1
   padding-bottom: 1%
   @media screen and (max-width: 770px)
     font-size: 6vw
-  
+
+.exName
+  display block
+  vertical-align: bottom
+  width 100%
+  height 45%
+  color $mainColor
+  text-transform: uppercase
+  font-size: 3vw
+  height: 40%
+  padding-top: 1%
+  padding-bottom: 1%
+  @media screen and (max-width: 770px)
+    font-size: 5vw
+
 .recovery-box
   padding-top: 1%
   padding-bottom: 1%
@@ -133,8 +149,6 @@ form h1
     padding-left: 7%
   @media screen and (min-width: 770px)
     padding-left: 14%
-=======
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
 
 #applyTemplate
   border-style none
@@ -147,137 +161,73 @@ form h1
   border-color $mainColor
   padding: 1.5% 10%
   display block
-<<<<<<< HEAD
-=======
   margin 0px auto 
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
 #applyTemplate:hover
   cursor: pointer
 
-.inputs
-  margin: 0px auto
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px $inactiveColor;
-  border-radius: $formRadius
-  width: 95%
-  @media all and (min-width: 770px)
-    width: 60%
+.arrows
+  display: inline-block
+  position: relative
+  width: 15%
+  text-align: center
+  vertical-align middle
 
-.input-box
-  padding: 20px
-  outline: none
-  border: none
-  text-align: right
-  font-size: 4vw
-  @media screen and (min-width: 770px)
-    font-size: 2vw
-    padding: 20px
-  @media screen and (min-width: 1700px)
-    font-size: 1.5vw
-    padding: 25px
-<<<<<<< HEAD
-    border-bottom: solid 1px $inactiveColor
-  	//width: ($formWidth - 40)px
-=======
-  border-bottom: solid 1px $inactiveColor
-  //width: ($formWidth - 40)px
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
-form input::-webkit-input-placeholder
-  color: $inactiveColor
-  font-style: italic
-  font-size: 4vw
-  @media screen and (min-width: 770px)
-    font-size: 2vw
-  @media screen and (min-width: 1700px)
-    font-size: 1.5vw
-form input:focus
-  outline: none
-
-.input-top
-  border-top-right-radius: $formRadius
-  border-top-left-radius: $formRadius
-.input-bottom
-  border-bottom-right-radius: $formRadius
-  border-bottom-left-radius: $formRadius
-  border-bottom: none
-
-<<<<<<< HEAD
-=======
-.repset-name
-  font-family: 'GothamBold'
-  font-weight: bold
-  text-transform: uppercase
-  color: $mainColor
-  text-align: left
-  float: left
-  position relative
-  text-decoration: none
-  width: 40%
-  display inline-block
-
-.repset-box
-  width: 60%
-  display inline-block
-
-.arith-box
-  width: 20%
-  text-align center
-  display inline-block
-  color $mainColor
-  font-size 6vw
-  font-family 'GothamBold'
-  border none
-  background-color $inactiveColor2
-
-.num-box
-  width: 20%
-  text-align center
-  display inline-block
-  color $mainColor
-  text-decoration underline
-  font-size 6vw
-  font-family 'GothamBold'
+.up
+  display block
+  height 50%
+  color $inactiveColor
   
-.input-name
-  font-family: 'GothamBold'
-  font-weight: bold
-  text-transform: uppercase
-  color: $mainColor
+.down
+  display block
+  height 50%
+  color $mainColor
+
+.exercise-box
+  display inline-block
+  width: 62.5%
   text-align: left
-  float: left
-  position relative
-  text-decoration: none
-.input-name:before
-  content: ""
-  position: absolute
+  vertical-align: middle
+  padding-left: 2.5%
+  padding-top: 4%
+  padding-bottom 4%
+
+.sets
+  display: inline-block
+  font-family: 'GothamLight'
+  color: $inactiveColor
+  font-size: 3vw
+  font-style italic
+
+.rh-box
+  display inline-block
+  width 20%
+  color: $mainColor
+  background-size contain
+  background-repeat no-repeat
+  font-size: 3vw
+  vertical-align: middle
+  text-align: center
+  color $white
+  font-family GothamLight
+  text-transform uppercase
+
+.inline-block-box
   width: 100%
-  height: 2px
-  bottom: 0
-  left: 0
-  background-color: $mainColor
-  visibility: hidden
-  -webkit-transform: scaleX(0)
-  transform: scaleX(0)
-  -webkit-transition: all 0.3s ease-in-out 0s
-  transition: all 0.3s ease-in-out 0s
 
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
-.text-input
-  position relative
-  width 50%
-  text-align right
-  //float right
-  color $darkgray
-  background none
-  border none
-  font-size: 4vw
-  @media screen and (min-width: 770px)
-    font-size: 2vw
-  @media screen and (min-width: 1700px)
-    font-size: 1.5vw
+.edit-button
+  display block
+  padding-top 20%
+  padding-bottom 20%
+  border-top-right-radius: $formRadius
+  background-color $mainColor
+  
+.delete-button
+  display block
+  padding-top 20%
+  padding-bottom 20%
+  border-bottom-right-radius: $formRadius
+  background-color: #801a00
 
-<<<<<<< HEAD
 .plus-button
   margin: 5% auto
   -webkit-box-shadow: 0px 0px 0px 0px
@@ -304,24 +254,3 @@ a
   text-decoration: none
 
 	
-=======
-.text-input:focus + .input-name:before
-  visibility: visible
-  -webkit-transform: scaleX(1)
-  transform: scaleX(1)
-
-.input-name + input
-    margin-top 10px
-.input-name#notes
-    text-align: left
-form textarea.text-input
-    resize: none
-    outline: none
-    font-size: 3.5vw
-    @media screen and (min-width: 770px)
-        font-size: 1.5vw
-    @media screen and (min-width: 1700px)
-        font-size: 1vw
-    width 100%
-    text-align left
->>>>>>> bc69486438aba25e5c1f58c2b34fdac94a556a0b
