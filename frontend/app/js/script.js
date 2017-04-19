@@ -427,30 +427,43 @@ function submitMeasure(id, i) {
 // =============================================================
 //  Progress Graph
 // =============================================================
-    var m = [0, 0, 0, 0]; // margins
-    var w = 300 - m[1] - m[3]; // width
-    var h = 250 - m[0] - m[2]; // height
+   var m = [50, 20, 0, 0]; // margins
+    var w = 350 - m[1] - m[3]; // width
+    var h = 220 - m[0] - m[2]; // height
 
-    var degreeValue = [32, 35, 40, 45, 43];
+    var degreeValue = [32, 35, 40, 45];
 
-    var dayMeasured = [1, 2, 3, 4, 5];
+    var dayMeasured = [1, 2, 3, 4];
+
+    var start_end = [0.5,4.8];
 
     //var dayMeasured = [2017-04-02, 2017-04-09, 2017-04-016, 2017-04-23, 2017-04-30, 	2017-5-07,  2017-05-14, 2017-05-21];
 
-    var goal = 50;
+    var goal = 60;
 
-    var points = [[32, 1], [35, 2], [40, 3], [45, 4], [43, 5]];
+    var next_weeks_goal = 45;
 
+    var next_weeks_goal_date = 5;
+
+    var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+
+    var goal_point = [50, 4];
+
+    var min_y = d3.min(degreeValue) - 20;
+
+    var max_y = goal + 10;
+
+    var max_x = next_weeks_goal_date;
 
     // X scale will fit all values from data[] within pixels 0-w
-    var x = d3.scale.linear().domain([0, 6]).range([0, w]);
+    var x = d3.scale.linear().domain([0, max_x]).range([0, w - 100]);
     // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-    var y = d3.scale.linear().domain([20, 60]).range([h, 0]);
+    var y = d3.scale.linear().domain([min_y, max_y]).range([h + 61, 50]);
 
 
     var line = d3.svg.line()
         .x(function (d, i) {
-            return x(dayMeasured[i]);
+            return x(dayMeasured[i]) ;
         })
         .y(function (d, i) {
             return y(degreeValue[i]);
@@ -458,10 +471,18 @@ function submitMeasure(id, i) {
 
     var line2 = d3.svg.line()
         .x(function (d, i) {
-            return x(dayMeasured[i]);
+            return x(start_end[i]);
         })
-        .y(function (d) {
-            return y(goal)
+        .y(function () {
+            return y(goal);
+        } );
+
+    var line3 = d3.svg.line()
+        .x(function (d, i) {
+            return x(next_weeks_goal_date[i]);
+        })
+        .y(function (d, i) {
+            return y(next_weeks_goal[i]);
         });
 
     // Add an SVG element with the desired dimensions and margin.
@@ -469,34 +490,56 @@ function submitMeasure(id, i) {
         .attr("width", w + m[1] + m[3])
         .attr("height", h + m[0] + m[2])
         .append("svg:g")
-        .attr("transform", "translate(15,0)");
+        .attr("transform", "translate(20,-35)");
     // create xAxis
 
     var xAxis = d3.svg.axis()
         .scale(x)
         .ticks(5)
-        .tickSize(-h);
+        .tickSize(0);
 
     // Add the x-axis.
     graph.append("svg:g")
         .attr("class", "x axis")
-        .attr("transform", "translate(15,230)")
+        .attr("transform", "translate(20,230)")
         .call(xAxis);
 
     // create left yAxis
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(5).orient("left");
+    var yAxisLeft = d3.svg.axis()
+        .scale(y)
+        .ticks(5)
+        .tickSize(0)
+        .orient("left");
 
     graph.append("svg:g")
         .attr("transform", "translate(20,0)")
         .attr("class", "y axis")
         .call(yAxisLeft);
 
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured));
+    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+        .attr("transform", "translate(20,0)");
     graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+        .attr("transform", "translate(20,0)")
         .attr("class", "horizontalLine");
+    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+        .attr("transform", "translate(20,0)");
+
+    graph.append("ellipse")
+        .attr("class", "goalCircle")
+        .attr("cx", 140)
+        .attr("cy", 80)
+        .attr("rx", 40)
+        .attr("ry", 15);
+
+    graph.append("text")
+        .attr("y",  85)
+        .attr("x", 140)
+        .attr('text-anchor', 'middle')
+        .attr("class", "goal")
+        .text("Goal");
 
 
-    graph.selectAll(".point")
+graph.selectAll(".point")
         .data(points)
         .enter().append("circle")
         .attr("class", "circles")
@@ -506,4 +549,21 @@ function submitMeasure(id, i) {
         .attr("cy", function (d, i) {
             return y(degreeValue[i]);
         })
-        .attr("r", 8);
+        .attr("r", 8)
+        .attr("transform", "translate(20,0)")
+;
+
+graph.selectAll(".point")
+    .data(goal_point)
+    .enter().append("circle")
+    .attr("class", "goal-point")
+    .attr("cx", function (d, i) {
+        return x(next_weeks_goal_date);
+    })
+    .attr("cy", function (d, i) {
+        return y(next_weeks_goal);
+    })
+    .attr("r", 15)
+    .attr("transform", "translate(20,0)")
+;
+

@@ -7,7 +7,11 @@ const auth = require('./auth');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
-    return res.render('index', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+});
+
+router.get('/patient-home', function(req, res, next) {
+    return res.render('patient-home', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
 router.post('/', function(req, res, next) {
@@ -17,6 +21,10 @@ router.post('/', function(req, res, next) {
 // -------------------------------------------------------------------------------
 router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/forgotpassword', function(req, res, next) {
+    return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/exercises', function(req, res, next) {
@@ -118,7 +126,7 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Add Measure', Id: 1});
 });
 
 // patient view
@@ -126,14 +134,14 @@ router.get('/patients1', function(req, res, next) {
     return res.render('patients1', { footerButton: 'Add Patient'});
 });
 
-// exercise set view
-router.get('/exercise-set', function(req, res, next) {
-    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
-});
-
 // exercise form view
 router.get('/exercise-form', function(req, res, next) {
     return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
+});
+
+// exercise set view
+router.get('/exercise-set', function(req, res, next) {
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
 module.exports = router;
