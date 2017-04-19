@@ -8,7 +8,7 @@ content
   font-family: 'GothamBold'
   overflow-y auto
   @media screen and (min-width: 400px)
-      height 8%
+      height 10%
   @media screen and (max-width: 600px)
     margin-top: 25%
   @media screen and (min-width: 601px), (max-width: 1100px)
@@ -145,9 +145,9 @@ hr
   vertical-align: middle
   font-size: 2.5vw
   @media screen and (min-width: 100px)
-    padding-left: 1.5%
+    padding-left: 5%
   @media screen and (min-width: 300px)
-    padding-left: 2%
+    padding-left: 6%
   @media screen and (min-width: 500px)
     padding-left: 3%
   @media screen and (min-width: 770px)
@@ -180,10 +180,16 @@ hr
   width 92%
   height 10%
   @media screen and (min-width: 300px)
-    height 15%
-  @media screen and (min-width: 500px)
     height 18%
-  @media screen and (min-width: 800px)
+  @media screen and (max-width 500px) and (max-height 700px)
+    height 13%
+  @media screen and (min-width: 650px)
+    height 19%
+  @media screen and (min-width: 770px)
+    height 18%
+  @media screen and (min-width: 1000px)
+    height 17%
+  @media screen and (min-width: 1400px)
     height 20%
 
 .header-left
@@ -238,11 +244,13 @@ hr
   @media screen and (min-width: 450px)
     height 13%
   @media screen and (min-width: 770px)
-    top 45%
-    width: 54%
-  @media screen and (min-width: 1000px)
     top 40%
-    width: 50%
+    left 23%
+    width: 54%
+  @media screen and (min-width: 1400px)
+    top 53%
+    width 54%
+    left 23%
   z-index 1
 
 .menu-top
@@ -330,6 +338,10 @@ hr
   text-align center
   position fixed
   left 40%
+  @media screen and (min-width 650px)
+    left 43%
+  @media screen and (min-width: 770px)
+    left 45%
 
 .icon
   display inline-block
@@ -386,18 +398,20 @@ hr
   text-align: left
   font-size: 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.5vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
   padding-left: 5%
-  padding-bottom 3%
+  padding-bottom 2%
+  @media screen and (max-width 650px and max-height 600px)
+    padding-bottom 5%
   width: 68%
 
 .input-percent1
   display: inline-block
   font-size: 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.5vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
   color #22B573
@@ -407,7 +421,7 @@ hr
   display: inline-block
   font-size: 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.5vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
   color #f4b342
@@ -417,7 +431,7 @@ hr
   display: inline-block
   font-size: 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.5vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
   color #801a00
@@ -428,6 +442,8 @@ hr
   height 35%
   width 90%
   padding 0% 5%
+  @media screen and (min-width: 650px)
+    height 30%
 
 #exerciseTitle
   display inline-block
@@ -438,17 +454,20 @@ hr
   color $mainColor
   font-size 4vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    font-size: 2.8vw
+    margin-bottom 6%
   @media screen and (min-width: 1700px)
-    font-size: 1vw
-  margin-top 5%
+    font-size: 1.5vw
+  margin-top 3%
 
 .exercise-description-label
-  height 30%
+  height 25%
   -webkit-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
   -moz-box-shadow 0px 0px 25px 0px rgba(0,0,0,0.75)
   box-shadow 0px 0px 25px 0px $inactiveColor
   border-radius $formRadius $formRadius $formRadius $formRadius
+  @media screen and (min-width: 650px)
+    height 40%
 
 #exerciseText
   display inline-block
@@ -457,10 +476,11 @@ hr
   text-align center
   color $mainColor
   width 100%
-  margin 3% 0%
-  font-size 4vw
+  margin 2% 0%
+  font-size 3vw
   @media screen and (min-width: 770px)
-    font-size: 2vw
+    margin-top 3%
+    font-size: 2.2vw
   @media screen and (min-width: 1700px)
     font-size: 1vw
 
@@ -471,12 +491,7 @@ hr
   padding 0% 5%
   outline none
   @media screen and (min-width: 770px)
-    font-size: 2vw
-    padding: 20px
-  @media screen and (min-width: 1700px)
-    font-size: 1.5vw
-    padding: 25px
-    border-bottom: solid 1px $inactiveColor
+    height 40%
 
 #noteTitle
   display inline-block
@@ -485,7 +500,13 @@ hr
   text-align left
   color $mainColor
   width 80%
-  margin-bottom 2%
+  margin-top 1%
+  margin-bottom 1%
+  font-size 4vw
+  @media screen and (min-width: 770px)
+    font-size: 2.8vw
+  @media screen and (min-width: 1700px)
+    font-size: 1.5vw
 
 .note-input
   position relative
@@ -541,7 +562,7 @@ hr
   height 87%
 
 .svgh
-  height 100%
+  height 80%
   width 100%
 
 path
@@ -557,17 +578,9 @@ path
 .x.axis line, .y.axis line
   display none
 
-
-.x.axis path
+.x.axis path, .y.axis path
   stroke $mainColor
-  stroke-width 1
-
-.y.axis path
-  display none
-
-.line2 path
-  stroke $mainColor
-  gradient webkit-gradient(radial, 50% 50%, 0, 50% 50%, 350, from(#000), to(#fff));
+  stroke-width 3
 
 .circles
   stroke $mainColor
@@ -576,10 +589,20 @@ path
 
 .goal-point
   stroke #21bb45
-  fill #74e586
+  fill $white
   stroke-width 3
 
 .horizontalLine
-  stroke $inactiveColor
-  stroke-width 2
+  stroke linear-gradient(red, yellow)
+  stroke-width 3
   stroke-dasharray 10 10
+
+.goal
+  font-family "Gotham-Bold"
+  fill $mainColor
+
+.goalCircle
+  stroke $mainColor
+  fill $white
+  stroke-width 3
+  border-radius $formRadius $formRadius $formRadius $formRadius

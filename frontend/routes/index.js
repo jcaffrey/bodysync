@@ -117,7 +117,7 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Add Measure', Id: 1});
 });
 
 // patient view
