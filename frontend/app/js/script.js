@@ -413,13 +413,15 @@ function submitMeasure(id, i) {
         dayMeasured: d.toMysqlFormat()
     };
     if (form[i].value) data.degreeValue = form[i].value;
-    fetch('/romMetrics/' + id + '/romMetricMeasures?token=' + localStorage.token, {
-        headers: headers(),
+    console.log(localStorage.token);
+    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
         method: 'POST',
         body: JSON.stringify(data)
     }).then(function(res) {
         if (!res.ok) throw new Error('There was an error sending this measure');
-    }).catch(function (err) { console.log(err); });
+    }).catch(function (err) { console.log(err) });
 }
 
 // =============================================================

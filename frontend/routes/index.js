@@ -79,6 +79,7 @@ router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
 router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.headers['x-access-token']},
         form: req.body
     }).pipe(res);
 });
