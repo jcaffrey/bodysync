@@ -7,7 +7,7 @@ const auth = require('./auth');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
-    return res.render('index', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
 router.post('/', function(req, res, next) {
