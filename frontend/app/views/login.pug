@@ -7,7 +7,7 @@ block cssSheets
 block header
 
 block content
-    #loginTitle LOGIN
+    #loginTitle Login
     form#loginForm
         .inputs
             button.tablinks#buttonTabPatient(type='button' onclick="changeTab(event, 'tabPatient')") Patient
@@ -26,7 +26,7 @@ block content
                 .input-box
                     input.text-input(type='password' name='password' placeholder='********' onblur="checkPassword(this.value)" maxlength="24")
                     .input-name Password
-            //button#buttonSubmit Submit
+    a#loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
     p#success
         script.
             function changeTab(evt, Tab) {
