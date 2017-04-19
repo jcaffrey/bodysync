@@ -19,6 +19,10 @@ router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/forgotpassword', function(req, res, next) {
+    return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises');
 });
