@@ -19,6 +19,10 @@ router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/forgotpassword', function(req, res, next) {
+    return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises');
 });
@@ -117,17 +121,12 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
+    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Add Measure', Id: 1});
 });
 
 // patient view
 router.get('/patients1', function(req, res, next) {
     return res.render('patients1', { footerButton: 'Add Patient'});
-});
-
-// exercise set view
-router.get('/exercise-set', function(req, res, next) {
-    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
 // exercise form view
