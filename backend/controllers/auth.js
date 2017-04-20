@@ -104,7 +104,7 @@ exports.tokenRequired = (req, res, next) => validateToken(req, res, next, false,
 
 function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-
+    console.log(token);
     if (!token) {
         return res.status(403).send('Token required');
     }

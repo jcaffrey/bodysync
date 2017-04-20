@@ -13,13 +13,17 @@ block cssSheets
             }}
 
 block content
-    .patient-box
+    .pt-box
         .pic-box
-            img(src='img/profile_pic.jpg' id='profileImg')
-        .info-box
+            img(src='../../img/profile_pic.jpg' id='profileImg')
+            img(src='../../img/upIcon.png' id='upIcon')
         .info-box
             .name Abdul
-            .input-label Shoulder, Back
+            .recovery-box
+                .percent1
+                    span 70%
+                .recovery
+                    span Recovered
     #menuBox.menu-box
         .menu-top
             .menu-title
@@ -49,36 +53,22 @@ block content
                 button(id='menuButton' onclick='menuBox.style.display="inline-block", bottomBox.style.opacity="0.5"') Menu
         #bottomBox.bottom-box(style = 'overflow-y:auto')
             #overviewBox.overview-box
-                .body-parts
-                    .body-part-label
-                        .text
-                            span Shoulder...............
-                            span#percentValue1  50%
-                                style.
-                                    #percentValue1 {
-                                        color: orange
-                                    }
-                        #symbol
-                            img(src='img/graph.png' id='graph-symbol' onclick=onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"')
-                        .text
-                            span Neck - Side..............
-                            span#percentValue2  70%
-                                style.
-                                    #percentValue2 {
-                                        color: #74e586
-                                    }
-                        #symbol
-                            img(src='img/graph.png' id='graph-symbol')
-                    .body-part-label
-                        .text
-                            span Neck - Front..........
-                            span#percentValue3  30%
-                                style.
-                                    #percentValue3 {
-                                        color: #a50000
-                                    }
-                        #symbol
-                            img(src='img/graph.png' id='graph-symbol')
+                .collapse#collapse
+                    .collapse-inner
+                        .input-label Shoulder
+                        .input-percent1 70%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph-symbol' onclick=onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"')
+                    .collapse-inner
+                        .input-label Neck - Side
+                        .input-percent2 50%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph-symbol')
+                    .collapse-inner
+                        .input-label Neck - Front
+                        .input-percent3 30%
+                        .graph-box
+                            img(src='../../img/graph.png' id='graph-symbol')
                 .exercise-set
                     span#exerciseTitle Exercise Set
                     .exercise-description-label
@@ -91,7 +81,7 @@ block content
                     .span#percentage 50%
                 .recovery-box
                     .span#recoveryText to full recovery
-                .graph-box
+                .graph-view
                     .svgh#graph
                         script(src = 'http://d3js.org/d3.v3.min.js').
 

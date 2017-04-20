@@ -1,25 +1,35 @@
+// CORRECT NEW ONE
+
 const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
 const auth = require('./auth');
 const request = require('request');
 
-router.get('/', (req, res, next) => {
-    return res.render('index', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'});
+router.get('/', function(req, res, next) {
+    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+});
+
+router.get('/patient-home', function(req, res, next) {
+    return res.render('patient-home', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
 router.post('/', function(req, res, next) {
     request.post(config.apiUrl + '/users', { form: req.body }).pipe(res);
 });
 
+// -------------------------------------------------------------------------------
 router.get('/login', function(req, res, next) {
     return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-router.get('/logind', function(req, res, next) {
-    return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+router.get('/forgotpassword', function(req, res, next) {
+    return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/exercises', function(req, res, next) {
+    return res.render('exercises');
+});
 
 router.get('/loginnew', function(req, res, next) {
     return res.render('loginnew');
@@ -29,26 +39,15 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-// new patient page
-router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { firstName: 'Josh', footerButton: 'Add Patient', footerButton2: 'Submit' });
+router.post('/login', function(req, res, next) {
+    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
-// // added
-// router.get('/pt/patients', (req, res, next) => {
-//     request.get(config.apiUrl + '/patients', (err, response, body) => {
-//     if (!err && response.statusCode == 200)
-// return res.render('patients', {patients: JSON.parse(body), footerButton2: 'Add Patient'});
-// else return res.render('patients', {footerButton2: 'Add Patient', patients: []});
-// })
-// })
-
-router.get('/pts/:id/patients', function(req, res, next) {
-    request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
-        headers: {'x-access-token': req.query.token}
-    }).pipe(res);
+router.get('/logind', function(req, res, next) {
+    return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+// -------------------------------------------------------------------------------
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
         headers: {'x-access-token': req.query.token}
@@ -61,45 +60,11 @@ router.get('/patients', function(req, res, next) {
     });
 });
 
-
-router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
-    request.get({
-        url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
-        headers: {'x-access-token': req.query.token},
-    }, (err, response, body) => {
-        return JSON.parse(body)
-    })
-});
-
 router.post('/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts',
         form: req.body
     }).pipe(res);
-});
-
-// end added
-
-router.get('/new-exercise', function(req, res, next) {
-    return res.render('new-exercise');
-});
-router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
-});
-
-router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', Id: 1});
-});
-
-router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
-    request.post({
-        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
-        form: req.body
-    }).pipe(res);
-});
-
-router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1});
 });
 
 router.post('/pts/:id/patients', function(req, res, next) {
@@ -109,10 +74,74 @@ router.post('/pts/:id/patients', function(req, res, next) {
     }).pipe(res);
 });
 
-router.post('/login', function(req, res, next) {
-    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
+// -------------------------------------------------------------------------------
+router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
+    request.get({
+        url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.query.token}
+    }, function(err, response, body) {
+        return JSON.parse(body)
+    })
 });
 
+router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
+    }).pipe(res);
+});
 
+// -------------------------------------------------------------------------------
+router.get('/patients/:id/injuries', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries?token=' + req.query.token, function(err, response, body) {
+        if (!err && response.statusCode == 200)
+            return res.render('add-measure', { injuries: JSON.parse(body), footerButton: 'Cancel', footerButton2: 'Submit' });
+        else return res.render('add-measure', { injuries: [], footerButton: 'Cancel', footerButton2: 'Submit' });
+    })
+});
+
+router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
+    if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: { 'x-access-token': req.headers['x-access-token'] || req.query.token },
+        form: req.body
+    }).pipe(res);
+});
+
+// -------------------------------------------------------------------------------
+router.get('/pt-form', function(req, res, next) {
+    return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/create-patient', function(req, res, next) {
+    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1});
+});
+
+router.get('/new-exercise', function(req, res, next) {
+    return res.render('new-exercise');
+});
+
+// -------------------------------------------------------------------------------
+
+router.get('/patient-status', function(req, res, next) {
+    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Add Measure', Id: 1});
+});
+
+// patient view
+router.get('/patients1', function(req, res, next) {
+    return res.render('patients1', { footerButton: 'Add Patient'});
+});
+
+// exercise form view
+router.get('/exercise-form', function(req, res, next) {
+    return res.render('exercise-form', { footerButton: 'Back', footerButton2: 'Submit' });
+});
+
+// exercise set view
+router.get('/exercise-set', function(req, res, next) {
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
+});
 
 module.exports = router;

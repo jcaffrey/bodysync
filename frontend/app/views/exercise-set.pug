@@ -1,0 +1,36 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/exercise-set.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+block content
+    form
+        .pt-box
+            .pic-box
+                img(src='../../img/profile_pic.jpg' id='profileImg')
+                img(src='../../img/upIcon.png' id='upIcon')
+            .info-box
+                .name Abdul
+                .recovery-box
+                    .percent1
+                        span 70%
+                    .recovery
+                        span Recovered
+        h1 Exercise Set
+        button#applyTemplate Apply Template
+        .pt-box
+            .arrows 
+                .up ▲
+                .down ▼
+            .exercise-box
+                .exName Back Bend
+                .recovery-box
+                    .sets
+                        span 2 sets, 20 seconds
+            .rh-box
+                .edit-button Edit
+                .delete-button Delete
+        .plus-button
+            a(href='/exercise-form').add +
+block submitForm
+    button.footerButton#buttonRight(type='button') #{footerButton2}
