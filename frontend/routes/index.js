@@ -7,7 +7,7 @@ const auth = require('./auth');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
-    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Submit'})
 });
 
 router.get('/patient-home', function(req, res, next) {
@@ -41,10 +41,6 @@ router.get('/pt-form', function(req, res, next) {
 
 router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
-});
-
-router.get('/logind', function(req, res, next) {
-    return res.render('dev-login', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 // -------------------------------------------------------------------------------
@@ -96,8 +92,8 @@ router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
 router.get('/patients/:id/injuries', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries?token=' + req.query.token, function(err, response, body) {
         if (!err && response.statusCode == 200)
-            return res.render('add-measure', { injuries: JSON.parse(body), footerButton: 'Cancel', footerButton2: 'Submit' });
-        else return res.render('add-measure', { injuries: [], footerButton: 'Cancel', footerButton2: 'Submit' });
+            return res.render('add-measure', { injuries: JSON.parse(body), id: req.params.id, footerButton: 'Cancel', footerButton2: 'Submit' });
+        else return res.render('add-measure', { injuries: [], id: req.params.id, footerButton: 'Cancel', footerButton2: 'Submit' });
     })
 });
 
@@ -126,12 +122,12 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {firstName: 'Josh', footerButton: 'Add Measure', Id: 1});
+    return res.render('patient-status', { firstName: 'Josh', footerButton: 'Add Measure' });
 });
 
 // patient view
 router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { footerButton: 'Add Patient'});
+    return res.render('patients1', { footerButton: 'Add Patient' });
 });
 
 // exercise form view
