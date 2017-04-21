@@ -27,7 +27,7 @@ exports.loginPt = (req, res, next) => {
     })
     .then(function(pt) {
         if(pt.validHash(req.body.password)) {
-            var payload = {id: pt.id, isPt: true, isAdmin: pt.isAdmin}
+            var payload = {id: pt.id, isPt: true, sessionNumber: null, isAdmin: pt.isAdmin}
              
             // fuck with flags as you wish
             // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
@@ -36,7 +36,8 @@ exports.loginPt = (req, res, next) => {
             pt.token = token;
             pt.save()
                 .then(function () {
-                    // returns token to frontend..
+                    // returns token to frontend (and backend)..
+                    req.body.token = token;
                     res.json({token: token});
                     return next();
                 });
@@ -64,10 +65,9 @@ exports.loginPatient = (req, res, next) => {
     })
     .then(function(patient) {
         if(patient.validHash(req.body.password)) {
-            var payload = {id: patient.id, isPt: false, isAdmin: false}
-             
-            // fuck with flags as you wish
-            // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
+
+            // note: sessionId updated in next middelware chain (createPtSession)
+            var payload = {id: patient.id, sessionNumber: null, isPt: false, isAdmin: false};
 
             var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
          
@@ -115,10 +115,10 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
-    console.log(isPtRequired);
-    console.log(isAdminRequired);
-    console.log(decoded.isPt);
-    console.log(decoded.isAdmin);
+    // console.log(isPtRequired);
+    // console.log(isAdminRequired);
+    // console.log(decoded.isPt);
+    // console.log(decoded.isAdmin);
     if (isPtRequired && !decoded.isPt)
         return res.status(403).send('You do not have access');
 
@@ -142,6 +142,8 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
             if (expired || token !== pt.token)
                 return res.status(403).send('Expired token');
 
+            req.body.ptId = pt.id;
+            req.body.token = token;
             next();
         })
     // resource is not restricted to pts,  validate patient or pt, depending on the isPt token flag
@@ -156,6 +158,9 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
                 if (decoded.id !== pt.id) expired = true;
                 if (expired || token !== pt.token)
                     return res.status(403).send('Expired token');
+                console.log('printing token');
+                console.log(token);
+                req.body.token = token;
 
                 next();
             })
