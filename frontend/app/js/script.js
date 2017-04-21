@@ -25,7 +25,8 @@ function submitLogin() {
         email: form.email.value,
         password: form.password.value
     };
-
+    console.log(data.email);
+    console.log(data.password);
     fetch('/login', {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
@@ -46,7 +47,7 @@ function logout() {
     localStorage.patients = '';
     localStorage.display = '';
     localStorage.graphData = '';
-    window.location = '/login';
+    window.location = '/';
 }
 
 function headers() {
@@ -373,25 +374,8 @@ function sortProg() {
 // =============================================================
 
 function getInjuries(id) {
-    fetch('/patients/' + id + '/injuries?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            // var patients = JSON.parse(localStorage.patients);
-            localStorage.patients = JSON.stringify(pts);
-            localStorage.display = JSON.stringify(pts);
-        });
-        window.location = '/patients';
-    }).catch(submitError);
-}
-
-function loadInjuries(inj) {
-    var injuries = JSON.parse(inj);
-    for (injury in injuries) {
-        var div = document.createElement('div');
-        div.setAttribute('class', 'input-box');
-        div.appendChild(document.createTextNode("hi"));
-        document.getElementById('injuries').appendChild(div);
+    for (injury in document.getElementsByClassName('inputs')) {
+        console.log(id);
     }
 }
 
@@ -413,7 +397,6 @@ function submitMeasure(id, i) {
         dayMeasured: d.toMysqlFormat()
     };
     if (form[i].value) data.degreeValue = form[i].value;
-    console.log(localStorage.token);
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
             'Content-Type': 'application/json'},
