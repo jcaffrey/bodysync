@@ -10,23 +10,54 @@ var config = require('../config/config.json')[env];
 module.exports.createSession = (req, res, next) => {
     // TODO add a field for sessionId in the pt token
 
-    // query ptSession table on ptId. increment or set initial sessionId
-    // update token with sessionId
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
 
+    console.log(decoded.id);
+    models.ptSession.findAll({
+        where: {
+            ptId: decoded.id
+        }
+    }).then(function(session) {
 
-    console.log('in create session');
-    console.log(req.url);
-    return;
+        models.ptSession.create({
+                ptId: decoded.id,
+                sessionNumber: session.sessionNumber || 1
+        }).then(function(created) {
+
+            // update token with sessionId <-- TODO: this is not actually updating the token in logSession..
+            decoded.sessionNumber = created.sessionNumber;
+            console.log(decoded);
+
+            return; // next() here?
+        })
+    });
+
 }
 
 module.exports.logSession = (req, res, next) => {
     // TODO in controllers -- save pt's current patientId in req.body
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    console.log(decoded);
+    console.log(req.body);
+    console.log(req.body.sessionNumber);
+
+    // models.ptSession.findAll({
+    //     where: {
+    //         ptId: req.body.ptId,
+    //         sessionNumber:
+    //     }
+    // })
+
+
     // save data down...
     // get sessionId, ptId from token
 
     // get resourceRequested from URL
 
-    // get patientId from req.body
+    // get patientId from req.body  --> TODO: what if there are multiple patients? right now just storing the route..should be able to construct the rest from the timestamps in queries for logs
 
     // get duration
     // query ptSession table for most recent row ON ptId AND sessionId, update duration of this data using
@@ -36,7 +67,7 @@ module.exports.logSession = (req, res, next) => {
 
 
     console.log('in log session');
-    console.log(req.url);
+    console.log(req.body);
     return;
 }
 

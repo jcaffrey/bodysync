@@ -59,6 +59,7 @@ module.exports.getPtById = (req, res, next) => {
                 id: req.params.id
             }
         }).then(function(pt) {
+            req.body.patientId =
             res.json(pt);
             return next();
         });

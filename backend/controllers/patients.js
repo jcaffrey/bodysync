@@ -58,10 +58,9 @@ module.exports.getPatients = (req, res, next) => {
 
         }).then(function(patients) {
             res.json(patients);
+            return next();
         });
     }
-
-    return;
 };
 
 // not to be used in actual app, unless for an admin
