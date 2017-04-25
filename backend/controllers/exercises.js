@@ -53,16 +53,16 @@ module.exports.createExercise = (req, res, next) => {
                                     exerciseSetId: req.params.id
                                 }).then(function (exercise) {
                                     if(Object.keys(exercise).length !== 0){
-                                        return res.json(exercise);
+                                        res.json(exercise);
+                                        return next();
                                     }
                                     else {
                                         res.status(500).send('Could not create');
                                     }
                                 }).catch(function (err) {
-                                    console.error(err.stack);
+                                    // console.error(err.stack);
                                     return next(err);
                                 })
-                                // catch here
                             } else {
                                 res.status(401).send('Unauthorized');
                             }
@@ -70,19 +70,22 @@ module.exports.createExercise = (req, res, next) => {
                             res.status(404).send('No patient with that injury');
                         }
 
-                    }) // catch here
+                    }).catch(function (err) {
+                        return next(err);
+                    })
                 } else {
                     res.status(404).send('No injury with that rom');
                 }
 
-            }) // catch here
+            }).catch(function (err) {
+                return next(err);
+            })
         } else {
             res.status(404).send('No ROM with that id');
         }
     }).catch(function (err) {
-        // console.error(err.stack);
         return next(err);
-    }) // catch here
+    })
 };
 
 /**
@@ -133,18 +136,26 @@ module.exports.getExercises = (req, res, next) => {
                                     // is pt
                                     else {
                                         if(decoded.id == patient.ptId) {
-                                            return res.json(exercises);
+                                            req.body.patientId = patient.id || injury.patientId;
+                                            res.json(exercises);
+                                            return next();
                                         }
                                         else {
                                             res.status(401).send('PT unauthorized');
                                         }
                                     }
                                 }
-                            }) // catch here
+                            }).catch(function (err) {
+                                return next(err);
+                            })
                         }
-                    }) // catch here
+                    }).catch(function (err) {
+                        return next(err);
+                    })
                 }
-            }) // catch here
+            }).catch(function (err) {
+                return next(err);
+            })
         } else {
             res.status(404).send('No Measures for that RomMetric');
         }
@@ -153,7 +164,7 @@ module.exports.getExercises = (req, res, next) => {
     })
 };
 
-
+// TODO: implement audit logging by querying all the way down to patient level..
 module.exports.getExerciseById = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
@@ -237,11 +248,14 @@ module.exports.deleteExercise = (req, res, next) => {
                 if(Object.keys(set).length !== 0) {
                     if(decoded.isPt && decoded.id == set.ptId) {
                         exercise.destroy();
-                        return res.json(exercise);
+                        res.json(exercise);
+                        return next();
                     } else {
                         return res.status(401).send('PT unauthorized');
                     }
                 }
+            }).catch(function (err) {
+                return next(err);
             })
         } else {
             res.status(404).send('No exercise with that id');

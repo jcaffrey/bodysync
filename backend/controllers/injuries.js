@@ -35,6 +35,7 @@ module.exports.createInjury = (req, res, next) => {
                 }).then(function(injury) {
                     if(Object.keys(injury).length !== 0) {
                         res.json(JSON.stringify(injury));
+                        return next();
                     }
                     else {
                         res.status(404).send('Could not create that injury')
@@ -86,7 +87,9 @@ module.exports.getInjuries = (req, res, next) => {
                 }).then(function(patient) {
                     if(patient.ptId === decoded.id) {
                         // return the injuries!
-                        return res.json(injuries);
+                        req.body.patientId = req.params.id;
+                        res.json(injuries);
+                        return next();
                     }
                     else {
                         res.status(401).send('Unauthorized');
@@ -140,7 +143,9 @@ module.exports.getInjuryById = (req, res, next) => {
                 }).then(function(patient) {
                     if (Object.keys(patient).length !== 0) {
                         if (patient.ptId == decoded.id) {
-                            return res.json(injury);
+                            req.body.patientId = patient.id || injury.patientId;
+                            res.json(injury);
+                            return next();
                         } else {
                             res.status(401).send('PTs are unauthorized to see injuries of patients who are not their own');
                         }
@@ -194,7 +199,8 @@ module.exports.deleteInjury = (req, res, next) => {
                     // check requesting pt is authorized to delete!
                     if(patient.ptId == decoded.id) {
                         injury.destroy();
-                        return res.json(injury);
+                        res.json(injury);
+                        return next();
                     } else {
                         res.status(401).send('PT unauthorized to delete that injury');
                     }

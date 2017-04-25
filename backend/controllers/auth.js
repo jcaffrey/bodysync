@@ -4,7 +4,8 @@ var jwt = require('jsonwebtoken');
 
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
-var config = require('../config/config.json')[env];  
+var config = require('../config/config.json')[env];
+
 
 
 /*
@@ -27,22 +28,50 @@ exports.loginPt = (req, res, next) => {
     })
     .then(function(pt) {
         if(pt.validHash(req.body.password)) {
-            var payload = {id: pt.id, isPt: true, sessionNumber: null, isAdmin: pt.isAdmin}
-             
-            // fuck with flags as you wish
-            // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
-             
-            pt.token = token;
-            pt.save()
-                .then(function () {
-                    // returns token to frontend (and backend)..
-                    req.body.token = token;
-                    res.json({token: token});
-                    return next();
-                });
+            models.ptSession.findAll({
+                where: {
+                    ptId: pt.id
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ]
+            }).then(function (ptSessions) {
+                if(ptSessions.length !== 0) {
+                    var newSession = ptSessions[0].sessionNumber + 1;
+                    console.log('PRINTING THE NEW SESSIONNUMBER: ' + newSession);
+
+                    var payload = {id: pt.id, isPt: true, sessionNumber: newSession, isAdmin: pt.isAdmin}
+
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+
+                    pt.token = token;
+                    pt.save()
+                        .then(function () {
+                            // returns token to frontend (and backend)..
+                            req.body.token = token;
+                            res.json({token: token});
+                            return next();
+                        });
 
 
+                } else {
+                    var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
+
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+
+                    pt.token = token;
+                    pt.save()
+                        .then(function () {
+                            // returns token to frontend (and backend)..
+                            req.body.token = token;
+                            res.json({token: token});
+                            return next();
+                        });
+
+                }
+            }).catch(function (err) {
+                return next(err);
+            })
         }
         else {
             return res.status(401).send('bad hash');
