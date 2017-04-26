@@ -1,0 +1,23 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+block header
+
+block content
+    #loginTitle Reset Password
+    form#loginForm
+        .inputs
+            .tabcontent#tabPatient
+                .input-box
+                    input.text-input(type='password' name='password' placeholder='******' maxlength="24")
+                    .input-name Password
+                .input-box
+                    input.text-input(type='password' name='confirm' placeholder='******' maxlength="24")
+                    .input-name Confirm 
+            //button#buttonSubmit Submit
+    p#success
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='submitPatient(' + ptId + ')') #{footerButton2}

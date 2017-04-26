@@ -55,7 +55,15 @@ router.route('/')
 router.route('/login/pt')
     .post(auth.loginPt, ptSessions.createSession);
 router.route('/login/patient')
-    .post(auth.loginPatient); 
+    .post(auth.loginPatient);
+
+router.route('/forgotpassword') 
+    .post(auth.forgotPassword);
+
+router.route('/reset/:token') 
+    .post(auth.resetPassword);
+
+router.route('')
 
 // routes for admin
 router.route('/pts')
