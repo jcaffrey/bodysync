@@ -79,65 +79,64 @@ router.route('/pts/:id')
 // routes for pts to see patients
 router.route('/pts/:id/patients')
     .get(auth.ptRequired, patients.getPatients, ptSessions.logSession)       // TODO: log this
-    .post(auth.ptRequired, patients.createPatient);   // should patients have any access?
+    .post(auth.ptRequired, patients.createPatient, ptSessions.updateSession);   // should patients have any access?
 
 router.route('/patients/:id')
-    .get(auth.tokenRequired, patients.getPatientById)
+    .get(auth.tokenRequired, patients.getPatientById, ptSessions.logSession)  //TODO only log if PT
     //.put(auth.tokenRequired, patients.updatePatient) // Access: pt   **w/query
-    .delete(auth.ptRequired, patients.deletePatient);
+    .delete(auth.ptRequired, patients.deletePatient, ptSessions.updateSession);
 
 // routes for pts, patients to see injuries
 router.route('/patients/:id/injuries') 
-    .get(auth.tokenRequired, injuries.getInjuries) //  views handled differently on frontend using token
-    .post(auth.ptRequired, injuries.createInjury);
+    .get(auth.tokenRequired, injuries.getInjuries, ptSessions.logSession) //  views handled differently on frontend using token
+    .post(auth.ptRequired, injuries.createInjury, ptSessions.updateSession);
 
 
 
-// TODO ERROR CATCHING ON ALL OF THESE
 
 router.route('/injuries/:id')
-    .get(auth.tokenRequired, injuries.getInjuryById) // error catching
+    .get(auth.tokenRequired, injuries.getInjuryById, ptSessions.logSession) // error catching
     //.put(auth.ptRequired, injuries.updateInjury) // Access: pt 
-    .delete(auth.ptRequired, injuries.deleteInjury);
+    .delete(auth.ptRequired, injuries.deleteInjury, ptSessions.updateSession);
 
 // routes for injury tracking (rom content)
 router.route('/injuries/:id/rommetrics')
-    .get(auth.tokenRequired, romMetrics.getRomMetrics) // error catching
-    .post(auth.ptRequired, romMetrics.createRomMetric);
+    .get(auth.tokenRequired, romMetrics.getRomMetrics, ptSessions.logSession) // error catching
+    .post(auth.ptRequired, romMetrics.createRomMetric, ptSessions.updateSession);
    
 
 router.route('/romMetrics/:id')
-    .get(auth.ptRequired, romMetrics.getRomMetricById)
+    .get(auth.ptRequired, romMetrics.getRomMetricById, ptSessions.logSession)
     //.put(auth.ptRequired, romMetrics.updateRomMetric) // Access: pt
-    .delete(auth.ptRequired, romMetrics.deleteRomMetric);
+    .delete(auth.ptRequired, romMetrics.deleteRomMetric, ptSessions.updateSession);
 
 router.route('/romMetrics/:id/romMetricMeasures')
-    .get(auth.tokenRequired, romMetricMeasures.getMeasures)  // restricts workers' comp server side
-    .post(auth.ptRequired, romMetricMeasures.createMeasure); // Access: pt
+    .get(auth.tokenRequired, romMetricMeasures.getMeasures, ptSessions.logSession)  // restricts workers' comp server side
+    .post(auth.ptRequired, romMetricMeasures.createMeasure, ptSessions.updateSession); // Access: pt
 
 
 
 // routes for injury training (exercise content)
 router.route('/injuries/:id/exerciseSets')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSets)
-    .post(auth.ptRequired, exerciseSets.createExerciseSet);
+    .get(auth.tokenRequired, exerciseSets.getExerciseSets, ptSessions.logSession)
+    .post(auth.ptRequired, exerciseSets.createExerciseSet, ptSessions.updateSession);
 
 router.route('/exerciseSets/:id')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSetById)
+    .get(auth.tokenRequired, exerciseSets.getExerciseSetById, ptSessions.logSession)
     // .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
-    .delete(auth.ptRequired, exerciseSets.deleteExercise);
+    .delete(auth.ptRequired, exerciseSets.deleteExercise, ptSessions.updateSession);
 
 router.route('/exerciseSets/:id/exercises')
-    .get(auth.tokenRequired, exercises.getExercises)
-    .post(auth.ptRequired, exercises.createExercise);
+    .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
+    .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
 
 router.route('/exercises/:id')
-    .get(auth.tokenRequired, exercises.getExerciseById)
+    .get(auth.tokenRequired, exercises.getExerciseById)  // TODO: logSession
     //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
-    .delete(auth.ptRequired, exercises.deleteExercise);
+    .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 
 router.route('/exercises/:id/exerciseCompletions')
-    .get(auth.tokenRequired, exerciseCompletions.getCompletions)
+    .get(auth.tokenRequired, exerciseCompletions.getCompletions) // TODO: logSession
     .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
 router.route('/exerciseCompletions/:id')

@@ -50,8 +50,12 @@ module.exports.createCompletion = (req, res, next) => {
                                     return res.status(401).send('Patient unauthorized');
                                 }
                             }
+                        }).catch(function (err) {
+                            return next(err);
                         })
                     }
+                }).catch(function (err) {
+                    return next(err);
                 })
             } else {
                 return res.status(404).send('No exercises with that id');
@@ -72,6 +76,7 @@ module.exports.createCompletion = (req, res, next) => {
 
  */
 
+// TODO: implement audit logging by querying all the way down to patient level..
 module.exports.getCompletions = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);

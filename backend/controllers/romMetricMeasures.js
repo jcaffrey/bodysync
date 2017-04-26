@@ -32,9 +32,7 @@ module.exports.createMeasure = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.isPt && decoded.id == patient.ptId) {
-                                // create !
                                 models.romMetricMeasure.create({
-                                    //name, degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId
                                     name: req.body.name,
                                     degreeValue: req.body.degreeValue,
                                     nextGoal: req.body.nextGoal,
@@ -43,12 +41,15 @@ module.exports.createMeasure = (req, res, next) => {
                                     romMetricId: req.params.id
                                 }).then(function (measure) {
                                     if(Object.keys(measure).length !== 0){
-                                        return res.json(measure);
+                                        res.json(measure);
+                                        return next();
                                     }
                                     else {
                                         res.status(500).send('Could not create');
                                     }
-                                }) // catch here
+                                }).catch(function (err) {
+                                    return next(err);
+                                })
                             } else {
                                 res.status(401).send('Unauthorized');
                             }
@@ -56,16 +57,22 @@ module.exports.createMeasure = (req, res, next) => {
                             res.status(404).send('No patient with that injury');
                         }
 
-                    }) // catch here
+                    }).catch(function (err) {
+                        return next(err);
+                    })
                 } else {
                     res.status(404).send('No injury with that rom');
                 }
 
-            }) // catch here
+            }).catch(function (err) {
+                return next(err);
+            })
         } else {
             res.status(404).send('No ROM with that id');
         }
-    }) // catch here
+    }).catch(function (err) {
+        return next(err);
+    })
 };
 
 // TODO: figure out what to return when patients object below is []
@@ -110,20 +117,30 @@ module.exports.getMeasures = (req, res, next) => {
                                     // is pt
                                     else {
                                         if(decoded.id == patient.ptId) {
-                                            return res.json(measures);
+                                            req.body.patientId = patient.id || injury.patientId;
+                                            res.json(measures);
+                                            return next();
                                         }
                                         else {
                                             res.status(401).send('PT unauthorized');
                                         }
                                     }
                                 }
-                            }) // catch here
+                            }).catch(function (err) {
+                                return next(err);
+                            })
                         }
-                    }) // catch here
+                    }).catch(function (err) {
+                        return next(err);
+                    })
                 }
-            }) // catch here
+            }).catch(function (err) {
+                return next(err);
+            })
         } else {
             res.status(404).send('No Measures for that RomMetric');
         }
-    });
+    }).catch(function (err) {
+        return next(err);
+    })
 };

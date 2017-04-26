@@ -32,7 +32,10 @@ module.exports.createPatient = (req, res, next) => {
             hash: models.patient.generateHash(req.body.hash) // add hash and token
         }).then(function(patient) {
             res.json(patient);
-        });
+            return next();
+        }).catch(function (err) {
+            return next(err);
+        })
     
     }
     return;
@@ -58,8 +61,15 @@ module.exports.getPatients = (req, res, next) => {
 
         }).then(function(patients) {
             res.json(patients);
+            var pIds = [];
+            for (var p in patients) {
+                pIds.push(patients[p].id);
+            }
+            req.body.patientIds = pIds;
             return next();
-        });
+        }).catch(function (e) {
+            return next(e);
+        })
     }
 };
 
@@ -84,10 +94,7 @@ module.exports.getPatientById = (req, res, next) => {
     // auth
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
-    
-    console.log(decoded.id);
-    console.log(req.params.id);
- 
+
     models.patient.findOne({
         where: {id: req.params.id}
     }).then(function(patient) {
@@ -98,7 +105,9 @@ module.exports.getPatientById = (req, res, next) => {
         if (decoded.isPt) {
             // if requesting pt is requested patient's pt
             if (decoded.id == patient.ptId) { // should be === ?
-                return res.json(patient);
+                req.body.patientId = patient.id;
+                res.json(patient);
+                return next();
             }  
             else {
                 return res.status(401).send('You are not authorized to see this resource');
@@ -156,7 +165,8 @@ module.exports.deletePatient = (req, res, next) => {
                 if (decoded.id === patient.ptId) {
                     // DESTROY IF THIS IS THE CASE
                     patient.destroy();
-                    return res.json(patient);
+                    res.json(patient);
+                    return next();
                     // return res.json(patient);
                 }
                 else {

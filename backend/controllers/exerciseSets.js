@@ -42,16 +42,23 @@ module.exports.createExerciseSet = (req, res, next) => {
                             ptId: patient.ptId
                         }).then(function(set) {
                             res.json(set);
+                            return next();
+                        }).catch(function(err) {
+                            return next(err);
                         });
                     } else {
                         res.status(401).send('PT unauthorized');
                     }
                 }
-            })
+            }).catch(function(err) {
+                return next(err);
+            });
         } else {
             res.status(404).send('No exercise set');
         }
-    })
+    }).catch(function(err) {
+        return next(err);
+    });
 }
 
 /**
@@ -84,8 +91,7 @@ module.exports.getExerciseSets = (req, res, next) => {
                         return res.status(401).send('Patient unauthorized');
                     }
                 }
-                // is pt
-                else {
+                else {// is pt
                     models.patient.findOne({
                         where: {
                             id: injury.patientId
@@ -93,18 +99,25 @@ module.exports.getExerciseSets = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
-                                return res.json(sets);
+                                req.body.patientId = patient.id || injury.patientId;
+                                res.json(sets);
+                                return next();
                             } else {
                                 return res.status(401).send('PT unauthorized');
                             }
                         }
-                    })
+                    }).catch(function(err) {
+                        return next(err);
+                    });
                 }
-            })
+            }).catch(function(err) {
+                return next(err);
+            });
         }
-    })
+    }).catch(function(err) {
+        return next(err);
+    });
 }
-
 
 module.exports.getExerciseSetById = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -131,19 +144,29 @@ module.exports.getExerciseSetById = (req, res, next) => {
                         }).then(function (patient) {
                             if(Object.keys(patient).length !== 0) {
                                 if(decoded.id == patient.ptId) {
-                                    return res.json(set);
+                                    req.body.patientId = patient.id || injury.patientId;
+                                    res.json(set);
+                                    return next();
                                 } else {
                                     res.status(401).send('PT unauthorized');
                                 }
                             } else {
                                 res.status(404).send('No patient with that injury');
                             }
-                        })
+                        }).catch(function(err) {
+                            return next(err);
+                        });
+                    }
+                    else // is patient
+                    {
+                        return res.json(set);
                     }
                 } else {
                     res.status(404).send('no injury with that rom');
                 }
-            })
+            }).catch(function(err) {
+                return next(err);
+            });
         } else {
             res.status(404).send('No Metric with that id');
         }
@@ -189,7 +212,8 @@ module.exports.deleteExercise = (req, res, next) => {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
                                 set.destroy();
-                                return res.json(set);
+                                res.json(set);
+                                return next();
                             }
                         } else {
                             res.status(404).send('No patient with that injury');

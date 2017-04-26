@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         duration: {
-            type: DataTypes.DATE  // TODO: look up how to subtract dates
+            type: DataTypes.INTEGER  // TODO: look up how to subtract dates
         },
         resourceRequested: {
             type: DataTypes.STRING,

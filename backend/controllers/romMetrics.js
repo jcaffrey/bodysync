@@ -6,7 +6,6 @@ var auth = require('./auth');
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
-// TODO ERROR CATCHING
 module.exports.createRomMetric = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
@@ -42,17 +41,16 @@ module.exports.createRomMetric = (req, res, next) => {
         } else {
             res.status(404).send('No rom');
         }
+    }).catch(function (err) {
+        return next(err);
     })
 
 };
 
 
-
-// TODO error catching
 module.exports.getRomMetrics = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
-    console.log(decoded.id);
 
     models.romMetric.findAll({
         where: {
@@ -61,7 +59,6 @@ module.exports.getRomMetrics = (req, res, next) => {
     }).then(function(roms) {
         if(roms.length !== 0) {
             var firstRom = roms[0];
-            console.log(roms.injuryId); //should be one id
 
             models.injury.findOne({
                 where: {
@@ -85,6 +82,7 @@ module.exports.getRomMetrics = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
+                                req.body.patientId = patient.id || injury.patientId;
                                 res.json(roms);
                                 return next();
                             } else {
@@ -97,6 +95,8 @@ module.exports.getRomMetrics = (req, res, next) => {
         } else {
             return res.status(404).send('No roms found');
         }
+    }).catch(function (err) {
+        return next(err);
     })
 }
 
@@ -127,6 +127,7 @@ module.exports.getRomMetricById = (req, res, next) => {
                         }).then(function (patient) {
                             if(Object.keys(patient).length !== 0) {
                                 if(decoded.id == patient.ptId) {
+                                    req.body.patientId = patient.id || injury.patientId;
                                     res.json(rom);
                                     return next();
                                 } else {
@@ -178,7 +179,8 @@ module.exports.deleteRomMetric = (req, res, next) => {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
                                 rom.destroy();
-                                return res.json(rom);
+                                res.json(rom);
+                                return next();
                             }
                         } else {
                             res.status(404).send('No patient with that injury');
@@ -194,7 +196,8 @@ module.exports.deleteRomMetric = (req, res, next) => {
         } else {
             res.status(404).send('No rom with that id');
         }
-
+    }).catch(function (err) {
+        return next(err);
     })
 
 
