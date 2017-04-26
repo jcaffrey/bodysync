@@ -4,14 +4,8 @@ var jwt = require('jsonwebtoken');
 
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
-<<<<<<< HEAD
-var config = require('../config/config.json')[env];  
-var nodemailer = require('nodemailer')
-=======
 var config = require('../config/config.json')[env];
-
->>>>>>> 7f969212ad4061bbd9f48d318e388e76b254451e
-
+var nodemailer = require('nodemailer')
 
 /*
 
@@ -232,6 +226,7 @@ exports.resetPassword = (req, res, next) => {
         });
     });
 }
+
 /*
 
     Token validation
@@ -347,4 +342,3 @@ exports.checkRequestIdAgainstId = (req, res) => {
     }
     // is bool best way to do this?
 }
-
