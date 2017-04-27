@@ -27,6 +27,12 @@ router.get('/forgotpassword', function(req, res, next) {
     return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/reset/:token', function(req, res, next) {
+    return res.render('reset', {footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('')
+
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises');
 });

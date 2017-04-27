@@ -5,58 +5,247 @@ var auth = require('./auth');
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
-// const url = require('url');
+/**
 
+ creates audit log session for pt upon login..
+
+ */
 module.exports.createSession = (req, res, next) => {
-    // TODO add a field for sessionId in the pt token
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
 
-    // query ptSession table on ptId. increment or set initial sessionId
-    // update token with sessionId
-
-
-    console.log('in create session');
-    console.log(req.url);
-    return;
+    models.ptSession.create({
+        ptId: decoded.id,
+        sessionNumber: decoded.sessionNumber,
+        resourceRequested: req.url
+    }).then(function(created) {
+        return;
+    }).catch(function (e) {
+        return next(e);
+    })
 }
 
+
+/**
+
+ Audit log ptSessions after every GET request for sensitive patient electronic health records.
+
+ */
 module.exports.logSession = (req, res, next) => {
-    // TODO in controllers -- save pt's current patientId in req.body
-    // save data down...
-    // get sessionId, ptId from token
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
 
-    // get resourceRequested from URL
-
-    // get patientId from req.body
+    var today = new Date();
 
     // get duration
     // query ptSession table for most recent row ON ptId AND sessionId, update duration of this data using
     // current request's start time as that request's end time - iff it is not set already (because of updateSession)
     // (so, we're backfilling the table)
+    if(decoded.isPt)
+    {
+        models.ptSession.findAll({
+            where: {
+                ptId: decoded.id,
+                sessionNumber: decoded.sessionNumber
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(function (ptSessions) {
+            if(ptSessions.length !== 0)
+            {
+                // check if time has not been set already (if not set we want to update duration)
+                if(ptSessions[0].duration == null)
+                {
+                    var diff;
+                    // backfill the duration..
+                    var cDate = new Date(ptSessions[0].createdAt);
+                    diff = today.getTime() - cDate.getTime();
+                    // CAN GET AN ACTUAL MINS, SECS, HRS OUT easily but storing the duration in milliseconds to be easy --> https://docs.microsoft.com/en-us/scripting/javascript/calculating-dates-and-times-javascript
+                    // var msecPerMinute = 1000 * 60;
+                    // var minutes = Math.floor(diff / msecPerMinute );
+                    // diff = diff - (minutes * msecPerMinute );
+                    // var seconds = Math.floor(diff / 1000 );
+                    // console.log(minutes);
+                    // console.log(seconds);
+                    // ptSessions.update()
+                    models.ptSession.update(
+                        {duration: diff},
+                        {where: {
+                            ptId: decoded.id,
+                            sessionNumber: decoded.sessionNumber,
+                            duration: null,
+                            resourceRequested: ptSessions[0].resourceRequested,
+                            createdAt: ptSessions[0].createdAt
+                        }
+                        })
+                }
 
+                if (req.body.patientIds) {
+                    var data = [];
+                    for (var i in req.body.patientIds) {
+                        data.push({
+                            ptId: decoded.id,
+                            resourceRequested: req.url,
+                            sessionNumber: decoded.sessionNumber,
+                            duration: null,
+                            patientId: req.body.patientIds[i]
+                        })
+                    }
+                    models.ptSession.bulkCreate(data)
+                        .then(function() {
+                            return;
+                        }).catch(function(err) { return next(err); });
+                } else if(req.body.patientId) {
+                    models.ptSession.create({
+                        ptId: decoded.id,
+                        resourceRequested: req.url,
+                        sessionNumber: decoded.sessionNumber,
+                        duration: null,
+                        patientId: req.body.patientId
+                    }).then(function () {
+                        return;
+                    }).catch(function (err) {
+                        return next(err);
+                    })
+                } else {
+                    console.log('error: no patientId associated with logging route');
+                    return;
+                }
+            }
+            else
+            {
+                console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+                return;
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
 
-
-    console.log('in log session');
-    console.log(req.url);
-    return;
+    }
+    else
+    {
+        console.log('only log pt sessions');
+        return;
+    }
 }
 
-// TODO implement a helper function to update durations when a non-GET request follows a GET request
+// a helper function to update durations when a non-GET request follows a GET request
 // (since we're only tracking when sensitive information is being viewed i.e. via GET)
-
+// no need to log post requests..
+// TODO: call update session when the frontend hits the logout route on backend..
+// TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
 module.exports.updateSession = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    var today = new Date();
+
     // query ptSesssion table ON ptId and sessionId
     // check if duration is set and update accordingly
+    if(decoded.isPt)
+    {
+        models.ptSession.findAll({
+            where: {
+                ptId: decoded.id,
+                sessionNumber: decoded.sessionNumber
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(function (ptSessions) {
+            if(ptSessions.length !== 0)
+            {
+                if(ptSessions[0].duration == null) {
+                    var cDate = new Date(ptSessions[0].createdAt);
+                    var diff = today.getTime() - cDate.getTime();
 
+                    models.ptSession.update(
+                        {duration: diff},
+                        {where: {
+                            ptId: decoded.id,
+                            sessionNumber: decoded.sessionNumber,
+                            duration: null,
+                            resourceRequested: ptSessions[0].resourceRequested,
+                            createdAt: ptSessions[0].createdAt
+                        }
+                        })
+                    return;
+                } else {
+                    return;
+                }
+            }
+            else
+            {
+                console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+                return;
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
+    } else {
+        console.log('only log pt sessions');
+        return;
+    }
 };
 //
 
 module.exports.endSession = (req, res, next) => {
-
-    // update duration of final request in some session as above
-
-    // that's all that happens here, everything else is handled in auth
-
-    console.log('in end session');
-    console.log(req.url);
-    return;
+    // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
+    // TODO: test this function! copied from update session above
+    // var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    // var decoded = jwt.verify(token, config.secret);
+    //
+    // var today = new Date();
+    //
+    // // update duration of final request in some session as above
+    //
+    // // that's all that happens here, everything else is handled in auth
+    //
+    // if (decoded.isPt)
+    // {
+    //     models.ptSession.findAll({
+    //         where: {
+    //             ptId: decoded.id,
+    //             sessionNumber: decoded.sessionNumber
+    //         },
+    //         order: [
+    //             ['createdAt', 'DESC']
+    //         ]
+    //     }).then(function (ptSessions) {
+    //         if(ptSessions.length !== 0)
+    //         {
+    //             if(ptSessions[0].duration == null) {
+    //                 var cDate = new Date(ptSessions[0].createdAt);
+    //                 var diff = today.getTime() - cDate.getTime();
+    //
+    //                 models.ptSession.update(
+    //                     {duration: diff},
+    //                     {where: {
+    //                         ptId: decoded.id,
+    //                         sessionNumber: decoded.sessionNumber,
+    //                         duration: null,
+    //                         resourceRequested: ptSessions[0].resourceRequested,
+    //                         createdAt: ptSessions[0].createdAt
+    //                     }
+    //                     })
+    //                 return;
+    //             } else {
+    //                 return;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+    //             return;
+    //         }
+    //     }).catch(function (err) {
+    //         return next(err);
+    //     })
+    // } else {
+    //     console.log('only log pt sessions');
+    //     return;
+    // }
+    //
+    // return;
 }
