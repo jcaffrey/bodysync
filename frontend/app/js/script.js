@@ -372,10 +372,31 @@ function sortProg() {
 // =============================================================
 //  Add measure
 // =============================================================
+function getMetrics(id) {
+    fetch('/romMetrics/' + id + '/romMetricMeasures?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(metrics) {
+            if (localStorage.metrics != "")
+                var lst = JSON.parse(localStorage.metrics);
+            else lst = [];
+            lst.push(metrics);
+            localStorage.metrics = JSON.stringify(lst);
+            return JSON.stringify(lst);
+        });
+    }).catch(submitError);
+}
 
 function getInjuries(id) {
-    for (injury in document.getElementsByClassName('inputs')) {
-        console.log(id);
+    localStorage.metrics = "";
+    var list = document.getElementsByClassName('inputs');
+    for (var i = 0; i < list.length; i++) {
+        var nid = list[i].getElementsByTagName('span')[1];
+        var num = nid.innerHTML;
+        var metrics = getMetrics(num) || localStorage.metrics;
+        alert(metrics);
+        // metrics = JSON.parse(metrics)[i];
+        // nid.innerHTML = metrics[metrics.length - 1].degreeValue;
     }
 }
 
@@ -388,7 +409,9 @@ function twoDigits(d) {
 }
 
 Date.prototype.toMysqlFormat = function() {
-    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-"
+        + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":"
+        + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 };
 
 function submitMeasure(id, i) {

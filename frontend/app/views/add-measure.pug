@@ -3,8 +3,7 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/add-measure.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    script.
-        window.onload = ()=>{getInjuries(#{id})}
+    script window.onload = ()=>{getInjuries(#{id})}
 block content
     form
         each injury, i in injuries
@@ -13,12 +12,12 @@ block content
                     .input-name
                         span= injury.name
                         .input-label
-                    .progress-icon
+                    .progress-icons
                 .input-box.input-bottom
                     .measure-container
                         .m-old
                             .num
-                                span 25
+                                span=injury.id
                             .m-label PREVIOUS
                         .m-new
                             .num
