@@ -3,6 +3,19 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-form.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        function increment() {
+            var original = document.getElementById('num').innerHTML;
+            var value = parseInt(original, 10);
+            value++;
+            document.getElementById('num').innerHTML.replace(original, toString(value));
+        };
+        function decrement() {
+            var original = document.getElementById('num').innerHTML;
+            var value = parseInt(original, 10);
+            value--;
+            document.getElementById('num').innerHTML.replace(original, toString(value));
+        };
 block content
     form
         button#applyTemplate Apply Template
@@ -14,9 +27,9 @@ block content
             .input-box#reps           
                 .repset-name Reps
                 .repset-box
-                    button.arith-box -
-                    .num-box 15
-                    button.arith-box +
+                    button.arith-box(onclick='decrement()') -
+                    p(id='num') 15
+                    button.arith-box(onclick='increment()') +
             .input-box#sets
                 .repset-name Sets
                 .repset-box

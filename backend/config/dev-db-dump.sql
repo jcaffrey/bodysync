@@ -98,3 +98,10 @@ values
     (DATE_ADD(NOW(), INTERVAL 9 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 10 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 12 DAY), now(), now(), 1);
+
+--insert into ptSessions
+--    (ptId, sessionNumber, duration, resourceRequested, patientId, createdAt, updatedAt)
+--values
+--    (2, 1, null, '/login', 1, now(), now()),
+--    (2, 2, null, '/pts/2/patients', 1, now() + 1, now()),
+--    (2, 3, null, '/test', 1, now() + 2, now());

@@ -4,8 +4,8 @@ var jwt = require('jsonwebtoken');
 
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
-var config = require('../config/config.json')[env];  
-
+var config = require('../config/config.json')[env];
+var nodemailer = require('nodemailer')
 
 /*
 
@@ -27,22 +27,50 @@ exports.loginPt = (req, res, next) => {
     })
     .then(function(pt) {
         if(pt.validHash(req.body.password)) {
-            var payload = {id: pt.id, isPt: true, sessionNumber: null, isAdmin: pt.isAdmin}
-             
-            // fuck with flags as you wish
-            // can change to async, see docs https://github.com/auth0/node-jsonwebtoken
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
-             
-            pt.token = token;
-            pt.save()
-                .then(function () {
-                    // returns token to frontend (and backend)..
-                    req.body.token = token;
-                    res.json({token: token});
-                    return next();
-                });
+            models.ptSession.findAll({
+                where: {
+                    ptId: pt.id
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ]
+            }).then(function (ptSessions) {
+                if(ptSessions.length !== 0) {
+                    var newSession = ptSessions[0].sessionNumber + 1;
+                    console.log('PRINTING THE NEW SESSIONNUMBER: ' + newSession);
+
+                    var payload = {id: pt.id, isPt: true, sessionNumber: newSession, isAdmin: pt.isAdmin}
+
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+
+                    pt.token = token;
+                    pt.save()
+                        .then(function () {
+                            // returns token to frontend (and backend)..
+                            req.body.token = token;
+                            res.json({token: token});
+                            return next();
+                        });
 
 
+                } else {
+                    var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
+
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+
+                    pt.token = token;
+                    pt.save()
+                        .then(function () {
+                            // returns token to frontend (and backend)..
+                            req.body.token = token;
+                            res.json({token: token});
+                            return next();
+                        });
+
+                }
+            }).catch(function (err) {
+                return next(err);
+            })
         }
         else {
             return res.status(401).send('bad hash');
@@ -86,6 +114,117 @@ exports.loginPatient = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
+}
+
+// NOTE: this could be implemented somewhat more efficiently with tokens
+// TODO: error handling
+exports.forgotPassword = (req, res, next) => {
+    if (typeof req.body.email !== 'string')
+        return res.status(400).send('No email');
+
+    models.patient.findOne({
+        where: {email: req.body.email}
+    })
+    .then(function(user) {
+        if (!user) { 
+            model.pt.findOne({
+                where: {email: req.body.email}
+            })
+            .then(function(user2) {
+                if (!user2) 
+                    return res.status(400).send('No account associated with that email');
+                user = user2;
+            });
+        }
+
+        crypto.randomBytes(10, function(err, buf) {
+            var token = buf.toString('hex') + Date.now().toString();
+            user.forgotPasswordHash = token;
+            user.forgotPasswordExpires = Date.now() + 3600000; // 1 hour
+
+            user.save().then(function () {
+                var smtpTransport = nodemailer.createTransport('SMTP', {
+                    service: 'gmail',
+                    auth: {
+                      user: 'tech.bodysync@gmail.com',
+                      pass: '/MdeUWK#<3)LEdKq'
+                    }
+                });
+
+                var mailOptions = {
+                    to: user.email,
+                    from: 'tech.bodysync@gmail.com',
+                    subject: 'Bodysync Password Reset',
+                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                      'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                      'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                      'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                };
+
+                smtpTransport.sendMail(mailOptions, function(err) {
+                    res.send('An e-mail has been sent to ' + user.email + ' with further instructions.');
+                });
+
+            });
+        });
+    });
+}
+
+// function reset (db, req, res, next) {
+//     db.findOne({ resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+//         if (!user) {
+//           return res.status(400).send('Password reset token is invalid or has expired.');
+//         }
+//         return res.render('reset');
+//   });
+// }
+
+exports.resetPassword = (req, res, next) => {
+    if (req.body.password !== req.body.confirm)
+        return res.status(400).send('Passwords do not match');
+
+    models.patient.findOne({ 
+        where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
+    })
+    .then(function(user){
+        if (!user) {
+                models.patient.findOne({ 
+                    where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
+                })
+                .then(function(user2){
+                if (!user2)
+                    return res.status(400).send('Password reset token is invalid or has expired.');
+                user = user2;
+            });
+        }
+
+        user.resetPasswordHash = undefined;
+        user.resetPasswordExpires = undefined;
+        // NOTE: currently storing passwords in plaintext, MUST change
+        user.Hash = req.body.password;
+
+        user.save.then(function () {
+            var smtpTransport = nodemailer.createTransport('SMTP', {
+                service: 'gmail',
+                auth: {
+                  user: 'tech.bodysync@gmail.com',
+                  pass: '/MdeUWK#<3)LEdKq'
+                }
+            });
+
+            var mailOptions = {
+                to: user.email,
+                from: 'tech.bodysync@gmail.com',
+                subject: 'Password Successfully Reset',
+                text: 'Hello,\n\n' +
+                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+            };
+
+            smtpTransport.sendMail(mailOptions, function(err) {
+                res.send('Your password has been successfully reset');
+            });
+        });
+    });
 }
 
 /*
@@ -203,4 +342,3 @@ exports.checkRequestIdAgainstId = (req, res) => {
     }
     // is bool best way to do this?
 }
-

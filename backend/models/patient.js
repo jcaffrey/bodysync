@@ -15,6 +15,14 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        fogotPasswordHash: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        fogotPasswordExpires: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
         surgeryType: {
             type: DataTypes.STRING,
