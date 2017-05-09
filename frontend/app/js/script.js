@@ -1,10 +1,6 @@
 var success = document.getElementById('success');
 var form = document.forms[0];
 
-// function home() {
-//
-// }
-
 // =============================================================
 // Form submit functions
 // =============================================================
