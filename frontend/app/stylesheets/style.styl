@@ -30,26 +30,78 @@ body
 
 #header
     display inline-block
-    height 12%
+    height 80px
     width 100%
     background-color $white
+    border-bottom $mainColor 1px solid
+    position fixed
+    z-index 9999
 
+#space
+    height 80px
 
 .profile-box
     display inline-block
-    padding-top 5%
-    height 100%
+    padding 0
+    margin 0
+    height 80px
     width 100%
 
 .profile-box-left
     display inline-block
-    width ((7/8) * 100)%
+    float right
+    margin 15px 25px 0 0
 
 .profile-box-right
     display inline-block
+    text-align right
+    float right
+
+#navbar
+    display inline-block
+    float left
+    line-height 80px
+    vertical-align middle
+    margin-left 25px
+
+#navbar a.navButton.active
+    vertical-align middle
+
+#navbar a.navButton.active:hover
+    cursor pointer
+
+.navButton
+    font-family 'GothamBold'
+    text-transform uppercase
+    text-decoration none
+    color $inactiveColor
+    padding 0
+    height 0
+    font-size 30px
+
+#profileImg1
+    display block
+    border-radius 50%
+    height 65px
+    width 65px
+    margin-top 5px
+    margin-right 20px
+    border 2px solid $mainColor
+
+.inactive
+    display inline-block
+    font-family 'GothamBold'
     text-align center
-    width ((1/8) * 100)%
-    padding-top 1%
+    font-weight bold
+    color $inactiveColor
+    width 100%
+    height 10%
+    padding-top 5%
+    text-transform uppercase
+    font-size 2em
+
+.active
+    color $mainColor
 
 #profileName
     display inline-block
@@ -59,10 +111,9 @@ body
     color $mainColor
     width 100%
     height 50%
-    padding-top 0.75%
-    text-transform uppercase
+    margin-bottom 4px
 
-#loginTitle
+.loginTitle
     display inline-block
     font-family 'GothamBold'
     text-align center
@@ -111,13 +162,25 @@ body
 
 #logOutButton
     display inline-block
-    background-color $mainColor
-    color $white
-    border-radius 11px 0px 0px 11px
+    background-color #ffffff
+    color $mainColor
+    border-radius 11px
+    border 1px solid $mainColor
+    font-size 10px
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
 
 #logOutButton:hover
-    background $inactiveColor
-    color $mainColor
+    background $mainColor
+    color #ffffff
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
 
 .border-left
     float right
@@ -151,36 +214,7 @@ body
 #profileImg
     display inline-block
     border-radius 50%
-
-#navbar
-    height 6%
-    width 90%
-    margin 1% 5%
-    border-bottom 2px solid $inactiveColor
-
-.nav
-
-.navButton
-    font-family 'GothamBold'
-    text-transform uppercase
-    text-decoration none
-    color $inactiveColor
-    padding-right 3%
-
-.inactive
-    display inline-block
-    font-family 'GothamBold'
-    text-align center
-    font-weight bold
-    color $inactiveColor
-    width 100%
-    height 10%
-    padding-top 5%
-    text-transform uppercase
-    font-size 2em
-
-.active
-    color $mainColor
+    vertical-align middle
 
 #content
     height 70%
@@ -282,299 +316,6 @@ body
 button:hover, .submit:hover
     cursor: pointer
 
-@media all and (max-width: 375px)
-    #profileImg
-        height 90%
-        width 90%
-    .navButton
-        font-size 20px
-    #navbar
-        height 4%
-    #profileName
-        padding-top 8px
-        font-size 12px
-    #logOutButton
-        padding 4px 20px
-        font-size 6px
-    #settingsButton
-        padding 4px 20px
-        font-size 6px
-    #header
-        height 10%
-    #footer
-        height 6%
-    .footerButton, #submit
-        font-size 12px
-
-@media all and (min-width: 375px) and (max-width: 500px)
-    #profileImg
-        padding-top 5px
-        height 85%
-        width 85%
-    .navButton
-        font-size 20px
-    #navbar
-        padding-top 3px
-        height 4%
-    #profileName
-        padding-top 12px
-        font-size 16px
-    #logOutButton
-        padding 4px 20px
-        font-size 8px
-    #settingsButton
-        padding 4px 20px
-        font-size 8px
-    #header
-        height 9%
-    #footer
-        height 6%
-    .footerButton, #submit
-        font-size 16px
-
-@media all and (min-width: 500px) and (max-width: 550px)
-    #profileImg
-        height 75%
-        width 75%
-    .navButton
-        font-size 20px
-    #navbar
-        height 4%
-    #profileName
-        padding-top 12px
-        font-size 14px
-    #logOutButton
-        padding 4px 20px
-        font-size 7px
-    #settingsButton
-        padding 4px 20px
-        font-size 7px
-    #header
-        height 10%
-    #footer
-        height 6%
-    .footerButton, #submit
-        font-size 14px
-
-@media all and (min-width: 550px) and (max-width: 700px)
-    #profileImg
-        height 70%
-        width 70%
-    .navButton
-        font-size 22px
-    #navbar
-        height 4%
-    #profileName
-        padding-top 14px
-        font-size 16px
-    #logOutButton
-        padding 4px 20px
-        font-size 8px
-    #settingsButton
-        padding 4px 20px
-        font-size 8px
-    #header
-        height 10%
-    #footer
-        height 7%
-    .footerButton, #submit
-        font-size 16px
-
-@media all and (min-width: 700px) and (max-width: 900px)
-    #profileImg
-        height 65%
-        width 65%
-    .navButton
-        font-size 26px
-    #navbar
-        height 4%
-    #profileName
-        font-size 20px
-    #logOutButton
-        padding 4px 20px
-        font-size 10px
-    #settingsButton
-        padding 4px 20px
-        font-size 10px
-    #header
-        height 11%
-    #footer
-        height 7%
-    .footerButton, #submit
-        font-size 20px
-
-@media all and (min-width: 900px) and (max-width: 1000px)
-    #profileImg
-        height 60%
-        width 60%
-    .navButton
-        font-size 32px
-    #navbar
-        height 5%
-    #profileName
-        padding-top 15px
-        font-size 24px
-    #logOutButton
-        padding 4px 20px
-        font-size 10px
-    #settingsButton
-        padding 4px 20px
-        font-size 10px
-    #header
-        height 12%
-    #footer
-        height 8%
-    .footerButton, #submit
-        font-size 24px
-
-
-@media all and (min-width: 1000px) and (max-width: 1100px)
-    #profileImg
-        height 65%
-        width 65%
-    .navButton
-        font-size 35px
-    #navbar
-        height 7%
-    #profileName
-        padding-top 18px
-        font-size 26px
-    #logOutButton
-        padding 4px 20px
-        font-size 13px
-    #settingsButton
-        padding 4px 20px
-        font-size 13px
-    #header
-        height 16%
-    #footer
-        height 8%
-    .footerButton, #submit
-        font-size 26px
-
-@media all and (min-width: 1100px) and (max-width: 1250px)
-    #profileImg
-        height 55%
-        width 55%
-    .navButton
-        font-size 40px
-    #navbar
-        height 6%
-    #profileName
-        padding-top 15px
-        font-size 30px
-    #logOutButton
-        padding 4px 20px
-        font-size 15px
-    #settingsButton
-        padding 4px 20px
-        font-size 15px
-    #header
-        height 14%
-    #footer
-        height 7%
-    .footerButton, #submit
-        font-size 30px
-
-
-@media all and (min-width: 1250px) and (max-width: 1475px)
-    #profileImg
-        height 48%
-        width 48%
-    .navButton
-        font-size 43px
-    #navbar
-        height 7%
-    #profileName
-        font-size 32px
-    #logOutButton
-        padding 4px 20px
-        font-size 16px
-    #settingsButton
-        padding 4px 20px
-        font-size 16px
-    #header
-        height 15%
-    #footer
-        height 8%
-    .footerButton, #submit
-        font-size 32px
-
-
-
-@media all and (min-width: 1475px) and (max-width: 1700px)
-    #profileImg
-        height 50%
-        width 50%
-    .navButton
-        font-size 45px
-    #navbar
-        height 8%
-    #profileName
-        padding-top 18px
-        font-size 36px
-    #logOutButton
-        padding 4px 20px
-        font-size 18px
-    #settingsButton
-        padding 4px 20px
-        font-size 18px
-    #header
-        height 14%
-    #footer
-        height 8%
-    .footerButton, #submit
-        font-size 36px
-
-@media all and (min-width: 1700px)
-    #profileImg
-        height 40%
-        width 40%
-    .navButton
-        font-size 50px
-    #navbar
-        height 8%
-    #profileName
-        padding-top px
-        font-size 44px
-    #logOutButton
-        padding 4px 20px
-        font-size 22px
-    #settingsButton
-        padding 4px 20px
-        font-size 22px
-    #header
-        height 14%
-    #footer
-        height 9%
-    .footerButton, #submit
-        font-size 44px
-
-@media all and (min-width: 850px) and (min-height: 850px)
-    #profileImg
-        height 80%
-        width 80%
-    .navButton
-        font-size 45px
-    #navbar
-        padding-top 10px
-        height 5%
-    #profileName
-        padding-top 20px
-        font-size 30px
-    #logOutButton
-        padding 4px 20px
-        font-size 15px
-    #settingsButton
-        padding 4px 20px
-        font-size 15px
-    #header
-        height 9%
-    #footer
-        height 9%
-    .footerButton, #submit
-        font-size 25px
-
 .validationError
     height 10%
     width 100%
@@ -600,3 +341,9 @@ p
 
 .invalid
     box-shadow: inset 0px 0px 5px #b5191e
+
+@media screen and (max-width: 500px)
+    #profileImg1
+        display none
+    #navbar a
+        font-size 20px

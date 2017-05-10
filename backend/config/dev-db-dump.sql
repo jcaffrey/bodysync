@@ -8,7 +8,7 @@
  * when testing the api (in postman or with curl at the command line), you should sign in
  * to get a token (which you should store as 'x-access-token':token in the header to simulate
  * the browser's storage) for subsequent resource requests, and you should sign in using a
- * plaintext password. We have inserted hashes into the db because these are not 
+ * plaintext password. We have inserted hashes into the db because these are not
  * created using the controller of course (see the schema for bcrypt functionality).
  *
  * https://bcrypt-generator.com
@@ -17,7 +17,7 @@
  * $2a$08$KyePVbpTFRdPaDcc1xAtOOCacEh6X.e.6Ud0Z/AKLJHsMHNYkqKku is bcrypted davidpw
  * $2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa. is bcrypted joshpw
  */
-insert into 
+insert into
     pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
 values 
     ('Jeremy Welborn', '$2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti', '16174627953', 'att', 'jeremy@gmail.com', false, now(), now()),
@@ -98,10 +98,3 @@ values
     (DATE_ADD(NOW(), INTERVAL 9 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 10 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 12 DAY), now(), now(), 1);
-
---insert into ptSessions
---    (ptId, sessionNumber, duration, resourceRequested, patientId, createdAt, updatedAt)
---values
---    (2, 1, null, '/login', 1, now(), now()),
---    (2, 2, null, '/pts/2/patients', 1, now() + 1, now()),
---    (2, 3, null, '/test', 1, now() + 2, now());

@@ -147,3 +147,10 @@ router.get('/exercise-set', function(req, res, next) {
 });
 
 module.exports = router;
+
+// reset password view
+router.get('/reset-password', function(req, res, next) {
+    return res.render('reset-password', { footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+module.exports = router;
