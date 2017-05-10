@@ -22,8 +22,8 @@ function submitOnEnterKey(submitFunction, targetForm) {
 
 function submitLogin() {
     var data = {
-        email: form.email.value,
-        password: form.password.value
+        email: form.email2.value,
+        password: form.password2.value
     };
     console.log(data.email);
     console.log(data.password);
