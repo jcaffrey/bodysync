@@ -25,8 +25,7 @@ function submitLogin() {
         email: form.email2.value,
         password: form.password2.value
     };
-    console.log(data.email);
-    console.log(data.password);
+    localStorage.email = data.email;
     fetch('/login', {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',

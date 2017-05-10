@@ -15,7 +15,7 @@ html
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left
-                        div#profileName #{firstName}
+                        div#profileName
                         div.profile-buttons
                             a(href='#')
                                 button.profileAction#settingsButton Settings
@@ -43,6 +43,8 @@ html
         script(src='/js/script.min.js')
         if token
             script localStorage.token = "#{token}"
+        script.
+            document.getElementById('profileName').innerHTML = localStorage.email
         block postScript
         if dev
             script(src='//localhost:10000/livereload.js')
