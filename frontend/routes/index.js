@@ -81,7 +81,7 @@ router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures', {
         headers: {'x-access-token': req.query.token}
     }, function(err, response, body) {
-        return JSON.parse(body)
+        return JSON.parse(body);
     })
 });
 
