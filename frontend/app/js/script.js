@@ -232,7 +232,7 @@ function getPatients() {
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
         });
-        window.location = '/patients';
+        window.location = '/patients1';
     }).catch(submitError);
 }
 
@@ -289,7 +289,7 @@ function loadPatients(pts) {
                     '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
                 '</div>' +
                 '<div class="space"></div>' +
-                '<div class="inspect1">Inspect Patient</div>' +
+                '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
             '</div>' +
             '</div>';
         rec.setAttribute('class', 'recovery');
