@@ -322,7 +322,7 @@ function loadProgress(patients) {
     var pats = JSON.parse(patients);
     for (var i = 0; i < pats.length; i++) {
         (function(x) {
-            fetch('/romMetrics/' + i + '/romMetricMeasures/?token=' + localStorage.token, {
+            fetch('/romMetrics/' + x + '/romMetricMeasures/?token=' + localStorage.token, {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
