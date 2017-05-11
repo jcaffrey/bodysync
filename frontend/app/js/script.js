@@ -519,7 +519,7 @@ var line3 = d3.svg.line()
 // Add an SVG element with the desired dimensions and margin.
 var graph = d3.select("#graph").append("svg")
     .attr("width", "100%")
-    .attr("height", "110%")
+    .attr("height", "95%")
     .append("svg:g")
     .attr("transform", "translate(20,-35)");
 // create xAxis
@@ -528,7 +528,7 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .ticks(5)
     .tickSize(0)
-    .tickFormat(d3.time.format("%-m.%-d"))
+    .tickFormat(d3.time.format("%-m/%-d"))
     .tickPadding(4);
 
 
@@ -592,7 +592,7 @@ if (window.innerWidth > 1000) {
         .attr('text-anchor', 'middle')
         .attr("class", "goal")
         .text("Goal")
-        .style("font-size", "30px");
+        .style("font-size", "25npmpx");
 
     graph.selectAll(".point")
         .data(points)
@@ -604,7 +604,7 @@ if (window.innerWidth > 1000) {
         .attr("cy", function (d, i) {
             return y(degreeValue[i]);
         })
-        .attr("r", 15)
+        .attr("r", 8)
         .attr("transform", "translate(20,10)")
     ;
 
@@ -703,7 +703,7 @@ else if (window.innerWidth > 770 && window.innerWidth < 1000) {
         .attr("cy", function (d, i) {
             return y(next_weeks_goal);
         })
-        .attr("r", 15)
+        .attr("r", 8)
         .attr("transform", "translate(20,0)")
     ;
 }
@@ -723,7 +723,7 @@ else if (window.innerWidth > 400 && window.innerWidth < 770) {
     graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
         .attr("transform", "translate(20,0)");
     graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
+        .attr("transform", "translate(20,1)")
         .attr("class", "horizontalLine");
     graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
         .attr("transform", "translate(20,0)");
@@ -787,7 +787,7 @@ else if (window.innerWidth > 400 && window.innerWidth < 770) {
         .attr("cy", function (d, i) {
             return y(next_weeks_goal);
         })
-        .attr("r", 15)
+        .attr("r", 8)
         .attr("transform", "translate(20,0)")
     ;
 
@@ -869,8 +869,92 @@ else if (window.innerWidth < 400 && window.innerHeight > 600) {
         .attr("cy", function (d, i) {
             return y(next_weeks_goal);
         })
-        .attr("r", 15)
+        .attr("r", 8)
         .attr("transform", "translate(20,0)")
+    ;
+}
+
+else if (window.innerWidth < 400 && window.innerHeight > 500) {
+    graph
+        .attr("transform", "translate(20,-45)");
+
+    graph.append("svg:g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(25,218)")
+        .call(xAxis);
+
+    graph.append("svg:g")
+        .attr("transform", "translate(25,20)")
+        .attr("class", "y axis")
+        .call(yAxisLeft);
+
+    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+        .attr("transform", "translate(25,20)");
+    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+        .attr("transform", "translate(25,20)")
+        .attr("class", "horizontalLine");
+    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+        .attr("transform", "translate(25,20)");
+
+    graph.append("rect")
+        .attr("class", "outerRect")
+        .attr("x", 95)
+        .attr("y", 84)
+        .attr("width", 55)
+        .attr("height", 30);
+
+    graph.append("circle")
+        .attr("class", "circleRight")
+        .attr("cx", 153)
+        .attr("cy", 99)
+        .attr("r", 15);
+
+    graph.append("circle")
+        .attr("class", "circleLeft")
+        .attr("cx", 92)
+        .attr("cy", 99)
+        .attr("r", 15);
+
+    graph.append("rect")
+        .attr("class", "goalRect")
+        .attr("x", 93)
+        .attr("y", 85.5)
+        .attr("width", 62)
+        .attr("height", 27);
+
+    graph.append("text")
+        .attr("x", 123)
+        .attr("y",  105)
+        .attr('text-anchor', 'middle')
+        .attr("class", "goal")
+        .text("Goal");
+
+    graph.selectAll(".point")
+        .data(points)
+        .enter().append("circle")
+        .attr("class", "circles")
+        .attr("cx", function (d, i) {
+            return x(dayMeasured[i]);
+        })
+        .attr("cy", function (d, i) {
+            return y(degreeValue[i]);
+        })
+        .attr("r", 8)
+        .attr("transform", "translate(25,20)")
+    ;
+
+    graph.selectAll(".point")
+        .data(goal_point)
+        .enter().append("circle")
+        .attr("class", "goal-point")
+        .attr("cx", function (d, i) {
+            return x(next_weeks_goal_date);
+        })
+        .attr("cy", function (d, i) {
+            return y(next_weeks_goal);
+        })
+        .attr("r", 8)
+        .attr("transform", "translate(25,20)")
     ;
 }
 
@@ -953,7 +1037,7 @@ else {
         .attr("cy", function (d, i) {
             return y(next_weeks_goal);
         })
-        .attr("r", 15)
+        .attr("r", 8)
         .attr("transform", "translate(25,0)")
     ;
 }
