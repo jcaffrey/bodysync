@@ -502,7 +502,7 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .ticks(5)
     .tickSize(0)
-    .tickFormat(d3.time.format("%-m.%-d"))
+    .tickFormat(d3.time.format("%-m/%-d"))
     .tickPadding(4);
 
 
@@ -566,7 +566,7 @@ if (window.innerWidth > 1000) {
         .attr('text-anchor', 'middle')
         .attr("class", "goal")
         .text("Goal")
-        .style("font-size", "30px");
+        .style("font-size", "25px");
 
     graph.selectAll(".point")
         .data(points)
