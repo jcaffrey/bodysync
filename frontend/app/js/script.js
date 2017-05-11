@@ -319,6 +319,7 @@ function clear() {
 
 function loadProgress(patients) {
     var progress = [];
+    progress.fill(0, 0, patients.length);
     var pats = JSON.parse(patients);
     for (var i = 1; i < pats.length + 1; i++) {
         (function(x) {
@@ -326,7 +327,6 @@ function loadProgress(patients) {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
-                console.log("Step " + x + ": " + progress);
                 res.json().then(function (data) {
                     var measure = data[data.length - 1] || 0;
                     progress[x] = (measure.degreeValue / measure.nextGoal);
