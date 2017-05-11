@@ -326,7 +326,7 @@ function loadProgress(patients) {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
-                console.log("Step " + i + ": " + progress);
+                console.log("Step " + x + ": " + progress);
                 res.json().then(function (data) {
                     var measure = data[data.length - 1] || 0;
                     progress[x] = (measure.degreeValue / measure.nextGoal);
