@@ -320,7 +320,7 @@ function clear() {
 function loadProgress(patients) {
     var progress = [];
     var pats = JSON.parse(patients);
-    for (var i = 0; i < pats.length; i++) {
+    for (var i = 1; i < pats.length + 1; i++) {
         (function(x) {
             fetch('/romMetrics/' + x + '/romMetricMeasures/?token=' + localStorage.token, {
                 method: 'GET'
