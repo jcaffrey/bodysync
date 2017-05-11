@@ -241,7 +241,7 @@ function displayCollapse(x) {
     else elt.style.display = 'none'
 }
 
-function loadPatients(pts) {
+function loadPatients(pts, progress) {
     var psd = JSON.parse(pts);
     // fetch patient metrics here
     for (var i = 0; i < psd.length; i++) {
@@ -317,9 +317,28 @@ function clear() {
     list.innerHTML = '';
 }
 
+function loadProgress(patients) {
+    var progress = [];
+    var pats = JSON.parse(patients);
+    for (var i = 0; i < pats.length; i++) {
+        fetch('/romMetrics/' + i + '/romMetricMeasures/?token=' + localStorage.token, {
+            method: 'GET'
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+            console.log("Step " + i + ": " + progress);
+            res.json().then(function (data) {
+                var measure = data[data.length - 1];
+                progress.push((measure.degreeValue / measure.nextGoal));
+            });
+        }).catch(submitError);
+    }
+    return progress;
+}
+
 function loadStart() {
     clear();
-    loadPatients(localStorage.patients);
+    var progress = loadProgress(localStorage.patients);
+    loadPatients(localStorage.patients, progress);
 }
 
 function load() {
