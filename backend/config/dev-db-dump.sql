@@ -39,8 +39,8 @@ insert into injuries
     (name, patientId, createdAt, updatedAt)
 values
     ('shoulder injury', (select id from patients where name = 'Josh Seides'), now(), now()),
-    ('stubbed toe', (select id from patients where name = 'Josh Seides'), now(), now()),
-    ('sprained ankle', (select id from patients where name = 'Josh Seides'), now(), now());
+    ('stubbed toe', (select id from patients where name = 'David Malan'), now(), now()),
+    ('sprained ankle', (select id from patients where name = 'Zamyla Chan'), now(), now());
 
 
 -- romMetrics
@@ -48,8 +48,8 @@ insert into romMetrics
     (name, startRange, endRangeGoal, createdAt, updatedAt, injuryId)
 values
     ('External Shoulder Rotation', '30', '90', now(), now(), 1),
-    ('Toe Rotation', '5', '10', now(), now(), 1),
-    ('Ankle Flexion', '70', '90', now(), now(), 1);
+    ('Toe Rotation', '5', '10', now(), now(), 2),
+    ('Ankle Flexion', '70', '90', now(), now(), 3);
 
 -- romMetricMeasures
 insert into romMetricMeasures
@@ -60,9 +60,10 @@ values
     ('thirdMeasure', 40, 50, DATE_ADD(NOW(), INTERVAL 21 DAY), DATE_ADD(NOW(), INTERVAL 14 DAY), now(), now(), 1),
     ('fourthMeasure', 45, 58, DATE_ADD(NOW(), INTERVAL 28 DAY), DATE_ADD(NOW(), INTERVAL 21 DAY), now(), now(), 1),
     ('fifthMeasure', 53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 90, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1);
+    ('sixthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
+    ('seventhMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
+    ('firstMeasure', 4, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 2),
+    ('firstMeasure', 18, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 3);
 
 -- exerciseSets
 insert into exerciseSets

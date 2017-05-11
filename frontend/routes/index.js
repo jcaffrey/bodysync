@@ -31,7 +31,7 @@ router.get('/reset/:token', function(req, res, next) {
     return res.render('reset', {footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-router.get('')
+router.get('');
 
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises');
@@ -58,7 +58,7 @@ router.get('/pts/:id/patients', function(req, res, next) {
 
 router.get('/patients', function(req, res, next) {
     return res.render('patients', {
-        firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit'
+        footerButton: 'Cancel', footerButton2: 'Submit'
     });
 });
 
@@ -78,12 +78,9 @@ router.post('/pts/:id/patients', function(req, res, next) {
 
 // -------------------------------------------------------------------------------
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
-    request.get({
-        url: config.apiUrl + '/romMetrics' + req.params.id + '/romMetricMeasures',
+    request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
-    }, function(err, response, body) {
-        return JSON.parse(body)
-    })
+    }).pipe(res);
 });
 
 router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
