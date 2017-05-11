@@ -80,9 +80,7 @@ router.post('/pts/:id/patients', function(req, res, next) {
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
-    }, function(err, response, body) {
-        return JSON.parse(body);
-    })
+    }).pipe(res);
 });
 
 router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
