@@ -241,6 +241,18 @@ function displayCollapse(x) {
     else elt.style.display = 'none'
 }
 
+function color(n) {
+    if (n < 33.3) {
+        return "ce2310";
+    }
+    else if (n < 66.7) {
+        return "dbb51c";
+    }
+    else {
+        return "1a924c";
+    }
+}
+
 function loadPatients(pts) {
     var progress = JSON.parse(localStorage.progress);
     if (progress[1]) {
@@ -258,6 +270,7 @@ function loadPatients(pts) {
             var rec = document.createElement('div');
             var arrow = document.createElement('div');
             var collapse = document.createElement('div');
+            var percent = (progress[i + 1] * 100).toFixed(1);
 
             pic.src = '../../img/profile_pic.jpg';
             pic.setAttribute('id', 'profileImg');
@@ -266,7 +279,8 @@ function loadPatients(pts) {
             recbx.setAttribute('class', 'recovery-box');
             p1.setAttribute('class', 'percent1');
             // Hard coded patient data
-            p1.innerHTML = "<span>" + (progress[i + 1] * 100).toFixed(1) + "%</span>";
+            p1.innerHTML = "<span>" + percent + "%</span>";
+            p1.style.color = "#" + color(percent);
             arrow.setAttribute('class', 'arrow');
             arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
             arrow.appendChild(document.createTextNode('▼'));
@@ -276,17 +290,17 @@ function loadPatients(pts) {
                 '<hr><div class="space"></div>' +
                 '<div class="collapse-inner">' +
                 '<div class="input-label">Shoulder</div>' +
-                '<div class="input-percent1">70%</div>' +
+                '<div class="input-percent1">' + percent + '</div>' +
                 '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
                 '</div>' +
                 '<div class="collapse-inner">' +
                 '<div class="input-label">Neck - Side</div>' +
-                '<div class="input-percent2">50%</div>' +
+                '<div class="input-percent2">' + percent + '%</div>' +
                 '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
                 '</div>' +
                 '<div class="collapse-inner">' +
                 '<div class="input-label">Neck - Front</div>' +
-                '<div class="input-percent3">30%</div>' +
+                '<div class="input-percent3">' + percent + '</div>' +
                 '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
                 '</div>' +
                 '<div class="space"></div>' +
