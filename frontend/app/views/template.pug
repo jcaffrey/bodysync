@@ -10,23 +10,16 @@ html
         div#header
             block header
                 div.profile-box
-                    div.profile-box-left
-                        div#profileName #{firstName}
-                        div.profile-buttons
-                            a(href='#')
-                                button.profileAction#settingsButton Settings
-                            a(href='#' onclick="logout()")
-                                button.profileAction#logOutButton Log Out
+                    div#navbar
+                        a(href='/patients1').navButton.active | Home
                     div.profile-box-right
-                        img(src='img/profile_pic.jpg' id='profileImg')
-
-                div#navbar
-                    if userType === 'patient'
-                        a(href='#' class='navButton active') Exercises
-                        a(href='#' class='navButton') Overview
-                    else
-                        a(href='#' class='navButton active') Patients
-                        a(href='#' class='navButton') Exercise Sets
+                        img(src='img/profile_pic.jpg' id='profileImg1')
+                    div.profile-box-left
+                        div#profileName
+                        div.profile-buttons
+                            a(href='#' onclick="logout()")
+                                .profileAction#logOutButton Log Out
+        div#space
 
         div#content
             block content
@@ -48,6 +41,8 @@ html
         script(src='/js/script.min.js')
         if token
             script localStorage.token = "#{token}"
+        script.
+            document.getElementById('profileName').innerHTML = localStorage.email
         block postScript
         if dev
             script(src='//localhost:10000/livereload.js')

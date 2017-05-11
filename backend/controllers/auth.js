@@ -102,8 +102,8 @@ exports.loginPatient = (req, res, next) => {
             patient.token = token;
             patient.save()
                 .then(function () {
-                    res.json({token: token});
-                    return next();
+                    return res.json({token: token});
+                    //return next();
                 });
 
 

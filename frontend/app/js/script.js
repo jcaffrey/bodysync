@@ -22,11 +22,10 @@ function submitOnEnterKey(submitFunction, targetForm) {
 
 function submitLogin() {
     var data = {
-        email: form.email.value,
-        password: form.password.value
+        email: form.email2.value,
+        password: form.password2.value
     };
-    console.log(data.email);
-    console.log(data.password);
+    localStorage.email = data.email;
     fetch('/login', {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
@@ -232,7 +231,7 @@ function getPatients() {
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
         });
-        window.location = '/patients';
+        window.location = '/patients1';
     }).catch(submitError);
 }
 
@@ -289,7 +288,7 @@ function loadPatients(pts) {
                     '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
                 '</div>' +
                 '<div class="space"></div>' +
-                '<div class="inspect1">Inspect Patient</div>' +
+                '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
             '</div>' +
             '</div>';
         rec.setAttribute('class', 'recovery');
