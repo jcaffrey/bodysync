@@ -321,16 +321,18 @@ function loadProgress(patients) {
     var progress = [];
     var pats = JSON.parse(patients);
     for (var i = 0; i < pats.length; i++) {
-        fetch('/romMetrics/' + i + '/romMetricMeasures/?token=' + localStorage.token, {
-            method: 'GET'
-        }).then(function(res) {
-            if (!res.ok) return submitError(res);
-            console.log("Step " + i + ": " + progress);
-            res.json().then(function (data) {
-                var measure = data[data.length - 1];
-                progress.push((measure.degreeValue / measure.nextGoal));
-            });
-        }).catch(submitError);
+        (function(x) {
+            fetch('/romMetrics/' + i + '/romMetricMeasures/?token=' + localStorage.token, {
+                method: 'GET'
+            }).then(function(res) {
+                if (!res.ok) return submitError(res);
+                console.log("Step " + i + ": " + progress);
+                res.json().then(function (data) {
+                    var measure = data[data.length - 1] || 0;
+                    progress[x] = (measure.degreeValue / measure.nextGoal);
+                });
+            }).catch(submitError);
+        }(i))
     }
     return progress;
 }
