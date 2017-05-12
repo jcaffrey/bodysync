@@ -238,7 +238,12 @@ function getPatients() {
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
-    else elt.style.display = 'none'
+    else elt.style.display = 'none';
+}
+
+function toggleOpen(x) {
+    var elt = document.getElementById(x);
+    elt.classList.toggle('open');
 }
 
 function color(n) {
@@ -267,8 +272,8 @@ function loadPatients(pts) {
             var name = document.createElement('div');
             var recbx = document.createElement('div');
             var p1 = document.createElement('div');
+            var menu = document.createElement('div');
             var rec = document.createElement('div');
-            var arrow = document.createElement('div');
             var collapse = document.createElement('div');
             var percent = (progress[i + 1] * 100).toFixed(1);
             var indicator = color(percent);
@@ -282,9 +287,15 @@ function loadPatients(pts) {
             // Hard coded patient data
             p1.innerHTML = "<span>" + percent + "%</span>";
             p1.style.color = "#" + indicator[0];
-            arrow.setAttribute('class', 'arrow');
-            arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
-            arrow.appendChild(document.createTextNode('▼'));
+            menu.setAttribute('class', 'arrow');
+            menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+            menu.setAttribute('class', 'nav-icon');
+            menu.setAttribute('id', 'nav-icon' + i);
+            menu.innerHTML =
+                '<span></span>' +
+                '<span></span>' +
+                '<span></span>' +
+                '<span></span>';
             collapse.setAttribute('class', 'buttonCollapse');
             collapse.innerHTML =
                 '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
@@ -323,7 +334,7 @@ function loadPatients(pts) {
             inner.appendChild(recbx);
             div.appendChild(picbox);
             div.appendChild(inner);
-            div.appendChild(arrow);
+            div.appendChild(menu);
             div.appendChild(collapse);
             document.getElementById('patients').appendChild(div);
         }
@@ -346,8 +357,8 @@ function loadStatus(patient) {
         var name = document.createElement('div');
         var recbx = document.createElement('div');
         var p1 = document.createElement('div');
+        var menu = document.createElement('div');
         var rec = document.createElement('div');
-        var arrow = document.createElement('div');
         var collapse = document.createElement('div');
         var percent = (progress * 100).toFixed(1);
         var indicator = color(percent);
@@ -361,9 +372,14 @@ function loadStatus(patient) {
         // Hard coded patient data
         p1.innerHTML = "<span>" + percent + "%</span>";
         p1.style.color = "#" + indicator[0];
-        arrow.setAttribute('class', 'arrow');
-        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
-        arrow.appendChild(document.createTextNode('▼'));
+        menu.setAttribute('class', 'arrow');
+        menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('" + i + "')");
+        menu.setAttribute('id', 'nav-icon');
+        menu.innerHTML =
+            '<span></span>' +
+            '<span></span>' +
+            '<span></span>' +
+            '<span></span>';
         collapse.setAttribute('class', 'buttonCollapse');
         collapse.innerHTML =
             '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
@@ -402,7 +418,7 @@ function loadStatus(patient) {
         inner.appendChild(recbx);
         div.appendChild(picbox);
         div.appendChild(inner);
-        div.appendChild(arrow);
+        div.appendChild(menu);
         div.appendChild(collapse);
         document.getElementById('patients').appendChild(div);
     }
