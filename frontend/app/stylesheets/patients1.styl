@@ -76,7 +76,7 @@ form h1
 hr
   border-style: dashed
   color: $inactiveColor
-#upIcon
+#upIcon, #downIcon, #flatIcon
   position: absolute
   z-index: 1000
   bottom: 10%
@@ -99,29 +99,7 @@ hr
     width: 28%
     right: 3%
   float: right
-#downIcon
-  position: absolute
-  z-index: 1000
-  bottom: 10%
-  @media all and (max-width: 375px)
-    width: 25%
-    right: 12%
-  @media all and (min-width: 375px) and (max-width: 500px)
-    width: 27.5%
-    right: 6%
-  @media all and (min-width: 500px) and (max-width: 550px)
-    width: 27%
-    right: 8%
-  @media all and (min-width: 550px) and (max-width: 700px)
-    width: 25%
-    right: 12%
-  @media all and (min-width: 700px) and (max-width: 900px)
-    width: 25%
-    right: 7%
-  @media all and (min-width: 900px)
-    width: 28%
-    right: 3%
-  float: right
+
 #profileImg
   position: relative
   z-index: 20

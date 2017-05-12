@@ -243,13 +243,13 @@ function displayCollapse(x) {
 
 function color(n) {
     if (n < 33.3) {
-        return "ce2310";
+        return ['ce2310', '../../img/downIcon.png', 'downIcon'];
     }
     else if (n < 66.7) {
-        return "dbb51c";
+        return ['dbb51c', '../../img/flatIcon.png', 'flatIcon'];
     }
     else {
-        return "1a924c";
+        return ['1a924c', '../../img/upIcon.png', 'upIcon'];
     }
 }
 
@@ -271,16 +271,17 @@ function loadPatients(pts) {
             var arrow = document.createElement('div');
             var collapse = document.createElement('div');
             var percent = (progress[i + 1] * 100).toFixed(1);
+            var indicator = color(percent);
 
             pic.src = '../../img/profile_pic.jpg';
             pic.setAttribute('id', 'profileImg');
-            prog.src = '../../img/upIcon.png';
-            prog.setAttribute('id', 'upIcon');
+            prog.src = indicator[1];
+            prog.setAttribute('id', indicator[2]);
             recbx.setAttribute('class', 'recovery-box');
             p1.setAttribute('class', 'percent1');
             // Hard coded patient data
             p1.innerHTML = "<span>" + percent + "%</span>";
-            p1.style.color = "#" + color(percent);
+            p1.style.color = "#" + indicator[0];
             arrow.setAttribute('class', 'arrow');
             arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
             arrow.appendChild(document.createTextNode('▼'));
