@@ -11,7 +11,7 @@ html
             block header
                 div.profile-box
                     div#navbar
-                        a(href='/patients1').navButton.active | Home
+                        a(href='/patients1').navButton.active Home
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left
@@ -33,11 +33,7 @@ html
                     div#phoneError.validationError
                 button.footerButton#buttonLeft(type='button') #{footerButton}
                 block submitForm
-                //script.
-                //    document.getElementById('buttonLeft').style.width = "100%";
-                //    document.getElementById('buttonRight').style.display = "none";
 
-        //- script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
         if token
             script localStorage.token = "#{token}"
