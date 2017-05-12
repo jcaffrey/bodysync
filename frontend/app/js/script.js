@@ -333,6 +333,83 @@ function loadPatients(pts) {
     }
 }
 
+function loadStatus(patient) {
+    var progress = +JSON.parse(localStorage.progress);
+    if (progress !== "") {
+        // fetch patient metrics here
+        var div = document.createElement('div');
+        var picbox = document.createElement('div');
+        var pic = document.createElement('img');
+        var prog = document.createElement('img');
+        var inner = document.createElement('div');
+        var name = document.createElement('div');
+        var recbx = document.createElement('div');
+        var p1 = document.createElement('div');
+        var rec = document.createElement('div');
+        var arrow = document.createElement('div');
+        var collapse = document.createElement('div');
+        var percent = (progress * 100).toFixed(1);
+        var indicator = color(percent);
+
+        pic.src = '../../img/profile_pic.jpg';
+        pic.setAttribute('id', 'profileImg');
+        prog.src = indicator[1];
+        prog.setAttribute('id', indicator[2]);
+        recbx.setAttribute('class', 'recovery-box');
+        p1.setAttribute('class', 'percent1');
+        // Hard coded patient data
+        p1.innerHTML = "<span>" + percent + "%</span>";
+        p1.style.color = "#" + indicator[0];
+        arrow.setAttribute('class', 'arrow');
+        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
+        arrow.appendChild(document.createTextNode('▼'));
+        collapse.setAttribute('class', 'buttonCollapse');
+        collapse.innerHTML =
+            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+            '<hr><div class="space"></div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Shoulder</div>' +
+            '<div class="input-percent1">' + percent + '</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Neck - Side</div>' +
+            '<div class="input-percent2">' + percent + '%</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Neck - Front</div>' +
+            '<div class="input-percent3">' + percent + '</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="space"></div>' +
+            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
+            '</div>' +
+            '</div>';
+        rec.setAttribute('class', 'recovery');
+        rec.innerHTML = "<span>Recovered</span>";
+        recbx.appendChild(p1);
+        recbx.appendChild(rec);
+        div.setAttribute('class', 'pt-box');
+        picbox.setAttribute('class', 'pic-box');
+        inner.setAttribute('class', 'info-box');
+        name.setAttribute('class', 'name');
+        picbox.appendChild(pic);
+        picbox.appendChild(prog);
+        name.appendChild(document.createTextNode(psd[i].name));
+        inner.appendChild(name);
+        inner.appendChild(recbx);
+        div.appendChild(picbox);
+        div.appendChild(inner);
+        div.appendChild(arrow);
+        div.appendChild(collapse);
+        document.getElementById('patients').appendChild(div);
+    }
+    else {
+        setTimeout(function() { loadStatus(patient) }, 100);
+    }
+}
+
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -358,10 +435,28 @@ function loadProgress(patients) {
     }
 }
 
+function loadPatient(id) {
+    fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var measure = data[data.length - 1] || 0;
+            localStorage.progress = JSON.stringify(measure);
+        });
+    }).catch(submitError);
+}
+
 function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
+}
+
+function loadStatus(patient) {
+    clear();
+    loadPatient(patient.id);
+    loadStatus(patient);
 }
 
 function load() {
