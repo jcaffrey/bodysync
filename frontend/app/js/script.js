@@ -333,6 +333,7 @@ function loadPatients(pts) {
     }
 }
 
+// change to status html
 function loadStatus(patient) {
     var progress = +JSON.parse(localStorage.progress);
     if (progress !== "") {
