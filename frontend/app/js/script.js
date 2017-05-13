@@ -251,7 +251,7 @@ function color(n) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
     }
     else if (n < 66.7) {
-        return ['dbb51c', '../../img/flatIcon.png', 'flatIcon'];
+        return ['fab03c', '../../img/flatIcon.png', 'flatIcon'];
     }
     else {
         return ['1a924c', '../../img/upIcon.png', 'upIcon'];
@@ -312,10 +312,11 @@ function loadPatients(patients) {
             for (var j = 0; j < psd[i].progress.length; j++) {
                 var val = psd[i].progress[j];
                 if (val !== null) {
+                    c = '#' + color(val[0])[0];
                     collapseContent +=
                         '<div class="collapse-inner">' +
                         '<div class="input-label">' + val[1] + '</div>' +
-                        '<div class="input-percent1">' + val[0] + '%</div>' +
+                        '<div class="input-percent1" style="color:' + c + '">' + val[0] + '%</div>' +
                         '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
                 }
             }
