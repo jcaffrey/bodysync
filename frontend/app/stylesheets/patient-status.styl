@@ -95,7 +95,7 @@ form h1
   color $white
   display inline-block
   width 100%
-  padding-top 2%
+  padding-top 1%
   padding-bottom 1%
 
 .exit-sign
@@ -150,19 +150,21 @@ form h1
   color $mainColor
   border-bottom solid 1px $inactiveColor
 
+.option:hover
+  cursor pointer
+
 .option.four
   border-radius 0 0 $formRadius $formRadius
 
 .bottom-box
-  height 82%
+  height 87%
   width 100%
   border-bottom none
 
 .transition-box
   height 3%
-  background-color $white
+  background-color none
   text-align center
-  position fixed
   left 40%
   @media screen and (min-width 650px)
     left 43%
@@ -215,6 +217,9 @@ form h1
   width: 50%
   height: auto
   vertical-align: sub
+
+#graph-symbol:hover
+  cursor pointer
 
 .input-label
   display: inline-block
@@ -361,6 +366,9 @@ form h1
 .svgh
   height 80%
   width 100%
+  margin-left 10%
+  @media screen and (max-width: 600px)
+    margin-left 5%
 
 path
   stroke $mainColor
@@ -399,21 +407,15 @@ path
 
 .goalRect
   fill #f9e5ff
-
-.outerRect
   stroke-width 3
   stroke $mainColor
-  fill #f9e5ff
-
-.circleLeft, .circleRight
-  stroke $mainColor
-  stroke-width 3
-  fill #f9e5ff
 
 .tick
   font-size large
   @media screen and (max-width: 350px)
     font-size small
+  @media screen and (max-width: 600px)
+    font-size smaller
 
 #buttonLeft
   width 100%

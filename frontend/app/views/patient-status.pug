@@ -32,10 +32,10 @@ block content
         .menu-options
             .option.one
                 .menu-icon#iconOverview
-                span(onclick='iconOverview.style.display="inline-block", iconGraph.style.display="none", iconOverviewTrans.style.background="#2e3192", iconGraphOneTrans.style.background="#BBB", overviewBox.style.display="inline-block", bodyBox.style.display="none"') Overview
+                span(onclick='iconOverview.style.display="inline-block", iconGraph.style.display="none", iconOverviewTrans.style.background="#2e3192", iconGraphOneTrans.style.background="#BBB", overviewBox.style.display="inline-block", bodyBox.style.display="none", menuBox.style.display="none", bottomBox.style.opacity="1"') Overview
             .option.two
                 .menu-icon#iconGraph
-                span(onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"') Measurement 1
+                span(onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block", menuBox.style.display="none", bottomBox.style.opacity="1"') Measurement 1
             .option.three
                 .menu-icon
                 span Measurement 2
@@ -68,7 +68,7 @@ block content
                         span#exerciseText STD Shoulder/Back
                 .notes
                     span#noteTitle Notes
-                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Add notes.")
+                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Enter notes here...")
             #bodyBox.body-part-box
                 .percentage-box
                     .span#percentage 50%

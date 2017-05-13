@@ -565,6 +565,18 @@ function submitMeasure(id, i) {
 // =============================================================
 var w, h;
 
+if (window.innerWidth < 500) {
+    w = 7 * window.innerWidth / 12;
+    h = 2 * window.innerHeight / 5;
+}
+
+else {
+    w = window.innerWidth / 3;
+    h = window.innerHeight / 3;
+}
+
+
+
 var degreeValue = [32, 35, 40, 45];
 
 var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
@@ -589,30 +601,7 @@ var max_x = next_weeks_goal_date;
 
 var start_end = [min_x, max_x];
 
-if (window.innerWidth > 1000) {
-    w = 450;
-    h = 455;
-}
 
-else if (window.innerWidth > 770 && window.innerWidth < 1000) {
-    w = 300;
-    h = 300;
-}
-
-else if (window.innerWidth > 400 && window.innerWidth < 770) {
-    w = 275;
-    h = 250;
-}
-
-else if (window.innerWidth < 400 && window.innerHeight > 600){
-    w = 230;
-    h = 230;
-}
-
-else {
-    w = 180;
-    h = 200;
-}
 
 var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
 var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
@@ -666,505 +655,64 @@ var yAxisLeft = d3.svg.axis()
     .tickSize(0)
     .orient("left");
 
-if (window.innerWidth > 1000) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,453)")
-        .call(xAxis);
+graph.append("svg:g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(20," + h + ")")
+    .call(xAxis);
+
+graph.append("svg:g")
+    .attr("transform", "translate(20,0)")
+    .attr("class", "y axis")
+    .call(yAxisLeft);
+
+graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+    .attr("transform", "translate(20, 0)");
+graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+    .attr("transform", "translate(20,0)")
+    .attr("class", "horizontalLine");
+graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+    .attr("transform", "translate(20, 0)");
+
+graph.append("rect")
+    .attr("class", "goalRect")
+    .attr("x", (w /2))
+    .attr("y", h / 6 + goal / 6 + h / 20)
+    .attr("width", w / 5)
+    .attr("height", h / 11);
+
+graph.append("text")
+    .attr("x", (w / 2 + w / 10))
+    .attr("y", h / 6 + goal / 6 + h / 11 + h / 40)
+    .attr('text-anchor', 'middle')
+    .attr("class", "goal")
+    .text("Goal")
+    .style("font-size", w / 20);
+
+graph.selectAll(".point")
+    .data(points)
+    .enter().append("circle")
+    .attr("class", "circles")
+    .attr("cx", function (d, i) {
+        return x(dayMeasured[i]);
+    })
+    .attr("cy", function (d, i) {
+        return y(degreeValue[i]);
+    })
+    .attr("r", (w /25))
+    .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+;
+
+graph.selectAll(".point")
+    .data(goal_point)
+    .enter().append("circle")
+    .attr("class", "goal-point")
+    .attr("cx", function (d, i) {
+        return x(next_weeks_goal_date);
+    })
+    .attr("cy", function (d, i) {
+        return y(next_weeks_goal);
+    })
+    .attr("r", (w /25))
+    .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+;
 
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,10)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,10)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 230)
-        .attr("y", 95)
-        .attr("width", 65)
-        .attr("height", 50);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 299)
-        .attr("cy", 120)
-        .attr("r", 25);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 227)
-        .attr("cy", 120)
-        .attr("r", 25);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 228)
-        .attr("y", 96.5)
-        .attr("width", 70)
-        .attr("height", 47);
-
-    graph.append("text")
-        .attr("x", 264)
-        .attr("y", 129)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal")
-        .style("font-size", "25npmpx");
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,10)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 35)
-        .attr("transform", "translate(20,10)")
-    ;
-
-}
-
-else if (window.innerWidth > 770 && window.innerWidth < 1000) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,200)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 110)
-        .attr("y", 65)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 168)
-        .attr("cy", 80)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 107)
-        .attr("cy", 80)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 108)
-        .attr("y", 66.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("y",  85)
-        .attr("x", 138)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-}
-
-else if (window.innerWidth > 400 && window.innerWidth < 770) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,249)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,1)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 135)
-        .attr("y", 67)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 193)
-        .attr("cy", 82)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 132)
-        .attr("cy", 82)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 133)
-        .attr("y", 68.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 163)
-        .attr("y",  87)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-}
-else if (window.innerWidth < 400 && window.innerHeight > 600) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,228)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 110)
-        .attr("y", 64)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 168)
-        .attr("cy", 79)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 107)
-        .attr("cy", 79)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 108)
-        .attr("y", 65.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 138)
-        .attr("y",  85)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-}
-
-else if (window.innerWidth < 400 && window.innerHeight > 500) {
-    graph
-        .attr("transform", "translate(20,-45)");
-
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(25,218)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(25,20)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,20)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,20)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(25,20)");
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 95)
-        .attr("y", 84)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 153)
-        .attr("cy", 99)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 92)
-        .attr("cy", 99)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 93)
-        .attr("y", 85.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 123)
-        .attr("y",  105)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(25,20)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(25,20)")
-    ;
-}
-
-else {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(25,200)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(25,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(25,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 90)
-        .attr("y", 62)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 148)
-        .attr("cy", 77)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 87)
-        .attr("cy", 77)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 88)
-        .attr("y", 63.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 118)
-        .attr("y",  83)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(25,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(25,0)")
-    ;
-}
