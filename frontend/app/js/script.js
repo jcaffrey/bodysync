@@ -251,17 +251,16 @@ function color(n) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
     }
     else if (n < 66.7) {
-        return ['dbb51c', '../../img/flatIcon.png', 'flatIcon'];
+        return ['fab03c', '../../img/flatIcon.png', 'flatIcon'];
     }
     else {
         return ['1a924c', '../../img/upIcon.png', 'upIcon'];
     }
 }
 
-function loadPatients(pts) {
-    var progress = JSON.parse(localStorage.progress);
-    if (progress[1]) {
-        var psd = JSON.parse(pts);
+function loadPatients(patients) {
+    var psd = JSON.parse(patients);
+    if (psd[0].progress.length !== 0) {
         // fetch patient metrics here
         for (var i = 0; i < psd.length; i++) {
             var div = document.createElement('div');
@@ -275,7 +274,17 @@ function loadPatients(pts) {
             var menu = document.createElement('div');
             var rec = document.createElement('div');
             var collapse = document.createElement('div');
-            var percent = (progress[i + 1] * 100).toFixed(1);
+
+            var sum = 0;
+            var count = 0;
+            for (var k = 0; k < psd[i].progress.length; k++) {
+                var value = psd[i].progress[k];
+                if (value != null) {
+                    sum += +value[0];
+                    count++;
+                }
+            }
+            var percent = (sum / count).toFixed(1);
             var indicator = color(percent);
 
             pic.src = '../../img/profile_pic.jpg';
@@ -297,28 +306,23 @@ function loadPatients(pts) {
                 '<span></span>' +
                 '<span></span>';
             collapse.setAttribute('class', 'buttonCollapse');
-            collapse.innerHTML =
+            var collapseContent =
                 '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
-                '<hr><div class="space"></div>' +
-                '<div class="collapse-inner">' +
-                '<div class="input-label">Shoulder</div>' +
-                '<div class="input-percent1">' + percent + '</div>' +
-                '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="collapse-inner">' +
-                '<div class="input-label">Neck - Side</div>' +
-                '<div class="input-percent2">' + percent + '%</div>' +
-                '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="collapse-inner">' +
-                '<div class="input-label">Neck - Front</div>' +
-                '<div class="input-percent3">' + percent + '</div>' +
-                '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="space"></div>' +
-                '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
-                '</div>' +
-                '</div>';
+                '<hr><div class="space"></div>';
+            for (var j = 0; j < psd[i].progress.length; j++) {
+                var val = psd[i].progress[j];
+                if (val !== null) {
+                    c = '#' + color(val[0])[0];
+                    collapseContent +=
+                        '<div class="collapse-inner">' +
+                        '<div class="input-label">' + val[1] + '</div>' +
+                        '<div class="input-percent1" style="color:' + c + '">' + val[0] + '%</div>' +
+                        '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                }
+            }
+            collapseContent += '<div class="space"></div>' +
+                '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a></div>';
+            collapse.innerHTML = collapseContent;
             rec.setAttribute('class', 'recovery');
             rec.innerHTML = "<span>Recovered</span>";
             recbx.appendChild(p1);
@@ -340,7 +344,7 @@ function loadPatients(pts) {
         }
     }
     else {
-        setTimeout(function() { loadPatients(pts) }, 100);
+        setTimeout(function() { loadPatients(localStorage.patients) }, 100);
     }
 }
 
@@ -432,25 +436,68 @@ function clear() {
     list.innerHTML = '';
 }
 
+function updateProgress(patient, injury, name) {
+    fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var pats = JSON.parse(localStorage.patients);
+            var last = data[data.length - 1];
+            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name];
+            localStorage.patients = JSON.stringify(pats);
+        });
+    }).catch(submitError);
+}
+
 function loadProgress(patients) {
-    localStorage.progress = JSON.stringify([]);
     var pats = JSON.parse(patients);
     for (var i = 1; i < pats.length + 1; i++) {
         (function(x) {
-            fetch('/romMetrics/' + x + '/romMetricMeasures/?token=' + localStorage.token, {
+            pats[x - 1].progress = [];
+            fetch('/findInjuries/' + x + '/?token=' + localStorage.token, {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
                 res.json().then(function (data) {
-                    var measure = data[data.length - 1] || 0;
-                    var temp = JSON.parse(localStorage.progress);
-                    temp[x] = measure.degreeValue / measure.nextGoal;
-                    localStorage.progress = JSON.stringify(temp);
+                    var init = data[0].id || 0;
+                    for (var j = init; j < data.length + init; j++) {
+                        (function(y) { updateProgress(x, y, data[y - init].name) }(j))
+                    }
                 });
             }).catch(submitError);
         }(i))
     }
+    localStorage.patients = JSON.stringify(pats);
 }
+
+// function loadProgress(patients) {
+//     var injuries = JSON.parse(localStorage.injuries);
+//     var pats = JSON.parse(patients);
+//     if (injuries !== {}) {
+//         for (var i = 1; i < pats.length + 1; i++) {
+//             pats[i - 1].progress = [];
+//                 (function(x) {
+//                 var temp = [];
+//                 for (var i = 0; i < injuries[x].length; i++) {
+//
+//                     fetch('/romMetrics/' + injuries[x][i] + '/romMetricMeasures/?token=' + localStorage.token, {
+//                         method: 'GET'
+//                     }).then(function (res) {
+//                         if (!res.ok) return submitError(res);
+//                         res.json().then(function (data) {
+//                             var last = data[data.length - 1];
+//                             pats[x - 1].progress.push(last.degreeValue / last.nextGoal);
+//                         });
+//                     }).catch(submitError);
+//                 }
+//             }(i))
+//         }
+//     }
+//     else {
+//         setTimeout(function() { loadProgress() }, 350);
+//     }
+// }
 
 function loadPatient(id) {
     fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
