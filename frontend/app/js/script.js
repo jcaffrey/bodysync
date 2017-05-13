@@ -258,10 +258,9 @@ function color(n) {
     }
 }
 
-function loadPatients(pts) {
-    var progress = JSON.parse(localStorage.progress);
-    if (progress[1]) {
-        var psd = JSON.parse(pts);
+function loadPatients(patients) {
+    var psd = JSON.parse(patients);
+    if (psd[0].progress.length !== 0) {
         // fetch patient metrics here
         for (var i = 0; i < psd.length; i++) {
             var div = document.createElement('div');
@@ -277,13 +276,15 @@ function loadPatients(pts) {
             var collapse = document.createElement('div');
 
             var sum = 0;
+            var count = 0;
             for (var k = 0; k < psd[i].progress.length; k++) {
                 var value = psd[i].progress[k];
-                if (value !== null) {
-                    sum += value[0];
+                if (value != null) {
+                    sum += +value[0];
+                    count++;
                 }
             }
-            var percent = (sum / psd[i].progress.length).toFixed(1);
+            var percent = (sum / count).toFixed(1);
             var indicator = color(percent);
 
             pic.src = '../../img/profile_pic.jpg';
@@ -313,7 +314,7 @@ function loadPatients(pts) {
                 if (val !== null) {
                     collapseContent +=
                         '<div class="collapse-inner">' +
-                        '<div class="input-label">' + val[1] + '/</div>' +
+                        '<div class="input-label">' + val[1] + '</div>' +
                         '<div class="input-percent1">' + val[0] + '%</div>' +
                         '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
                 }
@@ -342,7 +343,7 @@ function loadPatients(pts) {
         }
     }
     else {
-        setTimeout(function() { loadPatients(pts) }, 100);
+        setTimeout(function() { loadPatients(localStorage.patients) }, 100);
     }
 }
 
@@ -458,8 +459,9 @@ function loadProgress(patients) {
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
                 res.json().then(function (data) {
-                    for (var j = 1; j < data.length + 1; j++) {
-                        (function(y) { updateProgress(x, y, data[y - 1].name) }(j))
+                    var init = data[0].id || 0;
+                    for (var j = init; j < data.length + init; j++) {
+                        (function(y) { updateProgress(x, y, data[y - init].name) }(j))
                     }
                 });
             }).catch(submitError);
