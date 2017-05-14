@@ -340,6 +340,7 @@ function loadPatients(patients) {
                 if (indicator[0] !== 'bbbbbb') {
                     rec.innerHTML = "<span>Recovered</span>";
                 }
+                document.getElementById('loading').style.display = 'none';
                 recbx.appendChild(p1);
                 recbx.appendChild(rec);
                 div.setAttribute('class', 'pt-box');
@@ -361,7 +362,7 @@ function loadPatients(patients) {
         else {
             loadPatients(localStorage.patients);
         }
-    }, 250);
+    }, 1000);
 }
 
 // change to status html
