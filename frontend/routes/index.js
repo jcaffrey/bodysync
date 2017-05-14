@@ -72,6 +72,7 @@ router.post('/patients', function(req, res, next) {
 router.post('/pts/:id/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
+        headers: {'x-access-token': req.headers['x-access-token']},
         form: req.body
     }).pipe(res);
 });
@@ -121,7 +122,7 @@ router.get('/pt-form', function(req, res, next) {
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit', ptId: 1});
+    return res.render('create-patient', { footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
 router.get('/new-exercise', function(req, res, next) {
@@ -136,7 +137,7 @@ router.get('/patient-status', function(req, res, next) {
 
 // patient view
 router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { footerButton: 'Add Patient' });
+    return res.render('patients1', { url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // exercise form view

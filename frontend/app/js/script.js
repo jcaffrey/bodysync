@@ -78,7 +78,7 @@ function submitForm() {
 }
 
 // surgeryType, romStart, romEnd, notes in schema????
-function submitPatient(id) {
+function submitPatient() {
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
@@ -86,13 +86,16 @@ function submitPatient(id) {
         errorMessage += 'Email address is invalid.';
     }
     data.email = form.email.value;
+    data.name = form.name.value;
+    data.phoneProvider = 'att';
 
     if (form.phone.value) data.phoneNumber = form.phone.value;
-    if (form.rom1.value) data.hash = form.rom1.value;
-    if (form.rom2.value) data.surgeryType = form.rom2.value;
+    if (form.hash.value) data.hash = form.hash.value;
+    if (form.surgery.value) data.surgeryType = form.surgery.value;
     // if (form.notes.value) data.notes = form.notes.value;
-    fetch('/pts/' + id + '/patients', {
+    fetch('/pts/' + localStorage.id + '/patients', {
         headers: {
+            'x-access-token': localStorage.token,
             'Content-Type': 'application/json'
         },
         method: 'POST',
@@ -198,8 +201,7 @@ function clearForm() {
 
 function submitSuccess(res) {
     if (!res.ok) return submitError(res);
-    p.innerHTML = 'Success!';
-    //clearForm();
+    getPatients();
 }
 
 function submitError(res, message) {
@@ -219,8 +221,6 @@ function displayError(message) {
 // =============================================================
 //  Patients
 // =============================================================
-
-// JORDAN: login -> /patients -> request
 
 function getPatients() {
     fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
@@ -247,7 +247,10 @@ function toggleOpen(x) {
 }
 
 function color(n) {
-    if (n < 33.3) {
+    if (isNaN(n)) {
+        return ['bbbbbb', '../../img/flatIcon.png', 'flatIcon']
+    }
+    else if (n < 33.3) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
     }
     else if (n < 66.7) {
@@ -259,93 +262,106 @@ function color(n) {
 }
 
 function loadPatients(patients) {
-    var psd = JSON.parse(patients);
-    if (psd[0].progress.length !== 0) {
-        // fetch patient metrics here
-        for (var i = 0; i < psd.length; i++) {
-            var div = document.createElement('div');
-            var picbox = document.createElement('div');
-            var pic = document.createElement('img');
-            var prog = document.createElement('img');
-            var inner = document.createElement('div');
-            var name = document.createElement('div');
-            var recbx = document.createElement('div');
-            var p1 = document.createElement('div');
-            var menu = document.createElement('div');
-            var rec = document.createElement('div');
-            var collapse = document.createElement('div');
+    setTimeout(function() {
+        var psd = JSON.parse(patients);
+        if (psd[0].progress.length !== 0) {
+            // fetch patient metrics here
+            for (var i = 0; i < psd.length; i++) {
+                var div = document.createElement('div');
+                var picbox = document.createElement('div');
+                var pic = document.createElement('img');
+                var prog = document.createElement('img');
+                var inner = document.createElement('div');
+                var name = document.createElement('div');
+                var recbx = document.createElement('div');
+                var p1 = document.createElement('div');
+                var menu = document.createElement('div');
+                var rec = document.createElement('div');
+                var collapse = document.createElement('div');
 
-            var sum = 0;
-            var count = 0;
-            for (var k = 0; k < psd[i].progress.length; k++) {
-                var value = psd[i].progress[k];
-                if (value != null) {
-                    sum += +value[0];
-                    count++;
+                var sum = 0;
+                var count = 0;
+                for (var k = 0; k < psd[i].progress.length; k++) {
+                    var value = psd[i].progress[k];
+                    if (value != null) {
+                        sum += +value[0];
+                        count++;
+                    }
                 }
-            }
-            var percent = (sum / count).toFixed(1);
-            var indicator = color(percent);
+                var percent = (sum / count).toFixed(1);
+                var indicator = color(percent);
 
-            pic.src = '../../img/profile_pic.jpg';
-            pic.setAttribute('id', 'profileImg');
-            prog.src = indicator[1];
-            prog.setAttribute('id', indicator[2]);
-            recbx.setAttribute('class', 'recovery-box');
-            p1.setAttribute('class', 'percent1');
-            // Hard coded patient data
-            p1.innerHTML = "<span>" + percent + "%</span>";
-            p1.style.color = "#" + indicator[0];
-            menu.setAttribute('class', 'arrow');
-            menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
-            menu.setAttribute('class', 'nav-icon');
-            menu.setAttribute('id', 'nav-icon' + i);
-            menu.innerHTML =
-                '<span></span>' +
-                '<span></span>' +
-                '<span></span>' +
-                '<span></span>';
-            collapse.setAttribute('class', 'buttonCollapse');
-            var collapseContent =
-                '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
-                '<hr><div class="space"></div>';
-            for (var j = 0; j < psd[i].progress.length; j++) {
-                var val = psd[i].progress[j];
-                if (val !== null) {
-                    c = '#' + color(val[0])[0];
-                    collapseContent +=
-                        '<div class="collapse-inner">' +
-                        '<div class="input-label">' + val[1] + '</div>' +
-                        '<div class="input-percent1" style="color:' + c + '">' + val[0] + '%</div>' +
-                        '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                pic.src = '../../img/profile_pic.jpg';
+                pic.setAttribute('id', 'profileImg');
+                prog.src = indicator[1];
+                prog.setAttribute('id', indicator[2]);
+                recbx.setAttribute('class', 'recovery-box');
+                p1.setAttribute('class', 'percent1');
+                if (indicator[0] === 'bbbbbb') {
+                    p1.innerHTML = "<span>N/A</span>";
                 }
+                else {
+                    p1.innerHTML = "<span>" + percent + "%</span>";
+                }
+                p1.style.color = "#" + indicator[0];
+                menu.setAttribute('class', 'arrow');
+                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                menu.setAttribute('class', 'nav-icon');
+                menu.setAttribute('id', 'nav-icon' + i);
+                menu.innerHTML =
+                    '<span></span>' +
+                    '<span></span>' +
+                    '<span></span>' +
+                    '<span></span>';
+                collapse.setAttribute('class', 'buttonCollapse');
+                var collapseContent =
+                    '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+                    '<hr><div class="space"></div>';
+                for (var j = 0; j < psd[i].progress.length; j++) {
+                    var val = psd[i].progress[j];
+                    if (val !== null) {
+                        c = '#' + color(val[0])[0];
+                        collapseContent +=
+                            '<div class="collapse-inner">' +
+                            '<div class="input-label">' + val[1] + '</div>' +
+                            '<div class="input-percent1" style="color:' + c + '">';
+                        if (c === '#bbbbbb') {
+                            collapseContent += 'N/A</div>';
+                        } else {
+                            collapseContent += val[0] + '%</div>';
+                        }
+                        collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                    }
+                }
+                collapseContent += '<div class="space"></div>' +
+                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a></div>';
+                collapse.innerHTML = collapseContent;
+                rec.setAttribute('class', 'recovery');
+                if (indicator[0] !== 'bbbbbb') {
+                    rec.innerHTML = "<span>Recovered</span>";
+                }
+                recbx.appendChild(p1);
+                recbx.appendChild(rec);
+                div.setAttribute('class', 'pt-box');
+                picbox.setAttribute('class', 'pic-box');
+                inner.setAttribute('class', 'info-box');
+                name.setAttribute('class', 'name');
+                picbox.appendChild(pic);
+                picbox.appendChild(prog);
+                name.appendChild(document.createTextNode(psd[i].name));
+                inner.appendChild(name);
+                inner.appendChild(recbx);
+                div.appendChild(picbox);
+                div.appendChild(inner);
+                div.appendChild(menu);
+                div.appendChild(collapse);
+                document.getElementById('patients').appendChild(div);
             }
-            collapseContent += '<div class="space"></div>' +
-                '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a></div>';
-            collapse.innerHTML = collapseContent;
-            rec.setAttribute('class', 'recovery');
-            rec.innerHTML = "<span>Recovered</span>";
-            recbx.appendChild(p1);
-            recbx.appendChild(rec);
-            div.setAttribute('class', 'pt-box');
-            picbox.setAttribute('class', 'pic-box');
-            inner.setAttribute('class', 'info-box');
-            name.setAttribute('class', 'name');
-            picbox.appendChild(pic);
-            picbox.appendChild(prog);
-            name.appendChild(document.createTextNode(psd[i].name));
-            inner.appendChild(name);
-            inner.appendChild(recbx);
-            div.appendChild(picbox);
-            div.appendChild(inner);
-            div.appendChild(menu);
-            div.appendChild(collapse);
-            document.getElementById('patients').appendChild(div);
         }
-    }
-    else {
-        setTimeout(function() { loadPatients(localStorage.patients) }, 100);
-    }
+        else {
+            loadPatients(localStorage.patients);
+        }
+    }, 250);
 }
 
 // change to status html
