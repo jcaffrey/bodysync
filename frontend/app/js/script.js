@@ -248,7 +248,7 @@ function toggleOpen(x) {
 
 function color(n) {
     if (isNaN(n)) {
-        return ['bbbbbb', '../../img/null.png', 'flatIcon']
+        return ['bbbbbb', '../../img/flatIcon.png', 'flatIcon']
     }
     else if (n < 33.3) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
@@ -530,7 +530,8 @@ function loadPatient(id) {
 
 function loadStart() {
     clear();
-    sortAlpha();
+    loadProgress(localStorage.patients);
+    loadPatients(localStorage.patients);
 }
 
 function loadStatus(patient) {
