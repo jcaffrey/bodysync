@@ -530,7 +530,9 @@ function loadPatient(id) {
 
 function loadStart() {
     clear();
-    sortAlpha();
+    loadProgress(localStorage.patients);
+    localStorage.patients = JSON.stringify(JSON.parse(localStorage.patients).sort(compareAlpha));
+    loadPatients(localStorage.patients);
 }
 
 function loadStatus(patient) {
@@ -573,7 +575,8 @@ function sortAlpha() {
     var lst = JSON.parse(localStorage.patients);
     if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
     else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
-    load();}
+    load();
+}
 
 function findAverage() {
     var psd = JSON.parse(localStorage.patients);
