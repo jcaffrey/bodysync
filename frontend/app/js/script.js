@@ -530,8 +530,7 @@ function loadPatient(id) {
 
 function loadStart() {
     clear();
-    loadProgress(localStorage.patients);
-    loadPatients(localStorage.patients);
+    sortAlpha();
 }
 
 function loadStatus(patient) {
