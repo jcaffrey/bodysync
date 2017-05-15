@@ -71,14 +71,14 @@ block content
                     textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Enter notes here...")
             #bodyBox.body-part-box
                 .percentage-box
-                    .span#percentage 50%
-                .recovery-box
-                    .span#recoveryText to full recovery
+                    .percentage 50%
+                    .recoveryText to full recovery
                 .legend
-                    .weekly-goal-legend
-                        .span Next Week's Goal
-                    .final-goal-legend
-                        .span Final Goal
+                    .weekly-legend
+                        .weekly-goal-legend Weekly Goal
+                        .legend-circle
+                    .final-goal-legend Final Goal
+                        .dashes - - - - -
                 .graph-view
                     .svgh#graph
                         script(src = 'http://d3js.org/d3.v3.min.js').

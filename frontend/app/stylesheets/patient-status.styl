@@ -336,24 +336,58 @@ form h1
   text-align center
   color $mainColor
 
-#percentage
+.percentage
   color orange
   font-size 150%
-  margin 3% 0%
+  margin-top 3%
 
 .percentage-box
-  height 8%
+  width 45%
+  display inline-block
 
-.recovery-box
-  height 5%
-
-#recoveryText
+.recoveryText
   font-size 80%
   color $inactiveColor
   margin-bottom 3%
 
 #iconOverviewTrans
   background $mainColor
+
+.legend
+  margin-left 22.5%
+  width 55%
+  border-radius $formRadius
+  border-color $mainColor
+  border solid 1px
+  font-size 13px
+
+.weekly-legend
+  width 49%
+  display inline-block
+  border-right solid 1px
+  border-color $mainColor
+
+.weekly-goal-legend
+  display inline-block
+  margin 3%
+  width 100%
+
+.legend-circle
+  width 10px
+  height 10px
+  border-radius 50%
+  border solid 3px
+  display inline-block
+  background-color #74e586
+  border-color #00a136
+  margin-top 3%
+
+.final-goal-legend
+  width 50%
+  display inline-block
+
+.dashes
+  padding-top 10%
 
 .graph-view
   width 100%
@@ -400,15 +434,6 @@ path
 .horizontalLine
   stroke-width 3
   stroke-dasharray 10 10
-
-.goal
-  font-family "Gotham-Bold"
-  fill $mainColor
-
-.goalRect
-  fill #f9e5ff
-  stroke-width 3
-  stroke $mainColor
 
 .tick
   font-size large
