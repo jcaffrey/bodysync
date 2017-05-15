@@ -531,7 +531,6 @@ function loadPatient(id) {
 function loadStart() {
     clear();
     loadProgress(localStorage.patients);
-    localStorage.patients = JSON.stringify(JSON.parse(localStorage.patients).sort(compareAlpha));
     loadPatients(localStorage.patients);
 }
 
