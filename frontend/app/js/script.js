@@ -248,7 +248,7 @@ function toggleOpen(x) {
 
 function color(n) {
     if (isNaN(n)) {
-        return ['bbbbbb', '../../img/flatIcon.png', 'flatIcon']
+        return ['bbbbbb', '../../img/null.png', 'flatIcon']
     }
     else if (n < 33.3) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
