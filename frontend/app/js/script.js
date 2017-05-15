@@ -530,8 +530,7 @@ function loadPatient(id) {
 
 function loadStart() {
     clear();
-    loadProgress(localStorage.patients);
-    loadPatients(localStorage.patients);
+    sortAlpha();
 }
 
 function loadStatus(patient) {
@@ -566,25 +565,43 @@ function compareAlpha(a, b) {
     return 0;
 }
 
-var ctr1 = 0;
-var ctr2 = 0;
+localStorage.ctr1 = 0;
+localStorage.ctr2 = 0;
 
 function sortAlpha() {
-    ctr1++;
-    var lst = JSON.parse(localStorage.display);
-    if (ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    localStorage.ctr1++;
+    var lst = JSON.parse(localStorage.patients);
+    if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
     else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
-    load();
+    load();}
+
+function findAverage() {
+    var psd = JSON.parse(localStorage.patients);
+    for (var i = 0; i < psd.length; i++) {
+        var sum = 0;
+        var count = 0;
+        for (var k = 0; k < psd[i].progress.length; k++) {
+            var value = psd[i].progress[k];
+            if (value != null) {
+                sum += +value[0];
+                count++;
+            }
+        }
+        psd[i].average = (sum / count).toFixed(1);
+    }
+    localStorage.patients = JSON.stringify(psd);
 }
 
 function sortProg() {
-    ctr2++;
-    var lst = JSON.parse(localStorage.display);
-    if (ctr % 2 != 0)
-        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }));
-    else localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }));
+    localStorage.ctr2++;
+    findAverage();
+    var lst = JSON.parse(localStorage.patients);
+    if (localStorage.ctr2 % 2 != 0)
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.average - b.average }));
+    else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
 }
+
 
 // =============================================================
 //  Add measure
@@ -629,7 +646,7 @@ function submitMeasure(id, i) {
 // =============================================================
 var w, h;
 
-if (window.innerWidth < 500) {
+if (window.innerWidth < 770) {
     w = 7 * window.innerWidth / 12;
     h = 2 * window.innerHeight / 5;
 }
@@ -740,13 +757,13 @@ graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
 graph.append("rect")
     .attr("class", "goalRect")
     .attr("x", (w /2))
-    .attr("y", h / 6 + goal / 6 + h / 20)
+    .attr("y", h - h / 6 - 3 * goal + goal / 2 + h / 24)
     .attr("width", w / 5)
     .attr("height", h / 11);
 
 graph.append("text")
     .attr("x", (w / 2 + w / 10))
-    .attr("y", h / 6 + goal / 6 + h / 11 + h / 40)
+    .attr("y", h - h / 6 - 3 * goal + goal / 2 + h / 9)
     .attr('text-anchor', 'middle')
     .attr("class", "goal")
     .text("Goal")

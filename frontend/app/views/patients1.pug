@@ -81,9 +81,10 @@ block content
     form
         .search-bar
             img(src='../../img/search-icon.png' id='searchIcon')
-            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients")
-            img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="pSearch()")
-            img(src='../../img/health.png' id='health' onclick="pSearch()")
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients"
+                onkeypress="if (event.keyCode == 13) { event.preventDefault(); pSearch() } else { }")
+            img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="sortAlpha()")
+            img(src='../../img/health.png' id='health' onclick="sortProg()")
         #loading
             p Loading
             img(src='../../img/loading.gif')
