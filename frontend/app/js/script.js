@@ -754,46 +754,30 @@ graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
 graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
     .attr("transform", "translate(20, 0)");
 
-graph.append("rect")
-    .attr("class", "goalRect")
-    .attr("x", (w /2))
-    .attr("y", h - h / 6 - 3 * goal + goal / 2 + h / 24)
-    .attr("width", w / 5)
-    .attr("height", h / 11);
+    graph.selectAll(".point")
+        .data(points)
+        .enter().append("circle")
+        .attr("class", "circles")
+        .attr("cx", function (d, i) {
+            return x(dayMeasured[i]);
+        })
+        .attr("cy", function (d, i) {
+            return y(degreeValue[i]);
+        })
+        .attr("r", (w / 25))
+        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+    ;
 
-graph.append("text")
-    .attr("x", (w / 2 + w / 10))
-    .attr("y", h - h / 6 - 3 * goal + goal / 2 + h / 9)
-    .attr('text-anchor', 'middle')
-    .attr("class", "goal")
-    .text("Goal")
-    .style("font-size", w / 20);
-
-graph.selectAll(".point")
-    .data(points)
-    .enter().append("circle")
-    .attr("class", "circles")
-    .attr("cx", function (d, i) {
-        return x(dayMeasured[i]);
-    })
-    .attr("cy", function (d, i) {
-        return y(degreeValue[i]);
-    })
-    .attr("r", (w /25))
-    .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-;
-
-graph.selectAll(".point")
-    .data(goal_point)
-    .enter().append("circle")
-    .attr("class", "goal-point")
-    .attr("cx", function (d, i) {
-        return x(next_weeks_goal_date);
-    })
-    .attr("cy", function (d, i) {
-        return y(next_weeks_goal);
-    })
-    .attr("r", (w /25))
-    .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-;
-
+    graph.selectAll(".point")
+        .data(goal_point)
+        .enter().append("circle")
+        .attr("class", "goal-point")
+        .attr("cx", function (d, i) {
+            return x(next_weeks_goal_date);
+        })
+        .attr("cy", function (d, i) {
+            return y(next_weeks_goal);
+        })
+        .attr("r", (w / 25))
+        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+    ;
