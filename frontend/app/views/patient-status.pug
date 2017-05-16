@@ -1,6 +1,7 @@
 extends template
 
 block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients1.css')
     link(rel='stylesheet', href='/stylesheets/patient-status.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
 
@@ -26,17 +27,15 @@ block content
                     span Recovered
     #menuBox.menu-box
         .menu-top
-            .menu-title
-                span Jump to:
             .exit-sign
                 button(id='exitButton' onclick='menuBox.style.display="none", bottomBox.style.opacity="1"') X
         .menu-options
             .option.one
                 .menu-icon#iconOverview
-                span(onclick='iconOverview.style.display="inline-block", iconGraph.style.display="none", iconOverviewTrans.style.background="#2e3192", iconGraphOneTrans.style.background="#BBB", overviewBox.style.display="inline-block", bodyBox.style.display="none"') Overview
+                span(onclick='iconOverview.style.display="inline-block", iconGraph.style.display="none", iconOverviewTrans.style.background="#2e3192", iconGraphOneTrans.style.background="#BBB", overviewBox.style.display="inline-block", bodyBox.style.display="none", menuBox.style.display="none", bottomBox.style.opacity="1"') Overview
             .option.two
                 .menu-icon#iconGraph
-                span(onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"') Measurement 1
+                span(onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block", menuBox.style.display="none", bottomBox.style.opacity="1"') Measurement 1
             .option.three
                 .menu-icon
                 span Measurement 2
@@ -45,48 +44,47 @@ block content
                 span Measurement 3
     .outer-info-box
         .top-box
-            .header-left
-                .image
-                .header-left-text
-                    span#title OVERVIEW
-            .header-right
-                button(id='menuButton' onclick='menuBox.style.display="inline-block", bottomBox.style.opacity="0.5"') Menu
+            button(id='menuButton' onclick='menuBox.style.display="inline-block", bottomBox.style.opacity="0.5"') &#9776;
         #bottomBox.bottom-box(style = 'overflow-y:auto')
             #overviewBox.overview-box
-                .collapse#collapse
-                    .collapse-inner
-                        .input-label Shoulder
-                        .input-percent1 70%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph-symbol' onclick=onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"')
-                    .collapse-inner
-                        .input-label Neck - Side
-                        .input-percent2 50%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph-symbol')
-                    .collapse-inner
-                        .input-label Neck - Front
-                        .input-percent3 30%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph-symbol')
+                .collapse-inner
+                    .input-label Shoulder
+                    .input-percent1 70%
+                    .graph-box
+                        img(src='../../img/graph.png' id='graph-symbol' onclick=onclick='iconOverview.style.display="none", iconGraph.style.display="inline-block", iconOverviewTrans.style.background="#BBB", iconGraphOneTrans.style.background="#2e3192", overviewBox.style.display="none", bodyBox.style.display="inline-block"')
+                .collapse-inner
+                    .input-label Neck - Side
+                    .input-percent2 50%
+                    .graph-box
+                        img(src='../../img/graph.png' id='graph-symbol')
+                .collapse-inner
+                    .input-label Neck - Front
+                    .input-percent3 30%
+                    .graph-box
+                        img(src='../../img/graph.png' id='graph-symbol')
                 .exercise-set
                     span#exerciseTitle Exercise Set
                     .exercise-description-label
                         span#exerciseText STD Shoulder/Back
                 .notes
                     span#noteTitle Notes
-                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Add notes.")
+                    textarea.note-input(type='notes' id='notes' name='notes' cols="25" placeholder="Enter notes here...")
             #bodyBox.body-part-box
                 .percentage-box
-                    .span#percentage 50%
-                .recovery-box
-                    .span#recoveryText to full recovery
+                    .percentage 50%
+                    .recoveryText to full recovery
+                .legend
+                    .weekly-legend
+                        .weekly-goal-legend Weekly Goal
+                        .legend-circle
+                    .final-goal-legend Final Goal
+                        .dashes - - - - -
                 .graph-view
                     .svgh#graph
                         script(src = 'http://d3js.org/d3.v3.min.js').
 
-            .transition-box
-                .icon#iconOverviewTrans
-                .icon#iconGraphOneTrans
-                .icon.button-2
-                .icon.button-3
+        .transition-box
+            .icon#iconOverviewTrans
+            .icon#iconGraphOneTrans
+            .icon.button-2
+            .icon.button-3

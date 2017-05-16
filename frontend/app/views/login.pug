@@ -14,15 +14,15 @@ block content
     .loginTitle Login
     form#loginForm.form
         .inputs
-            button.tablinks#buttonTabPatient(type='button' onclick="changeTab(event, 'tabPatient')") Patient
+            button.tablinks#buttonTabPatient(type='button' onclick='changeTab(event, "tabPatient")') Patient
             button.tablinks#buttonTabPT(type='button' onclick="changeTab(event, 'tabPT')") PT
             .tabcontent#tabPatient
                 .input-box
                     input.text-input(type='email' name='email1' placeholder='example@domain.com' maxlength="24")
-                    .input-name Email
+                    .input-name.two Email
                 .input-box
                     input.text-input(type='password' name='password1' placeholder='********' maxlength="24")
-                    .input-name Password
+                    .input-name.two Password
             .tabcontent#tabPT
                 .input-box
                     input.text-input(type='email' name='email2' placeholder='example@domain.com' maxlength="24")

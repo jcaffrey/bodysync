@@ -8,8 +8,7 @@ $formWidthW 50%
 form
     text-align: center
     font-family: 'GothamBold'
-    @media screen and (min-width: 770px)
-        margin-top: -30px
+
 form h2
     text-transform: uppercase
     text-align: left
@@ -45,8 +44,11 @@ form h2
         font-size: 1.5vw
         padding: 25px
         border-bottom: solid 1px $inactiveColor
+
+.last-box
+    border-bottom none !important
+
 #rom-add
-    border-top 2px dashed $inactiveColor
     text-align center
     text-transform uppercase
     color $inactiveColor
@@ -96,7 +98,8 @@ form h2.rom-box
 .rom-input
     position relative
     text-align left
-    color $darkgray
+    color $mainColor
+    font-family 'GothamBold'
     background none
     border none
     font-size 4vw
@@ -165,6 +168,13 @@ form textarea.text-input
     display: block
     margin-bottom: 3px
 
+.input-name.two
+    color: $white
+
+
+.input-name.two:before
+    background-color: $white
+
 form img
     border-radius: 50%
     height: 10%
@@ -213,3 +223,8 @@ form img
     font-style normal
     color $mainColor
     margin-bottom 10px
+
+#tabPatient
+    color $white
+
+
