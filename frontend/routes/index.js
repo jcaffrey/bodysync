@@ -157,4 +157,10 @@ router.get('/reset-password', function(req, res, next) {
     return res.render('reset-password', { footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+// error page
+router.get('/error', function(req, res, next) {
+    return res.render('error');
+});
+
+
 module.exports = router;
