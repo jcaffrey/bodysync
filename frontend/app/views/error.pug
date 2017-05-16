@@ -1,0 +1,11 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+block content
+    .error-message Whoops, something went wrong
+    a.error-message(href="/patients1") Back to Home
+
+block footer
