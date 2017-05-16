@@ -610,7 +610,7 @@ function loadAddMeasure () {
                             '<div class="num">' +
                                 '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
                             '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.id + ',' + i + ')">SUBMIT</div>';
+                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.id + ',' + i + ')">SUBMIT</div></div><br><br>';
         }
     }
     div.innerHTML = content;
