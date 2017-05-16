@@ -78,6 +78,8 @@ module.exports.logSession = (req, res, next) => {
                             resourceRequested: ptSessions[0].resourceRequested,
                             createdAt: ptSessions[0].createdAt
                         }
+                        }).then(function() {
+                            return;
                         })
                 }
 

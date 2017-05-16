@@ -22,11 +22,10 @@ function submitOnEnterKey(submitFunction, targetForm) {
 
 function submitLogin() {
     var data = {
-        email: form.email.value,
-        password: form.password.value
+        email: form.email2.value,
+        password: form.password2.value
     };
-    console.log(data.email);
-    console.log(data.password);
+    localStorage.email = data.email;
     fetch('/login', {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
@@ -79,7 +78,7 @@ function submitForm() {
 }
 
 // surgeryType, romStart, romEnd, notes in schema????
-function submitPatient(id) {
+function submitPatient() {
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
@@ -87,13 +86,16 @@ function submitPatient(id) {
         errorMessage += 'Email address is invalid.';
     }
     data.email = form.email.value;
+    data.name = form.name.value;
+    data.phoneProvider = 'att';
 
     if (form.phone.value) data.phoneNumber = form.phone.value;
-    if (form.rom1.value) data.hash = form.rom1.value;
-    if (form.rom2.value) data.surgeryType = form.rom2.value;
+    if (form.hash.value) data.hash = form.hash.value;
+    if (form.surgery.value) data.surgeryType = form.surgery.value;
     // if (form.notes.value) data.notes = form.notes.value;
-    fetch('/pts/' + id + '/patients', {
+    fetch('/pts/' + localStorage.id + '/patients', {
         headers: {
+            'x-access-token': localStorage.token,
             'Content-Type': 'application/json'
         },
         method: 'POST',
@@ -199,8 +201,7 @@ function clearForm() {
 
 function submitSuccess(res) {
     if (!res.ok) return submitError(res);
-    p.innerHTML = 'Success!';
-    //clearForm();
+    getPatients();
 }
 
 function submitError(res, message) {
@@ -221,8 +222,6 @@ function displayError(message) {
 //  Patients
 // =============================================================
 
-// JORDAN: login -> /patients -> request
-
 function getPatients() {
     fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
     ).then(function(res) {
@@ -232,20 +231,145 @@ function getPatients() {
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
         });
-        window.location = '/patients';
+        window.location = '/patients1';
     }).catch(submitError);
 }
 
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
-    else elt.style.display = 'none'
+    else elt.style.display = 'none';
 }
 
-function loadPatients(pts) {
-    var psd = JSON.parse(pts);
-    // fetch patient metrics here
-    for (var i = 0; i < psd.length; i++) {
+function toggleOpen(x) {
+    var elt = document.getElementById(x);
+    elt.classList.toggle('open');
+}
+
+function color(n) {
+    if (isNaN(n)) {
+        return ['bbbbbb', '../../img/flatIcon.png', 'flatIcon']
+    }
+    else if (n < 33.3) {
+        return ['ce2310', '../../img/downIcon.png', 'downIcon'];
+    }
+    else if (n < 66.7) {
+        return ['fab03c', '../../img/flatIcon.png', 'flatIcon'];
+    }
+    else {
+        return ['1a924c', '../../img/upIcon.png', 'upIcon'];
+    }
+}
+
+function loadPatients(patients) {
+    setTimeout(function() {
+        var psd = JSON.parse(patients);
+        if (psd[0].progress.length !== 0) {
+            // fetch patient metrics here
+            for (var i = 0; i < psd.length; i++) {
+                var div = document.createElement('div');
+                var picbox = document.createElement('div');
+                var pic = document.createElement('img');
+                var prog = document.createElement('img');
+                var inner = document.createElement('div');
+                var name = document.createElement('div');
+                var recbx = document.createElement('div');
+                var p1 = document.createElement('div');
+                var menu = document.createElement('div');
+                var rec = document.createElement('div');
+                var collapse = document.createElement('div');
+
+                var sum = 0;
+                var count = 0;
+                for (var k = 0; k < psd[i].progress.length; k++) {
+                    var value = psd[i].progress[k];
+                    if (value != null) {
+                        sum += +value[0];
+                        count++;
+                    }
+                }
+                var percent = (sum / count).toFixed(1);
+                var indicator = color(percent);
+
+                pic.src = '../../img/' + psd[i].name + '.jpg';
+                pic.setAttribute('id', 'profileImg');
+                prog.src = indicator[1];
+                prog.setAttribute('id', indicator[2]);
+                recbx.setAttribute('class', 'recovery-box');
+                p1.setAttribute('class', 'percent1');
+                if (indicator[0] === 'bbbbbb') {
+                    p1.innerHTML = "<span>N/A</span>";
+                }
+                else {
+                    p1.innerHTML = "<span>" + percent + "%</span>";
+                }
+                p1.style.color = "#" + indicator[0];
+                menu.setAttribute('class', 'arrow');
+                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                menu.setAttribute('class', 'nav-icon');
+                menu.setAttribute('id', 'nav-icon' + i);
+                menu.innerHTML =
+                    '<span></span>' +
+                    '<span></span>' +
+                    '<span></span>' +
+                    '<span></span>';
+                collapse.setAttribute('class', 'buttonCollapse');
+                var collapseContent =
+                    '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+                    '<hr><div class="space"></div>';
+                for (var j = 0; j < psd[i].progress.length; j++) {
+                    var val = psd[i].progress[j];
+                    if (val !== null) {
+                        c = '#' + color(val[0])[0];
+                        collapseContent +=
+                            '<div class="collapse-inner">' +
+                            '<div class="input-label">' + val[1] + '</div>' +
+                            '<div class="input-percent1" style="color:' + c + '">';
+                        if (c === '#bbbbbb') {
+                            collapseContent += 'N/A</div>';
+                        } else {
+                            collapseContent += val[0] + '%</div>';
+                        }
+                        collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                    }
+                }
+                collapseContent += '<div class="space"></div>' +
+                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                collapse.innerHTML = collapseContent;
+                rec.setAttribute('class', 'recovery');
+                if (indicator[0] !== 'bbbbbb') {
+                    rec.innerHTML = "<span>Recovered</span>";
+                }
+                document.getElementById('loading').style.display = 'none';
+                recbx.appendChild(p1);
+                recbx.appendChild(rec);
+                div.setAttribute('class', 'pt-box');
+                picbox.setAttribute('class', 'pic-box');
+                inner.setAttribute('class', 'info-box');
+                name.setAttribute('class', 'name');
+                picbox.appendChild(pic);
+                picbox.appendChild(prog);
+                name.appendChild(document.createTextNode(psd[i].name));
+                inner.appendChild(name);
+                inner.appendChild(recbx);
+                div.appendChild(picbox);
+                div.appendChild(inner);
+                div.appendChild(menu);
+                div.appendChild(collapse);
+                document.getElementById('patients').appendChild(div);
+            }
+        }
+        else {
+            loadPatients(localStorage.patients);
+        }
+    }, 1000);
+}
+
+// change to status html
+function loadStatus(patient) {
+    var progress = +JSON.parse(localStorage.progress);
+    if (progress !== "") {
+        // fetch patient metrics here
         var div = document.createElement('div');
         var picbox = document.createElement('div');
         var pic = document.createElement('img');
@@ -254,42 +378,50 @@ function loadPatients(pts) {
         var name = document.createElement('div');
         var recbx = document.createElement('div');
         var p1 = document.createElement('div');
+        var menu = document.createElement('div');
         var rec = document.createElement('div');
-        var arrow = document.createElement('div');
         var collapse = document.createElement('div');
+        var percent = (progress * 100).toFixed(1);
+        var indicator = color(percent);
 
         pic.src = '../../img/profile_pic.jpg';
         pic.setAttribute('id', 'profileImg');
-        prog.src = '../../img/upIcon.png';
-        prog.setAttribute('id', 'upIcon');
+        prog.src = indicator[1];
+        prog.setAttribute('id', indicator[2]);
         recbx.setAttribute('class', 'recovery-box');
         p1.setAttribute('class', 'percent1');
         // Hard coded patient data
-        p1.innerHTML = "<span>70%</span>";
-        arrow.setAttribute('class', 'arrow');
-        arrow.setAttribute("onclick", "displayCollapse('collapse" + i + "')");
-        arrow.appendChild(document.createTextNode('▼'));
+        p1.innerHTML = "<span>" + percent + "%</span>";
+        p1.style.color = "#" + indicator[0];
+        menu.setAttribute('class', 'arrow');
+        menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('" + i + "')");
+        menu.setAttribute('id', 'nav-icon');
+        menu.innerHTML =
+            '<span></span>' +
+            '<span></span>' +
+            '<span></span>' +
+            '<span></span>';
         collapse.setAttribute('class', 'buttonCollapse');
         collapse.innerHTML =
             '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
-                '<hr><div class="space"></div>' +
-                '<div class="collapse-inner">' +
-                    '<div class="input-label">Shoulder</div>' +
-                    '<div class="input-percent1">70%</div>' +
-                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="collapse-inner">' +
-                    '<div class="input-label">Neck - Side</div>' +
-                    '<div class="input-percent2">50%</div>' +
-                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="collapse-inner">' +
-                    '<div class="input-label">Neck - Front</div>' +
-                    '<div class="input-percent3">30%</div>' +
-                    '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-                '</div>' +
-                '<div class="space"></div>' +
-                '<div class="inspect1">Inspect Patient</div>' +
+            '<hr><div class="space"></div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Shoulder</div>' +
+            '<div class="input-percent1">' + percent + '</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Neck - Side</div>' +
+            '<div class="input-percent2">' + percent + '%</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="collapse-inner">' +
+            '<div class="input-label">Neck - Front</div>' +
+            '<div class="input-percent3">' + percent + '</div>' +
+            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
+            '</div>' +
+            '<div class="space"></div>' +
+            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
             '</div>' +
             '</div>';
         rec.setAttribute('class', 'recovery');
@@ -307,9 +439,12 @@ function loadPatients(pts) {
         inner.appendChild(recbx);
         div.appendChild(picbox);
         div.appendChild(inner);
-        div.appendChild(arrow);
+        div.appendChild(menu);
         div.appendChild(collapse);
         document.getElementById('patients').appendChild(div);
+    }
+    else {
+        setTimeout(function() { loadStatus(patient) }, 100);
     }
 }
 
@@ -318,9 +453,91 @@ function clear() {
     list.innerHTML = '';
 }
 
+function updateProgress(patient, injury, name) {
+    fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var pats = JSON.parse(localStorage.patients);
+            var last = data[data.length - 1];
+            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name];
+            localStorage.patients = JSON.stringify(pats);
+        });
+    }).catch(submitError);
+}
+
+function loadProgress(patients) {
+    var pats = JSON.parse(patients);
+    for (var i = 1; i < pats.length + 1; i++) {
+        (function(x) {
+            pats[x - 1].progress = [];
+            fetch('/findInjuries/' + x + '/?token=' + localStorage.token, {
+                method: 'GET'
+            }).then(function(res) {
+                if (!res.ok) return submitError(res);
+                res.json().then(function (data) {
+                    var init = data[0].id || 0;
+                    for (var j = init; j < data.length + init; j++) {
+                        (function(y) { updateProgress(x, y, data[y - init].name) }(j))
+                    }
+                });
+            }).catch(submitError);
+        }(i))
+    }
+    localStorage.patients = JSON.stringify(pats);
+}
+
+// function loadProgress(patients) {
+//     var injuries = JSON.parse(localStorage.injuries);
+//     var pats = JSON.parse(patients);
+//     if (injuries !== {}) {
+//         for (var i = 1; i < pats.length + 1; i++) {
+//             pats[i - 1].progress = [];
+//                 (function(x) {
+//                 var temp = [];
+//                 for (var i = 0; i < injuries[x].length; i++) {
+//
+//                     fetch('/romMetrics/' + injuries[x][i] + '/romMetricMeasures/?token=' + localStorage.token, {
+//                         method: 'GET'
+//                     }).then(function (res) {
+//                         if (!res.ok) return submitError(res);
+//                         res.json().then(function (data) {
+//                             var last = data[data.length - 1];
+//                             pats[x - 1].progress.push(last.degreeValue / last.nextGoal);
+//                         });
+//                     }).catch(submitError);
+//                 }
+//             }(i))
+//         }
+//     }
+//     else {
+//         setTimeout(function() { loadProgress() }, 350);
+//     }
+// }
+
+function loadPatient(id) {
+    fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var measure = data[data.length - 1] || 0;
+            localStorage.progress = JSON.stringify(measure);
+        });
+    }).catch(submitError);
+}
+
 function loadStart() {
     clear();
+    loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
+}
+
+function loadStatus(patient) {
+    clear();
+    loadPatient(patient.id);
+    loadStatus(patient);
 }
 
 function load() {
@@ -349,34 +566,60 @@ function compareAlpha(a, b) {
     return 0;
 }
 
-var ctr1 = 0;
-var ctr2 = 0;
+localStorage.ctr1 = 0;
+localStorage.ctr2 = 0;
 
 function sortAlpha() {
-    ctr1++;
-    var lst = JSON.parse(localStorage.display);
-    if (ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    localStorage.ctr1++;
+    var lst = JSON.parse(localStorage.patients);
+    if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
     else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
     load();
 }
 
+function findAverage() {
+    var psd = JSON.parse(localStorage.patients);
+    for (var i = 0; i < psd.length; i++) {
+        var sum = 0;
+        var count = 0;
+        for (var k = 0; k < psd[i].progress.length; k++) {
+            var value = psd[i].progress[k];
+            if (value != null) {
+                sum += +value[0];
+                count++;
+            }
+        }
+        psd[i].average = (sum / count).toFixed(1);
+    }
+    localStorage.patients = JSON.stringify(psd);
+}
+
 function sortProg() {
-    ctr2++;
-    var lst = JSON.parse(localStorage.display);
-    if (ctr % 2 != 0)
-        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.progress - b.progress }));
-    else localStorage.display = (lst.sort(function (a, b) { return b.progress - a.progress }));
+    localStorage.ctr2++;
+    findAverage();
+    var lst = JSON.parse(localStorage.patients);
+    if (localStorage.ctr2 % 2 != 1)
+        localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.average - b.average }));
+    else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
 }
 
-function arrowdown(index) {
-    var lst = JSON.parse(localStorage.display);
-    if (not last element in array)
-        var temp = lst[index];
-        lst[index] = lst[index+1];
-        lst[index+1] = temp;
+// function arrowdown(index) {
+//     var lst = JSON.parse(localStorage.display);
+//     if (not last element in array)
+//         var temp = lst[index];
+//         lst[index] = lst[index+1];
+//         lst[index+1] = temp;
 
-    in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
+//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
+
+function focusPatient (id) {
+    var patients = JSON.parse(localStorage.patients);
+    for (var i = 0; i < patients.length; i++) {
+      if (patients[i].id == id) {
+        localStorage.focusPatient = JSON.stringify(patients[i]);
+      }
+    }
 }
 
 // =============================================================
@@ -422,6 +665,18 @@ function submitMeasure(id, i) {
 // =============================================================
 var w, h;
 
+if (window.innerWidth < 770) {
+    w = 7 * window.innerWidth / 12;
+    h = 2 * window.innerHeight / 5;
+}
+
+else {
+    w = window.innerWidth / 3;
+    h = window.innerHeight / 3;
+}
+
+
+
 var degreeValue = [32, 35, 40, 45];
 
 var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
@@ -446,30 +701,7 @@ var max_x = next_weeks_goal_date;
 
 var start_end = [min_x, max_x];
 
-if (window.innerWidth > 1000) {
-    w = 450;
-    h = 455;
-}
 
-else if (window.innerWidth > 770 && window.innerWidth < 1000) {
-    w = 300;
-    h = 300;
-}
-
-else if (window.innerWidth > 400 && window.innerWidth < 770) {
-    w = 275;
-    h = 250;
-}
-
-else if (window.innerWidth < 400 && window.innerHeight > 600){
-    w = 230;
-    h = 230;
-}
-
-else {
-    w = 180;
-    h = 200;
-}
 
 var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
 var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
@@ -503,7 +735,7 @@ var line3 = d3.svg.line()
 // Add an SVG element with the desired dimensions and margin.
 var graph = d3.select("#graph").append("svg")
     .attr("width", "100%")
-    .attr("height", "110%")
+    .attr("height", "95%")
     .append("svg:g")
     .attr("transform", "translate(20,-35)");
 // create xAxis
@@ -512,7 +744,7 @@ var xAxis = d3.svg.axis()
     .scale(x)
     .ticks(5)
     .tickSize(0)
-    .tickFormat(d3.time.format("%-m.%-d"))
+    .tickFormat(d3.time.format("%-m/%-d"))
     .tickPadding(4);
 
 
@@ -523,60 +755,23 @@ var yAxisLeft = d3.svg.axis()
     .tickSize(0)
     .orient("left");
 
-if (window.innerWidth > 1000) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,453)")
-        .call(xAxis);
+graph.append("svg:g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(20," + h + ")")
+    .call(xAxis);
 
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
+graph.append("svg:g")
+    .attr("transform", "translate(20,0)")
+    .attr("class", "y axis")
+    .call(yAxisLeft);
 
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,10)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,10)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 230)
-        .attr("y", 95)
-        .attr("width", 65)
-        .attr("height", 50);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 299)
-        .attr("cy", 120)
-        .attr("r", 25);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 227)
-        .attr("cy", 120)
-        .attr("r", 25);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 228)
-        .attr("y", 96.5)
-        .attr("width", 70)
-        .attr("height", 47);
-
-    graph.append("text")
-        .attr("x", 264)
-        .attr("y", 129)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal")
-        .style("font-size", "30px");
+graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+    .attr("transform", "translate(20, 0)");
+graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+    .attr("transform", "translate(20,0)")
+    .attr("class", "horizontalLine");
+graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+    .attr("transform", "translate(20, 0)");
 
     graph.selectAll(".point")
         .data(points)
@@ -588,8 +783,8 @@ if (window.innerWidth > 1000) {
         .attr("cy", function (d, i) {
             return y(degreeValue[i]);
         })
-        .attr("r", 15)
-        .attr("transform", "translate(20,10)")
+        .attr("r", (w / 25))
+        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
     ;
 
     graph.selectAll(".point")
@@ -602,342 +797,6 @@ if (window.innerWidth > 1000) {
         .attr("cy", function (d, i) {
             return y(next_weeks_goal);
         })
-        .attr("r", 35)
-        .attr("transform", "translate(20,10)")
+        .attr("r", (w / 25))
+        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
     ;
-
-}
-
-else if (window.innerWidth > 770 && window.innerWidth < 1000) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,200)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 110)
-        .attr("y", 65)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 168)
-        .attr("cy", 80)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 107)
-        .attr("cy", 80)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 108)
-        .attr("y", 66.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("y",  85)
-        .attr("x", 138)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 15)
-        .attr("transform", "translate(20,0)")
-    ;
-}
-
-else if (window.innerWidth > 400 && window.innerWidth < 770) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,249)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 135)
-        .attr("y", 67)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 193)
-        .attr("cy", 82)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 132)
-        .attr("cy", 82)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 133)
-        .attr("y", 68.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 163)
-        .attr("y",  87)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 15)
-        .attr("transform", "translate(20,0)")
-    ;
-
-}
-else if (window.innerWidth < 400 && window.innerHeight > 600) {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20,228)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(20,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(20,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(20,0)");
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 110)
-        .attr("y", 64)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 168)
-        .attr("cy", 79)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 107)
-        .attr("cy", 79)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 108)
-        .attr("y", 65.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 138)
-        .attr("y",  85)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(20,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 15)
-        .attr("transform", "translate(20,0)")
-    ;
-}
-
-else {
-    // Add the x-axis.
-    graph.append("svg:g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(25,200)")
-        .call(xAxis);
-
-    graph.append("svg:g")
-        .attr("transform", "translate(25,0)")
-        .attr("class", "y axis")
-        .call(yAxisLeft);
-
-    graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,0)");
-    graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-        .attr("transform", "translate(25,0)")
-        .attr("class", "horizontalLine");
-    graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-        .attr("transform", "translate(25,0)");
-
-
-    graph.append("rect")
-        .attr("class", "outerRect")
-        .attr("x", 90)
-        .attr("y", 62)
-        .attr("width", 55)
-        .attr("height", 30);
-
-    graph.append("circle")
-        .attr("class", "circleRight")
-        .attr("cx", 148)
-        .attr("cy", 77)
-        .attr("r", 15);
-
-    graph.append("circle")
-        .attr("class", "circleLeft")
-        .attr("cx", 87)
-        .attr("cy", 77)
-        .attr("r", 15);
-
-    graph.append("rect")
-        .attr("class", "goalRect")
-        .attr("x", 88)
-        .attr("y", 63.5)
-        .attr("width", 62)
-        .attr("height", 27);
-
-    graph.append("text")
-        .attr("x", 118)
-        .attr("y",  83)
-        .attr('text-anchor', 'middle')
-        .attr("class", "goal")
-        .text("Goal");
-
-
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", 8)
-        .attr("transform", "translate(25,0)")
-    ;
-
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", 15)
-        .attr("transform", "translate(25,0)")
-    ;
-}

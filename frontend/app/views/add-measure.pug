@@ -4,7 +4,7 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/add-measure.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        window.onload = ()=>{getInjuries(#{id})}
+        window.onload = () => {getInjuries(#{id})}
 block content
     form
         each injury, i in injuries

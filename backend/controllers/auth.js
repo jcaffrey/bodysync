@@ -73,7 +73,7 @@ exports.loginPt = (req, res, next) => {
             })
         }
         else {
-            return res.status(401).send('bad hash');
+            return res.status(401).send('Invalid Password');
         }
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
@@ -102,8 +102,8 @@ exports.loginPatient = (req, res, next) => {
             patient.token = token;
             patient.save()
                 .then(function () {
-                    res.json({token: token});
-                    return next();
+                    return res.json({token: token});
+                    //return next();
                 });
 
 
