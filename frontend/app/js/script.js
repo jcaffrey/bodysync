@@ -291,7 +291,7 @@ function loadPatients(patients) {
                 var percent = (sum / count).toFixed(1);
                 var indicator = color(percent);
 
-                pic.src = '../../img/profile_pic.jpg';
+                pic.src = '../../img/' + psd[i].name + '.jpg';
                 pic.setAttribute('id', 'profileImg');
                 prog.src = indicator[1];
                 prog.setAttribute('id', indicator[2]);

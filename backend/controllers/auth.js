@@ -73,7 +73,7 @@ exports.loginPt = (req, res, next) => {
             })
         }
         else {
-            return res.status(401).send('bad hash');
+            return res.status(401).send('Invalid Password');
         }
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
