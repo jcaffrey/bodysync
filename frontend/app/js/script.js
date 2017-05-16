@@ -461,7 +461,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury];
+            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
@@ -593,6 +593,7 @@ function loadAddMeasure () {
     var data = JSON.parse(localStorage.focusPatient);
     var div = document.createElement('div');
     var content = '';
+    var count = 0;
     for (var i = 0; i < data.progress.length; i++) {
         if (data.progress[i] !== null) {
             content +=
@@ -610,7 +611,8 @@ function loadAddMeasure () {
                             '<div class="num">' +
                                 '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
                             '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.id + ',' + i + ')">SUBMIT</div></div><br><br>';
+                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+            count++;
         }
     }
     div.innerHTML = content;
@@ -629,12 +631,13 @@ Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 };
 
-function submitMeasure(id, i) {
+function submitMeasure (id, i, lastGoal, lastMeasure) {
     var d = new Date();
     var data = {
-        dayMeasured: d.toMysqlFormat()
+        dayMeasured: d.toMysqlFormat(),
+        nextGoal: lastGoal
     };
-    if (form[i].value) data.degreeValue = form[i].value;
+    data.degreeValue = form[i].value || lastMeasure;
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
             'Content-Type': 'application/json'},
@@ -643,6 +646,17 @@ function submitMeasure(id, i) {
     }).then(function(res) {
         if (!res.ok) throw new Error('There was an error sending this measure');
     }).catch(function (err) { console.log(err) });
+}
+
+function submitMeasures () {
+    var data = JSON.parse(localStorage.focusPatient);
+    var count = 0;
+    for (var i = 0; i < data.progress.length; i++) {
+        if (data.progress[i] !== null) {
+            submitMeasure(data.progress[i][3], count, data.progress[i][4], data.progress[i][2]);
+            count++;
+        }
+    }
 }
 
 // =============================================================
