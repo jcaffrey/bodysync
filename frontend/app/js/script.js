@@ -598,7 +598,7 @@ function sortProg() {
     localStorage.ctr2++;
     findAverage();
     var lst = JSON.parse(localStorage.patients);
-    if (localStorage.ctr2 % 2 != 0)
+    if (localStorage.ctr2 % 2 != 1)
         localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.average - b.average }));
     else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
