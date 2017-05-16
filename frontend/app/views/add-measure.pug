@@ -4,28 +4,11 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/add-measure.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        window.onload = () => {getInjuries(#{id})}
+        window.onload = function() { loadAddMeasure() }
+
 block content
-    form
-        each injury, i in injuries
-            .inputs
-                .input-box.input-header
-                    .input-name
-                        span= injury.name
-                        .input-label
-                    .progress-icon
-                .input-box.input-bottom
-                    .measure-container
-                        .m-old
-                            .num
-                                span 25
-                            .m-label PREVIOUS
-                        .m-new
-                            .num
-                                input(type='text' name='newMeasure' placeholder='NEW')
-                            .m-label NEW
-                .input-box.action-box.input-bottom.submit(onclick='submitMeasure(' + injury.id + ',' + i + ')') SUBMIT
-    p#succes
+    form#fields
+    p#success
 
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='submitMeasures()') #{footerButton2}

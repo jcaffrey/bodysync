@@ -461,7 +461,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name];
+            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
@@ -487,34 +487,6 @@ function loadProgress(patients) {
     }
     localStorage.patients = JSON.stringify(pats);
 }
-
-// function loadProgress(patients) {
-//     var injuries = JSON.parse(localStorage.injuries);
-//     var pats = JSON.parse(patients);
-//     if (injuries !== {}) {
-//         for (var i = 1; i < pats.length + 1; i++) {
-//             pats[i - 1].progress = [];
-//                 (function(x) {
-//                 var temp = [];
-//                 for (var i = 0; i < injuries[x].length; i++) {
-//
-//                     fetch('/romMetrics/' + injuries[x][i] + '/romMetricMeasures/?token=' + localStorage.token, {
-//                         method: 'GET'
-//                     }).then(function (res) {
-//                         if (!res.ok) return submitError(res);
-//                         res.json().then(function (data) {
-//                             var last = data[data.length - 1];
-//                             pats[x - 1].progress.push(last.degreeValue / last.nextGoal);
-//                         });
-//                     }).catch(submitError);
-//                 }
-//             }(i))
-//         }
-//     }
-//     else {
-//         setTimeout(function() { loadProgress() }, 350);
-//     }
-// }
 
 function loadPatient(id) {
     fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
@@ -617,10 +589,32 @@ function focusPatient (id) {
 //  Add measure
 // =============================================================
 
-function getInjuries(id) {
-    for (injury in document.getElementsByClassName('inputs')) {
-        console.log(id);
+function loadAddMeasure () {
+    var data = JSON.parse(localStorage.focusPatient);
+    var div = document.createElement('div');
+    var content = '';
+    for (var i = 0; i < data.progress.length; i++) {
+        if (data.progress[i] !== null) {
+            content +=
+                '<div class="inputs">' +
+                    '<div class="input-box input-header">' +
+                        '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
+                '<div class="input-label"></div></div>' +
+                '<div class="progress-icon"></div></div>' +
+                '<div class="input-box input-bottom">' +
+                    '<div class="measure-container">' +
+                        '<div class="m-old">' +
+                            '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
+                            '<div class="m-label">PREVIOUS</div></div>' +
+                        '<div class="m-new">' +
+                            '<div class="num">' +
+                                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
+                            '<div class="m-label">NEW</div></div></div></div>' +
+                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.id + ',' + i + ')">SUBMIT</div>';
+        }
     }
+    div.innerHTML = content;
+    document.getElementById('fields').appendChild(div);
 }
 
 // JS date to MySQL function from:

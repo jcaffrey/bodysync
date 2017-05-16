@@ -63,7 +63,7 @@ router.route('/forgotpassword')
 router.route('/reset/:token') 
     .post(auth.resetPassword);
 
-router.route('')
+router.route('');
 
 // routes for admin
 router.route('/pts')
