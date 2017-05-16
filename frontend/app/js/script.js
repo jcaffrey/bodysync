@@ -365,6 +365,108 @@ function loadPatients(patients) {
     }, 1000);
 }
 
+
+function loadFocusPatient(){
+  var pfp = JSON.parse(localStorage.focusPatient);
+
+  var sum = 0;
+  var count = 0;
+  for (var k = 0; k < pfp.progress.length; k++) {
+      var value = pfp.progress[k];
+      if (value != null) {
+          sum += +value[0];
+          count++;
+      }
+  }
+  var percent = (sum / count).toFixed(1);
+  var indicator = color(percent);
+
+  // html for pt-box
+    var ptBox = document.createElement('div');
+    // adding pic-box
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src=" ' + pfp.name + ".jpeg"
+    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+    // adding info-box
+    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+    ptBox.innerHTML = ptBoxHTML;
+
+  // html for menu-box
+    var menuBox = document.createElement('div');
+
+    // adding menu-top
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="menuBox.style.display="none"; bottomBox.style.opacity="1"">X</button></div></div>';
+
+    // adding menu-options
+    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="iconOverview.style.display="inline-block"; iconGraph.style.display="none"; iconOverviewTrans.style.background="#2e3192"; iconGraphOneTrans.style.background="#BBB"; overviewBox.style.display="inline-block"; bodyBox.style.display="none"; menuBox.style.display="none"; bottomBox.style.opacity="1"">Overview</span></div>';
+
+    // getting injuries
+    var menuInjuries = '';
+    for (var j = 0; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:inline-block;"></div><span onclick="iconOverview.style.display="none"; iconGraph.style.display="inline-block"; iconOverviewTrans.style.background="#2e3192"; iconGraphOneTrans.style.background="#BBB"; overviewBox.style.display="none"; bodyBox.style.display="inline-block"; menuBox.style.display="none"; bottomBox.style.opacity="1"">'+ val[1] +'</span></div>';
+
+        }
+    }
+    menuBoxHTML += '</div>';
+    menuBox.innerHTML = menuBoxHTML;
+
+  // html for outer-info-box
+    var outBox = document.createElement('div');
+    // adding top-box
+    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="menuBox.style.display="inline-block"; bottomBox.style.opacity="0.5"")>&#9776</button></div>';
+
+    // adding bottom-box
+      // getting injury list
+      var collapseContent = '';
+      for (var j = 0; j < pfp.progress.length; j++) {
+          var val = pfp.progress[j];
+          if (val !== null) {
+              c = '#' + color(val[0])[0];
+              collapseContent +=
+                  '<div class="collapse-inner">' +
+                  '<div class="input-label">' + val[1] + '</div>' +
+                  '<div class="input-percent1" style="color:' + c + '">';
+              if (c === '#bbbbbb') {
+                  collapseContent += 'N/A</div>';
+              } else {
+                  collapseContent += val[0] + '%</div>';
+              }
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="iconOverview.style.display="none"; iconGraph.style.display="inline-block"; iconOverviewTrans.style.background="#BBB"; iconGraphOneTrans.style.background="#2e3192"; overviewBox.style.display="none"; bodyBox.style.display="inline-block""></div></div>';
+          }
+      }
+      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent +'</div></div>';
+      // getting exercise set
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+      // getting notes
+      outBoxHTML += '<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+
+      // adding body-part-box
+        // percentage-box
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + percent + '</div><div class="recoveryText">to full recovery</div></div>';
+        // legend
+        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+        // graph
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"><script src="http://d3js.org/d3.v3.min.js"></script></div></div></div></div>';
+
+    // adding transition-box
+    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans"></div><div class="icon" id="iconGraphOneTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div></div></div></div>';
+    outBox.innerHTML = outBoxHTML;
+}
+
+//
+function colorPercent (percent, col){
+  if (percent === 'bbbbbb') {
+      return '<span>N/A</span>';
+  }
+  else {
+      return '<font color = "#' + col + '"><span>"' + percent + '"%</span></font>';
+  }
+}
+
+
 // change to status html
 function loadStatus(patient) {
     var progress = +JSON.parse(localStorage.progress);
@@ -448,6 +550,8 @@ function loadStatus(patient) {
     }
 }
 
+
+
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -515,6 +619,9 @@ function loadProgress(patients) {
 //         setTimeout(function() { loadProgress() }, 350);
 //     }
 // }
+
+
+
 
 function loadPatient(id) {
     fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
