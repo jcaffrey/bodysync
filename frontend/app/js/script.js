@@ -421,7 +421,7 @@ function loadStatus(patient) {
             '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
             '</div>' +
             '<div class="space"></div>' +
-            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + i + ')">Inspect Patient</a>' +
+            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
             '</div>' +
             '</div>';
         rec.setAttribute('class', 'recovery');
@@ -607,7 +607,7 @@ function sortProg() {
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
     for (var i = 0; i < patients.length; i++) {
-      if (patients[i].id = id) {
+      if (patients[i].id == id) {
         localStorage.focusPatient = JSON.stringify(patients[i]);
       }
     }
