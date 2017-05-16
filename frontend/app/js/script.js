@@ -531,7 +531,6 @@ function loadPatient(id) {
 function loadStart() {
     clear();
     loadProgress(localStorage.patients);
-    localStorage.patients = JSON.stringify(JSON.parse(localStorage.patients).sort(compareAlpha));
     loadPatients(localStorage.patients);
 }
 
@@ -573,7 +572,7 @@ localStorage.ctr2 = 0;
 function sortAlpha() {
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
-    if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    if (localStorage.ctr1 % 2 != 1) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
     else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
     load();
 }
