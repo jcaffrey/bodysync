@@ -121,6 +121,10 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/add-measure', function(req, res, next) {
+    return res.render('add-measure', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 router.get('/create-patient', function(req, res, next) {
     return res.render('create-patient', { footerButton: 'Cancel', footerButton2: 'Submit'});
 });
