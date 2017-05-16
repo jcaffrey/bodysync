@@ -305,7 +305,7 @@ function loadPatients(patients) {
                 }
                 p1.style.color = "#" + indicator[0];
                 menu.setAttribute('class', 'arrow');
-                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                menu.setAttribute("onclick", "displayCollapse('collapse" + psd[i].id + "'); toggleOpen('nav-icon" + psd[i].id + "')");
                 menu.setAttribute('class', 'nav-icon');
                 menu.setAttribute('id', 'nav-icon' + i);
                 menu.innerHTML =
@@ -315,7 +315,7 @@ function loadPatients(patients) {
                     '<span></span>';
                 collapse.setAttribute('class', 'buttonCollapse');
                 var collapseContent =
-                    '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+                    '<div class="collapse" id= "collapse' + psd[i].id + '" style="display:none">' +
                     '<hr><div class="space"></div>';
                 for (var j = 0; j < psd[i].progress.length; j++) {
                     var val = psd[i].progress[j];
@@ -334,7 +334,7 @@ function loadPatients(patients) {
                     }
                 }
                 collapseContent += '<div class="space"></div>' +
-                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + i + ')">Inspect Patient</a>';
+                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + psd[i].id + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
                 collapse.innerHTML = collapseContent;
                 rec.setAttribute('class', 'recovery');
                 if (indicator[0] !== 'bbbbbb') {
@@ -421,7 +421,7 @@ function loadStatus(patient) {
             '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
             '</div>' +
             '<div class="space"></div>' +
-            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + i + ')">Inspect Patient</a>' +
+            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
             '</div>' +
             '</div>';
         rec.setAttribute('class', 'recovery');
@@ -609,7 +609,6 @@ function focusPatient (id) {
     for (var i = 0; i < patients.length; i++) {
       if (patients[i].id = id) {
         localStorage.focusPatient = JSON.stringify(patients[i]);
-        return;
       }
     }
 }
