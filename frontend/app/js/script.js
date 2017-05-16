@@ -334,7 +334,7 @@ function loadPatients(patients) {
                     }
                 }
                 collapseContent += '<div class="space"></div>' +
-                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a></div>';
+                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
                 collapse.innerHTML = collapseContent;
                 rec.setAttribute('class', 'recovery');
                 if (indicator[0] !== 'bbbbbb') {
@@ -572,7 +572,7 @@ localStorage.ctr2 = 0;
 function sortAlpha() {
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
-    if (localStorage.ctr1 % 2 != 1) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
+    if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
     else localStorage.display = JSON.stringify(lst.sort(compareAlpha).reverse());
     load();
 }
@@ -598,12 +598,20 @@ function sortProg() {
     localStorage.ctr2++;
     findAverage();
     var lst = JSON.parse(localStorage.patients);
-    if (localStorage.ctr2 % 2 != 0)
+    if (localStorage.ctr2 % 2 != 1)
         localStorage.display = JSON.stringify(lst.sort(function (a, b) { return a.average - b.average }));
     else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
 }
 
+function focusPatient (id) {
+    var patients = JSON.parse(localStorage.patients);
+    for (var i = 0; i < patients.length; i++) {
+      if (patients[i].id == id) {
+        localStorage.focusPatient = JSON.stringify(patients[i]);
+      }
+    }
+}
 
 // =============================================================
 //  Add measure
