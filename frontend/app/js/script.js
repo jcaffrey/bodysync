@@ -384,10 +384,32 @@ function loadPatients(patients) {
     }, 1000);
 }
 
+function change(e) {
+  e.style.display = "none";
+}
 
-function loadFocusPatient(){
+function change1(e) {
+  e.style.display= "inline-block";
+}
+
+function change2(e) {
+  e.style.background="#2e3192";
+}
+
+function change3(e) {
+  e.style.background="#bbb";
+}
+
+function change4(e) {
+  e.style.opacity="1";
+}
+
+function change4(e) {
+  e.style.opacity="0.5";
+}
+
+function loadFocusPatient () {
   var pfp = JSON.parse(localStorage.focusPatient);
-
   var sum = 0;
   var count = 0;
   for (var k = 0; k < pfp.progress.length; k++) {
@@ -403,7 +425,7 @@ function loadFocusPatient(){
   // html for pt-box
     var ptBox = document.createElement('div');
     // adding pic-box
-    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src=" ' + pfp.name + ".jpeg"
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
     + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
     // adding info-box
     ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
@@ -413,29 +435,34 @@ function loadFocusPatient(){
 
   // html for menu-box
     var menuBox = document.createElement('div');
+    menuBox.setAttribute('class', 'menu-box');
+    menuBox.setAttribute('id', 'menuBox');
+    menuBox.style.display = 'inline-block';
+    menuBox.style.display = 'none';
 
     // adding menu-top
-    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="menuBox.style.display="none"; bottomBox.style.opacity="1"">X</button></div></div>';
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox)", change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="iconOverview.style.display="inline-block"; iconGraph.style.display="none"; iconOverviewTrans.style.background="#2e3192"; iconGraphOneTrans.style.background="#BBB"; overviewBox.style.display="inline-block"; bodyBox.style.display="none"; menuBox.style.display="none"; bottomBox.style.opacity="1"">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="change1(iconOverview); change(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:inline-block;"></div><span onclick="iconOverview.style.display="none"; iconGraph.style.display="inline-block"; iconOverviewTrans.style.background="#2e3192"; iconGraphOneTrans.style.background="#BBB"; overviewBox.style.display="none"; bodyBox.style.display="inline-block"; menuBox.style.display="none"; bottomBox.style.opacity="1"">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:inline-block;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
 
         }
     }
-    menuBoxHTML += '</div>';
+    menuBoxHTML += menuInjuries + '</div>';
     menuBox.innerHTML = menuBoxHTML;
 
   // html for outer-info-box
     var outBox = document.createElement('div');
+
     // adding top-box
-    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="menuBox.style.display="inline-block"; bottomBox.style.opacity="0.5"")>&#9776</button></div>';
+    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
     // adding bottom-box
       // getting injury list
@@ -453,14 +480,14 @@ function loadFocusPatient(){
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="iconOverview.style.display="none"; iconGraph.style.display="inline-block"; iconOverviewTrans.style.background="#BBB"; iconGraphOneTrans.style.background="#2e3192"; overviewBox.style.display="none"; bodyBox.style.display="inline-block""></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
           }
       }
-      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent +'</div></div>';
+      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
       // getting notes
-      outBoxHTML += '<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" placeholder="Enter notes here..."></textarea></div></div>';
 
       // adding body-part-box
         // percentage-box
@@ -471,17 +498,19 @@ function loadFocusPatient(){
         outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"><script src="http://d3js.org/d3.v3.min.js"></script></div></div></div></div>';
 
     // adding transition-box
-    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans"></div><div class="icon" id="iconGraphOneTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div></div></div></div>';
+    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
     outBox.innerHTML = outBoxHTML;
+    var container = document.getElementById('status').appendChild(ptBox);
+    container.appendChild(menuBox);
+    container.appendChild(outBox);
 }
 
-//
 function colorPercent (percent, col){
   if (percent === 'bbbbbb') {
       return '<span>N/A</span>';
   }
   else {
-      return '<font color = "#' + col + '"><span>"' + percent + '"%</span></font>';
+      return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
   }
 }
 
