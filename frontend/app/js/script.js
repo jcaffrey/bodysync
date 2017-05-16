@@ -22,8 +22,8 @@ function submitOnEnterKey(submitFunction, targetForm) {
 
 function submitLogin() {
     var data = {
-        email: form.email2.value,
-        password: form.password2.value
+        email: form.email.value,
+        password: form.password.value
     };
     localStorage.email = data.email;
     fetch('/login', {
@@ -36,6 +36,25 @@ function submitLogin() {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
             getPatients();
+        });
+    }).catch(submitError);
+}
+
+function submitPatientLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+    localStorage.email = data.email;
+    fetch('/loginPatient', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
         });
     }).catch(submitError);
 }

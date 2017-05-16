@@ -49,6 +49,10 @@ router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
+router.post('/loginPatient', function(req, res, next) {
+    request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
+});
+
 // -------------------------------------------------------------------------------
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
