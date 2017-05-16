@@ -26,8 +26,8 @@ block content
                 .input-name Email
             .input-box
                 input.text-input(type='password' name='password' placeholder='********' maxlength="24"
-                    onkeypress="if (event.keyCode == 13 && form.PT.checked == true) {submitLogin()} " +
-                        "else { submitPatientLogin() } ")
+                    onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
+                        "else { submitPatientLogin() }} else {} ")
                 .input-name Password
     //a#forgotPassword Forgot Password
     a.loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
