@@ -18,17 +18,18 @@ block content
             button.tablinks#buttonTabPT(type='button' onclick="changeTab(event, 'tabPT')") PT
             .tabcontent#tabPatient
                 .input-box
-                    input.text-input(type='email' name='email1' placeholder='example@domain.com' maxlength="24")
+                    input.text-input2(type='email' name='email1' placeholder='example@domain.com' maxlength="24")
                     .input-name.two Email
                 .input-box
-                    input.text-input(type='password' name='password1' placeholder='********' maxlength="24")
+                    input.text-input2(type='password' name='password1' placeholder='********' maxlength="24")
                     .input-name.two Password
             .tabcontent#tabPT
                 .input-box
                     input.text-input(type='email' name='email2' placeholder='example@domain.com' maxlength="24")
                     .input-name PT Email
                 .input-box
-                    input.text-input(type='password' name='password2' placeholder='********' maxlength="24")
+                    input.text-input(type='password' name='password2' placeholder='********' maxlength="24"
+                        onkeypress="if (event.keyCode == 13) {submitLogin()} else { }")
                     .input-name Password
     //a#forgotPassword Forgot Password
     a.loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
@@ -56,6 +57,7 @@ block content
                 evt.currentTarget.className += " active";
             }
             submitOnEnterKey(submitLogin);
+
 
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='submitLogin()') #{footerButton2}
