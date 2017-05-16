@@ -126,7 +126,7 @@ router.get('/pt-form', function(req, res, next) {
 });
 
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/create-patient', function(req, res, next) {
@@ -140,7 +140,7 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', { firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  url: '/add-measure', firstName: 'Josh', footerButton: 'Add Measure' });
 });
 
 // patient view
