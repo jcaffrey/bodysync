@@ -369,6 +369,16 @@ function sortProg() {
     load();
 }
 
+function arrowdown(index) {
+    var lst = JSON.parse(localStorage.display);
+    if (not last element in array)
+        var temp = lst[index];
+        lst[index] = lst[index+1];
+        lst[index+1] = temp;
+
+    in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
+}
+
 // =============================================================
 //  Add measure
 // =============================================================
