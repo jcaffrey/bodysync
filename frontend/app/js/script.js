@@ -1,4 +1,4 @@
-var success = document.getElementById('success');
+entById('success');
 var form = document.forms[0];
 
 // =============================================================
@@ -385,55 +385,55 @@ function loadPatients(patients) {
 }
 
 function change(e) {
-  e.style.display = "none";
+    e.style.display = "none";
 }
 
 function change1(e) {
-  e.style.display= "inline-block";
+    e.style.display= "inline-block";
 }
 
 function change2(e) {
-  e.style.background="#2e3192";
+    e.style.background="#2e3192";
 }
 
 function change3(e) {
-  e.style.background="#bbb";
+    e.style.background="#bbb";
 }
 
 function change4(e) {
-  e.style.opacity="1";
+    e.style.opacity="1";
 }
 
 function change4(e) {
-  e.style.opacity="0.5";
+    e.style.opacity="0.5";
 }
 
 function loadFocusPatient () {
-  var pfp = JSON.parse(localStorage.focusPatient);
-  var sum = 0;
-  var count = 0;
-  for (var k = 0; k < pfp.progress.length; k++) {
-      var value = pfp.progress[k];
-      if (value != null) {
-          sum += +value[0];
-          count++;
-      }
-  }
-  var percent = (sum / count).toFixed(1);
-  var indicator = color(percent);
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var sum = 0;
+    var count = 0;
+    for (var k = 0; k < pfp.progress.length; k++) {
+        var value = pfp.progress[k];
+        if (value != null) {
+            sum += +value[0];
+            count++;
+        }
+    }
+    var percent = (sum / count).toFixed(1);
+    var indicator = color(percent);
 
-  // html for pt-box
+    // html for pt-box
     var ptBox = document.createElement('div');
     // adding pic-box
     var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
     // adding info-box
     ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
     ptBox.innerHTML = ptBoxHTML;
 
-  // html for menu-box
+    // html for menu-box
     var menuBox = document.createElement('div');
     menuBox.setAttribute('class', 'menu-box');
     menuBox.setAttribute('id', 'menuBox');
@@ -458,44 +458,44 @@ function loadFocusPatient () {
     menuBoxHTML += menuInjuries + '</div>';
     menuBox.innerHTML = menuBoxHTML;
 
-  // html for outer-info-box
+    // html for outer-info-box
     var outBox = document.createElement('div');
 
     // adding top-box
     var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
     // adding bottom-box
-      // getting injury list
-      var collapseContent = '';
-      for (var j = 0; j < pfp.progress.length; j++) {
-          var val = pfp.progress[j];
-          if (val !== null) {
-              c = '#' + color(val[0])[0];
-              collapseContent +=
-                  '<div class="collapse-inner">' +
-                  '<div class="input-label">' + val[1] + '</div>' +
-                  '<div class="input-percent1" style="color:' + c + '">';
-              if (c === '#bbbbbb') {
-                  collapseContent += 'N/A</div>';
-              } else {
-                  collapseContent += val[0] + '%</div>';
-              }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
-          }
-      }
-      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
-      // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
-      // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" placeholder="Enter notes here..."></textarea></div></div>';
+    // getting injury list
+    var collapseContent = '';
+    for (var j = 0; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            c = '#' + color(val[0])[0];
+            collapseContent +=
+                '<div class="collapse-inner">' +
+                '<div class="input-label">' + val[1] + '</div>' +
+                '<div class="input-percent1" style="color:' + c + '">';
+            if (c === '#bbbbbb') {
+                collapseContent += 'N/A</div>';
+            } else {
+                collapseContent += val[0] + '%</div>';
+            }
+            collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
+        }
+    }
+    outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+    // getting exercise set
+    outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+    // getting notes
+    outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
-      // adding body-part-box
-        // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + percent + '</div><div class="recoveryText">to full recovery</div></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
-        // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"><script src="http://d3js.org/d3.v3.min.js"></script></div></div></div></div>';
+    // adding body-part-box
+    // percentage-box
+    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
+    // legend
+    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+    // graph
+    outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -503,15 +503,17 @@ function loadFocusPatient () {
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
+
+    createGraph();
 }
 
 function colorPercent (percent, col){
-  if (percent === 'bbbbbb') {
-      return '<span>N/A</span>';
-  }
-  else {
-      return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
-  }
+    if (percent === 'bbbbbb') {
+        return '<span>N/A</span>';
+    }
+    else {
+        return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
+    }
 }
 
 
@@ -598,8 +600,6 @@ function loadStatus(patient) {
     }
 }
 
-
-
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -613,7 +613,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
+            pats[patient - 1].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
@@ -728,12 +728,21 @@ function sortProg() {
     load();
 }
 
+// function arrowdown(index) {
+//     var lst = JSON.parse(localStorage.display);
+//     if (not last element in array)
+//         var temp = lst[index];
+//         lst[index] = lst[index+1];
+//         lst[index+1] = temp;
+
+//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
+
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
     for (var i = 0; i < patients.length; i++) {
-      if (patients[i].id == id) {
-        localStorage.focusPatient = JSON.stringify(patients[i]);
-      }
+        if (patients[i].id == id) {
+            localStorage.focusPatient = JSON.stringify(patients[i]);
+        }
     }
 }
 
@@ -750,20 +759,20 @@ function loadAddMeasure () {
         if (data.progress[i] !== null) {
             content +=
                 '<div class="inputs">' +
-                    '<div class="input-box input-header">' +
-                        '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
+                '<div class="input-box input-header">' +
+                '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
                 '<div class="input-label"></div></div>' +
                 '<div class="progress-icon"></div></div>' +
                 '<div class="input-box input-bottom">' +
-                    '<div class="measure-container">' +
-                        '<div class="m-old">' +
-                            '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
-                            '<div class="m-label">PREVIOUS</div></div>' +
-                        '<div class="m-new">' +
-                            '<div class="num">' +
-                                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
-                            '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+                '<div class="measure-container">' +
+                '<div class="m-old">' +
+                '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
+                '<div class="m-label">PREVIOUS</div></div>' +
+                '<div class="m-new">' +
+                '<div class="num">' +
+                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
+                '<div class="m-label">NEW</div></div></div></div>' +
+                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
     }
@@ -809,145 +818,156 @@ function submitMeasures () {
             count++;
         }
     }
+    window.location = '/patients1';
+}
+
+function submitOne (id, i, lastGoal, lastMeasure) {
+    submitMeasure(id, i, lastGoal, lastMeasure);
+    window.location = '/patients1';
 }
 
 // =============================================================
 //  Progress Graph
 // =============================================================
-var w, h;
+function createGraph() {
+    setTimeout(function () {
+        var w, h;
 
-if (window.innerWidth < 770) {
-    w = 7 * window.innerWidth / 12;
-    h = 2 * window.innerHeight / 5;
-}
+        if (window.innerWidth < 770) {
+            w = 7 * window.innerWidth / 12;
+            h = 2 * window.innerHeight / 5;
+        }
 
-else {
-    w = window.innerWidth / 3;
-    h = window.innerHeight / 3;
-}
-
-
-
-var degreeValue = [32, 35, 40, 45];
-
-var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-
-var goal = 60;
-
-var next_weeks_goal = 50;
-
-var next_weeks_goal_date = (new Date(2017, 3, 29));
-
-var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-
-var goal_point = [50, 4];
-
-var min_y = d3.min(degreeValue) - 20;
-
-var max_y = goal + 10;
-
-var min_x = new Date(dayMeasured[0].getTime() - (60*60*24*7*1000));
-
-var max_x = next_weeks_goal_date;
-
-var start_end = [min_x, max_x];
+        else {
+            w = window.innerWidth / 3;
+            h = window.innerHeight / 3;
+        }
 
 
 
-var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
-var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
+        var degreeValue = [32, 35, 40, 45];
 
-var line = d3.svg.line()
-    .x(function (d, i) {
-        return x(dayMeasured[i]) ;
-    })
-    .y(function (d, i) {
-        return y(degreeValue[i]);
-    });
+        var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
 
-var line2 = d3.svg.line()
-    .x(function (d, i) {
-        return x(start_end[i]);
-    })
-    .y(function () {
-        return y(goal);
-    } );
+        var goal = 60;
 
-var line3 = d3.svg.line()
-    .x(function (d, i) {
-        return x(next_weeks_goal_date[i]);
-    })
-    .y(function (d, i) {
-        return y(next_weeks_goal[i]);
-    });
+        var next_weeks_goal = 50;
+
+        var next_weeks_goal_date = (new Date(2017, 3, 29));
+
+        var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+
+        var goal_point = [50, 4];
+
+        var min_y = d3.min(degreeValue) - 20;
+
+        var max_y = goal + 10;
+
+        var min_x = new Date(dayMeasured[0].getTime() - (60*60*24*7*1000));
+
+        var max_x = next_weeks_goal_date;
+
+        var start_end = [min_x, max_x];
+
+
+
+        var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
+        var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
+
+        var line = d3.svg.line()
+            .x(function (d, i) {
+                return x(dayMeasured[i]) ;
+            })
+            .y(function (d, i) {
+                return y(degreeValue[i]);
+            });
+
+        var line2 = d3.svg.line()
+            .x(function (d, i) {
+                return x(start_end[i]);
+            })
+            .y(function () {
+                return y(goal);
+            } );
+
+        var line3 = d3.svg.line()
+            .x(function (d, i) {
+                return x(next_weeks_goal_date[i]);
+            })
+            .y(function (d, i) {
+                return y(next_weeks_goal[i]);
+            });
 
 
 
 // Add an SVG element with the desired dimensions and margin.
-var graph = d3.select("#graph").append("svg")
-    .attr("width", "100%")
-    .attr("height", "95%")
-    .append("svg:g")
-    .attr("transform", "translate(20,-35)");
+        var graph = d3.select("#graph").append("svg")
+            .attr("width", "100%")
+            .attr("height", "95%")
+            .append("svg:g")
+            .attr("transform", "translate(20,-35)");
 // create xAxis
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .ticks(5)
-    .tickSize(0)
-    .tickFormat(d3.time.format("%-m/%-d"))
-    .tickPadding(4);
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .ticks(5)
+            .tickSize(0)
+            .tickFormat(d3.time.format("%-m/%-d"))
+            .tickPadding(4);
 
 
 // create left yAxis
-var yAxisLeft = d3.svg.axis()
-    .scale(y)
-    .ticks(5)
-    .tickSize(0)
-    .orient("left");
+        var yAxisLeft = d3.svg.axis()
+            .scale(y)
+            .ticks(5)
+            .tickSize(0)
+            .orient("left");
 
-graph.append("svg:g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(20," + h + ")")
-    .call(xAxis);
+        graph.append("svg:g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(20," + h + ")")
+            .call(xAxis);
 
-graph.append("svg:g")
-    .attr("transform", "translate(20,0)")
-    .attr("class", "y axis")
-    .call(yAxisLeft);
+        graph.append("svg:g")
+            .attr("transform", "translate(20,0)")
+            .attr("class", "y axis")
+            .call(yAxisLeft);
 
-graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-    .attr("transform", "translate(20, 0)");
-graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-    .attr("transform", "translate(20,0)")
-    .attr("class", "horizontalLine");
-graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-    .attr("transform", "translate(20, 0)");
+        graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+            .attr("transform", "translate(20, 0)");
+        graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+            .attr("transform", "translate(20,0)")
+            .attr("class", "horizontalLine");
+        graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+            .attr("transform", "translate(20, 0)");
 
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", (w / 25))
-        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-    ;
+        graph.selectAll(".point")
+            .data(points)
+            .enter().append("circle")
+            .attr("class", "circles")
+            .attr("cx", function (d, i) {
+                return x(dayMeasured[i]);
+            })
+            .attr("cy", function (d, i) {
+                return y(degreeValue[i]);
+            })
+            .attr("r", (w / 25))
+            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+        ;
 
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", (w / 25))
-        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-    ;
+        graph.selectAll(".point")
+            .data(goal_point)
+            .enter().append("circle")
+            .attr("class", "goal-point")
+            .attr("cx", function (d, i) {
+                return x(next_weeks_goal_date);
+            })
+            .attr("cy", function (d, i) {
+                return y(next_weeks_goal);
+            })
+            .attr("r", (w / 25))
+            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+        ;
+
+    }, 1000);
+}
