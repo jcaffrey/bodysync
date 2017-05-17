@@ -4,18 +4,40 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-form.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        function increment() {
-            var original = document.getElementById('num').innerHTML;
+        function changeReps(isInc) {
+            var original = document.getElementById('reps-num').innerHTML;
             var value = parseInt(original, 10);
-            value++;
-            document.getElementById('num').innerHTML = value.toString();
+            if (isInc = true) {
+                value++;
+            }
+            else {
+                value--;
+            };
+            document.getElementById('reps-num').innerHTML = value.toString();
         };
-        function decrement() {
-            var original = document.getElementById('num').innerHTML;
+        function changeSets(isInc) {
+            var original = document.getElementById('sets-num').innerHTML;
             var value = parseInt(original, 10);
-            value--;
-            document.getElementById('num').innerHTML = value.toString();
+            if (isInc = true) {
+                value++;
+            }
+            else {
+                value--;
+            };
+            document.getElementById('sets-num').innerHTML = value.toString();
         };
+        //- function increment(str) {
+        //-     var original = document.getElementById(str.toString()).innerHTML;
+        //-     var value = parseInt(original, 10);
+        //-     value++;
+        //-     document.getElementById(str.toString()).innerHTML = value.toString();
+        //- };
+        //- function decrement() {
+        //-     var original = document.getElementById('num').innerHTML;
+        //-     var value = parseInt(original, 10);
+        //-     value--;
+        //-     document.getElementById('num').innerHTML = value.toString();
+        //- };
 block content
     form
         button#applyTemplate Apply Template
@@ -27,15 +49,15 @@ block content
             .input-box#reps           
                 .repset-name Reps
                 .repset-box
-                    button.arith-box(type='button' onclick='decrement()') -
-                    p(id='num') 10
-                    button.arith-box(type='button' onclick='increment()') +
+                    button.arith-box(type='button' onclick='changeReps(false)') -
+                    p(id='reps-num') 10
+                    button.arith-box(type='button' onclick='changeReps(true)') +
             .input-box#sets
                 .repset-name Sets
                 .repset-box
-                    button.arith-box -
-                    .num-box 2
-                    button.arith-box +
+                    button.arith-box(type='button' onclick='changeSets(false)') -
+                    p(id='sets-num') 2
+                    button.arith-box(type='button' onclick='changeSets(true)') +
             .input-box.input-bottom
                 .input-name#notes Notes
                 textarea.text-input(type='notes' id='notes' name='notes' cols="25" placeholder="Type any notes, special requirements, etc. on this exercise here...")
