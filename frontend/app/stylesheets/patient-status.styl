@@ -33,8 +33,9 @@ form h1
   border-radius $formRadius
   background-color $white
   width 95%
-  height 80%
+  height 100vw
   @media all and (min-width: 770px)
+    height 70vw
     width 60%
 
 .top-box
@@ -128,6 +129,9 @@ form h1
   @media screen and (min-width: 1700px)
     font-size: 1vw
 
+.option:last-child
+  border-radius $formRadius
+
 .menu-icon
   display none
   width 8px
@@ -172,7 +176,7 @@ form h1
     left 45%
 
 .icon
-  display inline-block
+  display none
   width 8px
   height 8px
   background $inactiveColor
@@ -206,37 +210,13 @@ form h1
   width: 100%
   overflow hidden
 
-.graph-box
-  width: 10%
-  padding-right: 5%
-  display: inline-block
-  text-align: right
-
-#graph-symbol
-  display inline-block
+.graph-symbol
   width: 50%
   height: auto
   vertical-align: sub
 
-#graph-symbol:hover
+.graph-symbol:hover
   cursor pointer
-
-.input-label
-  display: inline-block
-  font-family: 'GothamBold'
-  color $inactiveColor
-  text-transform: uppercase
-  text-align: left
-  font-size: 4vw
-  @media screen and (min-width: 770px)
-    font-size: 2.5vw
-  @media screen and (min-width: 1700px)
-    font-size: 1vw
-    padding-left: 5%
-    padding-bottom 2%
-  @media screen and (max-width 650px and max-height 600px)
-    padding-bottom 5%
-  width: 68%
 
 .exercise-set
   display inline-block
