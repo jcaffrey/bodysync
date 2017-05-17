@@ -1,4 +1,4 @@
-var success = document.getElementById('success');
+entById('success');
 var form = document.forms[0];
 
 // =============================================================
@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            getPatientView();
         });
     }).catch(submitError);
 }
@@ -254,6 +255,18 @@ function getPatients() {
     }).catch(submitError);
 }
 
+function getPatientView (){
+  fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
+  ).then(function(res) {
+      if (!res.ok) throw(res);
+      res.json().then(function(info) {
+          localStorage.patientInfo = JSON.stringify([info]);
+      });
+      loadProgress(localStorage.patientInfo);
+      window.location = '/patient-home';
+  }).catch(submitError);
+}
+
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
@@ -385,30 +398,181 @@ function loadPatients(patients) {
 }
 
 function change(e) {
-  e.style.display = "none";
+<<<<<<< HEAD
+  e.style.display ="none";
 }
 
 function change1(e) {
-  e.style.display= "inline-block";
+  e.style.display="inline-block";
+=======
+    e.style.display = "none";
+}
+
+function change1(e) {
+    e.style.display= "inline-block";
+>>>>>>> 6207287860bba874bdb21b1da031667fe0de9909
 }
 
 function change2(e) {
-  e.style.background="#2e3192";
+    e.style.background="#2e3192";
 }
 
 function change3(e) {
-  e.style.background="#bbb";
+    e.style.background="#bbb";
 }
 
 function change4(e) {
-  e.style.opacity="1";
+    e.style.opacity="1";
 }
 
 function change4(e) {
-  e.style.opacity="0.5";
+    e.style.opacity="0.5";
 }
 
 function loadFocusPatient () {
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var sum = 0;
+    var count = 0;
+    for (var k = 0; k < pfp.progress.length; k++) {
+        var value = pfp.progress[k];
+        if (value != null) {
+            sum += +value[0];
+            count++;
+        }
+    }
+    var percent = (sum / count).toFixed(1);
+    var indicator = color(percent);
+
+    // html for pt-box
+    var ptBox = document.createElement('div');
+    // adding pic-box
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+    // adding info-box
+    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+    ptBox.innerHTML = ptBoxHTML;
+
+    // html for menu-box
+    var menuBox = document.createElement('div');
+    menuBox.setAttribute('class', 'menu-box');
+    menuBox.setAttribute('id', 'menuBox');
+    menuBox.style.display = 'inline-block';
+    menuBox.style.display = 'none';
+
+    // adding menu-top
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox)", change4(bottomBox)">X</button></div></div>';
+
+    // adding menu-options
+    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="change1(iconOverview); change(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+
+    // getting injuries
+    var menuInjuries = '';
+    for (var j = 0; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:none;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+
+        }
+    }
+    menuBoxHTML += menuInjuries + '</div>';
+    menuBox.innerHTML = menuBoxHTML;
+
+    // html for outer-info-box
+    var outBox = document.createElement('div');
+
+    // adding top-box
+    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
+
+    // adding bottom-box
+<<<<<<< HEAD
+      // getting injury list
+      var collapseContent = '';
+      for (var j = 0; j < pfp.progress.length; j++) {
+          var val = pfp.progress[j];
+          if (val !== null) {
+              c = '#' + color(val[0])[0];
+              collapseContent +=
+                  '<div class="collapse-inner">' +
+                  '<div class="input-label">' + val[1] + '</div>' +
+                  '<div class="input-percent1" style="color:' + c + '">';
+              if (c === '#bbbbbb') {
+                  collapseContent += 'N/A</div>';
+              } else {
+                  collapseContent += val[0] + '%</div>';
+              }
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
+          }
+      }
+      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+      // getting exercise set
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
+                    '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
+      // getting notes
+      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+
+      // adding body-part-box
+        // percentage-box
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
+        // legend
+        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+        // graph
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
+=======
+    // getting injury list
+    var collapseContent = '';
+    for (var j = 0; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            c = '#' + color(val[0])[0];
+            collapseContent +=
+                '<div class="collapse-inner">' +
+                '<div class="input-label">' + val[1] + '</div>' +
+                '<div class="input-percent1" style="color:' + c + '">';
+            if (c === '#bbbbbb') {
+                collapseContent += 'N/A</div>';
+            } else {
+                collapseContent += val[0] + '%</div>';
+            }
+            collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
+        }
+    }
+    outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+    // getting exercise set
+    outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+    // getting notes
+    outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+
+    // adding body-part-box
+    // percentage-box
+    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
+    // legend
+    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+    // graph
+    outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
+>>>>>>> 6207287860bba874bdb21b1da031667fe0de9909
+
+    // adding transition-box
+    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
+    outBox.innerHTML = outBoxHTML;
+    var container = document.getElementById('status').appendChild(ptBox);
+    container.appendChild(menuBox);
+    container.appendChild(outBox);
+
+    createGraph();
+}
+
+function colorPercent (percent, col){
+    if (percent === 'bbbbbb') {
+        return '<span>N/A</span>';
+    }
+    else {
+        return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
+    }
+}
+
+function loadPatientGeneralInfo (){
   var pfp = JSON.parse(localStorage.focusPatient);
   var sum = 0;
   var count = 0;
@@ -433,88 +597,12 @@ function loadFocusPatient () {
     '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
     ptBox.innerHTML = ptBoxHTML;
 
-  // html for menu-box
-    var menuBox = document.createElement('div');
-    menuBox.setAttribute('class', 'menu-box');
-    menuBox.setAttribute('id', 'menuBox');
-    menuBox.style.display = 'inline-block';
-    menuBox.style.display = 'none';
+    var container = document.getElementById('generalInfo').appendChild(ptBox);
 
-    // adding menu-top
-    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox)", change4(bottomBox)">X</button></div></div>';
 
-    // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="change1(iconOverview); change(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
-
-    // getting injuries
-    var menuInjuries = '';
-    for (var j = 0; j < pfp.progress.length; j++) {
-        var val = pfp.progress[j];
-        if (val !== null) {
-            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:inline-block;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
-
-        }
-    }
-    menuBoxHTML += menuInjuries + '</div>';
-    menuBox.innerHTML = menuBoxHTML;
-
-  // html for outer-info-box
-    var outBox = document.createElement('div');
-
-    // adding top-box
-    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
-
-    // adding bottom-box
-      // getting injury list
-      var collapseContent = '';
-      for (var j = 0; j < pfp.progress.length; j++) {
-          var val = pfp.progress[j];
-          if (val !== null) {
-              c = '#' + color(val[0])[0];
-              collapseContent +=
-                  '<div class="collapse-inner">' +
-                  '<div class="input-label">' + val[1] + '</div>' +
-                  '<div class="input-percent1" style="color:' + c + '">';
-              if (c === '#bbbbbb') {
-                  collapseContent += 'N/A</div>';
-              } else {
-                  collapseContent += val[0] + '%</div>';
-              }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
-          }
-      }
-      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
-      // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
-      // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
-
-      // adding body-part-box
-        // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
-        // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
-
-    // adding transition-box
-    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
-    outBox.innerHTML = outBoxHTML;
-    var container = document.getElementById('status').appendChild(ptBox);
-    container.appendChild(menuBox);
-    container.appendChild(outBox);
-
-    createGraph();
 }
 
-function colorPercent (percent, col){
-  if (percent === 'bbbbbb') {
-      return '<span>N/A</span>';
-  }
-  else {
-      return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
-  }
-}
+
 
 
 // change to status html
@@ -740,9 +828,9 @@ function sortProg() {
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
     for (var i = 0; i < patients.length; i++) {
-      if (patients[i].id == id) {
-        localStorage.focusPatient = JSON.stringify(patients[i]);
-      }
+        if (patients[i].id == id) {
+            localStorage.focusPatient = JSON.stringify(patients[i]);
+        }
     }
 }
 
@@ -759,19 +847,19 @@ function loadAddMeasure () {
         if (data.progress[i] !== null) {
             content +=
                 '<div class="inputs">' +
-                    '<div class="input-box input-header">' +
-                        '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
+                '<div class="input-box input-header">' +
+                '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
                 '<div class="input-label"></div></div>' +
                 '<div class="progress-icon"></div></div>' +
                 '<div class="input-box input-bottom">' +
-                    '<div class="measure-container">' +
-                        '<div class="m-old">' +
-                            '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
-                            '<div class="m-label">PREVIOUS</div></div>' +
-                        '<div class="m-new">' +
-                            '<div class="num">' +
-                                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
-                            '<div class="m-label">NEW</div></div></div></div>' +
+                '<div class="measure-container">' +
+                '<div class="m-old">' +
+                '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
+                '<div class="m-label">PREVIOUS</div></div>' +
+                '<div class="m-new">' +
+                '<div class="num">' +
+                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
+                '<div class="m-label">NEW</div></div></div></div>' +
                 '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
@@ -970,5 +1058,5 @@ function createGraph() {
         ;
 
     }, 1000);
-}
 
+}
