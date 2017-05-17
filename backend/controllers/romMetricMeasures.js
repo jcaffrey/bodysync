@@ -73,7 +73,7 @@ module.exports.createMeasure = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getMeasures = (req, res, next) => {

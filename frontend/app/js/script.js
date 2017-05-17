@@ -97,6 +97,23 @@ function submitForm() {
         .catch(submitError)
 }
 
+function postMeasure (id, degree, lastGoal) {
+    var d = new Date();
+    var data = {
+        dayMeasured: d.toMysqlFormat(),
+        nextGoal: lastGoal,
+        degreeValue: degree
+    };
+    fetch('/romMetrics/' + id + '/romMetricMeasures', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+    }).catch(function (err) { console.log(err) });
+}
+
 // surgeryType, romStart, romEnd, notes in schema????
 function submitPatient() {
     var data = {};
@@ -120,8 +137,34 @@ function submitPatient() {
         },
         method: 'POST',
         body: JSON.stringify(data)
-    }).then(submitSuccess)
-        .catch(submitError)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            var injuries = document.getElementsByClassName('rom-name-input');
+            var degrees = document.getElementsByClassName('degrees');
+            for (var i = 0; i < injuries.length; i++) {
+                (function(x) {
+                    fetch('/patients/' + result.id + '/injuries', {
+                        headers: {
+                            'x-access-token': localStorage.token,
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: injuries[x].value,
+                            injuryFromSurgery: "true"
+                        })
+                    }).then(function (res1) {
+                        if (!res1.ok) return submitError(res1);
+                        else return res1.json().then(function (result1) {
+                            console.log('posting to injury id ' + result1.id + 'with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
+                            postMeasure(result1.id, degrees[(2 * x) + 5].value, degrees[(2 * x) + 6].value);
+                        })
+                    }).catch(submitError);
+                }(i))
+            }
+        });
+    }).catch(submitError);
 }
 
 function getGraphData(id) {
@@ -747,7 +790,6 @@ function search(query, array) {
         if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
     }
-    localStorage.display = JSON.stringify(temp);
     load();
 }
 
@@ -870,6 +912,7 @@ function submitMeasure (id, i, lastGoal, lastMeasure) {
         nextGoal: lastGoal
     };
     data.degreeValue = form[i].value || lastMeasure;
+    console.log(JSON.stringify(data));
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
             'Content-Type': 'application/json'},
