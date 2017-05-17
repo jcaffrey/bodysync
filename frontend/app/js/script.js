@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            getPatientView();
         });
     }).catch(submitError);
 }
@@ -254,6 +255,18 @@ function getPatients() {
     }).catch(submitError);
 }
 
+function getPatientView (){
+  fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
+  ).then(function(res) {
+      if (!res.ok) throw(res);
+      res.json().then(function(info) {
+          localStorage.patientInfo = JSON.stringify([info]);
+      });
+      loadProgress(localStorage.patientInfo);
+      window.location = '/patient-home';
+  }).catch(submitError);
+}
+
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
@@ -385,11 +398,11 @@ function loadPatients(patients) {
 }
 
 function change(e) {
-  e.style.display = "none";
+  e.style.display ="none";
 }
 
 function change1(e) {
-  e.style.display= "inline-block";
+  e.style.display="inline-block";
 }
 
 function change2(e) {
@@ -451,7 +464,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:inline-block;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:none;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
 
         }
     }
@@ -485,7 +498,8 @@ function loadFocusPatient () {
       }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
+                    '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       // getting notes
       outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
@@ -515,6 +529,38 @@ function colorPercent (percent, col){
       return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
   }
 }
+
+function loadPatientGeneralInfo (){
+  var pfp = JSON.parse(localStorage.focusPatient);
+  var sum = 0;
+  var count = 0;
+  for (var k = 0; k < pfp.progress.length; k++) {
+      var value = pfp.progress[k];
+      if (value != null) {
+          sum += +value[0];
+          count++;
+      }
+  }
+  var percent = (sum / count).toFixed(1);
+  var indicator = color(percent);
+
+  // html for pt-box
+    var ptBox = document.createElement('div');
+    // adding pic-box
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+    // adding info-box
+    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+    ptBox.innerHTML = ptBoxHTML;
+
+    var container = document.getElementById('generalInfo').appendChild(ptBox);
+
+
+}
+
+
 
 
 // change to status html
@@ -962,4 +1008,3 @@ function createGraph() {
 
     }, 1000);
 }
-

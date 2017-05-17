@@ -1,6 +1,17 @@
 extends template
 
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/exercise-set.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    script.
+      window.onload = function() {
+          //loadPatientGeneralInfo();
+      }
+
+
 block content
+    #generalInfo
     p#loginTitle(style="font-size: 1.5em; color: #BBB;") Welcome back,
     #loginTitle(style="padding-top:1%; padding-bottom: 4%;") #{firstName}
     div(style="padding-left: 25%")
