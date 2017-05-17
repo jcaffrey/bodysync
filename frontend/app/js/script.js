@@ -487,7 +487,7 @@ function loadFocusPatient () {
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
       // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" placeholder="Enter notes here..."></textarea></div></div>';
+      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
       // adding body-part-box
         // percentage-box
