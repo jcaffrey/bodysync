@@ -491,11 +491,11 @@ function loadFocusPatient () {
 
       // adding body-part-box
         // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + percent + '</div><div class="recoveryText">to full recovery</div></div>';
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"><script src="http://d3js.org/d3.v3.min.js"></script></div></div></div></div>';
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -503,6 +503,8 @@ function loadFocusPatient () {
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
+
+    createGraph();
 }
 
 function colorPercent (percent, col){
@@ -957,4 +959,3 @@ function createGraph() {
     }, 1000);
 }
 
-createGraph();
