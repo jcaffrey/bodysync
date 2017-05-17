@@ -356,7 +356,7 @@ function loadPatients(patients) {
                         collapseContent +=
                             '<div class="collapse-inner">' +
                             '<div class="input-label">' + val[1] + '</div>' +
-                            '<div class="input-percent1" style="color:' + c + '">';
+                            '<div class="input-percent" style="color:' + c + '">';
                         if (c === '#bbbbbb') {
                             collapseContent += 'N/A</div>';
                         } else {
@@ -398,19 +398,11 @@ function loadPatients(patients) {
 }
 
 function change(e) {
-<<<<<<< HEAD
   e.style.display ="none";
 }
 
 function change1(e) {
   e.style.display="inline-block";
-=======
-    e.style.display = "none";
-}
-
-function change1(e) {
-    e.style.display= "inline-block";
->>>>>>> 6207287860bba874bdb21b1da031667fe0de9909
 }
 
 function change2(e) {
@@ -428,6 +420,28 @@ function change4(e) {
 function change4(e) {
     e.style.opacity="0.5";
 }
+
+function change6(e) {
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var count = 0;
+    for (var j = 1; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            var ele = eval('(' + "iconGraph" + (count + 1) + ')');
+            if (ele != e) {
+                change(ele);
+            count++;
+            }
+        }
+    }
+}
+
+function chooseInjury (c) {
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var val = pfp.progress[c];
+    return(val[0]);
+}
+
 
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
@@ -462,18 +476,19 @@ function loadFocusPatient () {
     menuBox.style.display = 'none';
 
     // adding menu-top
-    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox)", change4(bottomBox)">X</button></div></div>';
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option"><div class="menu-icon" id="iconOverview"></div><span onclick="change1(iconOverview); change(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
+    var count = 0;
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option"><div class="menu-icon" id="iconGraph" style="display:none;"></div><span onclick="change(iconOverview); change1(iconGraph); change2(iconOverviewTrans); change3(iconGraphOneTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
-
+            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="chooseInjury(' + j + '); change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change1(body); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            count++;
         }
     }
     menuBoxHTML += menuInjuries + '</div>';
@@ -486,23 +501,24 @@ function loadFocusPatient () {
     var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
     // adding bottom-box
-<<<<<<< HEAD
       // getting injury list
       var collapseContent = '';
+      var count = 0;
       for (var j = 0; j < pfp.progress.length; j++) {
           var val = pfp.progress[j];
           if (val !== null) {
               c = '#' + color(val[0])[0];
               collapseContent +=
                   '<div class="collapse-inner">' +
-                  '<div class="input-label">' + val[1] + '</div>' +
-                  '<div class="input-percent1" style="color:' + c + '">';
+                  '<div class="input-label" id="input-label' + count + '">' + val[1] + '</div>' +
+                  '<div class="input-percent" id="input-percent' + count + '" style="color:' + c + '">';
               if (c === '#bbbbbb') {
                   collapseContent += 'N/A</div>';
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              count++;
           }
       }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
@@ -514,47 +530,14 @@ function loadFocusPatient () {
 
       // adding body-part-box
         // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + percent + '%' + '</div><div class="recoveryText">recovered</div></div>';
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
         // graph
         outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
-=======
-    // getting injury list
-    var collapseContent = '';
-    for (var j = 0; j < pfp.progress.length; j++) {
-        var val = pfp.progress[j];
-        if (val !== null) {
-            c = '#' + color(val[0])[0];
-            collapseContent +=
-                '<div class="collapse-inner">' +
-                '<div class="input-label">' + val[1] + '</div>' +
-                '<div class="input-percent1" style="color:' + c + '">';
-            if (c === '#bbbbbb') {
-                collapseContent += 'N/A</div>';
-            } else {
-                collapseContent += val[0] + '%</div>';
-            }
-            collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph-symbol" onclick="change(iconOverview); change1(iconGraph); change3(iconOverviewTrans); change2(iconGraphOneTrans); change(overviewBox); change1(bodyBox)"></div></div>';
-        }
-    }
-    outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
-    // getting exercise set
-    outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
-    // getting notes
-    outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
-
-    // adding body-part-box
-    // percentage-box
-    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + (100 - percent) + '</div><div class="recoveryText">to full recovery</div></div>';
-    // legend
-    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
-    // graph
-    outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
->>>>>>> 6207287860bba874bdb21b1da031667fe0de9909
 
     // adding transition-box
-    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphOneTrans" style="background: rgb(187, 187, 187)"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
+    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
     outBox.innerHTML = outBoxHTML;
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
