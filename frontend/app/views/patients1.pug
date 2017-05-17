@@ -1,8 +1,12 @@
 extends template
 
 block cssSheets
-    link(rel='stylesheet', href='/stylesheets/patients.css')
+    link(rel='stylesheet', href='/stylesheets/patients1.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        window.onload = function() {
+            loadStart();
+        }
     script.
         // ================================================================
         //  Collapse button functionality
@@ -77,74 +81,14 @@ block content
     form
         .search-bar
             img(src='../../img/search-icon.png' id='searchIcon')
-            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients")
-            img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="pSearch()")
-            img(src='../../img/health.png' id='health' onclick="pSearch()")
-        .pt-box
-            .pic-box
-                img(src='../../img/profile_pic.jpg' id='profileImg')
-                img(src='../../img/upIcon.png' id='upIcon')
-            .info-box
-                .name Abdul
-                .recovery-box
-                    .percent1
-                        span 70%
-                    .recovery
-                        span Recovered
-            .arrow(onclick="displayCollapse('collapse')") ▼
-            //- .buttonCollapse(data-target=".collapse")
-            .buttonCollapse
-                .collapse#collapse
-                    // Collapsible info here!!
-                    hr
-                    .space
-                    .collapse-inner
-                        .input-label Shoulder
-                        .input-percent1 70%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph')
-                    .collapse-inner
-                        .input-label Neck - Side
-                        .input-percent2 50%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph')
-                    .collapse-inner
-                        .input-label Neck - Front
-                        .input-percent3 30%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph')
-                    .space
-                    a(href='/patient-status').inspect1 Inspect Patient
-
-        .pt-box
-            .pic-box
-                img(src='../../img/profile_pic.jpg' id='profileImg')
-                img(src='../../img/downIcon.png' id='downIcon')
-            .info-box
-                .name Cameron
-                .recovery-box
-                    .percent2
-                        span 31%
-                    .recovery
-                        span Recovered
-            .arrow(onclick="displayCollapse('collapse1')") ▼
-            .buttonCollapse
-                .collapse#collapse1
-                    // Collapsible info here!!
-                    hr
-                    .space
-                    .collapse-inner
-                        .input-label Arm
-                        .input-percent3 22%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph')
-                    .collapse-inner
-                        .input-label Calf
-                        .input-percent2 40%
-                        .graph-box
-                            img(src='../../img/graph.png' id='graph')
-                    .space
-                    .inspect2 Inspect Patient
+            input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients"
+                onkeypress="if (event.keyCode == 13) { event.preventDefault(); pSearch() } else { }")
+            img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="sortAlpha()")
+            img(src='../../img/health.png' id='health' onclick="sortProg()")
+        #loading
+            p Loading
+            img(src='../../img/loading.gif')
+        #patients
 
         .plus-button
             a(href='/create-patient').add +

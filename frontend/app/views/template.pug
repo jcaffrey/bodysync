@@ -3,6 +3,7 @@ html
     head
         meta(name='viewport', content='width=device-width', initial-scale='1')
         title= title || "Body Sync"
+        link(href='/img/favicon.png' rel='icon' type='image/png')
         link(rel='stylesheet', href='/stylesheets/style.css')
         block cssSheets
         script(src='/js/fetch.js')
@@ -10,26 +11,20 @@ html
         div#header
             block header
                 div.profile-box
-                    div.profile-box-left
-                        div#profileName #{firstName}
-                        div.profile-buttons
-                            a(href='#')
-                                button.profileAction#settingsButton Settings
-                            a(href='#' onclick="logout()")
-                                button.profileAction#logOutButton Log Out
+                    div#navbar
+                        a(href='/patients1').navButton.active Home
                     div.profile-box-right
-                        img(src='img/profile_pic.jpg' id='profileImg')
-
-                div#navbar
-                    if userType === 'patient'
-                        a(href='#' class='navButton active') Exercises
-                        a(href='#' class='navButton') Overview
-                    else
-                        a(href='#' class='navButton active') Patients
-                        a(href='#' class='navButton') Exercise Sets
+                        img(src='img/profile_pic.jpg' id='profileImg1')
+                    div.profile-box-left
+                        div#profileName
+                        div.profile-buttons
+                            a(href='#' onclick="logout()")
+                                .profileAction#logOutButton Log Out
+        div#space
 
         div#content
             block content
+
         block footer
             div#footer
                 div#errorContainer
@@ -38,16 +33,14 @@ html
                     div#passwordError.validationError
                     div#passwordConfirmError.validationError
                     div#phoneError.validationError
-                button.footerButton#buttonLeft(type='button') #{footerButton}
+                a.footerButton#buttonLeft(href=url) #{footerButton}
                 block submitForm
-                //script.
-                //    document.getElementById('buttonLeft').style.width = "100%";
-                //    document.getElementById('buttonRight').style.display = "none";
 
-        //- script(src='/js/bootstrap.js')
         script(src='/js/script.min.js')
         if token
             script localStorage.token = "#{token}"
+        script.
+            document.getElementById('profileName').innerHTML = localStorage.email
         block postScript
         if dev
             script(src='//localhost:10000/livereload.js')

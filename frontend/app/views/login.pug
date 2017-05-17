@@ -11,27 +11,26 @@ block cssSheets
 block header
 
 block content
-    #loginTitle Login
+    .loginTitle Login
     form#loginForm.form
         .inputs
-            button.tablinks#buttonTabPatient(type='button' onclick="changeTab(event, 'tabPatient')") Patient
-            button.tablinks#buttonTabPT(type='button' onclick="changeTab(event, 'tabPT')") PT
-            .tabcontent#tabPatient
-                .input-box
-                    input.text-input(type='emailp' name='emailp' placeholder='abc@xyz.com' maxlength="24")
-                    .input-name Email
-                .input-box
-                    input.text-input(type='passwordp' name='passwordp' placeholder='********' maxlength="24")
-                    .input-name Password
-            .tabcontent#tabPT
-                .input-box
-                    input.text-input(type='email' name='email' placeholder='abc@xyz.com' maxlength="24")
-                    .input-name PT Email
-                .input-box
-                    input.text-input(type='password' name='password' placeholder='********' maxlength="24")
-                    .input-name Password
+            .input-box
+                .radio1
+                    label.user-radio PT
+                    input(type='radio' id="PT" name='user-type' value="PT")
+                .radio2
+                    label.user-radio PATIENT
+                    input(type='radio' id="Patient" name='user-type' value="Patient")
+            .input-box
+                input.text-input(type='email' name='email' placeholder='example@domain.com' maxlength="24")
+                .input-name Email
+            .input-box
+                input.text-input(type='password' name='password' placeholder='********' maxlength="24"
+                    onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
+                        "else { submitPatientLogin() }} else {} ")
+                .input-name Password
     //a#forgotPassword Forgot Password
-    a#loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
+    a.loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
     p#success
     p#js-error-message
         script.
@@ -57,5 +56,7 @@ block content
             }
             submitOnEnterKey(submitLogin);
 
+
 block submitForm
-    button.footerButton#buttonRight(type='button' onclick='submitLogin()') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='if (PT.checked == true) {submitLogin()}' +
+    'else { submitPatientLogin() }') #{footerButton2}

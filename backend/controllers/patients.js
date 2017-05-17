@@ -22,21 +22,33 @@ var config = require('../config/config.json')[env];
 module.exports.createPatient = (req, res, next) => {
     if(auth.checkRequestIdAgainstId(req, res)) {
         // TODO: send email to patient, update fields, route them same way the forgot password works?
-        models.patient.create({
-            name: req.body.name,
-            email: req.body.email,
-            phoneNumber: req.body.phoneNumber,
-            phoneProvider: req.body.phoneProvider,
-            surgeryType: req.body.surgeryType,
-            ptId: req.params.id,
-            hash: models.patient.generateHash(req.body.hash) // add hash and token
-        }).then(function(patient) {
-            res.json(patient);
-            return next();
+        // TODO: make sure that no pt has the same email as the patient
+        models.pt.findAll({
+            where: {
+                email: req.body.email
+            }
+        }).then(function (user) {
+            if(Object.keys(user).length !== 0) {
+                res.status(405).send('sorry that email is taken');
+            } else {
+                models.patient.create({
+                    name: req.body.name,
+                    email: req.body.email,
+                    phoneNumber: req.body.phoneNumber,
+                    phoneProvider: req.body.phoneProvider,
+                    surgeryType: req.body.surgeryType,
+                    ptId: req.params.id,
+                    hash: models.patient.generateHash(req.body.hash) // add hash and token
+                }).then(function(patient) {
+                    res.json(patient);
+                    return next();
+                }).catch(function (err) {
+                    return next(err);
+                })
+            }
         }).catch(function (err) {
             return next(err);
         })
-    
     }
     return;
 };

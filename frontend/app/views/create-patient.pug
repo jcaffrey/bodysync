@@ -5,17 +5,23 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
 
 block content
-
+    #js-error-message
     form
         .inputs
             .input-box#patname
                 input.text-input(type='name' name='name' placeholder='John Smith ' onblur="checkName(this.value)" maxlength="24")
                 img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
             .input-box
-                input.text-input(type='email' name='email' placeholder='abc@xyz.com ' onblur="checkEmail(this.value)" maxlength="24")
+                input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)" maxlength="50")
                 .input-name Email
             .input-box
-                input.text-input(type='phone' id='phone' name='phone' placeholder='(123)456-7891 ' onblur="checkPhone(this.value)" maxlength="13" onkeypress="return isNumberKey(event)")
+                input.text-input(type='text' name='surgery' placeholder='Arm' maxlength="24")
+                .input-name Surgery Type
+            .input-box
+                input.text-input(type='password' name='hash' placeholder='********' maxlength="24")
+                .input-name Password
+            .input-box.last-box
+                input.text-input(type='phone' id='phone' name='phone' placeholder='(123) 456-7891 ' onblur="checkPhone(this.value)" maxlength="13" onkeypress="return isNumberKey(event)")
                 .input-name Phone #
         br
         .inputs#rom-inputs
@@ -27,10 +33,10 @@ block content
                 .rom2
                     .rom-label Ending Range of Motion
                     input.text-input(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkEmail(this.value)")
-            .input-box#rom-add(onclick="addMotion()") Add Motion
+            .input-box.last-box#rom-add(onclick="addMotion()") Add Motion
         br
         .inputs
-            .input-box
+            .input-box.last-box
                 .rom-label#notes Notes
                 textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement. ")
     p#success
@@ -101,4 +107,4 @@ block content
             }
 
 block submitForm
-    button.footerButton#buttonRight(type='button' onclick='submitPatient(' + ptId + ')') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='submitPatient()') #{footerButton2}
