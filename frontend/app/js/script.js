@@ -681,140 +681,147 @@ function submitMeasures () {
 // =============================================================
 //  Progress Graph
 // =============================================================
-var w, h;
+function createGraph() {
+    setTimeout(function () {
+        var w, h;
 
-if (window.innerWidth < 770) {
-    w = 7 * window.innerWidth / 12;
-    h = 2 * window.innerHeight / 5;
-}
+        if (window.innerWidth < 770) {
+            w = 7 * window.innerWidth / 12;
+            h = 2 * window.innerHeight / 5;
+        }
 
-else {
-    w = window.innerWidth / 3;
-    h = window.innerHeight / 3;
-}
-
-
-
-var degreeValue = [32, 35, 40, 45];
-
-var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-
-var goal = 60;
-
-var next_weeks_goal = 50;
-
-var next_weeks_goal_date = (new Date(2017, 3, 29));
-
-var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-
-var goal_point = [50, 4];
-
-var min_y = d3.min(degreeValue) - 20;
-
-var max_y = goal + 10;
-
-var min_x = new Date(dayMeasured[0].getTime() - (60*60*24*7*1000));
-
-var max_x = next_weeks_goal_date;
-
-var start_end = [min_x, max_x];
+        else {
+            w = window.innerWidth / 3;
+            h = window.innerHeight / 3;
+        }
 
 
 
-var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
-var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
+        var degreeValue = [32, 35, 40, 45];
 
-var line = d3.svg.line()
-    .x(function (d, i) {
-        return x(dayMeasured[i]) ;
-    })
-    .y(function (d, i) {
-        return y(degreeValue[i]);
-    });
+        var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
 
-var line2 = d3.svg.line()
-    .x(function (d, i) {
-        return x(start_end[i]);
-    })
-    .y(function () {
-        return y(goal);
-    } );
+        var goal = 60;
 
-var line3 = d3.svg.line()
-    .x(function (d, i) {
-        return x(next_weeks_goal_date[i]);
-    })
-    .y(function (d, i) {
-        return y(next_weeks_goal[i]);
-    });
+        var next_weeks_goal = 50;
+
+        var next_weeks_goal_date = (new Date(2017, 3, 29));
+
+        var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+
+        var goal_point = [50, 4];
+
+        var min_y = d3.min(degreeValue) - 20;
+
+        var max_y = goal + 10;
+
+        var min_x = new Date(dayMeasured[0].getTime() - (60*60*24*7*1000));
+
+        var max_x = next_weeks_goal_date;
+
+        var start_end = [min_x, max_x];
+
+
+
+        var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
+        var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
+
+        var line = d3.svg.line()
+            .x(function (d, i) {
+                return x(dayMeasured[i]) ;
+            })
+            .y(function (d, i) {
+                return y(degreeValue[i]);
+            });
+
+        var line2 = d3.svg.line()
+            .x(function (d, i) {
+                return x(start_end[i]);
+            })
+            .y(function () {
+                return y(goal);
+            } );
+
+        var line3 = d3.svg.line()
+            .x(function (d, i) {
+                return x(next_weeks_goal_date[i]);
+            })
+            .y(function (d, i) {
+                return y(next_weeks_goal[i]);
+            });
 
 
 
 // Add an SVG element with the desired dimensions and margin.
-var graph = d3.select("#graph").append("svg")
-    .attr("width", "100%")
-    .attr("height", "95%")
-    .append("svg:g")
-    .attr("transform", "translate(20,-35)");
+        var graph = d3.select("#graph").append("svg")
+            .attr("width", "100%")
+            .attr("height", "95%")
+            .append("svg:g")
+            .attr("transform", "translate(20,-35)");
 // create xAxis
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .ticks(5)
-    .tickSize(0)
-    .tickFormat(d3.time.format("%-m/%-d"))
-    .tickPadding(4);
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .ticks(5)
+            .tickSize(0)
+            .tickFormat(d3.time.format("%-m/%-d"))
+            .tickPadding(4);
 
 
 // create left yAxis
-var yAxisLeft = d3.svg.axis()
-    .scale(y)
-    .ticks(5)
-    .tickSize(0)
-    .orient("left");
+        var yAxisLeft = d3.svg.axis()
+            .scale(y)
+            .ticks(5)
+            .tickSize(0)
+            .orient("left");
 
-graph.append("svg:g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(20," + h + ")")
-    .call(xAxis);
+        graph.append("svg:g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(20," + h + ")")
+            .call(xAxis);
 
-graph.append("svg:g")
-    .attr("transform", "translate(20,0)")
-    .attr("class", "y axis")
-    .call(yAxisLeft);
+        graph.append("svg:g")
+            .attr("transform", "translate(20,0)")
+            .attr("class", "y axis")
+            .call(yAxisLeft);
 
-graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
-    .attr("transform", "translate(20, 0)");
-graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
-    .attr("transform", "translate(20,0)")
-    .attr("class", "horizontalLine");
-graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
-    .attr("transform", "translate(20, 0)");
+        graph.append("svg:path").attr("d", line(degreeValue, dayMeasured))
+            .attr("transform", "translate(20, 0)");
+        graph.append("svg:path").attr("d", line2(degreeValue, dayMeasured))
+            .attr("transform", "translate(20,0)")
+            .attr("class", "horizontalLine");
+        graph.append("svg:path").attr("d", line3(next_weeks_goal, next_weeks_goal_date))
+            .attr("transform", "translate(20, 0)");
 
-    graph.selectAll(".point")
-        .data(points)
-        .enter().append("circle")
-        .attr("class", "circles")
-        .attr("cx", function (d, i) {
-            return x(dayMeasured[i]);
-        })
-        .attr("cy", function (d, i) {
-            return y(degreeValue[i]);
-        })
-        .attr("r", (w / 25))
-        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-    ;
+        graph.selectAll(".point")
+            .data(points)
+            .enter().append("circle")
+            .attr("class", "circles")
+            .attr("cx", function (d, i) {
+                return x(dayMeasured[i]);
+            })
+            .attr("cy", function (d, i) {
+                return y(degreeValue[i]);
+            })
+            .attr("r", (w / 25))
+            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+        ;
 
-    graph.selectAll(".point")
-        .data(goal_point)
-        .enter().append("circle")
-        .attr("class", "goal-point")
-        .attr("cx", function (d, i) {
-            return x(next_weeks_goal_date);
-        })
-        .attr("cy", function (d, i) {
-            return y(next_weeks_goal);
-        })
-        .attr("r", (w / 25))
-        .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
-    ;
+        graph.selectAll(".point")
+            .data(goal_point)
+            .enter().append("circle")
+            .attr("class", "goal-point")
+            .attr("cx", function (d, i) {
+                return x(next_weeks_goal_date);
+            })
+            .attr("cy", function (d, i) {
+                return y(next_weeks_goal);
+            })
+            .attr("r", (w / 25))
+            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+        ;
+
+    }, 1000);
+}
+
+createGraph();
