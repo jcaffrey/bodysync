@@ -3,23 +3,19 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-set.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    script.
+      window.onload = function() {
+          loadPatientGeneralInfo();
+      }
+
 block content
     form
-        .pt-box
-            .pic-box
-                img(src='../../img/profile_pic.jpg' id='profileImg')
-                img(src='../../img/upIcon.png' id='upIcon')
-            .info-box
-                .name Abdul
-                .recovery-box
-                    .percent1
-                        span 70%
-                    .recovery
-                        span Recovered
+        #generalInfo
         h1 Exercise Set
         button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
         .pt-box
-            .arrows 
+            .arrows
                 .up ▲
                 .down ▼
             .exercise-box
