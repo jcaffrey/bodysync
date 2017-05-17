@@ -598,8 +598,6 @@ function loadStatus(patient) {
     }
 }
 
-
-
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -763,7 +761,7 @@ function loadAddMeasure () {
                             '<div class="num">' +
                                 '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
                             '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
     }
@@ -809,6 +807,12 @@ function submitMeasures () {
             count++;
         }
     }
+    window.location = '/patients1';
+}
+
+function submitOne (id, i, lastGoal, lastMeasure) {
+    submitMeasure(id, i, lastGoal, lastMeasure);
+    window.location = '/patients1';
 }
 
 // =============================================================
