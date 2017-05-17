@@ -105,6 +105,15 @@ router.get('/patients/:id/injuries', function(req, res, next) {
     })
 });
 
+router.post('/patients/:id/injuries', function(req, res, next) {
+    if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
+    request.post({
+        url: config.apiUrl + '/patients/' + req.params.id + '/injuries',
+        headers: { 'x-access-token': req.headers['x-access-token'] || req.query.token },
+        form: req.body
+    }).pipe(res);
+});
+
 router.get('/findInjuries/:id', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
