@@ -9,7 +9,7 @@ var nodemailer = require('nodemailer')
 
 /*
 
-    Token creation 
+    Token creation
 
     TBU: clean this up, catch
 
@@ -84,7 +84,7 @@ exports.loginPt = (req, res, next) => {
 exports.loginPatient = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.password !== 'string') 
+    if (typeof req.body.password !== 'string')
         return res.status(400).send('No password');
 
 
@@ -98,7 +98,7 @@ exports.loginPatient = (req, res, next) => {
             var payload = {id: patient.id, sessionNumber: null, isPt: false, isAdmin: false};
 
             var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
-         
+
             patient.token = token;
             patient.save()
                 .then(function () {
@@ -126,12 +126,12 @@ exports.forgotPassword = (req, res, next) => {
         where: {email: req.body.email}
     })
     .then(function(user) {
-        if (!user) { 
+        if (!user) {
             model.pt.findOne({
                 where: {email: req.body.email}
             })
             .then(function(user2) {
-                if (!user2) 
+                if (!user2)
                     return res.status(400).send('No account associated with that email');
                 user = user2;
             });
@@ -183,12 +183,12 @@ exports.resetPassword = (req, res, next) => {
     if (req.body.password !== req.body.confirm)
         return res.status(400).send('Passwords do not match');
 
-    models.patient.findOne({ 
+    models.patient.findOne({
         where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
     })
     .then(function(user){
         if (!user) {
-                models.patient.findOne({ 
+                models.patient.findOne({
                     where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
                 })
                 .then(function(user2){
@@ -263,17 +263,17 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
 
     if (isAdminRequired && !decoded.isAdmin)
         return res.status(403).send('You do not have access');
-    
+
     /*
 
        TBU:  should definitely do some factoring here...
-        
+
      */
 
     // resource is restricted to pts, so validate pt
     if (isPtRequired) {
         models.pt.findOne({
-            where: {id: decoded.id} 
+            where: {id: decoded.id}
         }).then(function(pt) {
             if (!pt) return res.status(403).send('Invalid token');
             var expired = false;
@@ -290,7 +290,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
         // query pt table if pt
         if (decoded.isPt) {
             models.pt.findOne({
-                where: {id: decoded.id} 
+                where: {id: decoded.id}
             }).then(function(pt) {
                 if (!pt) return res.status(403).send('Invalid token');
                 var expired = false;
@@ -307,7 +307,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
         // query patient table if not pt
         else {
             models.patient.findOne({
-                where: {id: decoded.id} 
+                where: {id: decoded.id}
             }).then(function(patient) {
                 if (!patient) return res.status(403).send('Invalid token');
                 var expired = false;
@@ -326,18 +326,18 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
 // call to authorize when requester's id appears in the query
 // i.e. check that request (query) id is same as requester (token) id
 // already retrieved and verified the token, so skipping error handling for the time being
-exports.checkRequestIdAgainstId = (req, res) => { 
+exports.checkRequestIdAgainstId = (req, res) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
-    
+
     // debugging
     // console.log('token id: ' + String(decoded.id));
     // console.log('query id: ' + String(req.params.id));
-    
+
     if (req.params.id != decoded.id) {
         res.status(401).send('You are not authorized to see this resource');
         return false;
-    } else { 
+    } else {
         return true;
     }
     // is bool best way to do this?

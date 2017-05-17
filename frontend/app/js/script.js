@@ -1,4 +1,4 @@
-var success = document.getElementById('success');
+entById('success');
 var form = document.forms[0];
 
 // =============================================================
@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            getPatientView();
         });
     }).catch(submitError);
 }
@@ -254,6 +255,18 @@ function getPatients() {
     }).catch(submitError);
 }
 
+function getPatientView (){
+  fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
+  ).then(function(res) {
+      if (!res.ok) throw(res);
+      res.json().then(function(info) {
+          localStorage.patientInfo = JSON.stringify([info]);
+      });
+      loadProgress(localStorage.patientInfo);
+      window.location = '/patient-home';
+  }).catch(submitError);
+}
+
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
@@ -385,27 +398,27 @@ function loadPatients(patients) {
 }
 
 function change(e) {
-  e.style.display = "none";
+  e.style.display ="none";
 }
 
 function change1(e) {
-  e.style.display= "inline-block";
+  e.style.display="inline-block";
 }
 
 function change2(e) {
-  e.style.background="#2e3192";
+    e.style.background="#2e3192";
 }
 
 function change3(e) {
-  e.style.background="#bbb";
+    e.style.background="#bbb";
 }
 
 function change4(e) {
-  e.style.opacity="1";
+    e.style.opacity="1";
 }
 
-function change5(e) {
-  e.style.opacity="0.5";
+function change4(e) {
+    e.style.opacity="0.5";
 }
 
 function change6(e) {
@@ -431,31 +444,31 @@ function chooseInjury (c) {
 
 
 function loadFocusPatient () {
-  var pfp = JSON.parse(localStorage.focusPatient);
-  var sum = 0;
-  var count = 0;
-  for (var k = 0; k < pfp.progress.length; k++) {
-      var value = pfp.progress[k];
-      if (value != null) {
-          sum += +value[0];
-          count++;
-      }
-  }
-  var percent = (sum / count).toFixed(1);
-  var indicator = color(percent);
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var sum = 0;
+    var count = 0;
+    for (var k = 0; k < pfp.progress.length; k++) {
+        var value = pfp.progress[k];
+        if (value != null) {
+            sum += +value[0];
+            count++;
+        }
+    }
+    var percent = (sum / count).toFixed(1);
+    var indicator = color(percent);
 
-  // html for pt-box
+    // html for pt-box
     var ptBox = document.createElement('div');
     // adding pic-box
     var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
     // adding info-box
     ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
     ptBox.innerHTML = ptBoxHTML;
 
-  // html for menu-box
+    // html for menu-box
     var menuBox = document.createElement('div');
     menuBox.setAttribute('class', 'menu-box');
     menuBox.setAttribute('id', 'menuBox');
@@ -481,7 +494,7 @@ function loadFocusPatient () {
     menuBoxHTML += menuInjuries + '</div>';
     menuBox.innerHTML = menuBoxHTML;
 
-  // html for outer-info-box
+    // html for outer-info-box
     var outBox = document.createElement('div');
 
     // adding top-box
@@ -510,9 +523,10 @@ function loadFocusPatient () {
       }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div></div>';
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
+                    '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" placeholder="Enter notes here..."></textarea></div></div>';
+      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
       // adding body-part-box
         // percentage-box
@@ -533,13 +547,45 @@ function loadFocusPatient () {
 }
 
 function colorPercent (percent, col){
-  if (percent === 'bbbbbb') {
-      return '<span>N/A</span>';
-  }
-  else {
-      return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
-  }
+    if (percent === 'bbbbbb') {
+        return '<span>N/A</span>';
+    }
+    else {
+        return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
+    }
 }
+
+function loadPatientGeneralInfo (){
+  var pfp = JSON.parse(localStorage.focusPatient);
+  var sum = 0;
+  var count = 0;
+  for (var k = 0; k < pfp.progress.length; k++) {
+      var value = pfp.progress[k];
+      if (value != null) {
+          sum += +value[0];
+          count++;
+      }
+  }
+  var percent = (sum / count).toFixed(1);
+  var indicator = color(percent);
+
+  // html for pt-box
+    var ptBox = document.createElement('div');
+    // adding pic-box
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+    // adding info-box
+    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+    ptBox.innerHTML = ptBoxHTML;
+
+    var container = document.getElementById('generalInfo').appendChild(ptBox);
+
+
+}
+
+
 
 
 // change to status html
@@ -753,12 +799,21 @@ function sortProg() {
     load();
 }
 
+// function arrowdown(index) {
+//     var lst = JSON.parse(localStorage.display);
+//     if (not last element in array)
+//         var temp = lst[index];
+//         lst[index] = lst[index+1];
+//         lst[index+1] = temp;
+
+//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
+
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
     for (var i = 0; i < patients.length; i++) {
-      if (patients[i].id == id) {
-        localStorage.focusPatient = JSON.stringify(patients[i]);
-      }
+        if (patients[i].id == id) {
+            localStorage.focusPatient = JSON.stringify(patients[i]);
+        }
     }
 }
 
@@ -775,19 +830,19 @@ function loadAddMeasure () {
         if (data.progress[i] !== null) {
             content +=
                 '<div class="inputs">' +
-                    '<div class="input-box input-header">' +
-                        '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
+                '<div class="input-box input-header">' +
+                '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
                 '<div class="input-label"></div></div>' +
                 '<div class="progress-icon"></div></div>' +
                 '<div class="input-box input-bottom">' +
-                    '<div class="measure-container">' +
-                        '<div class="m-old">' +
-                            '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
-                            '<div class="m-label">PREVIOUS</div></div>' +
-                        '<div class="m-new">' +
-                            '<div class="num">' +
-                                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
-                            '<div class="m-label">NEW</div></div></div></div>' +
+                '<div class="measure-container">' +
+                '<div class="m-old">' +
+                '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
+                '<div class="m-label">PREVIOUS</div></div>' +
+                '<div class="m-new">' +
+                '<div class="num">' +
+                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
+                '<div class="m-label">NEW</div></div></div></div>' +
                 '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
@@ -986,5 +1041,5 @@ function createGraph() {
         ;
 
     }, 1000);
-}
 
+}

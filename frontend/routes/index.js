@@ -66,6 +66,20 @@ router.get('/patients', function(req, res, next) {
     });
 });
 
+// get a specific patient's general info
+router.get('/patients/:id', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+// get a specific patient's injuries
+router.get('/patients/:id/injuries', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries', {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.post('/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts',
