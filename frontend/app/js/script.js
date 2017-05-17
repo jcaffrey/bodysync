@@ -600,8 +600,6 @@ function loadStatus(patient) {
     }
 }
 
-
-
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -615,7 +613,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient - 1].progress[injury] = [((last.degreeValue / last.nextGoal) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
+            pats[patient - 1].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
@@ -765,7 +763,7 @@ function loadAddMeasure () {
                             '<div class="num">' +
                                 '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
                             '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitMeasure(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
     }
@@ -811,6 +809,12 @@ function submitMeasures () {
             count++;
         }
     }
+    window.location = '/patients1';
+}
+
+function submitOne (id, i, lastGoal, lastMeasure) {
+    submitMeasure(id, i, lastGoal, lastMeasure);
+    window.location = '/patients1';
 }
 
 // =============================================================
