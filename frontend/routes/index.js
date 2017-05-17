@@ -49,6 +49,10 @@ router.post('/login', function(req, res, next) {
     request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
+router.post('/loginPatient', function(req, res, next) {
+    request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
+});
+
 // -------------------------------------------------------------------------------
 router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
@@ -60,6 +64,20 @@ router.get('/patients', function(req, res, next) {
     return res.render('patients', {
         footerButton: 'Cancel', footerButton2: 'Submit'
     });
+});
+
+// get a specific patient's general info
+router.get('/patients/:id', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+// get a specific patient's injuries
+router.get('/patients/:id/injuries', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries', {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
 });
 
 router.post('/patients', function(req, res, next) {
@@ -101,6 +119,15 @@ router.get('/patients/:id/injuries', function(req, res, next) {
     })
 });
 
+router.post('/patients/:id/injuries', function(req, res, next) {
+    if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
+    request.post({
+        url: config.apiUrl + '/patients/' + req.params.id + '/injuries',
+        headers: { 'x-access-token': req.headers['x-access-token'] || req.query.token },
+        form: req.body
+    }).pipe(res);
+});
+
 router.get('/findInjuries/:id', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
@@ -121,6 +148,10 @@ router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
+router.get('/add-measure', function(req, res, next) {
+    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 router.get('/create-patient', function(req, res, next) {
     return res.render('create-patient', { footerButton: 'Cancel', footerButton2: 'Submit'});
 });
@@ -132,7 +163,7 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', { firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  url: '/add-measure', firstName: 'Josh', footerButton: 'Add Measure' });
 });
 
 // patient view

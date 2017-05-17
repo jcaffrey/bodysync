@@ -3,6 +3,10 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    script.
+        window.onload = function () {
+            //loadPatientGeneralInfo();
+        }
 
 block content
     p.headerGrey Welcome back,
@@ -16,3 +20,4 @@ block content
     div.container-center
         p.loginTitle.patientMessage You've improved a lot since last week! Keep up the good work.
 block footer
+

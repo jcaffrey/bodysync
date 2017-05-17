@@ -8,11 +8,11 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: true
         },
         degreeValue: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         },
         nextGoal: {
-            type: DataTypes.INTEGER
+            type: DataTypes.FLOAT
         },
         dayOfNextGoal: {
             type: DataTypes.DATEONLY  //  TODO set default value to 1 week from now
