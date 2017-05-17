@@ -53,16 +53,16 @@ values
 
 -- romMetricMeasures
 insert into romMetricMeasures
-    (name, degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId)
+    (degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId)
 values
-    ('firstMeasure', 32, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 1),
-    ('secondMeasure', 35, 43, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 1),
-    ('thirdMeasure', 40, 50, DATE_ADD(NOW(), INTERVAL 21 DAY), DATE_ADD(NOW(), INTERVAL 14 DAY), now(), now(), 1),
-    ('fourthMeasure', 45, 58, DATE_ADD(NOW(), INTERVAL 28 DAY), DATE_ADD(NOW(), INTERVAL 21 DAY), now(), now(), 1),
-    ('fifthMeasure', 53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('fifthMeasure', 90, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1);
+    (32, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 1),
+    (35, 43, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 1),
+    (40, 50, DATE_ADD(NOW(), INTERVAL 21 DAY), DATE_ADD(NOW(), INTERVAL 14 DAY), now(), now(), 1),
+    (45, 58, DATE_ADD(NOW(), INTERVAL 28 DAY), DATE_ADD(NOW(), INTERVAL 21 DAY), now(), now(), 1),
+    (53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
+    (65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
+    (77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
+    (90, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1);
 
 -- exerciseSets
 insert into exerciseSets
@@ -98,10 +98,3 @@ values
     (DATE_ADD(NOW(), INTERVAL 9 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 10 DAY), now(), now(), 1),
     (DATE_ADD(NOW(), INTERVAL 12 DAY), now(), now(), 1);
-
---insert into ptSessions
---    (ptId, sessionNumber, duration, resourceRequested, patientId, createdAt, updatedAt)
---values
---    (2, 1, null, '/login', 1, now(), now()),
---    (2, 2, null, '/pts/2/patients', 1, now() + 1, now()),
---    (2, 3, null, '/test', 1, now() + 2, now());

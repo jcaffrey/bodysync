@@ -378,9 +378,11 @@ function getMetrics(id) {
         if (!res.ok) throw(res);
         res.json().then(function(metrics) {
             if (localStorage.metrics != "")
+                console.log(localStorage.metrics);
                 var lst = JSON.parse(localStorage.metrics);
             else lst = [];
             lst.push(metrics);
+            console.log(lst);
             localStorage.metrics = JSON.stringify(lst);
             return JSON.stringify(lst);
         });
@@ -394,9 +396,9 @@ function getInjuries(id) {
         var nid = list[i].getElementsByTagName('span')[1];
         var num = nid.innerHTML;
         var metrics = getMetrics(num) || localStorage.metrics;
-        alert(metrics);
-        // metrics = JSON.parse(metrics)[i];
-        // nid.innerHTML = metrics[metrics.length - 1].degreeValue;
+        console.log(metrics);
+        metrics = JSON.parse(metrics)[i];
+        nid.innerHTML = metrics[metrics.length - 1].degreeValue;
     }
 }
 
