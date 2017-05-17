@@ -7,37 +7,23 @@ block cssSheets
         function changeReps(isInc) {
             var original = document.getElementById('reps-num').innerHTML;
             var value = parseInt(original, 10);
-            if (isInc) {
-                value++;
-            }
+            if (isInc) value++;
             else {
-                value--;
+                if (value == 0) value = 0;
+                else value--;
             };
             document.getElementById('reps-num').innerHTML = value.toString();
         };
         function changeSets(isInc) {
             var original = document.getElementById('sets-num').innerHTML;
             var value = parseInt(original, 10);
-            if (isInc = true) {
-                value++;
-            }
+            if (isInc) value++;
             else {
-                value--;
+                if (value == 0) value = 0;
+                else value--;
             };
             document.getElementById('sets-num').innerHTML = value.toString();
         };
-        //- function increment(str) {
-        //-     var original = document.getElementById(str.toString()).innerHTML;
-        //-     var value = parseInt(original, 10);
-        //-     value++;
-        //-     document.getElementById(str.toString()).innerHTML = value.toString();
-        //- };
-        //- function decrement() {
-        //-     var original = document.getElementById('num').innerHTML;
-        //-     var value = parseInt(original, 10);
-        //-     value--;
-        //-     document.getElementById('num').innerHTML = value.toString();
-        //- };
 block content
     form
         button#applyTemplate Apply Template
@@ -50,13 +36,13 @@ block content
                 .repset-name Reps
                 .repset-box
                     button.arith-box(type='button' onclick='changeReps(false)') -
-                    p(id='reps-num') 10
+                    p(id='reps-num' name='repsNum') 0
                     button.arith-box(type='button' onclick='changeReps(true)') +
             .input-box#sets
                 .repset-name Sets
                 .repset-box
                     button.arith-box(type='button' onclick='changeSets(false)') -
-                    p(id='sets-num') 2
+                    p(id='sets-num') 0
                     button.arith-box(type='button' onclick='changeSets(true)') +
             .input-box.input-bottom
                 .input-name#notes Notes
