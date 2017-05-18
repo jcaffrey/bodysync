@@ -457,7 +457,7 @@ function change5(e) {
 function change6(e) {
     var pfp = JSON.parse(localStorage.focusPatient);
     var count = 0;
-    for (var j = 1; j < pfp.progress.length; j++) {
+    for (var j = 1; j <= pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
             var ele = eval('(' + "iconGraph" + (count + 1) + ')');
@@ -511,7 +511,7 @@ function loadFocusPatient () {
     var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(menuBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
@@ -1003,20 +1003,20 @@ function createGraph(id) {
             h = window.innerHeight / 3;
         }
 
-
-        var degreeValue = [32, 35, 40, 45];
-
-        var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-
-        var goal = 60;
-
-        var next_weeks_goal = 50;
-
-        var next_weeks_goal_date = (new Date(2017, 3, 29));
-
-        var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-
-        var goal_point = [50, 4];
+        //
+        // var degreeValue = [32, 35, 40, 45];
+        //
+        // var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
+        //
+        // var goal = 60;
+        //
+        // var next_weeks_goal = 50;
+        //
+        // var next_weeks_goal_date = (new Date(2017, 3, 29));
+        //
+        // var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+        //
+        // var goal_point = [50, 4];
 
 
 
@@ -1037,8 +1037,6 @@ function createGraph(id) {
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
         }
-
-
         getDegDates();
 
         var goal = +(injuryInfo[injuryInfo.length - 1]);
