@@ -449,7 +449,7 @@ function change4(e) {
     e.style.opacity="1";
 }
 
-function change4(e) {
+function change5(e) {
     e.style.opacity="0.5";
 }
 
@@ -518,7 +518,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="chooseInjury(' + j + '); change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change1(body); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -561,7 +561,7 @@ function loadFocusPatient () {
 
       // adding body-part-box
         // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + percent + '%' + '</div><div class="recoveryText">recovered</div></div>';
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
         // graph
@@ -976,8 +976,12 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 // =============================================================
 //  Progress Graph
 // =============================================================
-function createGraph() {
+function createGraph(id) {
     setTimeout(function () {
+        getGraphData(id);
+
+        var injuryInfo = JSON.parse(localStorage.graphData);
+
         var w, h;
 
         if (window.innerWidth < 770) {
@@ -989,7 +993,6 @@ function createGraph() {
             w = window.innerWidth / 3;
             h = window.innerHeight / 3;
         }
-
 
 
         var degreeValue = [32, 35, 40, 45];
@@ -1005,6 +1008,37 @@ function createGraph() {
         var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
 
         var goal_point = [50, 4];
+
+
+
+        var degreeValue = [];
+
+        var dayMeasured = [];
+
+        var points = [];
+
+
+        function getDegDates() {
+            for (var i = 0; i < (injuryInfo.length - 2); i++) {
+                degreeValue.push(injuryInfo[i].measure);
+                dayMeasured.push(injuryInfo[i].date);
+                points.push((injuryInfo[i].measure, (i + 1)));
+            }
+        }
+
+
+        var goal = injuryInfo[injuryInfo.legth - 1];
+
+        var nextGoalId = injuryInfo.length - 2;
+
+        var next_weeks_goal = injuryInfo[nextGoalId].goal;
+
+        var next_weeks_goal_date = injuryInfo[nextGoalId].date;
+
+        var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
+
+
+
 
         var min_y = d3.min(degreeValue) - 20;
 
