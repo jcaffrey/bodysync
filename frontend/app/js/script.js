@@ -628,9 +628,6 @@ function loadPatientGeneralInfo (){
 
 }
 
-
-
-
 // change to status html
 function loadStatus(patient) {
     var progress = +JSON.parse(localStorage.progress);
@@ -727,7 +724,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient - 1].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
+            pats[patient].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
@@ -735,10 +732,10 @@ function updateProgress(patient, injury, name) {
 
 function loadProgress(patients) {
     var pats = JSON.parse(patients);
-    for (var i = 1; i < pats.length + 1; i++) {
+    for (var i = 0; i < pats.length; i++) {
         (function(x) {
-            pats[x - 1].progress = [];
-            fetch('/findInjuries/' + x + '/?token=' + localStorage.token, {
+            pats[x].progress = [];
+            fetch('/findInjuries/' + pats[x].id + '/?token=' + localStorage.token, {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
@@ -909,9 +906,10 @@ function submitMeasure (id, i, lastGoal, lastMeasure) {
     var d = new Date();
     var data = {
         dayMeasured: d.toMysqlFormat(),
-        nextGoal: lastGoal
+        nextGoal: lastGoal,
+        degreeValue: form[i].value || lastMeasure,
+        name: 'name' + id
     };
-    data.degreeValue = form[i].value || lastMeasure;
     console.log(JSON.stringify(data));
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
