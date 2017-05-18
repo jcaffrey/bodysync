@@ -302,9 +302,9 @@ function getPatientView (){
   ).then(function(res) {
       if (!res.ok) throw(res);
       res.json().then(function(info) {
-          localStorage.patientInfo = JSON.stringify([info]);
+          localStorage.patients = JSON.stringify([info]);
+          //loadProgressPatients(localStorage.patients);
       });
-      loadProgress(localStorage.patientInfo);
       window.location = '/patient-home';
   }).catch(submitError);
 }
@@ -599,33 +599,37 @@ function colorPercent (percent, col){
 }
 
 function loadPatientGeneralInfo (){
-  var pfp = JSON.parse(localStorage.focusPatient);
-  var sum = 0;
-  var count = 0;
-  for (var k = 0; k < pfp.progress.length; k++) {
-      var value = pfp.progress[k];
-      if (value != null) {
-          sum += +value[0];
-          count++;
-      }
-  }
-  var percent = (sum / count).toFixed(1);
-  var indicator = color(percent);
+  //setTimeout(function() {
+    var pfp = JSON.parse(localStorage.patients);
+    // if (pfp[0]) {
+    //   var sum = 0;
+    //   var count = 0;
+    //   for (var k = 0; k < pfp.progress.length; k++) {
+    //       var value = pfp.progress[k];
+    //       if (value != null) {
+    //           sum += +value[0];
+    //           count++;
+    //       }
+    //   }
+    //var percent = (sum / count).toFixed(1);
+      var indicator = color(11.3);
 
-  // html for pt-box
-    var ptBox = document.createElement('div');
-    // adding pic-box
-    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-    // adding info-box
-    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-    ptBox.innerHTML = ptBoxHTML;
+      // html for pt-box
+        var ptBox = document.createElement('div');
+        // adding pic-box
+        var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + 'Josh Seides' + '.jpg'
+        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+        // adding info-box
+        ptBoxHTML += '<div class="info-box"><div class="name">' + 'Josh Seides' +
+        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(11.3, indicator[0]) +
+        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+        ptBox.innerHTML = ptBoxHTML;
 
-    var container = document.getElementById('generalInfo').appendChild(ptBox);
-
-
+        var container = document.getElementById('generalInfo').appendChild(ptBox);
+  //   } else {
+  //     loadPatientGeneralInfo();
+  //   }
+  // }, 100);
 }
 
 // change to status html
@@ -750,6 +754,24 @@ function loadProgress(patients) {
     }
     localStorage.patients = JSON.stringify(pats);
 }
+
+// function loadProgressPatients(patients) {
+//     var pats = JSON.parse(patients);
+//     pats.progress = [];
+//     fetch('/findInjuries/' + localStorage.id + '/?token=' + localStorage.token, {
+//           method: 'GET'
+//     }).then(function(res) {
+//         if (!res.ok) return submitError(res);
+//         res.json().then(function (data) {
+//               var init = data[0].id || 0;
+//               for (var j = init; j < data.length + init; j++) {
+//                   (function(y) { updateProgress(x, y, data[y - init].name) }(j))
+//               }
+//           });
+//       }).catch(submitError);
+//   }
+//   localStorage.patients = JSON.stringify(pats);
+// }
 
 function loadPatient(id) {
     fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {

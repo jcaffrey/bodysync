@@ -1,22 +1,17 @@
 extends template
 
 block cssSheets
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/patient-home.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
         window.onload = function () {
-            //loadPatientGeneralInfo();
+            loadPatientGeneralInfo();
         }
 
 block content
-    p.headerGrey Welcome back,
-    .loginTitle #{firstName}
+    p.headerGrey Welcome back
+    #generalInfo
     div.container-center
         button.buttonTab(onclick="location.href='/exercises';") Access Workouts
-    p.loginTitle.patientHome Completed workouts
-        span.mainColor  5 days
-        span  in a row
-    p.loginTitle.patientMain You're doing great!
-    div.container-center
-        p.loginTitle.patientMessage You're on the road to recovery! Keep up the good work.
+    p.headerGrey.patientMain You're on the road to recovery! Keep up the good work.
 block footer
