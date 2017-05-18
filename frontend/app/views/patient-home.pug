@@ -5,12 +5,14 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
         window.onload = function () {
-            loadPatientGeneralInfo();
+            console.log('hello');
+            loadPatientStart();
         }
 
 block content
-    p.headerGrey Welcome back
-    #generalInfo
+    #patients
+    p.headerGrey Welcome back,
+    .loginTitle #{firstName}
     div.container-center
         button.buttonTab(onclick="location.href='/exercises';") Access Workouts
     p.headerGrey.patientMain You're on the road to recovery! Keep up the good work.

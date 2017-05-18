@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            console.log('logged in');
             getPatientView();
         });
     }).catch(submitError);
@@ -66,6 +67,7 @@ function logout() {
     localStorage.patients = '';
     localStorage.display = '';
     localStorage.graphData = '';
+    localStorage.focusPatient = '';
     window.location = '/';
 }
 
@@ -164,17 +166,6 @@ function submitPatient() {
             }
         });
     }).catch(submitError);
-}
-
-function getGraphData(id) {
-    fetch('/romMetrics/' + id, {
-        headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {localStorage.graphData = data});
-    })
-        .catch(submitError);
 }
 
 // =============================================================
@@ -292,8 +283,8 @@ function getPatients() {
             // var patients = JSON.parse(localStorage.patients);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
+            window.location = '/patients1';
         });
-        window.location = '/patients1';
     }).catch(submitError);
 }
 
@@ -303,9 +294,8 @@ function getPatientView (){
       if (!res.ok) throw(res);
       res.json().then(function(info) {
           localStorage.patients = JSON.stringify([info]);
-          //loadProgressPatients(localStorage.patients);
+          window.location = '/patient-home';
       });
-      window.location = '/patient-home';
   }).catch(submitError);
 }
 
@@ -485,7 +475,6 @@ function chooseInjury (c) {
     return(val[0]);
 }
 
-
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
     var sum = 0;
@@ -598,38 +587,41 @@ function colorPercent (percent, col){
     }
 }
 
-function loadPatientGeneralInfo (){
-  //setTimeout(function() {
-    var pfp = JSON.parse(localStorage.patients);
-    // if (pfp[0]) {
-    //   var sum = 0;
-    //   var count = 0;
-    //   for (var k = 0; k < pfp.progress.length; k++) {
-    //       var value = pfp.progress[k];
-    //       if (value != null) {
-    //           sum += +value[0];
-    //           count++;
-    //       }
-    //   }
-    //var percent = (sum / count).toFixed(1);
-      var indicator = color(11.3);
+function loadPatientsOne () {
+    setTimeout(function() {
+        console.log('in');
+        var psd = JSON.parse(localStorage.patients);
+        if (psd[0].progress.length !== 0) {
+            console.log('in1');
+            var pfp = psd[0];
+            var sum = 0;
+            var count = 0;
+            for (var k = 0; k < pfp.progress.length; k++) {
+                var value = pfp.progress[k];
+                if (value != null) {
+                    sum += +value[0];
+                    count++;
+                }
+            }
+            var percent = (sum / count).toFixed(1);
+            var indicator = color(percent);
 
-      // html for pt-box
-        var ptBox = document.createElement('div');
-        // adding pic-box
-        var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + 'Josh Seides' + '.jpg'
-        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-        // adding info-box
-        ptBoxHTML += '<div class="info-box"><div class="name">' + 'Josh Seides' +
-        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(11.3, indicator[0]) +
-        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-        ptBox.innerHTML = ptBoxHTML;
+            // html for pt-box
+            var ptBox = document.createElement('div');
+            // adding pic-box
+            var ptBoxHTML = '<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+                + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
 
-        var container = document.getElementById('generalInfo').appendChild(ptBox);
-  //   } else {
-  //     loadPatientGeneralInfo();
-  //   }
-  // }, 100);
+            // adding info-box
+            ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+                '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+            ptBox.innerHTML = ptBoxHTML;
+            document.getElementById('patients').appendChild(ptBox);
+        } else {
+            loadPatientsOne();
+        }
+    }, 100);
 }
 
 // change to status html
@@ -720,6 +712,50 @@ function clear() {
     list.innerHTML = '';
 }
 
+function getMeasurements(injury) {
+    fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var temp = [];
+            var count = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                console.log('i is ' + i + ' and count is ' + count);
+                if (count <= 3) {
+                    temp[count] = {
+                        date: data[i].dayMeasured,
+                        measure: data[i].degreeValue
+                    };
+                    count++;
+                }
+            }
+            temp.reverse();
+            temp[count] = {
+                date: data[data.length - 1].dayOfNextGoal,
+                goal: data[data.length - 1].nextGoal
+            };
+            temp[count + 1] = data[data.length - 1].nextGoal;
+            localStorage["graphData" + injury] = JSON.stringify(temp);
+        });
+    }).catch(console.log('error' + injury));
+}
+
+function getGraphData() {
+    var id = JSON.parse(localStorage.focusPatient).id;
+    fetch('/findInjuries/' + id + '/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var init = data[0].id || 0;
+            for (var j = init; j < data.length + init; j++) {
+                (function(y) { getMeasurements(y) }(j));
+            }
+        });
+    }).catch(submitError);
+}
+
 function updateProgress(patient, injury, name) {
     fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
         method: 'GET'
@@ -755,24 +791,6 @@ function loadProgress(patients) {
     localStorage.patients = JSON.stringify(pats);
 }
 
-// function loadProgressPatients(patients) {
-//     var pats = JSON.parse(patients);
-//     pats.progress = [];
-//     fetch('/findInjuries/' + localStorage.id + '/?token=' + localStorage.token, {
-//           method: 'GET'
-//     }).then(function(res) {
-//         if (!res.ok) return submitError(res);
-//         res.json().then(function (data) {
-//               var init = data[0].id || 0;
-//               for (var j = init; j < data.length + init; j++) {
-//                   (function(y) { updateProgress(x, y, data[y - init].name) }(j))
-//               }
-//           });
-//       }).catch(submitError);
-//   }
-//   localStorage.patients = JSON.stringify(pats);
-// }
-
 function loadPatient(id) {
     fetch('/romMetrics/' + id + '/romMetricMeasures/?token=' + localStorage.token, {
         method: 'GET'
@@ -789,6 +807,12 @@ function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
+}
+
+function loadPatientStart() {
+    clear();
+    loadProgress(localStorage.patients);
+    loadPatientsOne();
 }
 
 function loadStatus(patient) {
@@ -859,15 +883,6 @@ function sortProg() {
     else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
 }
-
-// function arrowdown(index) {
-//     var lst = JSON.parse(localStorage.display);
-//     if (not last element in array)
-//         var temp = lst[index];
-//         lst[index] = lst[index+1];
-//         lst[index+1] = temp;
-
-//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
 
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
