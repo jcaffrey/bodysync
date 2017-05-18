@@ -942,7 +942,14 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 // =============================================================
 function createGraph(id) {
     setTimeout(function () {
-        getGraphData(id);
+      //  getGraphData(id);
+        localStorage.graphData = JSON.stringify([
+            {date: (new Date(2017, 4, 1)), measure: 32},
+            {date: (new Date(2017, 4, 8)), measure: 35},
+            {date: (new Date(2017, 4, 15)), measure: 40},
+            {date: (new Date(2017, 4, 22)), measure: 45},
+            {date: (new Date(2017, 4, 29)), goal: 50},
+            60]);
 
         var injuryInfo = JSON.parse(localStorage.graphData);
 
@@ -984,20 +991,28 @@ function createGraph(id) {
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
-                degreeValue.push(injuryInfo[i].measure);
-                dayMeasured.push(injuryInfo[i].date);
-                points.push((injuryInfo[i].measure, (i + 1)));
+                degreeValue.push(+(injuryInfo[i].measure));
+                var year = +(injuryInfo[i].date).substring(0,4);
+                var month = +(injuryInfo[i].date).substring(5,7) - 1;
+                var day = +(injuryInfo[i].date).substring(8,10) - 1;
+                dayMeasured.push(new Date(year, month, day));
+                points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
         }
 
 
-        var goal = injuryInfo[injuryInfo.legth - 1];
+        getDegDates();
+
+        var goal = +(injuryInfo[injuryInfo.length - 1]);
 
         var nextGoalId = injuryInfo.length - 2;
 
-        var next_weeks_goal = injuryInfo[nextGoalId].goal;
+        var next_weeks_goal = +(injuryInfo[nextGoalId].goal);
 
-        var next_weeks_goal_date = injuryInfo[nextGoalId].date;
+        var year = +(injuryInfo[injuryInfo.length - 2].date.substring(0,4));
+        var month = +(injuryInfo[injuryInfo.length - 2].date.substring(5,7)) - 1;
+        var day = +(injuryInfo[injuryInfo.length - 2].date.substring(8,10)) - 1;
+        var next_weeks_goal_date = new Date(year, month, day);
 
         var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
 
@@ -1096,8 +1111,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(degreeValue[i]);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
 
         graph.selectAll(".point")
@@ -1110,8 +1125,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(next_weeks_goal);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
 
     }, 1000);
