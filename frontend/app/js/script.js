@@ -309,6 +309,7 @@ function getPatientView (){
   }).catch(submitError);
 }
 
+
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
