@@ -908,9 +908,10 @@ function submitMeasure (id, i, lastGoal, lastMeasure) {
     var d = new Date();
     var data = {
         dayMeasured: d.toMysqlFormat(),
-        nextGoal: lastGoal
+        nextGoal: lastGoal,
+        degreeValue: form[i].value || lastMeasure,
+        name: 'name' + id
     };
-    data.degreeValue = form[i].value || lastMeasure;
     console.log(JSON.stringify(data));
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
