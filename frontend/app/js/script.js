@@ -66,6 +66,7 @@ function logout() {
     localStorage.patients = '';
     localStorage.display = '';
     localStorage.graphData = '';
+    localStorage.focusPatient = '';
     window.location = '/';
 }
 
@@ -164,17 +165,6 @@ function submitPatient() {
             }
         });
     }).catch(submitError);
-}
-
-function getGraphData(id) {
-    fetch('/romMetrics/' + id, {
-        headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {localStorage.graphData = data});
-    })
-        .catch(submitError);
 }
 
 // =============================================================
@@ -484,7 +474,6 @@ function chooseInjury (c) {
     return(val[0]);
 }
 
-
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
     var sum = 0;
@@ -713,6 +702,53 @@ function loadStatus(patient) {
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
+}
+
+function getMeasurements(injury) {
+    var graphData = JSON.parse(localStorage.graphData);
+    console.log(graphData);
+    graphData["injury" + injury] = [];
+    fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var count = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                console.log('i is ' + i + ' and count is ' + count);
+                if (count <= 3) {
+                    var arr = graphData["injury" + injury];
+                    arr[count] = {
+                        date: data[i].dayMeasured,
+                        measure: data[i].degreeValue
+                    };
+                    count++;
+                }
+            }
+            graphData["injury" + injury][count] = {
+                date: data[data.length - 1].dayOfNextGoal,
+                goal: data[data.length - 1].nextGoal
+            };
+            graphData["injury" + injury][count + 1] = data[data.length - 1].nextGoal;
+            localStorage.graphData = JSON.stringify(graphData);
+        });
+    }).catch(console.log('error' + injury));
+}
+
+function getGraphData() {
+    localStorage.graphData = JSON.stringify({});
+    var id = JSON.parse(localStorage.focusPatient).id;
+    fetch('/findInjuries/' + id + '/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var init = data[0].id || 0;
+            for (var j = init; j < data.length + init; j++) {
+                (function(y) { getMeasurements(y) }(j));
+            }
+        });
+    }).catch(submitError);
 }
 
 function updateProgress(patient, injury, name) {
