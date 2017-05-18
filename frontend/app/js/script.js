@@ -722,6 +722,7 @@ function getMeasurements(injury) {
                     count++;
                 }
             }
+            temp.reverse();
             temp[count] = {
                 date: data[data.length - 1].dayOfNextGoal,
                 goal: data[data.length - 1].nextGoal
