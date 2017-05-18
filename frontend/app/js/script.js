@@ -519,7 +519,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -566,7 +566,7 @@ function loadFocusPatient () {
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div><div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -574,8 +574,6 @@ function loadFocusPatient () {
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
-
-    createGraph();
 }
 
 function colorPercent (percent, col){
@@ -979,17 +977,20 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
+    document.getElementById('graph').innerHTML = '';
+    document.getElementById('loading').style.display = 'inline';
     setTimeout(function () {
-      //  getGraphData(id);
-        localStorage.graphData = JSON.stringify([
-            {date: (new Date(2017, 4, 1)), measure: 32},
-            {date: (new Date(2017, 4, 8)), measure: 35},
-            {date: (new Date(2017, 4, 15)), measure: 40},
-            {date: (new Date(2017, 4, 22)), measure: 45},
-            {date: (new Date(2017, 4, 29)), goal: 50},
-            60]);
+      // //  getGraphData(id);
+      //   localStorage.graphData = JSON.stringify([
+      //       {date: (new Date(2017, 4, 1)), measure: 32},
+      //       {date: (new Date(2017, 4, 8)), measure: 35},
+      //       {date: (new Date(2017, 4, 15)), measure: 40},
+      //       {date: (new Date(2017, 4, 22)), measure: 45},
+      //       {date: (new Date(2017, 4, 29)), goal: 50},
+      //       60]);
 
-        var injuryInfo = JSON.parse(localStorage.graphData);
+        var injuryInfo = JSON.parse(localStorage["graphData" + id]);
+        console.log(injuryInfo);
 
         var w, h;
 
@@ -1018,14 +1019,9 @@ function createGraph(id) {
         //
         // var goal_point = [50, 4];
 
-
-
         var degreeValue = [];
-
         var dayMeasured = [];
-
         var points = [];
-
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
@@ -1052,9 +1048,6 @@ function createGraph(id) {
 
         var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
 
-
-
-
         var min_y = d3.min(degreeValue) - 20;
 
         var max_y = goal + 10;
@@ -1064,8 +1057,6 @@ function createGraph(id) {
         var max_x = next_weeks_goal_date;
 
         var start_end = [min_x, max_x];
-
-
 
         var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
         var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
@@ -1094,6 +1085,7 @@ function createGraph(id) {
                 return y(next_weeks_goal[i]);
             });
 
+        document.getElementById('loading').style.display = 'none';
 
 
 // Add an SVG element with the desired dimensions and margin.
