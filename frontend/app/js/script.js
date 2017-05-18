@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            console.log('logged in');
             getPatientView();
         });
     }).catch(submitError);
@@ -282,8 +283,8 @@ function getPatients() {
             // var patients = JSON.parse(localStorage.patients);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
+            window.location = '/patients1';
         });
-        window.location = '/patients1';
     }).catch(submitError);
 }
 
@@ -292,10 +293,9 @@ function getPatientView (){
   ).then(function(res) {
       if (!res.ok) throw(res);
       res.json().then(function(info) {
-          localStorage.patientInfo = JSON.stringify([info]);
+          localStorage.patients = JSON.stringify([info]);
+          window.location = '/patient-home';
       });
-      loadProgress(localStorage.patientInfo);
-      window.location = '/patient-home';
   }).catch(submitError);
 }
 
@@ -586,34 +586,41 @@ function colorPercent (percent, col){
     }
 }
 
-function loadPatientGeneralInfo (){
-  var pfp = JSON.parse(localStorage.focusPatient);
-  var sum = 0;
-  var count = 0;
-  for (var k = 0; k < pfp.progress.length; k++) {
-      var value = pfp.progress[k];
-      if (value != null) {
-          sum += +value[0];
-          count++;
-      }
-  }
-  var percent = (sum / count).toFixed(1);
-  var indicator = color(percent);
+function loadPatientsOne () {
+    setTimeout(function() {
+        console.log('in');
+        var psd = JSON.parse(localStorage.patients);
+        if (psd[0].progress.length !== 0) {
+            console.log('in1');
+            var pfp = psd[0];
+            var sum = 0;
+            var count = 0;
+            for (var k = 0; k < pfp.progress.length; k++) {
+                var value = pfp.progress[k];
+                if (value != null) {
+                    sum += +value[0];
+                    count++;
+                }
+            }
+            var percent = (sum / count).toFixed(1);
+            var indicator = color(percent);
 
-  // html for pt-box
-    var ptBox = document.createElement('div');
-    // adding pic-box
-    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-    // adding info-box
-    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-    ptBox.innerHTML = ptBoxHTML;
+            // html for pt-box
+            var ptBox = document.createElement('div');
+            // adding pic-box
+            var ptBoxHTML = '<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+                + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
 
-    var container = document.getElementById('generalInfo').appendChild(ptBox);
-
-
+            // adding info-box
+            ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+                '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+            ptBox.innerHTML = ptBoxHTML;
+            document.getElementById('patients').appendChild(ptBox);
+        } else {
+            loadPatientsOne();
+        }
+    }, 100);
 }
 
 // change to status html
@@ -799,6 +806,12 @@ function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
+}
+
+function loadPatientStart() {
+    clear();
+    loadProgress(localStorage.patients);
+    loadPatientsOne();
 }
 
 function loadStatus(patient) {

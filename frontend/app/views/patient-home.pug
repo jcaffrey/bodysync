@@ -5,10 +5,12 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
         window.onload = function () {
-            //loadPatientGeneralInfo();
+            console.log('hello');
+            loadPatientStart();
         }
 
 block content
+    #patients
     p.headerGrey Welcome back,
     .loginTitle #{firstName}
     div.container-center
