@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/patient-home', function(req, res, next) {
-    return res.render('patient-home', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+    return res.render('patient-home', { type: 'patient', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
 router.post('/', function(req, res, next) {
@@ -34,7 +34,7 @@ router.get('/reset/:token', function(req, res, next) {
 router.get('');
 
 router.get('/exercises', function(req, res, next) {
-    return res.render('exercises');
+    return res.render('exercises', { type: 'patient'});
 });
 
 router.get('/loginnew', function(req, res, next) {
@@ -209,7 +209,7 @@ router.get('/patient-status', function(req, res, next) {
 
 // patient view
 router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { url: '/create-patient', footerButton: 'Add Patient' });
+    return res.render('patients1', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // exercise form view

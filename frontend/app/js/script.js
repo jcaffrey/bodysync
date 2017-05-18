@@ -299,6 +299,7 @@ function getPatientView (){
   }).catch(submitError);
 }
 
+
 function displayCollapse(x) {
     var elt = document.getElementById(x);
     if (elt.style.display === 'none') elt.style.display = 'block';
@@ -456,7 +457,7 @@ function change5(e) {
 function change6(e) {
     var pfp = JSON.parse(localStorage.focusPatient);
     var count = 0;
-    for (var j = 1; j < pfp.progress.length; j++) {
+    for (var j = 1; j <= pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
             var ele = eval('(' + "iconGraph" + (count + 1) + ')');
@@ -510,7 +511,7 @@ function loadFocusPatient () {
     var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(menuBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
@@ -518,7 +519,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -565,7 +566,7 @@ function loadFocusPatient () {
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div><div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -573,8 +574,6 @@ function loadFocusPatient () {
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
-
-    createGraph();
 }
 
 function colorPercent (percent, col){
@@ -883,15 +882,6 @@ function sortProg() {
     load();
 }
 
-// function arrowdown(index) {
-//     var lst = JSON.parse(localStorage.display);
-//     if (not last element in array)
-//         var temp = lst[index];
-//         lst[index] = lst[index+1];
-//         lst[index+1] = temp;
-
-//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
-
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
     for (var i = 0; i < patients.length; i++) {
@@ -987,10 +977,20 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
+    document.getElementById('graph').innerHTML = '';
+    document.getElementById('loading').style.display = 'inline';
     setTimeout(function () {
-        getGraphData(id);
+      // //  getGraphData(id);
+      //   localStorage.graphData = JSON.stringify([
+      //       {date: (new Date(2017, 4, 1)), measure: 32},
+      //       {date: (new Date(2017, 4, 8)), measure: 35},
+      //       {date: (new Date(2017, 4, 15)), measure: 40},
+      //       {date: (new Date(2017, 4, 22)), measure: 45},
+      //       {date: (new Date(2017, 4, 29)), goal: 50},
+      //       60]);
 
-        var injuryInfo = JSON.parse(localStorage.graphData);
+        var injuryInfo = JSON.parse(localStorage["graphData" + id]);
+        console.log(injuryInfo);
 
         var w, h;
 
@@ -1004,51 +1004,49 @@ function createGraph(id) {
             h = window.innerHeight / 3;
         }
 
-
-        var degreeValue = [32, 35, 40, 45];
-
-        var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-
-        var goal = 60;
-
-        var next_weeks_goal = 50;
-
-        var next_weeks_goal_date = (new Date(2017, 3, 29));
-
-        var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-
-        var goal_point = [50, 4];
-
-
+        //
+        // var degreeValue = [32, 35, 40, 45];
+        //
+        // var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
+        //
+        // var goal = 60;
+        //
+        // var next_weeks_goal = 50;
+        //
+        // var next_weeks_goal_date = (new Date(2017, 3, 29));
+        //
+        // var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
+        //
+        // var goal_point = [50, 4];
 
         var degreeValue = [];
-
         var dayMeasured = [];
-
         var points = [];
-
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
-                degreeValue.push(injuryInfo[i].measure);
-                dayMeasured.push(injuryInfo[i].date);
-                points.push((injuryInfo[i].measure, (i + 1)));
+                degreeValue.push(+(injuryInfo[i].measure));
+                var year = +(injuryInfo[i].date).substring(0,4);
+                var month = +(injuryInfo[i].date).substring(5,7) - 1;
+                var day = +(injuryInfo[i].date).substring(8,10) - 1;
+                dayMeasured.push(new Date(year, month, day));
+                points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
         }
+        getDegDates();
 
-
-        var goal = injuryInfo[injuryInfo.legth - 1];
+        var goal = +(injuryInfo[injuryInfo.length - 1]);
 
         var nextGoalId = injuryInfo.length - 2;
 
-        var next_weeks_goal = injuryInfo[nextGoalId].goal;
+        var next_weeks_goal = +(injuryInfo[nextGoalId].goal);
 
-        var next_weeks_goal_date = injuryInfo[nextGoalId].date;
+        var year = +(injuryInfo[injuryInfo.length - 2].date.substring(0,4));
+        var month = +(injuryInfo[injuryInfo.length - 2].date.substring(5,7)) - 1;
+        var day = +(injuryInfo[injuryInfo.length - 2].date.substring(8,10)) - 1;
+        var next_weeks_goal_date = new Date(year, month, day);
 
         var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
-
-
-
 
         var min_y = d3.min(degreeValue) - 20;
 
@@ -1059,8 +1057,6 @@ function createGraph(id) {
         var max_x = next_weeks_goal_date;
 
         var start_end = [min_x, max_x];
-
-
 
         var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
         var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
@@ -1089,6 +1085,7 @@ function createGraph(id) {
                 return y(next_weeks_goal[i]);
             });
 
+        document.getElementById('loading').style.display = 'none';
 
 
 // Add an SVG element with the desired dimensions and margin.
@@ -1142,8 +1139,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(degreeValue[i]);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
 
         graph.selectAll(".point")
@@ -1156,8 +1153,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(next_weeks_goal);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
 
     }, 1000);

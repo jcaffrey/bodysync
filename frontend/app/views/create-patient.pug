@@ -26,13 +26,13 @@ block content
         br
         .inputs#rom-inputs
             .input-box
-                input.text-input.rom-name-input(type='text' name='motion-name' placeholder='TARGETED MOTION ')
+                input.text-input.rom-name-input(type='text' name='motion-name' placeholder='TARGETED MOTION' onblur="checkMotionRangeName(this.value)")
                 .rom1
                     .rom-label Starting Range of Motion
-                    input.rom-input.degrees(maxlength='3' type='rom' name='rom1' placeholder='___° ' onblur="#")
+                    input.rom-input.degrees(maxlength='3' type='rom' name='rom1' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
                 .rom2
                     .rom-label Ending Range of Motion
-                    input.text-input.degrees(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkEmail(this.value)")
+                    input.text-input.degrees(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
             .input-box.last-box#rom-add(onclick="addMotion()") Add Motion
         br
         .inputs
@@ -69,6 +69,31 @@ block content
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if ((!re.test(str)) && (str != "")) {
                     errorDiv.innerHTML = "Invalid email entered";
+                    errorDiv.style.height = "6%";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                }
+            }
+            function checkMotionRangeName(str) {
+                var errorDiv = document.getElementById('rangeMotionError');
+                if (str == "") {
+                    errorDiv.innerHTML = "Missing Motion Name";
+                    errorDiv.style.height = "6%";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                }
+            }
+            function checkMotionRangeNum(str) {
+                var errorDiv = document.getElementById('rangeMotionError');
+                var num = parseInt(str)
+                if (num < 0 || isNaN(num)) {
+                    errorDiv.innerHTML = "Invalid Range of Motion";
                     errorDiv.style.height = "6%";
                 }
                 else {
