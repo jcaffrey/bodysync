@@ -812,7 +812,7 @@ function loadStart() {
 function loadPatientStart() {
     clear();
     loadProgress(localStorage.patients);
-    loadPatientsOne();
+    loadPatients(localStorage.patients);
 }
 
 function loadStatus(patient) {

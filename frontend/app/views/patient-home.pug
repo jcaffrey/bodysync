@@ -1,7 +1,7 @@
 extends template
 
 block cssSheets
-    link(rel='stylesheet', href='/stylesheets/patient-home.css')
+    link(rel='stylesheet', href='/stylesheets/patients1.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
         window.onload = function () {
@@ -10,7 +10,11 @@ block cssSheets
         }
 
 block content
+  form
     #patients
+    #loading
+        p Loading
+        img(src='../../img/loading.gif')
     p.headerGrey Welcome back,
     .loginTitle #{firstName}
     div.container-center
