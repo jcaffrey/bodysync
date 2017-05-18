@@ -102,7 +102,8 @@ function postMeasure (id, degree, lastGoal) {
     var data = {
         dayMeasured: d.toMysqlFormat(),
         nextGoal: lastGoal,
-        degreeValue: degree
+        degreeValue: degree,
+        name: "name" + id
     };
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
@@ -119,17 +120,14 @@ function submitPatient() {
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
-    if (form.email.value && !validateEmail(form.email)) {
+    if (form.email.value && !validateEmail(form.email))
         errorMessage += 'Email address is invalid.';
-    }
     data.email = form.email.value;
-    data.name = form.name.value;
-    data.phoneProvider = 'att';
-
     if (form.phone.value) data.phoneNumber = form.phone.value;
     if (form.hash.value) data.hash = form.hash.value;
     if (form.surgery.value) data.surgeryType = form.surgery.value;
-    // if (form.notes.value) data.notes = form.notes.value;
+    if (form.notes.value) data.ptNotes = form.notes.value;
+
     fetch('/pts/' + localStorage.id + '/patients', {
         headers: {
             'x-access-token': localStorage.token,
@@ -157,8 +155,9 @@ function submitPatient() {
                     }).then(function (res1) {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
-                            console.log('posting to injury id ' + result1.id + 'with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[(2 * x) + 5].value, degrees[(2 * x) + 6].value);
+                            console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
+                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
