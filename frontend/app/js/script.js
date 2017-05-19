@@ -402,13 +402,12 @@ function loadPatients(patients) {
                         collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
                     }
                 }
-                collapseContent += '<div class="space"></div>' +
-                    if (!isPatient) {
-                      '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
-                    }
-                    else {
-                      '<a href="/patient-details" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
-                    }
+                if (!isPatient) {
+                  collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                }
+                else {
+                  collapseContent += '<div class="space"></div><a href="/patient-details" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                }
                 collapse.innerHTML = collapseContent;
                 rec.setAttribute('class', 'recovery');
                 if (indicator[0] !== 'bbbbbb') {
@@ -568,7 +567,7 @@ function loadFocusPatient () {
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
-                    if (!isPatient) {'<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>'} + '</div>';
+                    '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       console.log('hi');
       // getting notes
       outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
@@ -672,7 +671,7 @@ function loadPatientDetails () {
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
-                    if (!isPatient) {'<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>'} + '</div>';
+                   '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       console.log('hi');
       // getting notes
       outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
