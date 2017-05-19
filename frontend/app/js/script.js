@@ -700,6 +700,55 @@ function loadPatient(id) {
     }).catch(submitError);
 }
 
+function loadExerciseSets() {
+    var pat = JSON.parse(localStorage.patients)[0];
+    pat.sets = [];
+    localStorage.patients = JSON.stringify([pat]);
+    var count = 0;
+    for (var i = 0; i < pat.progress.length; i++) {
+        if (pat.progress[i] !== null){
+            (function(x, y) {
+                fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets/?token=' + localStorage.token, {
+                    method: 'GET'
+                }).then(function(res) {
+                    if (!res.ok) return submitError(res);
+                    res.json().then(function (data) {
+                        var patient = JSON.parse(localStorage.patients)[0];
+                        patient.sets[y] = data[0];
+                        localStorage.patients = JSON.stringify([patient]);
+                    });
+                }).catch(submitError);
+
+            }(i, count))
+            count++;
+        }
+    }
+}
+
+// function loadSpecificExercises() {
+//     var exSet = JSON.parse(localStorage.exerciseSets);
+//     pat.injuries = [];
+//     for (var i = 0; i < pat.progress.length; i++) {
+//         if (pat.progress[i]){
+//             (function(x) {
+//                 fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets?token=' + localStorage.token, {
+//                     method: 'GET'
+//                 }).then(function(res) {
+//                     count++;
+//                     if (!res.ok) return submitError(res);
+//                     res.json().then(function (data) {
+//                         pat.injuries[count] = data[0];
+//                         console.log(pat.injuries[count]);
+//                     });
+//                 }).catch(submitError);
+//
+//             }(i))
+//         }
+//     }
+//     localStorage.exerciseSets = JSON.stringify(pat.injuries);
+// }
+
+
 function loadStart() {
     clear();
     loadProgress(localStorage.patients);
