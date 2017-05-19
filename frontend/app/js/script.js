@@ -560,7 +560,7 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
       }
@@ -873,21 +873,20 @@ function createGraph(id) {
         var w, h;
 
         if (window.innerWidth < 600) {
-            w = 7 * window.innerWidth / 12;
-            h = 2 * window.innerHeight / 5;
+            w = 7.5 * window.innerWidth / 11;
+            h = 7 * window.innerWidth / 12;
         }
-        if (window.innerWidth >= 600 && window.innerWidth < 770) {
-            w = 7 * window.innerWidth / 12;
-            h = 2 * window.innerHeight;
+        else if (window.innerWidth >= 600 && window.innerWidth < 770) {
+            w = 8.5 * window.innerWidth / 13;
+            h = 4 * window.innerWidth / 7;
         }
-        if (window.innerWidth >= 700 && window.innerWidth < 1000) {
-            w = 2 * window.innerWidth / 3;
-            h = 3* window.innerHeight / 7;
+        else if (window.innerWidth >= 700 && window.innerWidth < 1000) {
+            w = 4 * window.innerWidth / 11;
+            h = 6 * window.innerWidth / 15;
         }
-
         else {
-            w = window.innerWidth / 3;
-            h = window.innerHeight / 3;
+            w = 2* window.innerWidth / 5;
+            h = 2* window.innerWidth / 5;
         }
 
         var degreeValue = [];
