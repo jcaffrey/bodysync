@@ -16,21 +16,23 @@ block content
         .inputs
             .input-box
                 .radio1
-                    label.user-radio PT
-                    input(type='radio' id="PT" name='user-type' value="PT" checked)
+                    label(for="PT").user-radio PT
+                    #radioBox1
+                    input(class="radio-button" type='radio' id="PT" name='user-type' value="PT" checked onclick="radioBox2.style.background='#ffffff', radioBox1.style.background='#2e3192'")
                 .radio2
-                    label.user-radio PATIENT
-                    input(type='radio' id="Patient" name='user-type' value="Patient")
+                    label(for="Patient").user-radio PATIENT
+                    #radioBox2
+                    input(class="radio-button" type='radio' id="Patient" name='user-type' value="Patient" onclick="radioBox1.style.background='#ffffff', radioBox2.style.background='#2e3192'")
             .input-box
                 input.text-input(type='email' name='email' placeholder='example@domain.com' maxlength="24")
                 .input-name Email
-            .input-box
+            .input-box.last-box
                 input.text-input(type='password' name='password' placeholder='********' maxlength="24"
                     onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
                         "else { submitPatientLogin() }} else {} ")
                 .input-name Password
     //a#forgotPassword Forgot Password
-    a.loginTitle(style="font-size: 1em;" href="/forgotpassword") Forgot Password
+    a.loginTitle.forgotPassword(style="font-size: 1em;" href="/forgotpassword") Forgot Password
     p#success
     p#js-error-message
         script.
@@ -55,7 +57,6 @@ block content
                 evt.currentTarget.className += " active";
             }
             submitOnEnterKey(submitLogin);
-
 
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='if (PT.checked == true) {submitLogin()}' +

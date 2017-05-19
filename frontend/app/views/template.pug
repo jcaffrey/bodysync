@@ -16,7 +16,7 @@ html
                         if type == 'patient'
                           a(href='/patient-home').navButton.active Home
                         else
-                          a(href='/patients1').navButton.active Home
+                          a(href='/patients').navButton.active Home
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left
@@ -49,5 +49,3 @@ html
         script.
             document.getElementById('profileName').innerHTML = localStorage.email
         block postScript
-        if dev
-            script(src='//localhost:10000/livereload.js')

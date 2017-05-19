@@ -19,27 +19,43 @@ module.exports.createMeasure = (req, res, next) => {
                 where: {
                     id: injury.patientId
                 }
-            }).then(function(patient) {
-                if(Object.keys(patient).length !== 0) {
-                    console.log("made here!");
-                    if(decoded.isPt && decoded.id == patient.ptId) {
-                        models.romMetricMeasure.create({
-                            name: req.body.name,
-                            degreeValue: req.body.degreeValue,
-                            nextGoal: req.body.nextGoal,
-                            dayOfNextGoal: req.body.dayOfNextGoal,
-                            dayMeasured: req.body.dayMeasured,
-                            romMetricId: req.params.id
-                        }).then(function (measure) {
-                            if (!measure) console.log("SAD :(");
-                            res.json(measure);
-                            return next();
-                        }).catch(function (err) {
-                            return console.log("here1");
-                        })
-                    } else {
-                        res.status(401).send('Unauthorized');
-                    }
+            }).then(function(injury) {
+                if(Object.keys(injury).length !== 0){
+                    models.patient.findOne({
+                        where: {
+                            id: injury.patientId
+                        }
+                    }).then(function(patient) {
+                        if(Object.keys(patient).length !== 0) {
+                            if(decoded.isPt && decoded.id == patient.ptId) {
+                                models.romMetricMeasure.create({
+                                    name: req.body.name,
+                                    degreeValue: req.body.degreeValue,
+                                    nextGoal: req.body.nextGoal,
+                                    dayOfNextGoal: req.body.dayOfNextGoal,
+                                    dayMeasured: req.body.dayMeasured,
+                                    romMetricId: req.params.id
+                                }).then(function (measure) {
+                                    if(Object.keys(measure).length !== 0){
+                                        res.json(measure);
+                                        return next();
+                                    }
+                                    else {
+                                        res.status(500).send('Could not create');
+                                    }
+                                }).catch(function (err) {
+                                    return next(err);
+                                })
+                            } else {
+                                res.status(401).send('Unauthorized');
+                            }
+                        } else {
+                            res.status(404).send('No patient with that injury');
+                        }
+                    }).catch(function (err) {
+                        // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
+                        console.log("here1");
+                    })
                 } else {
                     res.status(404).send('No patient with that injury');
                 }
@@ -123,4 +139,4 @@ module.exports.getMeasures = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}
