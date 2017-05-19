@@ -638,7 +638,7 @@ function getMeasurements(injury) {
             for (var i = data.length - 1; i >= 0; i--) {
                 if (count <= 3) {
                     temp[count] = {
-                        date: data[i].dayMeasured,
+                        date: data[i].dayOfNextGoal,
                         measure: data[i].degreeValue
                     };
                     count++;
@@ -933,6 +933,7 @@ function createGraph(id) {
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
+        console.log(injuryInfo);
 
         var w, h;
 
@@ -959,13 +960,15 @@ function createGraph(id) {
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
+                console.log(i);
                 degreeValue.push(+(injuryInfo[i].measure));
                 var year = +(injuryInfo[i].date).substring(0,4);
                 var month = +(injuryInfo[i].date).substring(5,7) - 1;
                 var day = +(injuryInfo[i].date).substring(8,10) - 1;
-                dayMeasured.push(new Date(year, month, day));
+                dayMeasured.push((new Date(year, month, day)));
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
+            console.log(points);
         }
         getDegDates();
 
@@ -1037,9 +1040,8 @@ function createGraph(id) {
             .tickSize(0)
             .tickFormat(d3.time.format("%-m/%-d"))
             .tickPadding(4)
-            .ticks(d3.time.days, 5)
-            ;
-
+            .ticks(d3.time.days, 7)
+            .ticks(5);
 
 // create left yAxis
         var yAxisLeft = d3.svg.axis()
