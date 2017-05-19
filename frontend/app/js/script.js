@@ -767,6 +767,7 @@ function search(query, array) {
         if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
     }
+    localStorage.display = JSON.stringify(temp);
     load();
 }
 
