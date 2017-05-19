@@ -605,6 +605,36 @@ function loadFocusPatient () {
     container.appendChild(outBox);
 }
 
+function renderExercisePage() {
+    setTimeout(function() {
+        var pat = JSON.parse(localStorage.patients)[0];
+        if (pat.sets.length !== 0) {
+            var bodyBox = document.createElement('div');
+            var bodyBoxHTML = "";
+            console.log(pat);
+            for (var i = 0; i < pat.sets.length; i++){
+                var exSetId = pat.sets[i].id;
+                // adding exercise set name
+                bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i].name + '</p>';
+                // adding list of exercises
+                for (var j = 0; j < pat.exercises.length; j++){
+                    if (pat.exercises[j].exerciseSetId == exSetId){
+                        // adding exercise name
+                        bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[j].name;
+                        // adding exercise sets and seconds
+                        bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div><br></div></div>'
+                    }
+                }
+            }
+            bodyBox.innerHTML = bodyBoxHTML;
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('exercisepg').appendChild(bodyBox);
+        } else {
+            renderExercisePage();
+        }
+    }, 1000);
+}
+
 function changePercent(val) {
     var pfp = JSON.parse(localStorage.focusPatient);
     var injuryData = pfp.progress[val];
@@ -731,7 +761,6 @@ function loadExerciseSets() {
                     if (!res.ok) return submitError(res);
                     res.json().then(function (data) {
                         var patient = JSON.parse(localStorage.patients)[0];
-                        console.log(data);
                         patient.sets[y] = data[0];
                         localStorage.patients = JSON.stringify([patient]);
                         loadSpecificExercises(data[0].id);
@@ -767,6 +796,11 @@ function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
+}
+
+function loadExerciseStart() {
+    loadExerciseSets();
+    renderExercisePage();
 }
 
 function load() {
