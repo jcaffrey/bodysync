@@ -457,7 +457,7 @@ function change5(e) {
 function change6(e) {
     var pfp = JSON.parse(localStorage.focusPatient);
     var count = 0;
-    for (var j = 1; j <= pfp.progress.length; j++) {
+    for (var j = 1; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
             var ele = eval('(' + "iconGraph" + (count + 1) + ')');
@@ -511,7 +511,7 @@ function loadFocusPatient () {
     var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(menuBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
@@ -549,7 +549,7 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
       }
@@ -562,11 +562,13 @@ function loadFocusPatient () {
 
       // adding body-part-box
         // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+
+        c = '#' + color(val[0])[0];
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage" style="color:' + c + '">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div><div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div></div></div></div>';
+        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div><div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div>';
+        // legend
+        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -990,13 +992,20 @@ function createGraph(id) {
       //       60]);
 
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
-        console.log(injuryInfo);
 
         var w, h;
 
-        if (window.innerWidth < 770) {
+        if (window.innerWidth < 500) {
             w = 7 * window.innerWidth / 12;
             h = 2 * window.innerHeight / 5;
+        }
+        if (window.innerWidth >= 600 && window.innerWidth < 770) {
+            w = 7 * window.innerWidth / 12;
+            h = 2 * window.innerHeight;
+        }
+        if (window.innerWidth >= 700 && window.innerWidth < 1000) {
+            w = 2 * window.innerWidth / 3;
+            h = 3* window.innerHeight / 7;
         }
 
         else {
@@ -1058,6 +1067,7 @@ function createGraph(id) {
 
         var start_end = [min_x, max_x];
 
+
         var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
         var y = d3.scale.linear().domain([min_y, max_y]).range([h, 50]);
 
@@ -1098,10 +1108,11 @@ function createGraph(id) {
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .ticks(5)
             .tickSize(0)
             .tickFormat(d3.time.format("%-m/%-d"))
-            .tickPadding(4);
+            .tickPadding(4)
+            .ticks(d3.time.days, 5)
+            ;
 
 
 // create left yAxis
@@ -1158,5 +1169,4 @@ function createGraph(id) {
         ;
 
     }, 1000);
-
 }
