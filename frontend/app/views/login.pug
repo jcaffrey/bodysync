@@ -24,7 +24,7 @@ block content
             .input-box
                 input.text-input(type='email' name='email' placeholder='example@domain.com' maxlength="24")
                 .input-name Email
-            .input-box
+            .input-box.last-box
                 input.text-input(type='password' name='password' placeholder='********' maxlength="24"
                     onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
                         "else { submitPatientLogin() }} else {} ")
