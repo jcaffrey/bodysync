@@ -301,7 +301,7 @@ function getPatients() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
-            window.location = '/patients1';
+            window.location = '/patients';
         });
     }).catch(submitError);
 }
@@ -919,12 +919,12 @@ function submitMeasures () {
             count++;
         }
     }
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 function submitOne (id, i, lastGoal, lastMeasure) {
     submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 // =============================================================

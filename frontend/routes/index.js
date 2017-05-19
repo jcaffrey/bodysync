@@ -1,5 +1,3 @@
-// CORRECT NEW ONE
-
 const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
@@ -58,12 +56,6 @@ router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
         headers: {'x-access-token': req.query.token}
     }).pipe(res);
-});
-
-router.get('/patients', function(req, res, next) {
-    return res.render('patients', {
-        footerButton: 'Cancel', footerButton2: 'Submit'
-    });
 });
 
 // get a specific patient's general info
@@ -222,8 +214,8 @@ router.get('/patient-status', function(req, res, next) {
 });
 
 // patient view
-router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
+router.get('/patients', function(req, res, next) {
+    return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // exercise form view
