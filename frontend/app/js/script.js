@@ -122,7 +122,7 @@ function postMeasure (id, degree, lastGoal) {
         dayMeasured: d.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: degree,
-        name: "name" + id
+        name: "firstMeasure"
     };
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
@@ -175,8 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
-                            console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
+                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
