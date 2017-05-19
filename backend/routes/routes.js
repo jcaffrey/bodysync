@@ -97,7 +97,7 @@ router.route('/injuries/:id')
     .delete(auth.ptRequired, injuries.deleteInjury, ptSessions.updateSession);
 
 // routes for injury tracking (rom content)
-router.route('/injuries/:id/rommetrics')
+router.route('/injuries/:id/romMetrics')
     .get(auth.tokenRequired, romMetrics.getRomMetrics, ptSessions.logSession) // error catching
     .post(auth.ptRequired, romMetrics.createRomMetric, ptSessions.updateSession);
 

@@ -99,6 +99,23 @@ function submitForm() {
         .catch(submitError)
 }
 
+function postMetric (id, degree, lastGoal) {
+    var data = {
+        startRange: degree,
+        endRangeGoal: lastGoal,
+        name: "name" + id
+    };
+    fetch('/injuries/' + id + '/romMetrics', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+        postMeasure(id, degree, lastGoal);
+    }).catch(function (err) { console.log(err) });
+}
+
 function postMeasure (id, degree, lastGoal) {
     var d = new Date();
     var data = {
@@ -158,7 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                             console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);

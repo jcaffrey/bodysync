@@ -54,7 +54,6 @@ insert into romMetrics
     (name, startRange, endRangeGoal, createdAt, updatedAt, injuryId)
 values
     ('External Shoulder Rotation', '30', '90', now(), now(), 1),
-    ('Arm Rotation', '10', '100', now(), now(), 1),
     ('Toe Rotation', '5', '10', now(), now(), 2),
     ('Ankle Flexion', '70', '90', now(), now(), 3),
     ('Thumb Rotation', '0', '90', now(), now(), 4),
@@ -72,13 +71,11 @@ values
     ('fifthMeasure', 53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
     ('sixthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
     ('seventhMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('firstMeasure', 17, 25, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 2),
-    ('secondMeasure', 77, 100, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 2),
-    ('firstMeasure', 4, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 3),
-    ('firstMeasure', 18, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 4),
-    ('firstMeasure', 67, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 5),
-    ('firstMeasure', 88, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 6),
-    ('firstMeasure', 56, 1000, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 7);
+    ('firstMeasure', 4, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 2),
+    ('firstMeasure', 18, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 3),
+    ('firstMeasure', 67, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 4),
+    ('firstMeasure', 88, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 5),
+    ('firstMeasure', 56, 1000, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 6);
 
 -- exerciseSets
 insert into exerciseSets

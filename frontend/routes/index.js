@@ -96,9 +96,23 @@ router.post('/pts/:id/patients', function(req, res, next) {
 });
 
 // -------------------------------------------------------------------------------
+router.get('/injuries/:id/romMetrics', function(req, res, next) {
+    request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.post('/injuries/:id/romMetrics', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
     }).pipe(res);
 });
 
