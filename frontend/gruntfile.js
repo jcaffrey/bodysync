@@ -40,18 +40,15 @@ module.exports = function(grunt) {
         watch: {
             css: {
                 files: ['gruntfile.js', 'app/stylesheets/*'],
-                tasks: ['stylus'],
-                options: { livereload: 10000 }
+                tasks: ['stylus']
             },
             js: {
                 files: ['gruntfile.js', 'app/js/*'],
-                tasks: ['uglify'],
-                options: { livereload: 10000 }
+                tasks: ['uglify']
             },
             html: {
                 files: ['app/views/*'],
-                tasks: [],
-                options: { livereload: 10000 }
+                tasks: []
             }
         }
     });

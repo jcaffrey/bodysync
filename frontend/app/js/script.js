@@ -568,7 +568,6 @@ function loadFocusPatient () {
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
                     '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
-      console.log('hi');
       // getting notes
       outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
@@ -578,7 +577,7 @@ function loadFocusPatient () {
         c = '#' + color(val[0])[0];
         outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage" style="color:' + c + '">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div><div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div>';
+        outBoxHTML += '<div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
         // legend
         outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
@@ -669,25 +668,20 @@ function loadPatientDetails () {
               count++;
           }
       }
-      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
-      // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
-                   '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
-      console.log('hi');
-      // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+    outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+    // getting exercise set
+    outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Set</span><div class="exercise-description-label"><span id="exerciseText">STD Shoulder/Back</span></div>'+
+               '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
+    // getting notes
+    outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
-      // adding body-part-box
-        // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
-        // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
-
-    // adding transition-box
-    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
-    window.alert(isPatient);
+    // adding body-part-box
+    // percentage-box
+    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
+    // legend
+    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+    // graph
+    outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
     outBox.innerHTML = outBoxHTML;
     var container = document.getElementById('patientDetails').appendChild(ptBox);
     container.appendChild(menuBox);
@@ -719,7 +713,6 @@ function getMeasurements(injury) {
             var temp = [];
             var count = 0;
             for (var i = data.length - 1; i >= 0; i--) {
-                console.log('i is ' + i + ' and count is ' + count);
                 if (count <= 3) {
                     temp[count] = {
                         date: data[i].dayMeasured,
@@ -967,6 +960,7 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 function createGraph(id) {
     document.getElementById('graph').innerHTML = '';
     document.getElementById('loading').style.display = 'inline';
+    document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
 
@@ -1058,6 +1052,7 @@ function createGraph(id) {
             });
 
         document.getElementById('loading').style.display = 'none';
+        document.getElementById('graph-container').style.display = 'inline';
 
 
 // Add an SVG element with the desired dimensions and margin.
