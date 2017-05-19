@@ -55,6 +55,7 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            console.log('logged in');
             getPatientView();
         });
     }).catch(submitError);
@@ -66,6 +67,7 @@ function logout() {
     localStorage.patients = '';
     localStorage.display = '';
     localStorage.graphData = '';
+    localStorage.focusPatient = '';
     window.location = '/';
 }
 
@@ -95,6 +97,23 @@ function submitForm() {
         body: JSON.stringify(data)
     }).then(submitSuccess)
         .catch(submitError)
+}
+
+function postMetric (id, degree, lastGoal) {
+    var data = {
+        startRange: degree,
+        endRangeGoal: lastGoal,
+        name: "name" + id
+    };
+    fetch('/injuries/' + id + '/romMetrics', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+        postMeasure(id, degree, lastGoal);
+    }).catch(function (err) { console.log(err) });
 }
 
 function postMeasure (id, degree, lastGoal) {
@@ -156,7 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                             console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
@@ -164,17 +183,6 @@ function submitPatient() {
             }
         });
     }).catch(submitError);
-}
-
-function getGraphData(id) {
-    fetch('/romMetrics/' + id, {
-        headers: { 'Content-Type': 'application/json', 'x-access-token': localStorage.token },
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {localStorage.graphData = data});
-    })
-        .catch(submitError);
 }
 
 // =============================================================
@@ -290,10 +298,11 @@ function getPatients() {
         if (!res.ok) throw(res);
         res.json().then(function(pts) {
             // var patients = JSON.parse(localStorage.patients);
+            localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
+            window.location = '/patients';
         });
-        window.location = '/patients1';
     }).catch(submitError);
 }
 
@@ -302,12 +311,13 @@ function getPatientView (){
   ).then(function(res) {
       if (!res.ok) throw(res);
       res.json().then(function(info) {
-          localStorage.patientInfo = JSON.stringify([info]);
+          localStorage.isPatient = JSON.stringify(true);
+          localStorage.patients = JSON.stringify([info]);
+          window.location = '/patient-home';
       });
-      loadProgress(localStorage.patientInfo);
-      window.location = '/patient-home';
   }).catch(submitError);
 }
+
 
 function displayCollapse(x) {
     var elt = document.getElementById(x);
@@ -338,6 +348,7 @@ function color(n) {
 function loadPatients(patients) {
     setTimeout(function() {
         var psd = JSON.parse(patients);
+        var isPatient = JSON.parse(localStorage.isPatient);
         if (psd[0].progress.length !== 0) {
             // fetch patient metrics here
             for (var i = 0; i < psd.length; i++) {
@@ -388,8 +399,9 @@ function loadPatients(patients) {
                     '<span></span>' +
                     '<span></span>';
                 collapse.setAttribute('class', 'buttonCollapse');
+                var collapseDiv = !isPatient ? '" style="display:none">' : ''
                 var collapseContent =
-                    '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
+                    '<div class="collapse" id= "collapse' + i + collapseDiv +
                     '<hr><div class="space"></div>';
                 for (var j = 0; j < psd[i].progress.length; j++) {
                     var val = psd[i].progress[j];
@@ -407,8 +419,12 @@ function loadPatients(patients) {
                         collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
                     }
                 }
-                collapseContent += '<div class="space"></div>' +
-                    '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                if (!isPatient) {
+                  collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                }
+                else {
+                  collapseContent += '<div class="space"></div><a href="/patient-details" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                }
                 collapse.innerHTML = collapseContent;
                 rec.setAttribute('class', 'recovery');
                 if (indicator[0] !== 'bbbbbb') {
@@ -428,7 +444,9 @@ function loadPatients(patients) {
                 inner.appendChild(recbx);
                 div.appendChild(picbox);
                 div.appendChild(inner);
-                div.appendChild(menu);
+                if (!isPatient) {
+                  div.appendChild(menu);
+                }
                 div.appendChild(collapse);
                 document.getElementById('patients').appendChild(div);
             }
@@ -484,9 +502,9 @@ function chooseInjury (c) {
     return(val[0]);
 }
 
-
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
+    var isPatient = JSON.parse(localStorage.isPatient);
     var sum = 0;
     var count = 0;
     for (var k = 0; k < pfp.progress.length; k++) {
@@ -521,7 +539,7 @@ function loadFocusPatient () {
     var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change6(iconOverview); change2(iconOverviewTrans); change1(overviewBox); change(bodyBox); change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
@@ -529,7 +547,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -559,7 +577,7 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
       }
@@ -572,11 +590,12 @@ function loadFocusPatient () {
 
       // adding body-part-box
         // percentage-box
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div class="percentage-box"><div class="percentage">' + val[0] + '%' + '</div><div class="recoveryText">recovered</div></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div>';
+
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
         // graph
-        outBoxHTML += '<div class="graph-view"><div class="svgh" id="graph"></div></div></div></div>';
+        outBoxHTML += '<div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+        // legend
+        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -584,8 +603,14 @@ function loadFocusPatient () {
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
+}
 
-    createGraph();
+function changePercent(val) {
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var injuryData = pfp.progress[val];
+    document.getElementById('singlePercent').style.color = '#' + color(injuryData[0])[0];
+    document.getElementById('singlePercent').innerHTML = injuryData[0] + '%';
+    document.getElementById('injuryTitle').innerHTML = injuryData[1];
 }
 
 function colorPercent (percent, col){
@@ -597,122 +622,52 @@ function colorPercent (percent, col){
     }
 }
 
-function loadPatientGeneralInfo (){
-  var pfp = JSON.parse(localStorage.focusPatient);
-  var sum = 0;
-  var count = 0;
-  for (var k = 0; k < pfp.progress.length; k++) {
-      var value = pfp.progress[k];
-      if (value != null) {
-          sum += +value[0];
-          count++;
-      }
-  }
-  var percent = (sum / count).toFixed(1);
-  var indicator = color(percent);
-
-  // html for pt-box
-    var ptBox = document.createElement('div');
-    // adding pic-box
-    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-    + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-    // adding info-box
-    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-    '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-    '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-    ptBox.innerHTML = ptBoxHTML;
-
-    var container = document.getElementById('generalInfo').appendChild(ptBox);
-
-
-}
-
-// change to status html
-function loadStatus(patient) {
-    var progress = +JSON.parse(localStorage.progress);
-    if (progress !== "") {
-        // fetch patient metrics here
-        var div = document.createElement('div');
-        var picbox = document.createElement('div');
-        var pic = document.createElement('img');
-        var prog = document.createElement('img');
-        var inner = document.createElement('div');
-        var name = document.createElement('div');
-        var recbx = document.createElement('div');
-        var p1 = document.createElement('div');
-        var menu = document.createElement('div');
-        var rec = document.createElement('div');
-        var collapse = document.createElement('div');
-        var percent = (progress * 100).toFixed(1);
-        var indicator = color(percent);
-
-        pic.src = '../../img/profile_pic.jpg';
-        pic.setAttribute('id', 'profileImg');
-        prog.src = indicator[1];
-        prog.setAttribute('id', indicator[2]);
-        recbx.setAttribute('class', 'recovery-box');
-        p1.setAttribute('class', 'percent1');
-        // Hard coded patient data
-        p1.innerHTML = "<span>" + percent + "%</span>";
-        p1.style.color = "#" + indicator[0];
-        menu.setAttribute('class', 'arrow');
-        menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('" + i + "')");
-        menu.setAttribute('id', 'nav-icon');
-        menu.innerHTML =
-            '<span></span>' +
-            '<span></span>' +
-            '<span></span>' +
-            '<span></span>';
-        collapse.setAttribute('class', 'buttonCollapse');
-        collapse.innerHTML =
-            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
-            '<hr><div class="space"></div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Shoulder</div>' +
-            '<div class="input-percent1">' + percent + '</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Neck - Side</div>' +
-            '<div class="input-percent2">' + percent + '%</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Neck - Front</div>' +
-            '<div class="input-percent3">' + percent + '</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="space"></div>' +
-            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
-            '</div>' +
-            '</div>';
-        rec.setAttribute('class', 'recovery');
-        rec.innerHTML = "<span>Recovered</span>";
-        recbx.appendChild(p1);
-        recbx.appendChild(rec);
-        div.setAttribute('class', 'pt-box');
-        picbox.setAttribute('class', 'pic-box');
-        inner.setAttribute('class', 'info-box');
-        name.setAttribute('class', 'name');
-        picbox.appendChild(pic);
-        picbox.appendChild(prog);
-        name.appendChild(document.createTextNode(psd[i].name));
-        inner.appendChild(name);
-        inner.appendChild(recbx);
-        div.appendChild(picbox);
-        div.appendChild(inner);
-        div.appendChild(menu);
-        div.appendChild(collapse);
-        document.getElementById('patients').appendChild(div);
-    }
-    else {
-        setTimeout(function() { loadStatus(patient) }, 100);
-    }
-}
-
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
+}
+
+function getMeasurements(injury) {
+    fetch('/romMetrics/' + injury + '/romMetricMeasures/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var temp = [];
+            var count = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                if (count <= 3) {
+                    temp[count] = {
+                        date: data[i].dayMeasured,
+                        measure: data[i].degreeValue
+                    };
+                    count++;
+                }
+            }
+            temp.reverse();
+            temp[count] = {
+                date: data[data.length - 1].dayOfNextGoal,
+                goal: data[data.length - 1].nextGoal
+            };
+            temp[count + 1] = data[data.length - 1].nextGoal;
+            localStorage["graphData" + injury] = JSON.stringify(temp);
+        });
+    }).catch(console.log('error' + injury));
+}
+
+function getGraphData() {
+    var id = JSON.parse(localStorage.focusPatient).id;
+    fetch('/findInjuries/' + id + '/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var init = data[0].id || 0;
+            for (var j = init; j < data.length + init; j++) {
+                (function(y) { getMeasurements(y) }(j));
+            }
+        });
+    }).catch(submitError);
 }
 
 function updateProgress(patient, injury, name) {
@@ -762,16 +717,56 @@ function loadPatient(id) {
     }).catch(submitError);
 }
 
+function loadExerciseSets() {
+    var pat = JSON.parse(localStorage.patients)[0];
+    pat.sets = [];
+    localStorage.patients = JSON.stringify([pat]);
+    var count = 0;
+    for (var i = 0; i < pat.progress.length; i++) {
+        if (pat.progress[i] !== null){
+            (function(x, y) {
+                fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets/?token=' + localStorage.token, {
+                    method: 'GET'
+                }).then(function(res) {
+                    if (!res.ok) return submitError(res);
+                    res.json().then(function (data) {
+                        var patient = JSON.parse(localStorage.patients)[0];
+                        patient.sets[y] = data[0];
+                        localStorage.patients = JSON.stringify([patient]);
+                        loadSpecificExercises(patient.sets[y].id);
+                    });
+                }).catch(submitError);
+
+            }(i, count))
+            count++;
+        }
+    }
+}
+
+function loadSpecificExercises(exSetId) {
+    var pat = JSON.parse(localStorage.patients)[0];
+    pat.exercises = [];
+    localStorage.patients = JSON.stringify([pat]);
+    fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            console.log(data.length);
+            for (var j = 0; j < data.length; j++){
+                var patient = JSON.parse(localStorage.patients)[0];
+                patient.exercises[j] = data[0];
+                localStorage.patients = JSON.stringify([patient]);
+            }
+        });
+    }).catch(submitError);
+}
+
+
 function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
-}
-
-function loadStatus(patient) {
-    clear();
-    loadPatient(patient.id);
-    loadStatus(patient);
 }
 
 function load() {
@@ -786,6 +781,7 @@ function search(query, array) {
         if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
     }
+    localStorage.display = JSON.stringify(temp);
     load();
 }
 
@@ -836,15 +832,6 @@ function sortProg() {
     else localStorage.display = JSON.stringify(lst.sort(function (a, b) { return b.average - a.average }));
     load();
 }
-
-// function arrowdown(index) {
-//     var lst = JSON.parse(localStorage.display);
-//     if (not last element in array)
-//         var temp = lst[index];
-//         lst[index] = lst[index+1];
-//         lst[index+1] = temp;
-
-//     in pug, use each to make an id that is the index (look at loadPatients and add-measure.styl)
 
 function focusPatient (id) {
     var patients = JSON.parse(localStorage.patients);
@@ -929,12 +916,12 @@ function submitMeasures () {
             count++;
         }
     }
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 function submitOne (id, i, lastGoal, lastMeasure) {
     submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 // =============================================================
@@ -963,68 +950,59 @@ function submitExercise() {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
+    document.getElementById('graph').innerHTML = '';
+    document.getElementById('loading').style.display = 'inline';
+    document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
-        getGraphData(id);
-
-        var injuryInfo = JSON.parse(localStorage.graphData);
+        var injuryInfo = JSON.parse(localStorage["graphData" + id]);
 
         var w, h;
 
-        if (window.innerWidth < 770) {
-            w = 7 * window.innerWidth / 12;
-            h = 2 * window.innerHeight / 5;
+        if (window.innerWidth < 600) {
+            w = 7.5 * window.innerWidth / 11;
+            h = 7 * window.innerWidth / 12;
         }
-
+        else if (window.innerWidth >= 600 && window.innerWidth < 770) {
+            w = 8.5 * window.innerWidth / 13;
+            h = 4 * window.innerWidth / 7;
+        }
+        else if (window.innerWidth >= 700 && window.innerWidth < 1000) {
+            w = 4 * window.innerWidth / 11;
+            h = 6 * window.innerWidth / 15;
+        }
         else {
-            w = window.innerWidth / 3;
-            h = window.innerHeight / 3;
+            w = 2* window.innerWidth / 5;
+            h = 2* window.innerWidth / 5;
         }
-
-
-        var degreeValue = [32, 35, 40, 45];
-
-        var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-
-        var goal = 60;
-
-        var next_weeks_goal = 50;
-
-        var next_weeks_goal_date = (new Date(2017, 3, 29));
-
-        var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-
-        var goal_point = [50, 4];
-
-
 
         var degreeValue = [];
-
         var dayMeasured = [];
-
         var points = [];
-
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
-                degreeValue.push(injuryInfo[i].measure);
-                dayMeasured.push(injuryInfo[i].date);
-                points.push((injuryInfo[i].measure, (i + 1)));
+                degreeValue.push(+(injuryInfo[i].measure));
+                var year = +(injuryInfo[i].date).substring(0,4);
+                var month = +(injuryInfo[i].date).substring(5,7) - 1;
+                var day = +(injuryInfo[i].date).substring(8,10) - 1;
+                dayMeasured.push(new Date(year, month, day));
+                points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
         }
+        getDegDates();
 
-
-        var goal = injuryInfo[injuryInfo.legth - 1];
+        var goal = +(injuryInfo[injuryInfo.length - 1]);
 
         var nextGoalId = injuryInfo.length - 2;
 
-        var next_weeks_goal = injuryInfo[nextGoalId].goal;
+        var next_weeks_goal = +(injuryInfo[nextGoalId].goal);
 
-        var next_weeks_goal_date = injuryInfo[nextGoalId].date;
+        var year = +(injuryInfo[injuryInfo.length - 2].date.substring(0,4));
+        var month = +(injuryInfo[injuryInfo.length - 2].date.substring(5,7)) - 1;
+        var day = +(injuryInfo[injuryInfo.length - 2].date.substring(8,10)) - 1;
+        var next_weeks_goal_date = new Date(year, month, day);
 
         var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
-
-
-
 
         var min_y = d3.min(degreeValue) - 20;
 
@@ -1035,7 +1013,6 @@ function createGraph(id) {
         var max_x = next_weeks_goal_date;
 
         var start_end = [min_x, max_x];
-
 
 
         var x = d3.time.scale().domain([min_x, max_x]).range([0, w]);
@@ -1065,6 +1042,8 @@ function createGraph(id) {
                 return y(next_weeks_goal[i]);
             });
 
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('graph-container').style.display = 'inline';
 
 
 // Add an SVG element with the desired dimensions and margin.
@@ -1077,10 +1056,11 @@ function createGraph(id) {
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .ticks(5)
             .tickSize(0)
             .tickFormat(d3.time.format("%-m/%-d"))
-            .tickPadding(4);
+            .tickPadding(4)
+            .ticks(d3.time.days, 5)
+            ;
 
 
 // create left yAxis
@@ -1118,8 +1098,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(degreeValue[i]);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
 
         graph.selectAll(".point")
@@ -1132,10 +1112,8 @@ function createGraph(id) {
             .attr("cy", function (d, i) {
                 return y(next_weeks_goal);
             })
-            .attr("r", (w / 25))
-            .attr("transform", "translate(" + (w / 25 + 20) + "," + -(w / 100) + ")")
+            .attr("r", 9)
+            .attr("transform", "translate(18,0)")
         ;
-
     }, 1000);
-
 }

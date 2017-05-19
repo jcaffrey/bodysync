@@ -12,9 +12,7 @@ module.exports = function(grunt) {
                     'public/stylesheets/rom-form.css': 'app/stylesheets/rom-form.styl',
                     'public/stylesheets/add-measure.css': 'app/stylesheets/add-measure.styl',
                     'public/stylesheets/patients.css': 'app/stylesheets/patients.styl',
-                    'public/stylesheets/patients1.css': 'app/stylesheets/patients1.styl',
                     'public/stylesheets/patient-status.css': 'app/stylesheets/patient-status.styl',
-                    'public/stylesheets/patients.css': 'app/stylesheets/patients1.styl',
                     'public/stylesheets/exercise-set.css': 'app/stylesheets/exercise-set.styl',
                     'public/stylesheets/exercise-form.css': 'app/stylesheets/exercise-form.styl'
                 }
@@ -39,18 +37,15 @@ module.exports = function(grunt) {
         watch: {
             css: {
                 files: ['gruntfile.js', 'app/stylesheets/*'],
-                tasks: ['stylus'],
-                options: { livereload: 10000 }
+                tasks: ['stylus']
             },
             js: {
                 files: ['gruntfile.js', 'app/js/*'],
-                tasks: ['uglify'],
-                options: { livereload: 10000 }
+                tasks: ['uglify']
             },
             html: {
                 files: ['app/views/*'],
-                tasks: [],
-                options: { livereload: 10000 }
+                tasks: []
             }
         }
     });

@@ -1,5 +1,3 @@
-// CORRECT NEW ONE
-
 const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
@@ -11,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/patient-home', function(req, res, next) {
-    return res.render('patient-home', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
+    return res.render('patient-home', { type: 'patient', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
 
 router.post('/', function(req, res, next) {
@@ -34,7 +32,7 @@ router.get('/reset/:token', function(req, res, next) {
 router.get('');
 
 router.get('/exercises', function(req, res, next) {
-    return res.render('exercises');
+    return res.render('exercises', { type: 'patient'});
 });
 
 router.get('/loginnew', function(req, res, next) {
@@ -58,12 +56,6 @@ router.get('/pts/:id/patients', function(req, res, next) {
     request.get(config.apiUrl + '/pts/' + req.params.id + '/patients', {
         headers: {'x-access-token': req.query.token}
     }).pipe(res);
-});
-
-router.get('/patients', function(req, res, next) {
-    return res.render('patients', {
-        footerButton: 'Cancel', footerButton2: 'Submit'
-    });
 });
 
 // get a specific patient's general info
@@ -96,9 +88,23 @@ router.post('/pts/:id/patients', function(req, res, next) {
 });
 
 // -------------------------------------------------------------------------------
+router.get('/injuries/:id/romMetrics', function(req, res, next) {
+    request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.post('/injuries/:id/romMetrics', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
     }).pipe(res);
 });
 
@@ -144,6 +150,47 @@ router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
 });
 
 // -------------------------------------------------------------------------------
+router.get('/injuries/:id/exerciseSets', function(req, res, next) {
+    request.get(config.apiUrl + '/injuries/' + req.params.id + '/exerciseSets?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.get('/exerciseSets/:id', function(req, res, next) {
+    request.get(config.apiUrl + '/exerciseSets/' + req.params.id + '/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.get('/exerciseSets/:id/exercises', function(req, res, next) {
+    request.get(config.apiUrl + '/exerciseSets/' + req.params.id + '/exercises?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.get('/exercises/:id', function(req, res, next) {
+    request.get(config.apiUrl + '/exercises/' + req.params.id + '/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.post('/injuries/:id/exerciseSets', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/injuries/' + req.params.id + '/exerciseSets',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
+    }).pipe(res);
+});
+
+router.post('/exerciseSets/:id/exercises', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/exerciseSets/' + req.params.id + '/exercises',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
+    }).pipe(res);
+});
+
+// -------------------------------------------------------------------------------
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
@@ -167,8 +214,8 @@ router.get('/patient-status', function(req, res, next) {
 });
 
 // patient view
-router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { url: '/create-patient', footerButton: 'Add Patient' });
+router.get('/patients', function(req, res, next) {
+    return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // exercise form view

@@ -137,6 +137,9 @@ body
     text-transform uppercase
     font-size 2em
 
+.forgotPassword
+    padding-top 1%
+
 .headerGrey
     display inline-block
     font-family 'GothamBold'
@@ -328,7 +331,7 @@ body
     border-radius: 11px 0px 0px 0px
 
 #loginForm
-    padding-top: 10%
+    padding-top: 2%
 
 #buttonTabPatient, #buttonTabPT
     height: 5%
@@ -338,10 +341,15 @@ body
     font-size: 20px
 
 .buttonTab
-    width: 90%
-    background: $mainColor
+    width: 60%
+    background-color: $mainColor
     color: #fff
     border-radius: 11px 11px 11px 11px
+    -webkit-transition: background-color 0.3s
+    transition: background-color 0.3s
+    &:hover
+        background-color: #1a0192
+        cursor: pointer
 
 #buttonTabPT
     border-radius: 0px 11px 0px 0px
