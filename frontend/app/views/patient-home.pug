@@ -5,18 +5,18 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
         window.onload = function () {
-            loadPatientStart();
+            loadStart();
         }
 
 block content
-  form
-    p.headerGrey Welcome back
-    #patients
-    #loading
-        p Loading
-        img(src='../../img/loading.gif')
+    form
+        p.headerGrey Welcome back!
+        #patients
+        #loading
+            p Loading
+            img(src='../../img/loading.gif')
 
-    div.container-center
-        a.buttonTab(onclick="window.location='/exercises';") Access Workouts
-    p.headerGrey.patientMain You're on the road to recovery! Keep up the good work.
+        div.container-center
+            a.buttonTab(onclick="window.location='/exercises'") Access Workouts
+        p.headerGrey.patientMain You're on the road to recovery! Keep up the good work.
 block footer
