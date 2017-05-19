@@ -1,0 +1,23 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients1.css')
+    link(rel='stylesheet', href='/stylesheets/patient-status.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    script.
+        var ChangeView = {
+            box1: document.getElementsByClassName('overview-box')[0],
+            box2: document.getElementsByClassName('body-part-box')[0],
+            toggleView: function (e) {
+                e.style.display = (e.style.display == 'none') ? 'inline-block' : 'none'
+            }}
+    script.
+      window.onload = function() {
+          loadPatientDetails();
+          getGraphData();
+      }
+
+block content
+    #pHIHIHI!
+    #patientDetails
