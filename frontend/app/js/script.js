@@ -122,7 +122,7 @@ function postMeasure (id, degree, lastGoal) {
         dayMeasured: d.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: degree,
-        name: "name" + id
+        name: "firstMeasure"
     };
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
@@ -175,8 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
-                            console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
+                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
@@ -668,7 +667,7 @@ function getMeasurements(injury) {
             for (var i = data.length - 1; i >= 0; i--) {
                 if (count <= 3) {
                     temp[count] = {
-                        date: data[i].dayMeasured,
+                        date: data[i].dayOfNextGoal,
                         measure: data[i].degreeValue
                     };
                     count++;
@@ -959,6 +958,28 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 }
 
 // =============================================================
+// Exercise form functions
+// =============================================================
+
+function submitExercise() {
+    var data = {};
+    data.name = form.exerciseName.value;
+    data.numRepsOrDuration = parseInt(document.getElementById('reps-num').innerHTML, 10);
+    data.numSets = parseInt(document.getElementById('sets-num').innerHTML, 10);
+    if (form.notes.value) data.ptNotes = form.notes.value;
+    fetch('/exerciseSets/' + localStorage.id + '/exercises', {
+        headers: {
+            'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+    }).catch(function (err) {console.log(err) });
+}
+
+// =============================================================
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
@@ -967,6 +988,7 @@ function createGraph(id) {
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
+        console.log(injuryInfo);
 
         var w, h;
 
@@ -993,13 +1015,15 @@ function createGraph(id) {
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
+                console.log(i);
                 degreeValue.push(+(injuryInfo[i].measure));
                 var year = +(injuryInfo[i].date).substring(0,4);
                 var month = +(injuryInfo[i].date).substring(5,7) - 1;
                 var day = +(injuryInfo[i].date).substring(8,10) - 1;
-                dayMeasured.push(new Date(year, month, day));
+                dayMeasured.push((new Date(year, month, day)));
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
+            console.log(points);
         }
         getDegDates();
 
@@ -1071,9 +1095,8 @@ function createGraph(id) {
             .tickSize(0)
             .tickFormat(d3.time.format("%-m/%-d"))
             .tickPadding(4)
-            .ticks(d3.time.days, 5)
-            ;
-
+            .ticks(d3.time.days, 7)
+            .ticks(5);
 
 // create left yAxis
         var yAxisLeft = d3.svg.axis()

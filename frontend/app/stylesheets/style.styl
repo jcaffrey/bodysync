@@ -391,7 +391,7 @@ button:hover, .submit:hover
     cursor: pointer
 
 .validationError
-    height 10%
+    height 4%
     width 100%
     z-index 9999
     bottom 9%
@@ -501,3 +501,25 @@ p
 
 .container-center
     text-align : center;
+
+form input[type='radio']
+    opacity 0
+    cursor pointer
+    position absolute
+    width 20px
+    height 20px
+    pointer-events auto
+
+
+#radioBox1, #radioBox2
+    position fixed
+    display inline-block
+    background-color $white
+    height 15px
+    width 15px
+    border solid 1px $mainColor
+    pointer-events auto
+    border-radius 50px
+
+#radioBox1
+    background-color $mainColor
