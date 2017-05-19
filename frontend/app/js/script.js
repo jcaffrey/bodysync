@@ -731,9 +731,10 @@ function loadExerciseSets() {
                     if (!res.ok) return submitError(res);
                     res.json().then(function (data) {
                         var patient = JSON.parse(localStorage.patients)[0];
+                        console.log(data);
                         patient.sets[y] = data[0];
                         localStorage.patients = JSON.stringify([patient]);
-                        loadSpecificExercises(patient.sets[y].id);
+                        loadSpecificExercises(data[0].id);
                     });
                 }).catch(submitError);
 
@@ -752,10 +753,9 @@ function loadSpecificExercises(exSetId) {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            console.log(data.length);
             for (var j = 0; j < data.length; j++){
                 var patient = JSON.parse(localStorage.patients)[0];
-                patient.exercises[j] = data[0];
+                patient.exercises.push(data[j]);
                 localStorage.patients = JSON.stringify([patient]);
             }
         });
