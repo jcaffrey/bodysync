@@ -9,15 +9,15 @@ module.exports.createMeasure = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.romMetric.findOne({
+    models.injury.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(rom) {
-        if(Object.keys(rom).length !== 0) {
-            models.injury.findOne({
+    }).then(function(injury) {
+        if(Object.keys(injury).length !== 0){
+            models.patient.findOne({
                 where: {
-                    id: rom.injuryId
+                    id: injury.patientId
                 }
             }).then(function(injury) {
                 if(Object.keys(injury).length !== 0){
@@ -57,17 +57,17 @@ module.exports.createMeasure = (req, res, next) => {
                         console.log("here1");
                     })
                 } else {
-                    res.status(404).send('No injury with that rom');
+                    res.status(404).send('No patient with that injury');
                 }
-
             }).catch(function (err) {
-                console.log("here2");
+                // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
+                return console.log("here2");
             })
         } else {
-            res.status(404).send('No ROM with that id');
+            res.status(404).send('No injury with that rom');
         }
     }).catch(function (err) {
-        console.log("here3");
+        return console.log("here3");
     })
 }
 
