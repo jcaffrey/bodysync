@@ -692,8 +692,6 @@ function loadPatientDetails () {
     var container = document.getElementById('patientDetails').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
-
-    createGraph();
 }
 
 function colorPercent (percent, col){
@@ -972,7 +970,7 @@ function createGraph(id) {
 
         var w, h;
 
-        if (window.innerWidth < 500) {
+        if (window.innerWidth < 600) {
             w = 7 * window.innerWidth / 12;
             h = 2 * window.innerHeight / 5;
         }
