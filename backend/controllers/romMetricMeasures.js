@@ -28,7 +28,7 @@ module.exports.createMeasure = (req, res, next) => {
                     }).then(function(patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.isPt && decoded.id == patient.ptId) {
-                                models.romMetricMeasure.createMeasure({
+                                models.romMetricMeasure.create({
                                     name: req.body.name,
                                     degreeValue: req.body.degreeValue,
                                     nextGoal: req.body.nextGoal,
