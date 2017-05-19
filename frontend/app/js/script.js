@@ -582,7 +582,6 @@ function loadFocusPatient () {
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
-    window.alert(isPatient);
     outBox.innerHTML = outBoxHTML;
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
@@ -704,126 +703,6 @@ function colorPercent (percent, col){
     }
 }
 
-function loadPatientsOne () {
-    setTimeout(function() {
-        console.log('in');
-        var psd = JSON.parse(localStorage.patients);
-        if (psd[0].progress.length !== 0) {
-            console.log('in1');
-            var pfp = psd[0];
-            var sum = 0;
-            var count = 0;
-            for (var k = 0; k < pfp.progress.length; k++) {
-                var value = pfp.progress[k];
-                if (value != null) {
-                    sum += +value[0];
-                    count++;
-                }
-            }
-            var percent = (sum / count).toFixed(1);
-            var indicator = color(percent);
-
-            // html for pt-box
-            var ptBox = document.createElement('div');
-            // adding pic-box
-            var ptBoxHTML = '<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
-                + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-
-            // adding info-box
-            ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-                '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-            ptBox.innerHTML = ptBoxHTML;
-            document.getElementById('patients').appendChild(ptBox);
-        } else {
-            loadPatientsOne();
-        }
-    }, 100);
-}
-
-// change to status html
-function loadStatus(patient) {
-    var progress = +JSON.parse(localStorage.progress);
-    if (progress !== "") {
-        // fetch patient metrics here
-        var div = document.createElement('div');
-        var picbox = document.createElement('div');
-        var pic = document.createElement('img');
-        var prog = document.createElement('img');
-        var inner = document.createElement('div');
-        var name = document.createElement('div');
-        var recbx = document.createElement('div');
-        var p1 = document.createElement('div');
-        var menu = document.createElement('div');
-        var rec = document.createElement('div');
-        var collapse = document.createElement('div');
-        var percent = (progress * 100).toFixed(1);
-        var indicator = color(percent);
-
-        pic.src = '../../img/profile_pic.jpg';
-        pic.setAttribute('id', 'profileImg');
-        prog.src = indicator[1];
-        prog.setAttribute('id', indicator[2]);
-        recbx.setAttribute('class', 'recovery-box');
-        p1.setAttribute('class', 'percent1');
-        // Hard coded patient data
-        p1.innerHTML = "<span>" + percent + "%</span>";
-        p1.style.color = "#" + indicator[0];
-        menu.setAttribute('class', 'arrow');
-        menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('" + i + "')");
-        menu.setAttribute('id', 'nav-icon');
-        menu.innerHTML =
-            '<span></span>' +
-            '<span></span>' +
-            '<span></span>' +
-            '<span></span>';
-        collapse.setAttribute('class', 'buttonCollapse');
-        collapse.innerHTML =
-            '<div class="collapse" id= "collapse' + i + '" style="display:none">' +
-            '<hr><div class="space"></div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Shoulder</div>' +
-            '<div class="input-percent1">' + percent + '</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Neck - Side</div>' +
-            '<div class="input-percent2">' + percent + '%</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="collapse-inner">' +
-            '<div class="input-label">Neck - Front</div>' +
-            '<div class="input-percent3">' + percent + '</div>' +
-            '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div>' +
-            '</div>' +
-            '<div class="space"></div>' +
-            '<a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '">Inspect Patient</a>' +
-            '</div>' +
-            '</div>';
-        rec.setAttribute('class', 'recovery');
-        rec.innerHTML = "<span>Recovered</span>";
-        recbx.appendChild(p1);
-        recbx.appendChild(rec);
-        div.setAttribute('class', 'pt-box');
-        picbox.setAttribute('class', 'pic-box');
-        inner.setAttribute('class', 'info-box');
-        name.setAttribute('class', 'name');
-        picbox.appendChild(pic);
-        picbox.appendChild(prog);
-        name.appendChild(document.createTextNode(psd[i].name));
-        inner.appendChild(name);
-        inner.appendChild(recbx);
-        div.appendChild(picbox);
-        div.appendChild(inner);
-        div.appendChild(menu);
-        div.appendChild(collapse);
-        document.getElementById('patients').appendChild(div);
-    }
-    else {
-        setTimeout(function() { loadStatus(patient) }, 100);
-    }
-}
-
 function clear() {
     var list = document.getElementById('patients');
     list.innerHTML = '';
@@ -924,18 +803,6 @@ function loadStart() {
     clear();
     loadProgress(localStorage.patients);
     loadPatients(localStorage.patients);
-}
-
-function loadPatientStart() {
-    clear();
-    loadProgress(localStorage.patients);
-    loadPatientsOne();
-}
-
-function loadStatus(patient) {
-    clear();
-    loadPatient(patient.id);
-    loadStatus(patient);
 }
 
 function load() {
@@ -1099,15 +966,6 @@ function createGraph(id) {
     document.getElementById('graph').innerHTML = '';
     document.getElementById('loading').style.display = 'inline';
     setTimeout(function () {
-      // //  getGraphData(id);
-      //   localStorage.graphData = JSON.stringify([
-      //       {date: (new Date(2017, 4, 1)), measure: 32},
-      //       {date: (new Date(2017, 4, 8)), measure: 35},
-      //       {date: (new Date(2017, 4, 15)), measure: 40},
-      //       {date: (new Date(2017, 4, 22)), measure: 45},
-      //       {date: (new Date(2017, 4, 29)), goal: 50},
-      //       60]);
-
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
         console.log(injuryInfo);
 
@@ -1122,21 +980,6 @@ function createGraph(id) {
             w = window.innerWidth / 3;
             h = window.innerHeight / 3;
         }
-
-        //
-        // var degreeValue = [32, 35, 40, 45];
-        //
-        // var dayMeasured = [(new Date(2017, 3, 1)), (new Date(2017, 3, 8)), (new Date(2017, 3, 15)), (new Date(2017, 3, 22))];
-        //
-        // var goal = 60;
-        //
-        // var next_weeks_goal = 50;
-        //
-        // var next_weeks_goal_date = (new Date(2017, 3, 29));
-        //
-        // var points = [[32, 1], [35, 2], [40, 3], [45, 4]];
-        //
-        // var goal_point = [50, 4];
 
         var degreeValue = [];
         var dayMeasured = [];
@@ -1275,7 +1118,5 @@ function createGraph(id) {
             .attr("r", 9)
             .attr("transform", "translate(18,0)")
         ;
-
     }, 1000);
-
 }
