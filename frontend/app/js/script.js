@@ -701,7 +701,7 @@ function loadPatient(id) {
 }
 
 function loadExerciseSets() {
-    var pat = JSON.parse(localStorage.patients);
+    var pat = JSON.parse(localStorage.patients)[0];
     pat.sets = [];
     localStorage.patients = JSON.stringify([pat]);
     var count = 0;
@@ -714,9 +714,8 @@ function loadExerciseSets() {
                     if (!res.ok) return submitError(res);
                     res.json().then(function (data) {
                         var patient = JSON.parse(localStorage.patients)[0];
-                        console.log(patient);
                         patient.sets[y] = data[0];
-                        localStorage.patients = JSON.stringify(patient);
+                        localStorage.patients = JSON.stringify([patient]);
                     });
                 }).catch(submitError);
 
