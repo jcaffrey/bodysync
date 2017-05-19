@@ -716,6 +716,7 @@ function loadExerciseSets() {
                         var patient = JSON.parse(localStorage.patients)[0];
                         patient.sets[y] = data[0];
                         localStorage.patients = JSON.stringify([patient]);
+                        loadSpecificExercises(patient.sets[y].id);
                     });
                 }).catch(submitError);
 
@@ -725,28 +726,24 @@ function loadExerciseSets() {
     }
 }
 
-// function loadSpecificExercises() {
-//     var exSet = JSON.parse(localStorage.exerciseSets);
-//     pat.injuries = [];
-//     for (var i = 0; i < pat.progress.length; i++) {
-//         if (pat.progress[i]){
-//             (function(x) {
-//                 fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets?token=' + localStorage.token, {
-//                     method: 'GET'
-//                 }).then(function(res) {
-//                     count++;
-//                     if (!res.ok) return submitError(res);
-//                     res.json().then(function (data) {
-//                         pat.injuries[count] = data[0];
-//                         console.log(pat.injuries[count]);
-//                     });
-//                 }).catch(submitError);
-//
-//             }(i))
-//         }
-//     }
-//     localStorage.exerciseSets = JSON.stringify(pat.injuries);
-// }
+function loadSpecificExercises(exSetId) {
+    var pat = JSON.parse(localStorage.patients)[0];
+    pat.exercises = [];
+    localStorage.patients = JSON.stringify([pat]);
+    fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            console.log(data.length);
+            for (var j = 0; j < data.length; j++){
+                var patient = JSON.parse(localStorage.patients)[0];
+                patient.exercises[j] = data[0];
+                localStorage.patients = JSON.stringify([patient]);
+            }
+        });
+    }).catch(submitError);
+}
 
 
 function loadStart() {
