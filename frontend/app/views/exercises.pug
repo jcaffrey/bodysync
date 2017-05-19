@@ -2,6 +2,10 @@ extends template
 
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/rom-form.css')
+    script.
+        window.onload = function() {
+            loadExerciseSets();
+        }
 
 block content
     form
