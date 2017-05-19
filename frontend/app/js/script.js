@@ -938,6 +938,28 @@ function submitOne (id, i, lastGoal, lastMeasure) {
 }
 
 // =============================================================
+// Exercise form functions
+// =============================================================
+
+function submitExercise() {
+    var data = {};
+    data.name = form.exerciseName.value;
+    data.numRepsOrDuration = parseInt(document.getElementById('reps-num').innerHTML, 10);
+    data.numSets = parseInt(document.getElementById('sets-num').innerHTML, 10);
+    if (form.notes.value) data.ptNotes = form.notes.value;
+    fetch('/exerciseSets/' + localStorage.id + '/exercises', {
+        headers: {
+            'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+    }).catch(function (err) {console.log(err) });
+}
+
+// =============================================================
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
