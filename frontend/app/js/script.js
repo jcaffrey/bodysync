@@ -99,6 +99,23 @@ function submitForm() {
         .catch(submitError)
 }
 
+function postMetric (id, degree, lastGoal) {
+    var data = {
+        startRange: degree,
+        endRangeGoal: lastGoal,
+        name: "name" + id
+    };
+    fetch('/injuries/' + id + '/romMetrics', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+        postMeasure(id, degree, lastGoal);
+    }).catch(function (err) { console.log(err) });
+}
+
 function postMeasure (id, degree, lastGoal) {
     var d = new Date();
     var data = {
@@ -158,7 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                             console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
@@ -284,7 +301,7 @@ function getPatients() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
-            window.location = '/patients1';
+            window.location = '/patients';
         });
     }).catch(submitError);
 }
@@ -560,7 +577,7 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
       }
@@ -764,6 +781,7 @@ function search(query, array) {
         if (arr[i].name.toUpperCase().includes(query.toUpperCase()))
             temp.push(arr[i]);
     }
+    localStorage.display = JSON.stringify(temp);
     load();
 }
 
@@ -898,12 +916,12 @@ function submitMeasures () {
             count++;
         }
     }
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 function submitOne (id, i, lastGoal, lastMeasure) {
     submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 // =============================================================
@@ -919,21 +937,20 @@ function createGraph(id) {
         var w, h;
 
         if (window.innerWidth < 600) {
-            w = 7 * window.innerWidth / 12;
-            h = 2 * window.innerHeight / 5;
+            w = 7.5 * window.innerWidth / 11;
+            h = 7 * window.innerWidth / 12;
         }
-        if (window.innerWidth >= 600 && window.innerWidth < 770) {
-            w = 7 * window.innerWidth / 12;
-            h = 2 * window.innerHeight;
+        else if (window.innerWidth >= 600 && window.innerWidth < 770) {
+            w = 8.5 * window.innerWidth / 13;
+            h = 4 * window.innerWidth / 7;
         }
-        if (window.innerWidth >= 700 && window.innerWidth < 1000) {
-            w = 2 * window.innerWidth / 3;
-            h = 3* window.innerHeight / 7;
+        else if (window.innerWidth >= 700 && window.innerWidth < 1000) {
+            w = 4 * window.innerWidth / 11;
+            h = 6 * window.innerWidth / 15;
         }
-
         else {
-            w = window.innerWidth / 3;
-            h = window.innerHeight / 3;
+            w = 2* window.innerWidth / 5;
+            h = 2* window.innerWidth / 5;
         }
 
         var degreeValue = [];

@@ -74,7 +74,7 @@ form h1
   box-shadow 0px 0px 25px 0px $inactiveColor
   border-radius $formRadius $formRadius $formRadius $formRadius
   display none
-  position fixed
+  position absolute
   width: 90%
   text-align: left
   vertical-align: middle
@@ -161,7 +161,7 @@ form h1
   border-radius 0 0 $formRadius $formRadius
 
 .bottom-box
-  height 80%
+  height 90%
   width 100%
   border-bottom none
 
@@ -403,17 +403,16 @@ form h1
   height 87%
 
 #graph
-  height 80%
+  height 65%
   width 100%
-  @media screen and (max-width: 500px)
-    height 90%
+  @media screen and (min-width: 600px)
+    width 88%
+    margin 0 6%
 
 .svgh
   height 70%
   width 100%
-  margin-left 10%
-  @media screen and (max-width: 600px)
-    margin-left 5%
+
 
 path
   stroke $mainColor
