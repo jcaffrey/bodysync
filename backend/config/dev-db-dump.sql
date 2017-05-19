@@ -54,12 +54,12 @@ insert into romMetrics
     (name, startRange, endRangeGoal, createdAt, updatedAt, injuryId)
 values
     ('External Shoulder Rotation', '30', '90', now(), now(), 1),
-    ('Arm Rotation', '10', '100', now(), now(), 1),
-    ('Toe Rotation', '5', '10', now(), now(), 2),
-    ('Ankle Flexion', '70', '90', now(), now(), 3),
-    ('Thumb Rotation', '0', '90', now(), now(), 4),
-    ('Back Angle', '80', '90', now(), now(), 5),
-    ('Face Coolness', '0', '1000', now(), now(), 6);
+    ('Arm Roration', '30', '90', now(), now(), 2),
+    ('Toe Rotation', '5', '10', now(), now(), 3),
+    ('Ankle Flexion', '70', '90', now(), now(), 4),
+    ('Thumb Rotation', '0', '90', now(), now(), 5),
+    ('Back Angle', '80', '90', now(), now(), 6),
+    ('Face Coolness', '0', '1000', now(), now(), 7);
 
 -- romMetricMeasures
 insert into romMetricMeasures
@@ -98,7 +98,7 @@ values
     ('stubbed toe extension', 12, 3, 5, null, now(), 'flex toe while laying on roof of building', null, now(), now(), 2),
     ('stubbed toe flexion', 12, 3, 5, null, now(), 'flex toe while laying upside down', null, now(), now(), 2),
     ('sprained ankle flexion', 12, 3, 5, null, now(), 'flex ankle while laying on bed of rocks', null, now(), now(), 3),
-    ('sprained ankle  flexion', 12, 3, 5, null, now(), 'flex ankle while laying on roof of car', null, now(), now(), 3);
+    ('sprained ankle flexion', 12, 3, 5, null, now(), 'flex ankle while laying on roof of car', null, now(), now(), 3);
 
 -- exerciseCompletions
 insert into exerciseCompletions

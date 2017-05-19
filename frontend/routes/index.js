@@ -1,5 +1,3 @@
-// CORRECT NEW ONE
-
 const express = require('express');
 const router = express.Router();
 const config = require('../app/models/config');
@@ -60,12 +58,6 @@ router.get('/pts/:id/patients', function(req, res, next) {
     }).pipe(res);
 });
 
-router.get('/patients', function(req, res, next) {
-    return res.render('patients', {
-        footerButton: 'Cancel', footerButton2: 'Submit'
-    });
-});
-
 // get a specific patient's general info
 router.get('/patients/:id', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id, {
@@ -96,9 +88,23 @@ router.post('/pts/:id/patients', function(req, res, next) {
 });
 
 // -------------------------------------------------------------------------------
+router.get('/injuries/:id/romMetrics', function(req, res, next) {
+    request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
+router.post('/injuries/:id/romMetrics', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/romMetrics/' + req.params.id + '/romMetricMeasures',
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
     }).pipe(res);
 });
 
@@ -208,8 +214,8 @@ router.get('/patient-status', function(req, res, next) {
 });
 
 // patient view
-router.get('/patients1', function(req, res, next) {
-    return res.render('patients1', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
+router.get('/patients', function(req, res, next) {
+    return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // exercise form view

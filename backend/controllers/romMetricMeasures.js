@@ -139,4 +139,4 @@ module.exports.getMeasures = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}

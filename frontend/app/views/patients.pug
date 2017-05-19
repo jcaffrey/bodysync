@@ -4,19 +4,104 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        window.onload = ()=>{loadStart()}
+        window.onload = function() {
+            loadStart();
+        }
+    script.
+        // ================================================================
+        //  Collapse button functionality
+        // ================================================================
+        var Collapse = {
+            init: function (element) {
+                if (!element) return false;
+                if (element.indexOf('.') != -1) {
+                    var getName = element;
+                    var getElement = document.querySelector(getName);
+                } else if (element.indexOf('#') != -1) {
+                    var getName = element.replace(/\#/g, '');
+                    var getElement = document.getElementById(getName);
+                }
+                if (!getElement.hasAttribute('data-height')) {
+                    getElement.style.display = 'block';
+                    getElement.dataset.height = getElement.offsetHeight + 'px';
+                    getElement.style.height = '0';
+                }
+                return getElement;
+            },
+            expand: function (element) {
+                var getContent = Collapse.init(element);
+                setTimeout(function () {
+                    getContent.style.height = getContent.dataset.height;
+                }, 20)
+            },
+            collapse: function (element) {
+                var getContent = Collapse.init(element);
+                getContent.style.height = '0';
+            }
+        }
+
+        // new collapse
+        function displayCollapse (x) {
+            var elt = document.getElementById(x);
+            if (elt.style.display === 'none') {
+                elt.style.display = 'block';
+                //- elt.style.transition = "all 1s";
+
+            }
+            else {
+                elt.style.display = 'none';
+            }
+        }
+        // ================================================================
+        //  Search functionality
+        // ================================================================
+
+        // temporarily hard-coded
+        var patients = [{name: "Abdul", id: 1, progress: 70, injuries: ["shoulder", "back"]},
+            {name: "Cameron", id: 2, progress: 22, injuries: ["knee"]}];
+
+        // TODO: search on key strokes
+        function search(query, array) {
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (array[i].name.toUpperCase().includes(query.toUpperCase())) {
+                    alert(array[i].name);
+                    return array[i];
+                }
+            }
+        }
+
+        // ================================================================
+        //  Hover and click functionality
+        // ================================================================
+        //- var hoverOrClick = function () {
+        //-     $('div')
+        //- }
 
 block content
     form
         .search-bar
             img(src='../../img/search-icon.png' id='searchIcon')
             input(type="search" name="patientSearch" id="patientSearch" placeholder="Search for patients"
-                    onkeypress="if (event.keyCode != 13) { return pSearch() } else { return false }")
+                onkeypress="if (event.keyCode == 13) { event.preventDefault(); pSearch() } else { }")
             img(src='../../img/alphaOrder.png' id='alphaOrder' onclick="sortAlpha()")
             img(src='../../img/health.png' id='health' onclick="sortProg()")
+        #loading
+            p Loading
+            img(src='../../img/loading.gif')
         #patients
 
-        a(href='/create-patient')
-            .plus-button
-                .add +
+        .plus-button
+            a(href='/create-patient').add +
         .space
+//- #footerButton2
+//-     button.footerButton#buttonRight(type='button' onclick='location.href = '/create-patient')
+
+        //- button(type='button' onclick='fetchPatients()') Fetch
+        //- #js-patients
+//- block submitForm
+//-     button.footerButton#buttonRight(type='button' onclick='submitForm()') #{footerButton2}
+//- block postScript
+//-     script fetchPatients();
+//- block postScript
+//-     script.
+

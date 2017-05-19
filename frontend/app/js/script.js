@@ -99,6 +99,23 @@ function submitForm() {
         .catch(submitError)
 }
 
+function postMetric (id, degree, lastGoal) {
+    var data = {
+        startRange: degree,
+        endRangeGoal: lastGoal,
+        name: "name" + id
+    };
+    fetch('/injuries/' + id + '/romMetrics', {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+        postMeasure(id, degree, lastGoal);
+    }).catch(function (err) { console.log(err) });
+}
+
 function postMeasure (id, degree, lastGoal) {
     var d = new Date();
     var data = {
@@ -158,7 +175,7 @@ function submitPatient() {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
                             console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                             console.log('posted to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
@@ -284,7 +301,7 @@ function getPatients() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
-            window.location = '/patients1';
+            window.location = '/patients';
         });
     }).catch(submitError);
 }
@@ -714,8 +731,10 @@ function loadExerciseSets() {
                     if (!res.ok) return submitError(res);
                     res.json().then(function (data) {
                         var patient = JSON.parse(localStorage.patients)[0];
+                        console.log(data);
                         patient.sets[y] = data[0];
                         localStorage.patients = JSON.stringify([patient]);
+                        loadSpecificExercises(data[0].id);
                     });
                 }).catch(submitError);
 
@@ -725,28 +744,23 @@ function loadExerciseSets() {
     }
 }
 
-// function loadSpecificExercises() {
-//     var exSet = JSON.parse(localStorage.exerciseSets);
-//     pat.injuries = [];
-//     for (var i = 0; i < pat.progress.length; i++) {
-//         if (pat.progress[i]){
-//             (function(x) {
-//                 fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets?token=' + localStorage.token, {
-//                     method: 'GET'
-//                 }).then(function(res) {
-//                     count++;
-//                     if (!res.ok) return submitError(res);
-//                     res.json().then(function (data) {
-//                         pat.injuries[count] = data[0];
-//                         console.log(pat.injuries[count]);
-//                     });
-//                 }).catch(submitError);
-//
-//             }(i))
-//         }
-//     }
-//     localStorage.exerciseSets = JSON.stringify(pat.injuries);
-// }
+function loadSpecificExercises(exSetId) {
+    var pat = JSON.parse(localStorage.patients)[0];
+    pat.exercises = [];
+    localStorage.patients = JSON.stringify([pat]);
+    fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            for (var j = 0; j < data.length; j++){
+                var patient = JSON.parse(localStorage.patients)[0];
+                patient.exercises.push(data[j]);
+                localStorage.patients = JSON.stringify([patient]);
+            }
+        });
+    }).catch(submitError);
+}
 
 
 function loadStart() {
@@ -902,12 +916,12 @@ function submitMeasures () {
             count++;
         }
     }
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 function submitOne (id, i, lastGoal, lastMeasure) {
     submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients1';
+    window.location = '/patients';
 }
 
 // =============================================================
