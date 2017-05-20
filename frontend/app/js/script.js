@@ -621,7 +621,7 @@ function renderExercisePage() {
                         // adding exercise name
                         bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[j].name;
                         // adding exercise sets and seconds
-                        bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div><br></div></div>'
+                        bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
                     }
                 }
             }
