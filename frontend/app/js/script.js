@@ -118,8 +118,11 @@ function postMetric (id, degree, lastGoal) {
 
 function postMeasure (id, degree, lastGoal) {
     var d = new Date();
+    var d1 = new Date();
+    d1.setDate(d1.getDate() + 7);
     var data = {
         dayMeasured: d.toMysqlFormat(),
+        dayOfNextGoal: d1.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: degree,
         name: "firstMeasure"
@@ -174,8 +177,7 @@ function submitPatient() {
                     }).then(function (res1) {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
-                            console.log('posting to injury id ' + result1.id + ' with degree ' + degrees[2 * x].value + ' and goal ' + degrees[(2 * x) + 1].value);
-                            postMeasure(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
@@ -375,7 +377,18 @@ function loadPatients(patients) {
                 var percent = (sum / count).toFixed(1);
                 var indicator = color(percent);
 
-                pic.src = '../../img/' + psd[i].name + '.jpg';
+                // include default pictures for users without uploaded pictures
+                switch (psd[i].name) {
+                    case 'Josh Seides':
+                    case 'David Malan':
+                    case 'Zamyla Chan':
+                    case 'Sam Pelletier':
+                        pic.src = '../../img/' + psd[i].name + '.jpg';
+                        break;
+                    default:
+                        pic.src = '../../img/Josh Seides.jpg';
+                }
+
                 pic.setAttribute('id', 'profileImg');
                 prog.src = indicator[1];
                 prog.setAttribute('id', indicator[2]);
@@ -693,7 +706,7 @@ function getMeasurements(injury) {
             for (var i = data.length - 1; i >= 0; i--) {
                 if (count <= 3) {
                     temp[count] = {
-                        date: data[i].dayOfNextGoal,
+                        date: data[i].dayMeasured,
                         measure: data[i].degreeValue
                     };
                     count++;
@@ -949,13 +962,15 @@ Date.prototype.toMysqlFormat = function() {
 
 function submitMeasure (id, i, lastGoal, lastMeasure) {
     var d = new Date();
+    var d1 = new Date();
+    d1.setDate(d1.getDate() + 7);
     var data = {
         dayMeasured: d.toMysqlFormat(),
+        dayOfNextGoal: d1.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: form[i].value || lastMeasure,
         name: 'name' + id
     };
-    console.log(JSON.stringify(data));
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
             'Content-Type': 'application/json'},
@@ -1014,8 +1029,6 @@ function createGraph(id) {
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
-        console.log(injuryInfo);
-
         var w, h;
 
         if (window.innerWidth < 600) {
@@ -1041,7 +1054,6 @@ function createGraph(id) {
 
         function getDegDates() {
             for (var i = 0; i < (injuryInfo.length - 2); i++) {
-                console.log(i);
                 degreeValue.push(+(injuryInfo[i].measure));
                 var year = +(injuryInfo[i].date).substring(0,4);
                 var month = +(injuryInfo[i].date).substring(5,7) - 1;
@@ -1049,7 +1061,6 @@ function createGraph(id) {
                 dayMeasured.push((new Date(year, month, day)));
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }
-            console.log(points);
         }
         getDegDates();
 
