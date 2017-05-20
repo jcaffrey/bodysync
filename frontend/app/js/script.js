@@ -526,7 +526,18 @@ function loadFocusPatient () {
             // html for pt-box
             var ptBox = document.createElement('div');
             // adding pic-box
-            var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + pfp.name + '.jpg'
+            var source;
+            switch (pfp.name) {
+                case 'Josh Seides':
+                case 'David Malan':
+                case 'Zamyla Chan':
+                case 'Sam Pelletier':
+                    source =  pfp.name;
+                    break;
+                default:
+                    source = 'Josh Seides';
+            }
+            var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + source + '.jpg'
                 + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
             // adding info-box
             ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
@@ -625,6 +636,7 @@ function loadFocusPatient () {
             // adding transition-box
             outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
             outBox.innerHTML = outBoxHTML;
+            document.getElementById('loading').style.display = 'none';
             var container = document.getElementById('status').appendChild(ptBox);
             container.appendChild(menuBox);
             container.appendChild(outBox);
