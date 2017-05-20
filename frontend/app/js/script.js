@@ -35,7 +35,7 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            getPatients();
+            window.location = '/patients'
         });
     }).catch(submitError);
 }
@@ -139,6 +139,8 @@ function postMeasure (id, degree, lastGoal) {
 
 // surgeryType, romStart, romEnd, notes in schema????
 function submitPatient() {
+    form.style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
@@ -182,6 +184,9 @@ function submitPatient() {
                     }).catch(submitError);
                 }(i))
             }
+            setTimeout(function() {
+                window.location = '/patients';
+            }, 1000);
         });
     }).catch(submitError);
 }
@@ -272,7 +277,7 @@ function clearForm() {
 
 function submitSuccess(res) {
     if (!res.ok) return submitError(res);
-    getPatients();
+    window.location = '/patients';
 }
 
 function submitError(res, message) {
@@ -292,21 +297,6 @@ function displayError(message) {
 // =============================================================
 //  Patients
 // =============================================================
-
-function getPatients() {
-    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            // var patients = JSON.parse(localStorage.patients);
-            localStorage.isPatient = JSON.stringify(false);
-            localStorage.patients = JSON.stringify(pts);
-            localStorage.display = JSON.stringify(pts);
-            window.location = '/patients';
-        });
-    }).catch(submitError);
-}
-
 function getPatientView (){
   fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
   ).then(function(res) {
@@ -817,9 +807,18 @@ function loadSpecificExercises(exSetId) {
 
 
 function loadStart() {
-    clear();
-    loadProgress(localStorage.patients);
-    loadPatients(localStorage.patients);
+    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            localStorage.isPatient = JSON.stringify(false);
+            localStorage.patients = JSON.stringify(pts);
+            localStorage.display = JSON.stringify(pts);
+            clear();
+            loadProgress(localStorage.patients);
+            loadPatients(localStorage.patients);
+        });
+    }).catch(submitError);
 }
 
 function loadExerciseStart() {
