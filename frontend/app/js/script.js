@@ -517,7 +517,8 @@ function chooseInjury (c) {
 function loadFocusPatient () {
     setTimeout(function() {
         var pat = JSON.parse(localStorage.patients)[0];
-        if (pat.sets.length !== 0) {
+        // should be changed to pat.sets.length
+        if (pat.progress.length !== 0) {
             var pfp = JSON.parse(localStorage.focusPatient);
             var isPatient = JSON.parse(localStorage.isPatient);
             var sum = 0;
@@ -600,21 +601,21 @@ function loadFocusPatient () {
               // getting exercise set
               outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Sets</span>';
 
-              for (var i = 0; i < pat.sets.length; i++){
-
-                  var exSetId = pat.sets[i].id;
-                  // adding exercise set name
-                  outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pat.sets[i].name + '</span></div><br>';
-                  // adding list of exercises
-                  for (var j = 0; j < pat.exercises.length; j++){
-                      if (pat.exercises[j].exerciseSetId == exSetId){
-                          // adding exercise name
-                          outBoxHTML += '<span id="exerciseText">' + pat.exercises[j].name+ '</span>';
-                          // adding exercise sets and seconds
-                          outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
-                      }
-                  }
-              }
+            //   for (var i = 0; i < pat.sets.length; i++){
+              //
+            //       var exSetId = pat.sets[i].id;
+            //       // adding exercise set name
+            //       outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pat.sets[i].name + '</span></div><br>';
+            //       // adding list of exercises
+            //       for (var j = 0; j < pat.exercises.length; j++){
+            //           if (pat.exercises[j].exerciseSetId == exSetId){
+            //               // adding exercise name
+            //               outBoxHTML += '<span id="exerciseText">' + pat.exercises[j].name+ '</span>';
+            //               // adding exercise sets and seconds
+            //               outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
+            //           }
+            //       }
+            //   }
               if (!isPatient){
                   outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise Set</a>' + '</div>';
               }
