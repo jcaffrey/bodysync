@@ -9,15 +9,15 @@ module.exports.createMeasure = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.injury.findOne({
+    models.romMetric.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(injury) {
-        if(Object.keys(injury).length !== 0){
-            models.patient.findOne({
+    }).then(function(romMetric) {
+        if(Object.keys(romMetric).length !== 0){
+            models.injury.findOne({
                 where: {
-                    id: injury.patientId
+                    id: romMetric.injuryId
                 }
             }).then(function(injury) {
                 if(Object.keys(injury).length !== 0){
