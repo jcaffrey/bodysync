@@ -4,17 +4,25 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-form.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        function increment() {
-            var original = document.getElementById('num').innerHTML;
+        function changeReps(isInc) {
+            var original = document.getElementById('reps-num').innerHTML;
             var value = parseInt(original, 10);
-            value++;
-            document.getElementById('num').innerHTML.replace(original, toString(value));
+            if (isInc) value++;
+            else {
+                if (value == 0) value = 0;
+                else value--;
+            };
+            document.getElementById('reps-num').innerHTML = value.toString();
         };
-        function decrement() {
-            var original = document.getElementById('num').innerHTML;
+        function changeSets(isInc) {
+            var original = document.getElementById('sets-num').innerHTML;
             var value = parseInt(original, 10);
-            value--;
-            document.getElementById('num').innerHTML.replace(original, toString(value));
+            if (isInc) value++;
+            else {
+                if (value == 0) value = 0;
+                else value--;
+            };
+            document.getElementById('sets-num').innerHTML = value.toString();
         };
 block content
     form
@@ -27,17 +35,17 @@ block content
             .input-box#reps           
                 .repset-name Reps
                 .repset-box
-                    button.arith-box(onclick='decrement()') -
-                    p(id='num') 15
-                    button.arith-box(onclick='increment()') +
+                    button.arith-box(type='button' onclick='changeReps(false)') -
+                    p(id='reps-num' name='repsNum') 0
+                    button.arith-box(type='button' onclick='changeReps(true)') +
             .input-box#sets
                 .repset-name Sets
                 .repset-box
-                    button.arith-box -
-                    .num-box 2
-                    button.arith-box +
+                    button.arith-box(type='button' onclick='changeSets(false)') -
+                    p(id='sets-num') 0
+                    button.arith-box(type='button' onclick='changeSets(true)') +
             .input-box.input-bottom
                 .input-name#notes Notes
                 textarea.text-input(type='notes' id='notes' name='notes' cols="25" placeholder="Type any notes, special requirements, etc. on this exercise here...")
 block submitForm
-    button.footerButton#buttonRight(type='button') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='submitExercise()') #{footerButton2}

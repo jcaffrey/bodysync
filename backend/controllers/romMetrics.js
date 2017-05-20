@@ -1,4 +1,3 @@
-
 var models = require('../models/index');
 var jwt = require('jsonwebtoken');
 var auth = require('./auth');

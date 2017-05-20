@@ -1,35 +1,31 @@
-
-
 var models = require('../models/index');
-
 var jwt = require('jsonwebtoken');
 var auth = require('./auth');
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
-
 module.exports.createMeasure = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    models.romMetric.findOne({
+    models.injury.findOne({
         where: {
             id: req.params.id
         }
-    }).then(function(rom) {
-        if(Object.keys(rom).length !== 0) {
-            models.injury.findOne({
+    }).then(function(injury) {
+        if(Object.keys(injury).length !== 0){
+            models.patient.findOne({
                 where: {
-                    id: rom.injuryId
+                    id: injury.patientId
                 }
-            }).then(function (injury) {
+            }).then(function(injury) {
                 if(Object.keys(injury).length !== 0){
                     models.patient.findOne({
                         where: {
                             id: injury.patientId
                         }
-                    }).then(function (patient) {
+                    }).then(function(patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.isPt && decoded.id == patient.ptId) {
                                 models.romMetricMeasure.create({
@@ -56,24 +52,24 @@ module.exports.createMeasure = (req, res, next) => {
                         } else {
                             res.status(404).send('No patient with that injury');
                         }
-
                     }).catch(function (err) {
-                        return next(err);
+                        // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
+                        console.log("here1");
                     })
                 } else {
-                    res.status(404).send('No injury with that rom');
+                    res.status(404).send('No patient with that injury');
                 }
-
             }).catch(function (err) {
-                return next(err);
+                // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
+                return console.log("here2");
             })
         } else {
-            res.status(404).send('No ROM with that id');
+            res.status(404).send('No injury with that rom');
         }
     }).catch(function (err) {
-        return next(err);
+        return console.log("here3");
     })
-};
+}
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getMeasures = (req, res, next) => {
@@ -143,4 +139,4 @@ module.exports.getMeasures = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}

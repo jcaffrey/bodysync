@@ -40,7 +40,7 @@ var auth = require('../controllers/auth');
 router.route('/')
     .get(function(req, res) {
         res.send('Welcome to the bodysync API. See /backend/app.js for useful endpoints!');
-     })
+     });
 
 // routes to sign-in and create token 
 /* 
@@ -63,7 +63,7 @@ router.route('/forgotpassword')
 router.route('/reset/:token') 
     .post(auth.resetPassword);
 
-router.route('')
+router.route('');
 
 // routes for admin
 router.route('/pts')
@@ -88,11 +88,8 @@ router.route('/patients/:id')
 
 // routes for pts, patients to see injuries
 router.route('/patients/:id/injuries') 
-    .get(auth.tokenRequired, injuries.getInjuries, ptSessions.logSession) //  views handled differently on frontend using token
+    .get(auth.tokenRequired, injuries.getInjuries, ptSessions.logSession) // views handled differently on frontend using token
     .post(auth.ptRequired, injuries.createInjury, ptSessions.updateSession);
-
-
-
 
 router.route('/injuries/:id')
     .get(auth.tokenRequired, injuries.getInjuryById, ptSessions.logSession) // error catching
@@ -100,10 +97,9 @@ router.route('/injuries/:id')
     .delete(auth.ptRequired, injuries.deleteInjury, ptSessions.updateSession);
 
 // routes for injury tracking (rom content)
-router.route('/injuries/:id/rommetrics')
+router.route('/injuries/:id/romMetrics')
     .get(auth.tokenRequired, romMetrics.getRomMetrics, ptSessions.logSession) // error catching
     .post(auth.ptRequired, romMetrics.createRomMetric, ptSessions.updateSession);
-   
 
 router.route('/romMetrics/:id')
     .get(auth.ptRequired, romMetrics.getRomMetricById, ptSessions.logSession)
@@ -113,8 +109,6 @@ router.route('/romMetrics/:id')
 router.route('/romMetrics/:id/romMetricMeasures')
     .get(auth.tokenRequired, romMetricMeasures.getMeasures, ptSessions.logSession)  // restricts workers' comp server side
     .post(auth.ptRequired, romMetricMeasures.createMeasure, ptSessions.updateSession); // Access: pt
-
-
 
 // routes for injury training (exercise content)
 router.route('/injuries/:id/exerciseSets')

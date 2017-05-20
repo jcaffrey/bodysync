@@ -34,7 +34,7 @@ module.exports.createInjury = (req, res, next) => {
                     patientId: req.params.id
                 }).then(function(injury) {
                     if(Object.keys(injury).length !== 0) {
-                        res.json(JSON.stringify(injury));
+                        res.json(injury);
                         return next();
                     }
                     else {
@@ -51,9 +51,7 @@ module.exports.createInjury = (req, res, next) => {
     }).catch(function(err) {
         return next(err);
     })
-
-
-};
+}
 
 
 /**

@@ -1,32 +1,19 @@
 extends template
 
 block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients.css')
     link(rel='stylesheet', href='/stylesheets/rom-form.css')
+    script.
+        window.onload = function() {
+            loadExerciseStart()
+        }
 
 block content
     form
-        #exercisesTitle Exercises
-        .exercise
-            .input-box-top
-                .input-name Backbend
-                    .input-name.metaData 2 sets, 20 seconds
-                .rightArrowDiv
-                    .input-name.rightArrow ►
-                br
-        .exercise
-            .input-box-top
-                .input-name Arm Stretch
-                    .input-name.metaData 2 sets, 20 seconds
-
-                .rightArrowDiv
-                    .input-name.rightArrow ►
-                br
-        .exercise
-            .input-box-top
-                .input-name Back Pull
-                    .input-name.metaData 2 sets, 20 seconds
-                .rightArrowDiv
-                    .input-name.rightArrow ►
-                br
+        #exercisesTitle Exercise Sets
+        #exercisepg
+        #loading
+            p Loading
+            img(src='../../img/loading.gif')
 
 block footer
