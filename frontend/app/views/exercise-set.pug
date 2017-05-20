@@ -2,6 +2,7 @@ extends template
 
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-set.css')
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
 
     script.
@@ -13,20 +14,46 @@ block content
     form
         #generalInfo
         h1 Exercise Set
-        button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
-        .pt-box
-            .arrows
-                .up ▲
-                .down ▼
-            .exercise-box
-                .exName Back Bend
-                .recovery-box
-                    .sets
-                        span 2 sets, 20 seconds
-            .rh-box
-                .edit-button Edit
-                .delete-button Delete
-        .plus-button
-            a(href='/exercise-form').add +
+
+        .inputs
+            .input-box#patname
+                 input.text-input(type='name' name='name' placeholder='Set Name ' onblur="checkName(this.value)" maxlength="65")
+        br
+        .inputs#rom-inputs
+            .input-box
+                input.text-input.rom-name-input(type='text' name='motion-name' placeholder='ENTER EXERCISE HERE ' onblur="checkMotionRangeName(this.value)")
+                .rom2
+                    .rom-label Exercise Specifics
+                    input.text-input.degrees(maxlength='3' type='rom' name='rom2' placeholder='reps or time ' onblur="checkMotionRangeNum(this.value)")
+            .input-box.last-box#rom-add(onclick="addMotion()") Add Exercise
+
+        //- TODO: use the code below to format a delete button on the box div
+        //- button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
+        //- .pt-box
+        //-     .arrows
+        //-         .up ▲
+        //-         .down ▼
+        //-     .exercise-box
+        //-         .exName Back Bend
+        //-         .recovery-box
+        //-             .sets
+        //-                 span 2 sets, 20 seconds
+        //-     .rh-box
+        //-         .edit-button Edit
+        //-         .delete-button Delete
+        //- .plus-button
+        //-     a(href='/exercise-form').add +
+    p#success
+        script.
+            function addMotion() {
+                var inputs = document.getElementById('rom-inputs')
+                var romadd = document.getElementById('rom-add')
+                var newMotion = document.createElement("div")
+                newMotion.setAttribute('class', 'input-box')
+                newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE HERE'><div class='rom2'><div class='rom-label'>Exercise Specifics</div><input class='text-input degrees' type='rom' name='rom2' placeholder='reps or time ' onblur='#' maxlength='3'></div>"
+                inputs.insertBefore(newMotion, romadd)
+            }
+
 block submitForm
-    button.footerButton#buttonRight(type='button') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='submitExSet()') #{footerButton2}
+    //- TODO: add functionality for the left footer button
