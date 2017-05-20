@@ -15,8 +15,12 @@ block cssSheets
     script.
       window.onload = function() {
           loadFocusPatient();
+          //loadExerciseStart();
           getGraphData();
       }
 
 block content
+    #loading
+        p Loading
+        img(src='../../img/loading.gif')
     #status
