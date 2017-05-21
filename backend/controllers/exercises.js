@@ -86,7 +86,7 @@ module.exports.createExercise = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}
 
 /**
 
@@ -162,7 +162,7 @@ module.exports.getExercises = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}
 
 // TODO: implement audit logging by querying all the way down to patient level..
 module.exports.getExerciseById = (req, res, next) => {
@@ -211,9 +211,7 @@ module.exports.getExerciseById = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
-
-
+}
 
 /**
 
@@ -263,4 +261,4 @@ module.exports.deleteExercise = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}
