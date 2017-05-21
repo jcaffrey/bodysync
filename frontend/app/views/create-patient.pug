@@ -1,11 +1,13 @@
 extends template
 
 block cssSheets
+    link(rel='stylesheet', href='/stylesheets/patients.css')
     link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
 
 block content
     #js-error-message
+    #loading
     form
         .inputs
             .input-box#patname

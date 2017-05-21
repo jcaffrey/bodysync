@@ -139,9 +139,7 @@ module.exports.getCompletions = (req, res, next) => {
             res.status(404).send('No stats associated with that exercise');
         }
     })
-};
-
-
+}
 
 module.exports.getCompletionById = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -200,9 +198,7 @@ module.exports.getCompletionById = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
-
-
+}
 
 /**
 
@@ -266,4 +262,4 @@ module.exports.deleteCompletion = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-};
+}

@@ -151,8 +151,7 @@ module.exports.getRomMetricById = (req, res, next) => {
     }).catch(function(err) {
         return next(err);
     });
-};
-
+}
 
 module.exports.deleteRomMetric = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -198,8 +197,6 @@ module.exports.deleteRomMetric = (req, res, next) => {
     }).catch(function (err) {
         return next(err);
     })
-
-
 
     // models.romMetric.destroy({
     //     where: {
