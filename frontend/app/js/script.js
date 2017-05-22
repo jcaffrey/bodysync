@@ -393,7 +393,7 @@ function loadPatients(patients) {
                 }
                 p1.style.color = "#" + indicator[0];
                 menu.setAttribute('class', 'arrow');
-                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 menu.setAttribute('class', 'nav-icon');
                 menu.setAttribute('id', 'nav-icon' + i);
                 menu.innerHTML =
@@ -437,6 +437,8 @@ function loadPatients(patients) {
                 recbx.appendChild(p1);
                 recbx.appendChild(rec);
                 div.setAttribute('class', 'pt-box');
+                // added to make entire pt-box clickable
+                div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 picbox.setAttribute('class', 'pic-box');
                 inner.setAttribute('class', 'info-box');
                 name.setAttribute('class', 'name');
