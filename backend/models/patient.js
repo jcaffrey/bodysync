@@ -62,6 +62,7 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 });
                 patient.hasMany(models.injury);
+                patient.hasMany(models.exercise);
             },
             generateHash: function (hash) {
                 return bcrypt.hashSync(hash, bcrypt.genSaltSync(8),null);  // think about doing this async if performance becomes noticeable

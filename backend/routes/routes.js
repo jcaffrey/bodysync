@@ -14,7 +14,7 @@ var patients = require('../controllers/patients');
 var injuries = require('../controllers/injuries');
 var romMetrics  = require('../controllers/romMetrics');
 var romMetricMeasures = require('../controllers/romMetricMeasures');
-var exerciseSets = require('../controllers/exerciseSets');
+// var exerciseSets = require('../controllers/exerciseSets');
 var exercises = require('../controllers/exercises');
 var exerciseCompletions = require('../controllers/exerciseCompletions');
 var ptSessions = require('../controllers/ptSessions');
@@ -63,7 +63,8 @@ router.route('/forgotpassword')
 router.route('/reset/:token') 
     .post(auth.resetPassword);
 
-router.route('');
+router.route('/notifyPts')
+    .get(pts.notifyPtsOnRom);  // security - need to know the secret to hit this route?/ make sure that this route is only hit at most once a day (and that you need more than a token to hit it)
 
 // routes for admin
 router.route('/pts')
@@ -110,33 +111,51 @@ router.route('/romMetrics/:id/romMetricMeasures')
     .get(auth.tokenRequired, romMetricMeasures.getMeasures, ptSessions.logSession)  // restricts workers' comp server side
     .post(auth.ptRequired, romMetricMeasures.createMeasure, ptSessions.updateSession); // Access: pt
 
-// routes for injury training (exercise content)
-router.route('/injuries/:id/exerciseSets')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSets, ptSessions.logSession)
-    .post(auth.ptRequired, exerciseSets.createExerciseSet, ptSessions.updateSession);
 
-router.route('/exerciseSets/:id')
-    .get(auth.tokenRequired, exerciseSets.getExerciseSetById, ptSessions.logSession)
-    // .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
-    .delete(auth.ptRequired, exerciseSets.deleteExercise, ptSessions.updateSession);
 
-router.route('/exerciseSets/:id/exercises')
+// simplified route for exercise content (injury training)
+router.route('/patients/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
+    // .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession),
+    .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
+
+// router.route('/exercises/:id/exerciseCompletions')
+//     .post(auth.tokenRequired, exerciseCompletions.createCompletion, auth.updateSession);
+                                                                                            // query this on the backend to calculate the streak
+
+router.route('/patients/:id/createSingleExercise')
+//     .get(auth.tokenRequired, exercises.getExerciseById, ptSessions.logSession),
     .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
 
-router.route('/exercises/:id')
-    .get(auth.tokenRequired, exercises.getExerciseById)  // TODO: logSession
-    //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
-    .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 
-router.route('/exercises/:id/exerciseCompletions')
-    .get(auth.tokenRequired, exerciseCompletions.getCompletions) // TODO: logSession
-    .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
-router.route('/exerciseCompletions/:id')
-    .get(auth.tokenRequired, exerciseCompletions.getCompletionById)
-//     .put(exerciseCompletions.updateExerciseCompletion)      // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
-    .delete(auth.tokenRequired, exerciseCompletions.deleteCompletion);  // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+// // routes for injury training (exercise content)
+// router.route('/injuries/:id/exerciseSets')
+//     .get(auth.tokenRequired, exerciseSets.getExerciseSets, ptSessions.logSession)
+//     .post(auth.ptRequired, exerciseSets.createExerciseSet, ptSessions.updateSession);
+//
+// router.route('/exerciseSets/:id')
+//     .get(auth.tokenRequired, exerciseSets.getExerciseSetById, ptSessions.logSession)
+//     // .put(auth.ptRequired, exerciseSets.updateExerciseSet)       // Access: pt
+//     .delete(auth.ptRequired, exerciseSets.deleteExercise, ptSessions.updateSession);
+//
+// router.route('/exerciseSets/:id/exercises')
+//     .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
+//     .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
+//
+// router.route('/exercises/:id')
+//     .get(auth.tokenRequired, exercises.getExerciseById)  // TODO: logSession
+//     //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
+//     .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
+//
+// router.route('/exercises/:id/exerciseCompletions')
+//     .get(auth.tokenRequired, exerciseCompletions.getCompletions) // TODO: logSession
+//     .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+//
+// router.route('/exerciseCompletions/:id')
+//     .get(auth.tokenRequired, exerciseCompletions.getCompletionById)
+// //     .put(exerciseCompletions.updateExerciseCompletion)      // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+//     .delete(auth.tokenRequired, exerciseCompletions.deleteCompletion);  // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
 
 // TBU - routes for templated exercise sets

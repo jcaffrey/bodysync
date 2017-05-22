@@ -24,10 +24,10 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 });
                 injury.hasMany(models.romMetric);
-                injury.hasMany(models.exerciseSet, {
-                    allowNull: false
-                   // defaultValue: null   // injuryId within ExerciseSet initialized to null
-                });
+                // injury.hasMany(models.exerciseSet, {
+                //     allowNull: false
+                //    // defaultValue: null   // injuryId within ExerciseSet initialized to null
+                // });
             }
         }
     });
