@@ -939,7 +939,7 @@ function loadAddMeasure () {
     for (var i = 0; i < data.progress.length; i++) {
         if (data.progress[i] !== null) {
             content +=
-                '<div class="inputs">' +
+                '<div class="inputs" id="box' + count + '" style="display:block">' +
                 '<div class="input-box input-header">' +
                 '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
                 '<div class="input-label"></div></div>' +
@@ -978,13 +978,11 @@ Date.prototype.toMysqlFormat = function() {
 };
 
 function submitMeasure (id, i, lastMeasure, last) {
-    console.log(last);
     fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function (res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            console.log('hi1');
             var d = new Date();
             var d1 = new Date();
             d1.setDate(d1.getDate() + 7);
@@ -1003,7 +1001,6 @@ function submitMeasure (id, i, lastMeasure, last) {
                 body: JSON.stringify(data)
             }).then(function(res) {
                 if (!res.ok) throw new Error('There was an error sending this measure');
-                console.log('here with ' + last);
                 if (last) window.location = '/patients';
             }).catch(function (err) { console.log(err) });
         });
@@ -1032,7 +1029,17 @@ function submitMeasures () {
 }
 
 function submitOne (id, i, lastMeasure) {
-    submitMeasure(id, i, lastMeasure, true);
+    var count = 0;
+    var inputs = document.getElementsByClassName('inputs');
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].style.display != 'none') count++;
+    }
+    document.getElementById('box' + i).style.display = 'none';
+    if (count <= 1) {
+        submitMeasure(id, i, lastMeasure, true);
+    } else {
+        submitMeasure(id, i, lastMeasure, false);
+    }
 }
 
 // =============================================================
