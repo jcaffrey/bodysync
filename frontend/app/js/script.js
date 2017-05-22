@@ -393,7 +393,7 @@ function loadPatients(patients) {
                 }
                 p1.style.color = "#" + indicator[0];
                 menu.setAttribute('class', 'arrow');
-                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 menu.setAttribute('class', 'nav-icon');
                 menu.setAttribute('id', 'nav-icon' + i);
                 menu.innerHTML =
@@ -437,6 +437,8 @@ function loadPatients(patients) {
                 recbx.appendChild(p1);
                 recbx.appendChild(rec);
                 div.setAttribute('class', 'pt-box');
+                // added to make entire pt-box clickable
+                div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 picbox.setAttribute('class', 'pic-box');
                 inner.setAttribute('class', 'info-box');
                 name.setAttribute('class', 'name');
@@ -834,21 +836,6 @@ function loadStart() {
     }).catch(submitError);
 }
 
-function loadPatientStart() {
-    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            localStorage.isPatient = JSON.stringify(true);
-            localStorage.patients = JSON.stringify([pts]);
-            localStorage.display = JSON.stringify([pts]);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
-        });
-    }).catch(submitError);
-}
-
 function loadExerciseStart() {
     loadExerciseSets();
     renderExercisePage();
@@ -883,6 +870,12 @@ function compareAlpha(a, b) {
 localStorage.ctr1 = 0;
 localStorage.ctr2 = 0;
 
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
+}
+function progAscending() {
+    return patients.sort(function (a, b) { a.progress - b.progress})
+}
 function sortAlpha() {
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
