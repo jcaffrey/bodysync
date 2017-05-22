@@ -99,7 +99,7 @@ function submitForm() {
         .catch(submitError)
 }
 
-function postMetric (id, degree, lastGoal) {
+function postMetric (id, degree, lastGoal, endRangeGoal) {
     var data = {
         startRange: degree,
         endRangeGoal: lastGoal,
@@ -112,11 +112,11 @@ function postMetric (id, degree, lastGoal) {
         body: JSON.stringify(data)
     }).then(function(res) {
         if (!res.ok) console.log(res);
-        postMeasure(id, degree, lastGoal);
+        postMeasure(id, degree, lastGoal, endRangeGoal);
     }).catch(function (err) { console.log(err) });
 }
 
-function postMeasure (id, degree, lastGoal) {
+function postMeasure (id, degree, lastGoal, endRangeGoal) {
     var d = new Date();
     var d1 = new Date();
     d1.setDate(d1.getDate() + 7);
@@ -125,7 +125,8 @@ function postMeasure (id, degree, lastGoal) {
         dayOfNextGoal: d1.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: degree,
-        name: "firstMeasure"
+        name: "measure" + id,
+        endRangeGoal: endRangeGoal
     };
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
@@ -179,7 +180,7 @@ function submitPatient() {
                     }).then(function (res1) {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
-                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
@@ -629,7 +630,7 @@ function loadFocusPatient () {
 
                 outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
                 // graph
-                outBoxHTML += '<div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+                outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
                 // legend
                 outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
@@ -720,7 +721,7 @@ function getMeasurements(injury) {
                 date: data[data.length - 1].dayOfNextGoal,
                 goal: data[data.length - 1].nextGoal
             };
-            temp[count + 1] = data[data.length - 1].nextGoal;
+            temp[count + 1] = data[data.length - 1].endRangeGoal;
             localStorage["graphData" + injury] = JSON.stringify(temp);
         });
     }).catch(console.log('error' + injury));
@@ -965,9 +966,13 @@ function loadAddMeasure () {
                 '<div class="m-label">PREVIOUS</div></div>' +
                 '<div class="m-new">' +
                 '<div class="num">' +
-                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
-                '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+                '<input type="text" name="newMeasure" placeholder="NEW" id="middle-input"></div>' +
+                '<div class="m-label">NEW</div></div>' +
+                '<div class="m-new1">' +
+                '<div class="num">' +
+                '<input type="text" name="newMeasure" placeholder="GOAL"></div>' +
+                '<div class="m-label">GOAL</div></div></div></div>' +
+                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
     }
@@ -987,42 +992,62 @@ Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 };
 
-function submitMeasure (id, i, lastGoal, lastMeasure) {
-    var d = new Date();
-    var d1 = new Date();
-    d1.setDate(d1.getDate() + 7);
-    var data = {
-        dayMeasured: d.toMysqlFormat(),
-        dayOfNextGoal: d1.toMysqlFormat(),
-        nextGoal: lastGoal,
-        degreeValue: form[i].value || lastMeasure,
-        name: 'name' + id
-    };
-    fetch('/romMetrics/' + id + '/romMetricMeasures', {
-        headers: {'x-access-token': localStorage.token,
-            'Content-Type': 'application/json'},
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(function(res) {
-        if (!res.ok) throw new Error('There was an error sending this measure');
-    }).catch(function (err) { console.log(err) });
+function submitMeasure (id, i, lastMeasure, last) {
+    console.log(last);
+    fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            console.log('hi1');
+            var d = new Date();
+            var d1 = new Date();
+            d1.setDate(d1.getDate() + 7);
+            var data = {
+                dayMeasured: d.toMysqlFormat(),
+                dayOfNextGoal: d1.toMysqlFormat(),
+                nextGoal: form[(2 * i) + 1].value || lastMeasure,
+                degreeValue: form[2 * i].value || lastMeasure,
+                name: 'name' + id,
+                endRangeGoal: data.endRangeGoal
+            };
+            fetch('/romMetrics/' + id + '/romMetricMeasures', {
+                headers: {'x-access-token': localStorage.token,
+                    'Content-Type': 'application/json'},
+                method: 'POST',
+                body: JSON.stringify(data)
+            }).then(function(res) {
+                if (!res.ok) throw new Error('There was an error sending this measure');
+                console.log('here with ' + last);
+                if (last) window.location = '/patients';
+            }).catch(function (err) { console.log(err) });
+        });
+    }).catch(function () { console.log('wrong') });
 }
 
 function submitMeasures () {
     var data = JSON.parse(localStorage.focusPatient);
     var count = 0;
+    var num = 0;
+    for (var j = 0; j < data.progress.length; j++) {
+        if (data.progress[j] !== null) {
+            num++;
+        }
+    }
     for (var i = 0; i < data.progress.length; i++) {
         if (data.progress[i] !== null) {
-            submitMeasure(data.progress[i][3], count, data.progress[i][4], data.progress[i][2]);
+            if (count == (num - 1)) {
+                submitMeasure(data.progress[i][3], count, data.progress[i][2], true);
+            } else {
+                submitMeasure(data.progress[i][3], count, data.progress[i][2], false);
+            }
             count++;
         }
     }
-    window.location = '/patients';
 }
 
-function submitOne (id, i, lastGoal, lastMeasure) {
-    submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients';
+function submitOne (id, i, lastMeasure) {
+    submitMeasure(id, i, lastMeasure, true);
 }
 
 // =============================================================
@@ -1052,7 +1077,7 @@ function submitExercise() {
 // =============================================================
 function createGraph(id) {
     document.getElementById('graph').innerHTML = '';
-    document.getElementById('loading').style.display = 'inline';
+    document.getElementById('loading1').style.display = 'inline';
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
@@ -1142,7 +1167,7 @@ function createGraph(id) {
                 return y(next_weeks_goal[i]);
             });
 
-        document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading1').style.display = 'none';
         document.getElementById('graph-container').style.display = 'inline';
 
 

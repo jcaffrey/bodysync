@@ -63,22 +63,22 @@ values
 
 -- romMetricMeasures
 insert into romMetricMeasures
-    (name, degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId)
+    (name, degreeValue, nextGoal, dayOfNextGoal, dayMeasured, createdAt, updatedAt, romMetricId, endRangeGoal)
 values
-    ('firstMeasure', 32, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 1),
-    ('secondMeasure', 35, 43, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 1),
-    ('thirdMeasure', 40, 50, DATE_ADD(NOW(), INTERVAL 21 DAY), DATE_ADD(NOW(), INTERVAL 14 DAY), now(), now(), 1),
-    ('fourthMeasure', 45, 58, DATE_ADD(NOW(), INTERVAL 28 DAY), DATE_ADD(NOW(), INTERVAL 21 DAY), now(), now(), 1),
-    ('fifthMeasure', 53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1),
-    ('sixthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 42 DAY), DATE_ADD(NOW(), INTERVAL 35 DAY), now(), now(), 1),
-    ('seventhMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 49 DAY), DATE_ADD(NOW(), INTERVAL 42 DAY), now(), now(), 1),
-    ('firstMeasure', 17, 25, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 2),
-    ('secondMeasure', 77, 100, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 2),
-    ('firstMeasure', 4, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 3),
-    ('firstMeasure', 18, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 4),
-    ('firstMeasure', 67, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 5),
-    ('firstMeasure', 88, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 6),
-    ('firstMeasure', 56, 1000, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 7);
+    ('firstMeasure', 32, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 1, 90),
+    ('secondMeasure', 35, 43, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 1, 90),
+    ('thirdMeasure', 40, 50, DATE_ADD(NOW(), INTERVAL 21 DAY), DATE_ADD(NOW(), INTERVAL 14 DAY), now(), now(), 1, 90),
+    ('fourthMeasure', 45, 58, DATE_ADD(NOW(), INTERVAL 28 DAY), DATE_ADD(NOW(), INTERVAL 21 DAY), now(), now(), 1, 90),
+    ('fifthMeasure', 53, 70, DATE_ADD(NOW(), INTERVAL 35 DAY), DATE_ADD(NOW(), INTERVAL 28 DAY), now(), now(), 1, 90),
+    ('sixthMeasure', 65, 81, DATE_ADD(NOW(), INTERVAL 42 DAY), DATE_ADD(NOW(), INTERVAL 35 DAY), now(), now(), 1, 90),
+    ('seventhMeasure', 77, 90, DATE_ADD(NOW(), INTERVAL 49 DAY), DATE_ADD(NOW(), INTERVAL 42 DAY), now(), now(), 1, 90),
+    ('firstMeasure', 17, 25, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 2, 90),
+    ('secondMeasure', 77, 100, DATE_ADD(NOW(), INTERVAL 14 DAY), DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), 2, 90),
+    ('firstMeasure', 4, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 3, 10),
+    ('firstMeasure', 18, 35, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 4, 90),
+    ('firstMeasure', 67, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 5, 90),
+    ('firstMeasure', 88, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 6, 90),
+    ('firstMeasure', 56, 580, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 7, 1000);
 
 -- exerciseSets
 insert into exerciseSets
