@@ -152,6 +152,9 @@ function submitPatient() {
     if (form.hash.value) data.hash = form.hash.value;
     if (form.surgery.value) data.surgeryType = form.surgery.value;
     if (form.notes.value) data.ptNotes = form.notes.value;
+    if (form.isRestrictedFromRom.value) data.isRestrictedFromRom = form.isRestrictedFromRom.value;
+    if (form.age.value) data.age = form.age.value;
+    if (form.weight.value) data.weight = form.weight.value;
 
     fetch('/pts/' + localStorage.id + '/patients', {
         headers: {
