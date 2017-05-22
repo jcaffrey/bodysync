@@ -1024,8 +1024,8 @@ function submitMeasures () {
 function submitOne (id, i, lastMeasure) {
     var count = 0;
     var inputs = document.getElementsByClassName('inputs');
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].style.display != 'none') count++;
+    for (var j = 0; j < inputs.length; j++) {
+        if (inputs[j].style.display != 'none') count++;
     }
     document.getElementById('box' + i).style.display = 'none';
     if (count <= 1) {
