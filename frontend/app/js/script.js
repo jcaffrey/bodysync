@@ -836,21 +836,6 @@ function loadStart() {
     }).catch(submitError);
 }
 
-function loadPatientStart() {
-    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            localStorage.isPatient = JSON.stringify(true);
-            localStorage.patients = JSON.stringify([pts]);
-            localStorage.display = JSON.stringify([pts]);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
-        });
-    }).catch(submitError);
-}
-
 function loadExerciseStart() {
     loadExerciseSets();
     renderExercisePage();
@@ -885,6 +870,12 @@ function compareAlpha(a, b) {
 localStorage.ctr1 = 0;
 localStorage.ctr2 = 0;
 
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
+}
+function progAscending() {
+    return patients.sort(function (a, b) { a.progress - b.progress})
+}
 function sortAlpha() {
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
