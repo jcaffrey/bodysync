@@ -1,15 +1,12 @@
 extends template
-
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-set.css')
     link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-
     script.
-      window.onload = function() {
-          loadPatientGeneralInfo();
-      }
-
+        window.onload = function() {
+            loadPatientGeneralInfo();
+        }
 block content
     form
         #generalInfo
@@ -17,7 +14,7 @@ block content
 
         .inputs
             .input-box#patname
-                 input.text-input(type='name' name='name' placeholder='Set Name ' onblur="checkName(this.value)" maxlength="65")
+                input.text-input(type='name' name='name' placeholder='Set Name ' onblur="checkName(this.value)" maxlength="65")
         br
         .inputs#rom-inputs
             .input-box
@@ -57,3 +54,4 @@ block content
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='submitExSet()') #{footerButton2}
     //- TODO: add functionality for the left footer button
+
