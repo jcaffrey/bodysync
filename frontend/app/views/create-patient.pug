@@ -6,9 +6,10 @@ block cssSheets
     meta(name="viewport", content="width=device-width, initial-scale=1")
     style.
         form input[type='radio'] {
+            opacity: 0;
             cursor: pointer;
-            width: 15px;
-            height: 15px;
+            width: 20px;
+            height: 20px;
             pointer-events: auto;
         }
 block content
@@ -46,7 +47,7 @@ block content
                 .radio2.restr-data-radio
                     label(for="NO").user-radio NO
                     #radBox2
-                    input(class="radio-button" type='radio' id="NO" name='isRestrictedFromRom' value='false' onclick="radBox2.style.background='#ffffff', radBox1.style.background='#2e3192'")
+                    input(class="radio-button" type='radio' id="NO" name='isRestrictedFromRom' value='false' onclick="radBox1.style.background='#ffffff', radBox2.style.background='#2e3192'")
         br
         .inputs#rom-inputs
             .input-box
