@@ -34,6 +34,7 @@ module.exports.createMeasure = (req, res, next) => {
                                     nextGoal: req.body.nextGoal,
                                     dayOfNextGoal: req.body.dayOfNextGoal,
                                     dayMeasured: req.body.dayMeasured,
+                                    endRangeGoal: req.body.endRangeGoal,
                                     romMetricId: req.params.id
                                 }).then(function (measure) {
                                     if(Object.keys(measure).length !== 0){

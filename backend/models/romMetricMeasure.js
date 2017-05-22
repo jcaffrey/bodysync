@@ -20,6 +20,9 @@ module.exports = function(sequelize, DataTypes) {
         dayMeasured: {
             type:DataTypes.DATEONLY,  //  TODO set default value to now
             allowNull: false
+        },
+        endRangeGoal: {
+            type: DataTypes.FLOAT
         }
     }, {
         classMethods: {
