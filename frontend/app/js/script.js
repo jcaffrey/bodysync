@@ -834,21 +834,6 @@ function loadStart() {
     }).catch(submitError);
 }
 
-function loadPatientStart() {
-    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            localStorage.isPatient = JSON.stringify(true);
-            localStorage.patients = JSON.stringify([pts]);
-            localStorage.display = JSON.stringify([pts]);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
-        });
-    }).catch(submitError);
-}
-
 function loadExerciseStart() {
     loadExerciseSets();
     renderExercisePage();
