@@ -100,6 +100,12 @@ router.get('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     }).pipe(res);
 });
 
+router.get('/romMetrics/:id', function(req, res, next) {
+    request.get(config.apiUrl + '/romMetrics/' + req.params.id + '/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.post('/injuries/:id/romMetrics', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/injuries/' + req.params.id + '/romMetrics',

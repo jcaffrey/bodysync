@@ -9,10 +9,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         startRange: {
-            type: DataTypes.INTEGER
+            type: DataTypes.FLOAT
         },
         endRangeGoal: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         }
     }, {

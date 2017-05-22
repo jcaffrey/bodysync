@@ -99,7 +99,7 @@ function submitForm() {
         .catch(submitError)
 }
 
-function postMetric (id, degree, lastGoal) {
+function postMetric (id, degree, lastGoal, endRangeGoal) {
     var data = {
         startRange: degree,
         endRangeGoal: lastGoal,
@@ -112,11 +112,11 @@ function postMetric (id, degree, lastGoal) {
         body: JSON.stringify(data)
     }).then(function(res) {
         if (!res.ok) console.log(res);
-        postMeasure(id, degree, lastGoal);
+        postMeasure(id, degree, lastGoal, endRangeGoal);
     }).catch(function (err) { console.log(err) });
 }
 
-function postMeasure (id, degree, lastGoal) {
+function postMeasure (id, degree, lastGoal, endRangeGoal) {
     var d = new Date();
     var d1 = new Date();
     d1.setDate(d1.getDate() + 7);
@@ -125,7 +125,8 @@ function postMeasure (id, degree, lastGoal) {
         dayOfNextGoal: d1.toMysqlFormat(),
         nextGoal: lastGoal,
         degreeValue: degree,
-        name: "firstMeasure"
+        name: "measure" + id,
+        endRangeGoal: endRangeGoal
     };
     fetch('/romMetrics/' + id + '/romMetricMeasures', {
         headers: {'x-access-token': localStorage.token,
@@ -179,7 +180,7 @@ function submitPatient() {
                     }).then(function (res1) {
                         if (!res1.ok) return submitError(res1);
                         else return res1.json().then(function (result1) {
-                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value);
+                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
                         })
                     }).catch(submitError);
                 }(i))
@@ -505,175 +506,170 @@ function chooseInjury (c) {
 }
 
 function loadFocusPatient () {
-    setTimeout(function() {
-        var pat = JSON.parse(localStorage.patients)[0];
-        // should be changed to pat.sets.length
-        if (pat.progress.length !== 0) {
-            var pfp = JSON.parse(localStorage.focusPatient);
-            var isPatient = JSON.parse(localStorage.isPatient);
-            var sum = 0;
-            var count = 0;
-            for (var k = 0; k < pfp.progress.length; k++) {
-                var value = pfp.progress[k];
-                if (value != null) {
-                    sum += +value[0];
-                    count++;
-                }
-            }
-            var percent = (sum / count).toFixed(1);
-            var indicator = color(percent);
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var isPatient = JSON.parse(localStorage.isPatient);
+    var sum = 0;
+    var count = 0;
+    for (var k = 0; k < pfp.progress.length; k++) {
+        var value = pfp.progress[k];
+        if (value != null) {
+            sum += +value[0];
+            count++;
+        }
+    }
+    var percent = (sum / count).toFixed(1);
+    var indicator = color(percent);
 
-            // html for pt-box
-            var ptBox = document.createElement('div');
-            // adding pic-box
-            var source;
-            switch (pfp.name) {
-                case 'Josh Seides':
-                case 'David Malan':
-                case 'Zamyla Chan':
-                case 'Sam Pelletier':
-                    source =  pfp.name;
-                    break;
-                default:
-                    source = 'Josh Seides';
-            }
-            var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + source + '.jpg'
-                + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
-            // adding info-box
-            ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
-                '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
-            ptBox.innerHTML = ptBoxHTML;
+    // html for pt-box
+    var ptBox = document.createElement('div');
+    // adding pic-box
+    var source;
+    switch (pfp.name) {
+        case 'Josh Seides':
+        case 'David Malan':
+        case 'Zamyla Chan':
+        case 'Sam Pelletier':
+            source =  pfp.name;
+            break;
+        default:
+            source = 'Josh Seides';
+    }
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + source + '.jpg'
+        + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+    // adding info-box
+    ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+        '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+        '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+    ptBox.innerHTML = ptBoxHTML;
 
-            // html for menu-box
-            var menuBox = document.createElement('div');
-            menuBox.setAttribute('class', 'menu-box');
-            menuBox.setAttribute('id', 'menuBox');
-            menuBox.style.display = 'inline-block';
-            menuBox.style.display = 'none';
+    // html for menu-box
+    var menuBox = document.createElement('div');
+    menuBox.setAttribute('class', 'menu-box');
+    menuBox.setAttribute('id', 'menuBox');
+    menuBox.style.display = 'inline-block';
+    menuBox.style.display = 'none';
 
-            // adding menu-top
-            var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
+    // adding menu-top
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
-            // adding menu-options
-            menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
+    // adding menu-options
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
 
-            // getting injuries
-            var menuInjuries = '';
-            var count = 0;
-            for (var j = 0; j < pfp.progress.length; j++) {
-                var val = pfp.progress[j];
-                if (val !== null) {
-                    menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
-                    count++;
-                }
-            }
-            menuBoxHTML += menuInjuries + '</div>';
-            menuBox.innerHTML = menuBoxHTML;
+    // getting injuries
+    var menuInjuries = '';
+    var count = 0;
+    for (var j = 0; j < pfp.progress.length; j++) {
+        var val = pfp.progress[j];
+        if (val !== null) {
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            count++;
+        }
+    }
+    menuBoxHTML += menuInjuries + '</div>';
+    menuBox.innerHTML = menuBoxHTML;
 
-            // html for outer-info-box
-            var outBox = document.createElement('div');
+    // html for outer-info-box
+    var outBox = document.createElement('div');
 
-            // adding top-box
-            var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
+    // adding top-box
+    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
-            // adding bottom-box
-              // getting injury list
-              var collapseContent = '';
-              var count = 0;
-              for (var j = 0; j < pfp.progress.length; j++) {
-                  var val = pfp.progress[j];
-                  if (val !== null) {
-                      c = '#' + color(val[0])[0];
-                      collapseContent +=
-                          '<div class="collapse-inner">' +
-                          '<div class="input-label" id="input-label' + count + '">' + val[1] + '</div>' +
-                          '<div class="input-percent" id="input-percent' + count + '" style="color:' + c + '">';
-                      if (c === '#bbbbbb') {
-                          collapseContent += 'N/A</div>';
-                      } else {
-                          collapseContent += val[0] + '%</div>';
-                      }
-                      collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
-                      count++;
+    // adding bottom-box
+      // getting injury list
+      var collapseContent = '';
+      var count = 0;
+      for (var j = 0; j < pfp.progress.length; j++) {
+          var val = pfp.progress[j];
+          if (val !== null) {
+              c = '#' + color(val[0])[0];
+              collapseContent +=
+                  '<div class="collapse-inner">' +
+                  '<div class="input-label" id="input-label' + count + '">' + val[1] + '</div>' +
+                  '<div class="input-percent" id="input-percent' + count + '" style="color:' + c + '">';
+              if (c === '#bbbbbb') {
+                  collapseContent += 'N/A</div>';
+              } else {
+                  collapseContent += val[0] + '%</div>';
+              }
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              count++;
+          }
+      }
+      outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+      // getting exercise set
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Sets</span>';
+
+      if (pfp.sets.length > 0) {
+          for (var i = 0; i < pfp.sets.length; i++){
+              var exSetId = pfp.sets[i][0].id;
+              // adding exercise set name
+              outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pfp.sets[i][0].name + '</span></div><br>';
+              // adding list of exercises
+              for (var j = 0; j < pfp.exercises.length; j++){
+                  if (pfp.exercises[j].exerciseSetId == exSetId){
+                      // adding exercise name
+                      outBoxHTML += '<span id="exerciseText">' + pfp.exercises[j].name + '</span>';
+                      // adding exercise sets and seconds
+                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
                   }
               }
-              outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
-              // getting exercise set
-              outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Sets</span>';
+          }
+      }
+      else {
+          outBoxHTML += '<span id="exerciseText"> No Exercise Sets Currently Assigned </span>';
+      }
 
-            //   for (var i = 0; i < pat.sets.length; i++){
-              //
-            //       var exSetId = pat.sets[i].id;
-            //       // adding exercise set name
-            //       outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pat.sets[i].name + '</span></div><br>';
-            //       // adding list of exercises
-            //       for (var j = 0; j < pat.exercises.length; j++){
-            //           if (pat.exercises[j].exerciseSetId == exSetId){
-            //               // adding exercise name
-            //               outBoxHTML += '<span id="exerciseText">' + pat.exercises[j].name+ '</span>';
-            //               // adding exercise sets and seconds
-            //               outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
-            //           }
-            //       }
-            //   }
-              if (!isPatient){
-                  outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise Set</a>' + '</div>';
-              }
+      if (!isPatient){
+          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise Set</a>' + '</div>';
+      }
 
-              // getting notes
-              outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+      // getting notes
+      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
-              // adding body-part-box
-                // percentage-box
+      // adding body-part-box
+        // percentage-box
 
-                outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
-                // graph
-                outBoxHTML += '<div id="loading"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
-                // legend
-                outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
+        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+        // graph
+        outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+        // legend
+        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
-            // adding transition-box
-            outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
-            outBox.innerHTML = outBoxHTML;
-            document.getElementById('loading').style.display = 'none';
-            var container = document.getElementById('status').appendChild(ptBox);
-            container.appendChild(menuBox);
-            container.appendChild(outBox);
-        } else {
-            loadFocusPatient();
-        }
-    }, 1000);
+    // adding transition-box
+    outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
+    outBox.innerHTML = outBoxHTML;
+    document.getElementById('loading').style.display = 'none';
+    var container = document.getElementById('status').appendChild(ptBox);
+    container.appendChild(menuBox);
+    container.appendChild(outBox);
 }
 
 function renderExercisePage() {
-    setTimeout(function() {
-        var pat = JSON.parse(localStorage.patients)[0];
-        if (pat.sets.length !== 0) {
-            var bodyBox = document.createElement('div');
-            var bodyBoxHTML = "";
-            console.log(pat);
-            for (var i = 0; i < pat.sets.length; i++){
-                var exSetId = pat.sets[i].id;
-                // adding exercise set name
-                bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i].name + '</p>';
-                // adding list of exercises
-                for (var j = 0; j < pat.exercises.length; j++){
-                    if (pat.exercises[j].exerciseSetId == exSetId){
-                        // adding exercise name
-                        bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[j].name;
-                        // adding exercise sets and seconds
-                        bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
-                    }
+    var pat = JSON.parse(localStorage.patients)[0];
+    var bodyBox = document.createElement('div');
+    var bodyBoxHTML = "";
+    if (pat.sets.length > 0){
+        for (var i = 0; i < pat.sets.length; i++){
+            var exSetId = pat.sets[i][0].id;
+            // adding exercise set name
+            bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
+            // adding list of exercises
+            for (var j = 0; j < pat.exercises.length; j++){
+                if (pat.exercises[j].exerciseSetId == exSetId){
+                    // adding exercise name
+                    bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[j].name;
+                    // adding exercise sets and seconds
+                    bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
                 }
             }
-            bodyBox.innerHTML = bodyBoxHTML;
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('exercisepg').appendChild(bodyBox);
-        } else {
-            renderExercisePage();
         }
-    }, 1000);
+    }
+    else {
+        bodyBoxHTML += '<p class="headerGrey"> No Exercise Sets Currently Assigned </p>';
+    }
+    bodyBox.innerHTML = bodyBoxHTML;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('exercisepg').appendChild(bodyBox);                
 }
 
 function changePercent(val) {
@@ -720,7 +716,7 @@ function getMeasurements(injury) {
                 date: data[data.length - 1].dayOfNextGoal,
                 goal: data[data.length - 1].nextGoal
             };
-            temp[count + 1] = data[data.length - 1].nextGoal;
+            temp[count + 1] = data[data.length - 1].endRangeGoal;
             localStorage["graphData" + injury] = JSON.stringify(temp);
         });
     }).catch(console.log('error' + injury));
@@ -760,6 +756,7 @@ function loadProgress(patients) {
     for (var i = 0; i < pats.length; i++) {
         (function(x) {
             pats[x].progress = [];
+            pats[x].sets = [];
             fetch('/findInjuries/' + pats[x].id + '/?token=' + localStorage.token, {
                 method: 'GET'
             }).then(function(res) {
@@ -767,7 +764,8 @@ function loadProgress(patients) {
                 res.json().then(function (data) {
                     var init = data[0].id || 0;
                     for (var j = init; j < data.length + init; j++) {
-                        (function(y) { updateProgress(x, y, data[y - init].name) }(j))
+                        (function(y) { updateProgress(x, y, data[y - init].name) }(j));
+                        (function(y) { loadExerciseSets(x, y) }(j));
                     }
                 });
             }).catch(submitError);
@@ -788,45 +786,33 @@ function loadPatient(id) {
     }).catch(submitError);
 }
 
-function loadExerciseSets() {
-    var pat = JSON.parse(localStorage.patients)[0];
-    pat.sets = [];
-    localStorage.patients = JSON.stringify([pat]);
-    var count = 0;
-    for (var i = 0; i < pat.progress.length; i++) {
-        if (pat.progress[i] !== null){
-            (function(x, y) {
-                fetch('/injuries/' + pat.progress[x][3] + '/exerciseSets/?token=' + localStorage.token, {
-                    method: 'GET'
-                }).then(function(res) {
-                    if (!res.ok) return submitError(res);
-                    res.json().then(function (data) {
-                        var patient = JSON.parse(localStorage.patients)[0];
-                        patient.sets[y] = data[0];
-                        localStorage.patients = JSON.stringify([patient]);
-                        loadSpecificExercises(data[0].id);
-                    });
-                }).catch(submitError);
-
-            }(i, count))
-            count++;
-        }
-    }
+function loadExerciseSets(patIndex, injuryId) {
+    fetch('/injuries/' + injuryId + '/exerciseSets/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var patients = JSON.parse(localStorage.patients);
+            patients[patIndex].sets.push(data);
+            patients[patIndex].exercises = [];
+            localStorage.patients = JSON.stringify(patients);
+            for (var j = 0; j < data.length; j++) {
+                loadSpecificExercises(patIndex, data[j].id);
+            }
+        });
+    }).catch(submitError);
 }
 
-function loadSpecificExercises(exSetId) {
-    var pat = JSON.parse(localStorage.patients)[0];
-    pat.exercises = [];
-    localStorage.patients = JSON.stringify([pat]);
+function loadSpecificExercises(patIndex, exSetId) {
     fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
             for (var j = 0; j < data.length; j++){
-                var patient = JSON.parse(localStorage.patients)[0];
-                patient.exercises.push(data[j]);
-                localStorage.patients = JSON.stringify([patient]);
+                var patients = JSON.parse(localStorage.patients);
+                patients[patIndex].exercises.push(data[j]);
+                localStorage.patients = JSON.stringify(patients);
             }
         });
     }).catch(submitError);
@@ -841,6 +827,21 @@ function loadStart() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
+            clear();
+            loadProgress(localStorage.patients);
+            loadPatients(localStorage.patients);
+        });
+    }).catch(submitError);
+}
+
+function loadPatientStart() {
+    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(pts) {
+            localStorage.isPatient = JSON.stringify(true);
+            localStorage.patients = JSON.stringify([pts]);
+            localStorage.display = JSON.stringify([pts]);
             clear();
             loadProgress(localStorage.patients);
             loadPatients(localStorage.patients);
@@ -956,9 +957,13 @@ function loadAddMeasure () {
                 '<div class="m-label">PREVIOUS</div></div>' +
                 '<div class="m-new">' +
                 '<div class="num">' +
-                '<input type="text" name="newMeasure" placeholder="NEW"></div>' +
-                '<div class="m-label">NEW</div></div></div></div>' +
-                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][4] + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+                '<input type="text" name="newMeasure" placeholder="NEW" id="middle-input"></div>' +
+                '<div class="m-label">NEW</div></div>' +
+                '<div class="m-new1">' +
+                '<div class="num">' +
+                '<input type="text" name="newMeasure" placeholder="GOAL"></div>' +
+                '<div class="m-label">GOAL</div></div></div></div>' +
+                '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
             count++;
         }
     }
@@ -978,42 +983,62 @@ Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 };
 
-function submitMeasure (id, i, lastGoal, lastMeasure) {
-    var d = new Date();
-    var d1 = new Date();
-    d1.setDate(d1.getDate() + 7);
-    var data = {
-        dayMeasured: d.toMysqlFormat(),
-        dayOfNextGoal: d1.toMysqlFormat(),
-        nextGoal: lastGoal,
-        degreeValue: form[i].value || lastMeasure,
-        name: 'name' + id
-    };
-    fetch('/romMetrics/' + id + '/romMetricMeasures', {
-        headers: {'x-access-token': localStorage.token,
-            'Content-Type': 'application/json'},
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(function(res) {
-        if (!res.ok) throw new Error('There was an error sending this measure');
-    }).catch(function (err) { console.log(err) });
+function submitMeasure (id, i, lastMeasure, last) {
+    console.log(last);
+    fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            console.log('hi1');
+            var d = new Date();
+            var d1 = new Date();
+            d1.setDate(d1.getDate() + 7);
+            var data = {
+                dayMeasured: d.toMysqlFormat(),
+                dayOfNextGoal: d1.toMysqlFormat(),
+                nextGoal: form[(2 * i) + 1].value || lastMeasure,
+                degreeValue: form[2 * i].value || lastMeasure,
+                name: 'name' + id,
+                endRangeGoal: data.endRangeGoal
+            };
+            fetch('/romMetrics/' + id + '/romMetricMeasures', {
+                headers: {'x-access-token': localStorage.token,
+                    'Content-Type': 'application/json'},
+                method: 'POST',
+                body: JSON.stringify(data)
+            }).then(function(res) {
+                if (!res.ok) throw new Error('There was an error sending this measure');
+                console.log('here with ' + last);
+                if (last) window.location = '/patients';
+            }).catch(function (err) { console.log(err) });
+        });
+    }).catch(function () { console.log('wrong') });
 }
 
 function submitMeasures () {
     var data = JSON.parse(localStorage.focusPatient);
     var count = 0;
+    var num = 0;
+    for (var j = 0; j < data.progress.length; j++) {
+        if (data.progress[j] !== null) {
+            num++;
+        }
+    }
     for (var i = 0; i < data.progress.length; i++) {
         if (data.progress[i] !== null) {
-            submitMeasure(data.progress[i][3], count, data.progress[i][4], data.progress[i][2]);
+            if (count == (num - 1)) {
+                submitMeasure(data.progress[i][3], count, data.progress[i][2], true);
+            } else {
+                submitMeasure(data.progress[i][3], count, data.progress[i][2], false);
+            }
             count++;
         }
     }
-    window.location = '/patients';
 }
 
-function submitOne (id, i, lastGoal, lastMeasure) {
-    submitMeasure(id, i, lastGoal, lastMeasure);
-    window.location = '/patients';
+function submitOne (id, i, lastMeasure) {
+    submitMeasure(id, i, lastMeasure, true);
 }
 
 // =============================================================
@@ -1043,7 +1068,7 @@ function submitExercise() {
 // =============================================================
 function createGraph(id) {
     document.getElementById('graph').innerHTML = '';
-    document.getElementById('loading').style.display = 'inline';
+    document.getElementById('loading1').style.display = 'inline';
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
@@ -1133,7 +1158,7 @@ function createGraph(id) {
                 return y(next_weeks_goal[i]);
             });
 
-        document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading1').style.display = 'none';
         document.getElementById('graph-container').style.display = 'inline';
 
 
