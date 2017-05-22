@@ -393,7 +393,7 @@ function loadPatients(patients) {
                 }
                 p1.style.color = "#" + indicator[0];
                 menu.setAttribute('class', 'arrow');
-                menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 menu.setAttribute('class', 'nav-icon');
                 menu.setAttribute('id', 'nav-icon' + i);
                 menu.innerHTML =
@@ -440,6 +440,8 @@ function loadPatients(patients) {
                 recbx.appendChild(p1);
                 recbx.appendChild(rec);
                 div.setAttribute('class', 'pt-box');
+                // added to make entire pt-box clickable
+                div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                 picbox.setAttribute('class', 'pic-box');
                 inner.setAttribute('class', 'info-box');
                 name.setAttribute('class', 'name');
@@ -836,21 +838,6 @@ function loadStart() {
     }).catch(submitError);
 }
 
-function loadPatientStart() {
-    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
-    ).then(function(res) {
-        if (!res.ok) throw(res);
-        res.json().then(function(pts) {
-            localStorage.isPatient = JSON.stringify(true);
-            localStorage.patients = JSON.stringify([pts]);
-            localStorage.display = JSON.stringify([pts]);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
-        });
-    }).catch(submitError);
-}
-
 function loadExerciseStart() {
     loadExerciseSets();
     renderExercisePage();
@@ -885,6 +872,12 @@ function compareAlpha(a, b) {
 localStorage.ctr1 = 0;
 localStorage.ctr2 = 0;
 
+function alphaDescending(lst) {
+    return lst.sort(compareAlphaRev)
+}
+function progAscending() {
+    return patients.sort(function (a, b) { a.progress - b.progress})
+}
 function sortAlpha() {
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
@@ -941,7 +934,7 @@ function loadAddMeasure () {
     for (var i = 0; i < data.progress.length; i++) {
         if (data.progress[i] !== null) {
             content +=
-                '<div class="inputs">' +
+                '<div class="inputs" id="box' + count + '" style="display:block">' +
                 '<div class="input-box input-header">' +
                 '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
                 '<div class="input-label"></div></div>' +
@@ -980,13 +973,11 @@ Date.prototype.toMysqlFormat = function() {
 };
 
 function submitMeasure (id, i, lastMeasure, last) {
-    console.log(last);
     fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function (res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            console.log('hi1');
             var d = new Date();
             var d1 = new Date();
             d1.setDate(d1.getDate() + 7);
@@ -1005,7 +996,6 @@ function submitMeasure (id, i, lastMeasure, last) {
                 body: JSON.stringify(data)
             }).then(function(res) {
                 if (!res.ok) throw new Error('There was an error sending this measure');
-                console.log('here with ' + last);
                 if (last) window.location = '/patients';
             }).catch(function (err) { console.log(err) });
         });
@@ -1034,7 +1024,17 @@ function submitMeasures () {
 }
 
 function submitOne (id, i, lastMeasure) {
-    submitMeasure(id, i, lastMeasure, true);
+    var count = 0;
+    var inputs = document.getElementsByClassName('inputs');
+    for (var j = 0; j < inputs.length; j++) {
+        if (inputs[j].style.display != 'none') count++;
+    }
+    document.getElementById('box' + i).style.display = 'none';
+    if (count <= 1) {
+        submitMeasure(id, i, lastMeasure, true);
+    } else {
+        submitMeasure(id, i, lastMeasure, false);
+    }
 }
 
 // =============================================================

@@ -13,18 +13,20 @@ block content
         h1 Exercise Set
 
         .inputs#exercise-inputs
-            .input-box
-                input.text-input.exercise-name-input(type='text' name='exercise-name' placeholder='ENTER EXERCISE NAME ' onblur="#")
-                .ex1
-                    .exercise-label Number of Sets
-                    input.ex-input.degrees(maxlength='3' name='numSets' placeholder='___ ' onblur="#")
-                .ex2
-                    .exercise-label Number of Reps/Duration
-                    input.text-input.degrees(maxlength='3' name='numRepsOrDuration' placeholder='___ ' onblur="#")
-                br
-                .exercise-label#notes Notes
-                textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
-            .input-box.last-box#exercise-add(onclick="addMotion()") Add Motion
+                .input-box
+                    input.text-input.exercise-name-input(type='text' name='exercise-name' placeholder='ENTER EXERCISE NAME ' onblur="#")
+                    .ex1
+                        .exercise-label Number of Sets
+                        input.ex-input.degrees(maxlength='3' name='numSets' placeholder='___ ' onblur="#")
+                    .ex2
+                        .exercise-label Number of Reps/Duration
+                        input.text-input.degrees(maxlength='3' name='numRepsOrDuration' placeholder='___ ' onblur="#")
+                    br
+                    .exercise-label#notes Notes
+                    textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
+                .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
+
+
 
         //- TODO: use the code below to format a delete button on the box div
         //- button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
@@ -44,13 +46,13 @@ block content
         //-     a(href='/exercise-form').add +
     p#success
         script.
-            function addMotion() {
-                var inputs = document.getElementById('exercise-inputs')
-                var exadd = document.getElementById('exercise-add')
-                var newMotion = document.createElement("div")
-                newMotion.setAttribute('class', 'input-box')
-                newMotion.innerHTML = "<input class='text-input exercise-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME'><div class='ex1'><div class='exercise-label'>Number of Sets</div><input class='ex-input degrees' name='ex1' placeholder='___ ' onblur='#' maxlength='3'></div><div class='ex2'><div class='exercise-label'>Number of Reps/Duration</div><input class='text-input degrees' name='ex2' placeholder='___' onblur='#' maxlength='3'></div><br><div class='exercise-label' id='notes'>Notes</div><textarea class='text-input notes' type='notes' id='notes' name='notes' cols='25' placeholder='Additional information about the exercise... ''></textarea>"
-                inputs.insertBefore(newMotion, exadd)
+            function addExercise() {
+                   var inputs = document.getElementById('exercise-inputs')
+                   var exadd = document.getElementById('exercise-add')
+                   var newEx = document.createElement("div")
+                   newEx.setAttribute('class', 'input-box')
+                   newEx.innerHTML = "<input class='text-input exercise-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME'><div class='ex1'><div class='exercise-label'>Number of Sets</div><input class='ex-input degrees' name='ex1' placeholder='___ ' onblur='#' maxlength='3'></div><div class='ex2'><div class='exercise-label'>Number of Reps/Duration</div><input class='text-input degrees' name='ex2' placeholder='___' onblur='#' maxlength='3'></div><br><div class='exercise-label' id='notes'>Notes</div><textarea class='text-input notes' type='notes' id='notes' name='notes' cols='25' placeholder='Additional information about the exercise... ''></textarea>"
+                   inputs.insertBefore(newEx, exadd)
             }
 
 block submitForm
