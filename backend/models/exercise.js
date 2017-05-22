@@ -18,8 +18,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         assignedFrequency: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.INTEGER
         },
         assignedDuration: {
             type: DataTypes.INTEGER
@@ -37,12 +36,12 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                exercise.belongsTo(models.exerciseSet, {
-                    onDelete: "CASCADE",
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
+                // exercise.belongsTo(models.exerciseSet, {
+                //     onDelete: "CASCADE",
+                //     foreignKey: {
+                //         allowNull: false
+                //     }
+                // });
                 exercise.hasMany(models.exerciseCompletion);
             }
         }

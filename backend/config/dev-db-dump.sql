@@ -80,21 +80,14 @@ values
     ('firstMeasure', 88, 90, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 6, 90),
     ('firstMeasure', 56, 580, DATE_ADD(NOW(), INTERVAL 7 DAY), now(), now(), now(), 7, 1000);
 
--- exerciseSets
-insert into exerciseSets
-    (name, isTemplate, isCurrentlyAssigned, intendedInjuryType, createdAt, updatedAt, injuryId, ptId)
-values
-    ('Shoulder Recovery', true, true, 'Shoulder', now(), now(), 1, 2),
-    ('Stubbed Toe Recovery', true, true, 'Shoulder', now(), now(), 2, 2),
-    ('Sprained Ankle Recovery', true, true, 'Shoulder', now(), now(), 3, 2);
+
 
 -- exercises
 insert into exercises
-    (name, numRepsOrDuration, numSets, assignedFrequency, assignedDuration, dateAssigned, ptNotes, mediaUrl, createdAt, updatedAt, exerciseSetId)
+    (name, numRepsOrDuration, numSets, assignedFrequency, assignedDuration, dateAssigned, ptNotes, mediaUrl, createdAt, updatedAt, patientId)
 values
     ('shoulder extension', 12, 3, 5, null, now(), 'extend shoulder while laying on side', null, now(), now(), 1),
     ('shoulder flexion', 12, 3, 5, null, now(), 'flex shoulder while laying on side', null, now(), now(), 1),
-    ('shoulder stretch', 30, 3, 5, 45, now(), 'stretch shoulder for the assigned 45 seconds while laying on side', null, now(), now(), 1),
     ('stubbed toe extension', 12, 3, 5, null, now(), 'flex toe while laying on roof of building', null, now(), now(), 2),
     ('stubbed toe flexion', 12, 3, 5, null, now(), 'flex toe while laying upside down', null, now(), now(), 2),
     ('sprained ankle flexion', 12, 3, 5, null, now(), 'flex ankle while laying on bed of rocks', null, now(), now(), 3),

@@ -27,6 +27,12 @@ module.exports.createInjury = (req, res, next) => {
     }).then(function(patient) {
         if (Object.keys(patient).length !== 0) {
             // check the requesting pt has permission to view this patient
+            console.log(patient.ptId);
+            console.log(decoded.id);
+            console.log(patient.ptId === decoded.id);
+            console.log(patient.ptId == decoded.id);
+
+
             if(patient.ptId === decoded.id) {
                 models.injury.create({
                     name: req.body.name,
@@ -36,6 +42,7 @@ module.exports.createInjury = (req, res, next) => {
                     if(Object.keys(injury).length !== 0) {
                         res.json(injury);
                         return next();
+
                     }
                     else {
                         res.status(404).send('Could not create that injury')
@@ -44,10 +51,11 @@ module.exports.createInjury = (req, res, next) => {
                     return next(err);
                 })
             }
+            else {
+                res.status(404).send('No patient with that id');
+            }
         }
-        else {
-            res.status(404).send('No patient with that id');
-        }
+
     }).catch(function(err) {
         return next(err);
     })
@@ -83,15 +91,22 @@ module.exports.getInjuries = (req, res, next) => {
                         id: req.params.id
                     }
                 }).then(function(patient) {
-                    if(patient.ptId === decoded.id) {
-                        // return the injuries!
-                        req.body.patientId = req.params.id;
-                        res.json(injuries);
-                        return next();
-                    }
-                    else {
-                        res.status(401).send('Unauthorized');
-                    }
+                     if(Object.keys(patient).length !== 0)
+                     {
+                        if (patient.ptId === decoded.id) {
+                            // return the injuries!
+                            req.body.patientId = req.params.id;
+                            res.json(injuries);
+                            return next();
+                        }
+                        else {
+                            res.status(401).send('Unauthorized');
+                        }
+                     }
+                     else
+                     {
+                         res.status(404).send('no pat found');
+                     }
                 }).catch(function(err) {
                     return next(err);
                 })
