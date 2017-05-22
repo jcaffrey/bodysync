@@ -57,7 +57,16 @@ form h2
     cursor pointer
 #rom-add:hover
     background-color #EEE
-    
+
+#exercise-add
+    text-align center
+    text-transform uppercase
+    color $inactiveColor
+    transition 0.3s
+    cursor pointer
+#exercise-add:hover
+    background-color #EEE
+
 form input::-webkit-input-placeholder
     color: $inactiveColor
     font-style: italic
@@ -125,6 +134,28 @@ form h2.rom-box
         font-size: 2vw
     @media screen and (min-width: 1700px)
         font-size: 1.5vw
+
+.ex1
+    float: left
+    text-align: left
+    width: 50%
+.ex2
+    height: 100%
+    width: 100%
+    text-align: right
+.ex-input
+    position relative
+    text-align left
+    color $mainColor
+    font-family 'GothamBold'
+    background none
+    border none
+    font-size 4vw
+    @media screen and (min-width: 770px)
+        font-size: 2vw
+    @media screen and (min-width: 1700px)
+        font-size: 1.5vw
+
 .rom-label
     font-size 3vw
     color $mainColor
@@ -137,6 +168,20 @@ form h2.rom-box
     margin-top 10px
 .rom-label#notes
     text-align: left
+
+.exercise-label
+    font-size 3vw
+    color $mainColor
+    text-transform uppercase
+    @media screen and (min-width: 770px)
+        font-size: 1.25vw
+    @media screen and (min-width: 1700px)
+        font-size: 1vw
+.exercise-label + input
+    margin-top 10px
+.exercise-label#notes
+    text-align: left
+
 form textarea.text-input
     resize: none
     outline: none
@@ -146,6 +191,7 @@ form textarea.text-input
     @media screen and (min-width: 1700px)
         font-size: 1vw
     height: 70px
+
 
 .input-box:first-child
     border-top-right-radius: $formRadius
@@ -235,6 +281,14 @@ form img
     color $mainColor
     margin-bottom 10px
 
+.exercise-name-input
+    width 100%
+    font-weight bold
+    text-align left
+    font-style normal
+    color $mainColor
+    margin-bottom 10px
+
 #tabPatient
     color $white
 
@@ -249,13 +303,3 @@ form img
 
 .user-radio
     padding 0% 5%
-
-
-
-
-
-
-
-
-
-

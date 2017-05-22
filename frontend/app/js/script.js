@@ -405,10 +405,13 @@ function loadPatients(patients) {
                     '<span></span>' +
                     '<span></span>';
                 collapse.setAttribute('class', 'buttonCollapse');
-                var collapseDiv = !isPatient ? '" style="display:none">' : ''
+                var collapseDiv = !isPatient ? '" style="display:none">' : '';
                 var collapseContent =
                     '<div class="collapse" id= "collapse' + i + collapseDiv +
                     '<hr><div class="space"></div>';
+                if (isPatient){
+                    collapseContent += '<hr><div class="space"></div>'
+                }
                 for (var j = 0; j < psd[i].progress.length; j++) {
                     var val = psd[i].progress[j];
                     if (val !== null) {
@@ -426,10 +429,10 @@ function loadPatients(patients) {
                     }
                 }
                 if (!isPatient) {
-                  collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                  collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
                 }
                 else {
-                  collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">Inspect Patient</a>';
+                  collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
                 }
                 collapse.innerHTML = collapseContent;
                 rec.setAttribute('class', 'recovery');
@@ -643,7 +646,6 @@ function loadFocusPatient () {
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
     outBox.innerHTML = outBoxHTML;
-    document.getElementById('loading').style.display = 'none';
     var container = document.getElementById('status').appendChild(ptBox);
     container.appendChild(menuBox);
     container.appendChild(outBox);
@@ -674,7 +676,7 @@ function renderExercisePage() {
     }
     bodyBox.innerHTML = bodyBoxHTML;
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('exercisepg').appendChild(bodyBox);                
+    document.getElementById('exercisepg').appendChild(bodyBox);
 }
 
 function changePercent(val) {

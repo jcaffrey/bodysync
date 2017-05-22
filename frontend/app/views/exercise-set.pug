@@ -12,17 +12,21 @@ block content
         #generalInfo
         h1 Exercise Set
 
-        .inputs
-            .input-box#patname
-                input.text-input(type='exsetname' name='exsetname' placeholder='Set Name ' maxlength="65")
-        br
-        .inputs#rom-inputs
-            .input-box
-                input.text-input.rom-name-input(type='exname' name='exname' placeholder='ENTER EXERCISE NAME HERE ' onblur="checkMotionRangeName(this.value)")
-                .rom2
-                    .rom-label Exercise Specifics
-                    input.text-input.degrees(maxlength='60' type='exdetails' name='exdetails' placeholder='reps / time ' onblur="checkMotionRangeNum(this.value)")
-            .input-box.last-box#rom-add(onclick="addExercise()") Add Exercise
+        .inputs#exercise-inputs
+                .input-box
+                    input.text-input.exercise-name-input(type='text' name='exercise-name' placeholder='ENTER EXERCISE NAME ' onblur="#")
+                    .ex1
+                        .exercise-label Number of Sets
+                        input.ex-input.degrees(maxlength='3' name='numSets' placeholder='___ ' onblur="#")
+                    .ex2
+                        .exercise-label Number of Reps/Duration
+                        input.text-input.degrees(maxlength='3' name='numRepsOrDuration' placeholder='___ ' onblur="#")
+                    br
+                    .exercise-label#notes Notes
+                    textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
+                .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
+
+
 
         //- TODO: use the code below to format a delete button on the box div
         //- button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
@@ -43,15 +47,14 @@ block content
     p#success
         script.
             function addExercise() {
-                var inputs = document.getElementById('rom-inputs')
-                var romadd = document.getElementById('rom-add')
-                var newMotion = document.createElement("div")
-                newMotion.setAttribute('class', 'input-box')
-                newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME HERE'><div class='rom2'><div class='rom-label'>Exercise Specifics</div><input class='text-input degrees' type='rom' name='rom2' placeholder='reps / time ' onblur='#' maxlength='60'></div>"
-                inputs.insertBefore(newMotion, romadd)
+                   var inputs = document.getElementById('exercise-inputs')
+                   var exadd = document.getElementById('exercise-add')
+                   var newEx = document.createElement("div")
+                   newEx.setAttribute('class', 'input-box')
+                   newEx.innerHTML = "<input class='text-input exercise-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME'><div class='ex1'><div class='exercise-label'>Number of Sets</div><input class='ex-input degrees' name='ex1' placeholder='___ ' onblur='#' maxlength='3'></div><div class='ex2'><div class='exercise-label'>Number of Reps/Duration</div><input class='text-input degrees' name='ex2' placeholder='___' onblur='#' maxlength='3'></div><br><div class='exercise-label' id='notes'>Notes</div><textarea class='text-input notes' type='notes' id='notes' name='notes' cols='25' placeholder='Additional information about the exercise... ''></textarea>"
+                   inputs.insertBefore(newEx, exadd)
             }
 
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='submitExSet()') #{footerButton2}
     //- TODO: add functionality for the left footer button
-
