@@ -86,24 +86,31 @@ form h1
     margin 0
 .m-old
     display inline-block
-    width 50% - 2px
+    width ((1/3) * 100)% - 2px
     height 100%
     margin 0
     border-right 2px $inactiveColor dashed
-.m-new
+.m-new, .m-new1
     display inline-block
-    width 50%
+    width ((1/3) * 100)%
     height 100%
     margin 0
     background-color white
+.m-new
+    width ((1/3) * 100)% - 2px
+    border-right 2px $inactiveColor dashed
+#middle-input
+    text-align center
 .m-label
     display inline-block
     height 20px
     font-size 0.7em
     width 100%
-.m-new .m-label
+.m-new .m-label, .m-new1 .m-label
     text-align right
     color $mainColor
+.m-new .m-label
+    text-align center
 .m-old .m-label
     text-align left
 .num
