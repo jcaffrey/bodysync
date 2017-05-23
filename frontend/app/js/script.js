@@ -514,6 +514,7 @@ function chooseInjury (c) {
 }
 
 function loadFocusPatient () {
+    getGraphData();
     var pfp = JSON.parse(localStorage.focusPatient);
     var isPatient = JSON.parse(localStorage.isPatient);
     var sum = 0;
@@ -583,10 +584,10 @@ function loadFocusPatient () {
     var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
     // adding bottom-box
-      // getting injury list
-      var collapseContent = '';
-      var count = 0;
-      for (var j = 0; j < pfp.progress.length; j++) {
+    // getting injury list
+    var collapseContent = '';
+    var count = 0;
+    for (var j = 0; j < pfp.progress.length; j++) {
           var val = pfp.progress[j];
           if (val !== null) {
               c = '#' + color(val[0])[0];
@@ -602,26 +603,19 @@ function loadFocusPatient () {
               collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
-      }
+    }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
       outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span>';
 
       if (pfp.exercises.length > 0) {
-        //   for (var i = 0; i < pfp.sets.length; i++){
-        //       var exSetId = pfp.sets[i][0].id;
-        //       // adding exercise set name
-        //       outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pfp.sets[i][0].name + '</span></div><br>';
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
-                //   if (pfp.exercises[j].exerciseSetId == exSetId){
-                      // adding exercise name
-                      outBoxHTML += '<span id="exerciseText">' + pfp.exercises[0][j].name + '</span>';
-                      // adding exercise sets and seconds
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
-                 // }
+                  // adding exercises
+                  outBoxHTML += '<span id="exerciseText">' + pfp.exercises[0][j].name + '</span>';
+                  // adding exercise sets and seconds
+                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
               }
-         // }
       }
       else {
           outBoxHTML += '<span id="exerciseText"> No Exercise Currently Assigned </span>';
@@ -631,17 +625,17 @@ function loadFocusPatient () {
           outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       }
 
-      // getting notes
-      outBoxHTML += '<div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+    // getting notes
+    outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
-      // adding body-part-box
-        // percentage-box
+    // adding body-part-box
+    // percentage-box
 
-        outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
-        // graph
-        outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
-        // legend
-        outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
+    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+    // graph
+    outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+    // legend
+    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
@@ -851,6 +845,22 @@ function loadStart() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
+            clear();
+            loadProgress(localStorage.patients);
+            loadPatients(localStorage.patients);
+        });
+    }).catch(submitError);
+}
+
+function loadPatientStart() {
+    fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
+    ).then(function(res) {
+        if (!res.ok) throw(res);
+        res.json().then(function(patient) {
+            localStorage.isPatient = JSON.stringify(true);
+            localStorage.patients = JSON.stringify([patient]);
+            localStorage.display = JSON.stringify([patient]);
+            localStorage.focusPatient = JSON.stringify(patient);
             clear();
             loadProgress(localStorage.patients);
             loadPatients(localStorage.patients);
@@ -1082,6 +1092,7 @@ function submitExercise() {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
+    console.log(id);
     document.getElementById('graph').innerHTML = '';
     document.getElementById('loading1').style.display = 'inline';
     document.getElementById('graph-container').style.display = 'none';
