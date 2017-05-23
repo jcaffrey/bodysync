@@ -57,6 +57,10 @@ router.route('/login/pt')
 router.route('/login/patient')
     .post(auth.loginPatient);
 
+// TODO: TEST THIS WITH FRONTEND
+router.route('/logoff')
+    .get(auth.ptRequired, ptSessions.updateSession);
+
 router.route('/forgotpassword') 
     .post(auth.forgotPassword);
 

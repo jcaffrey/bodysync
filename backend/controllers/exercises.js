@@ -14,36 +14,57 @@ module.exports.createExercises = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    var data = [];
-    for(exerciseObj in req.body)
-    {
 
-        if(req.body[exerciseObj].name && req.body[exerciseObj].numRepsOrDuration && req.body[exerciseObj].numSets)
+    models.patient.findOne({where: {id: req.params.id}}).then(function (pat) {
+        if(Object.keys(pat).length !== 0)
         {
-            data.push({
-                name: req.body[exerciseObj].name,
-                numRepsOrDuration: req.body[exerciseObj].numRepsOrDuration,
-                numSets: req.body[exerciseObj].numSets,
-                ptNotes: req.body[exerciseObj].ptNotes,
-                patientId: req.params.id
-            })
-        }
-    }
-
-    models.exercise.bulkCreate(data).then(function () {
-        models.exercise.findAll({where: {patientId: req.params.id}}).then(function(exercises) {
-            if(exercises.length !== 0)
+            if(decoded.id == pat.ptId)
             {
-                res.json(exercises);
-                return next();
+                var data = [];
+                for(exerciseObj in req.body)
+                {
+
+                    if(req.body[exerciseObj].name && req.body[exerciseObj].numRepsOrDuration && req.body[exerciseObj].numSets)
+                    {
+                        data.push({
+                            name: req.body[exerciseObj].name,
+                            numRepsOrDuration: req.body[exerciseObj].numRepsOrDuration,
+                            numSets: req.body[exerciseObj].numSets,
+                            ptNotes: req.body[exerciseObj].ptNotes,
+                            patientId: req.params.id
+                        })
+                    }
+
+                }
+
+                if(data.length !== 0)
+                {
+                    models.exercise.bulkCreate(data).then(function () {
+                        models.exercise.findAll({where: {patientId: req.params.id}}).then(function(exercises) {
+                            if(exercises.length !== 0)
+                            {
+                                res.json(exercises);
+                                return next();
+                            }
+                        }).catch(function(err) {
+                            console.log('something weird')
+                            return next(err);
+                        })
+                    }).catch(function(err) {
+                        console.log('failed to create')
+                        return next(err);
+                    })
+                }
+                else
+                {
+                    return res.status(400).send('please include all required fields');
+                }
             }
-        }).catch(function(err) {
-            console.log('something weird')
-            return next(err);
-        })
-    }).catch(function(err) {
-        console.log('failed to create')
-        return next(err);
+            else
+            {
+                return res.status(403).send('not authorized to do that');
+            }
+        }
     })
 
 }
@@ -138,6 +159,7 @@ module.exports.getExercises = (req, res, next) => {
 module.exports.updateExercises = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
+
 
 }
 

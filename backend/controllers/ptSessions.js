@@ -69,18 +69,20 @@ module.exports.logSession = (req, res, next) => {
                     // console.log(minutes);
                     // console.log(seconds);
                     // ptSessions.update()
-                    models.ptSession.update(
-                        {duration: diff},
-                        {where: {
-                            ptId: decoded.id,
-                            sessionNumber: decoded.sessionNumber,
-                            duration: null,
-                            resourceRequested: ptSessions[0].resourceRequested,
-                            createdAt: ptSessions[0].createdAt
-                        }
-                        }).then(function() {
-                            return;
-                        })
+                    models.ptSession.update({
+                        duration: diff
+                    },
+                        {
+                            where: {
+                                ptId: decoded.id,
+                                sessionNumber: decoded.sessionNumber,
+                                duration: null,
+                                resourceRequested: ptSessions[0].resourceRequested,
+                                createdAt: ptSessions[0].createdAt
+                            }
+                    }).then(function() {
+                        return;
+                    })
                 }
 
                 if (req.body.patientIds) {
@@ -192,62 +194,62 @@ module.exports.updateSession = (req, res, next) => {
 };
 //
 
-module.exports.endSession = (req, res, next) => {
-    // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
-    // TODO: test this function! copied from update session above
-    // var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    // var decoded = jwt.verify(token, config.secret);
-    //
-    // var today = new Date();
-    //
-    // // update duration of final request in some session as above
-    //
-    // // that's all that happens here, everything else is handled in auth
-    //
-    // if (decoded.isPt)
-    // {
-    //     models.ptSession.findAll({
-    //         where: {
-    //             ptId: decoded.id,
-    //             sessionNumber: decoded.sessionNumber
-    //         },
-    //         order: [
-    //             ['createdAt', 'DESC']
-    //         ]
-    //     }).then(function (ptSessions) {
-    //         if(ptSessions.length !== 0)
-    //         {
-    //             if(ptSessions[0].duration == null) {
-    //                 var cDate = new Date(ptSessions[0].createdAt);
-    //                 var diff = today.getTime() - cDate.getTime();
-    //
-    //                 models.ptSession.update(
-    //                     {duration: diff},
-    //                     {where: {
-    //                         ptId: decoded.id,
-    //                         sessionNumber: decoded.sessionNumber,
-    //                         duration: null,
-    //                         resourceRequested: ptSessions[0].resourceRequested,
-    //                         createdAt: ptSessions[0].createdAt
-    //                     }
-    //                     })
-    //                 return;
-    //             } else {
-    //                 return;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             console.log('oops something went wrong. no ptSession with that sessionNumber and id');
-    //             return;
-    //         }
-    //     }).catch(function (err) {
-    //         return next(err);
-    //     })
-    // } else {
-    //     console.log('only log pt sessions');
-    //     return;
-    // }
-    //
-    // return;
-}
+// module.exports.endSession = (req, res, next) => {
+//     // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
+//     // TODO: test this function! copied from update session above
+//     // var token = req.query.token || req.body.token || req.headers['x-access-token'];
+//     // var decoded = jwt.verify(token, config.secret);
+//     //
+//     // var today = new Date();
+//     //
+//     // // update duration of final request in some session as above
+//     //
+//     // // that's all that happens here, everything else is handled in auth
+//     //
+//     // if (decoded.isPt)
+//     // {
+//     //     models.ptSession.findAll({
+//     //         where: {
+//     //             ptId: decoded.id,
+//     //             sessionNumber: decoded.sessionNumber
+//     //         },
+//     //         order: [
+//     //             ['createdAt', 'DESC']
+//     //         ]
+//     //     }).then(function (ptSessions) {
+//     //         if(ptSessions.length !== 0)
+//     //         {
+//     //             if(ptSessions[0].duration == null) {
+//     //                 var cDate = new Date(ptSessions[0].createdAt);
+//     //                 var diff = today.getTime() - cDate.getTime();
+//     //
+//     //                 models.ptSession.update(
+//     //                     {duration: diff},
+//     //                     {where: {
+//     //                         ptId: decoded.id,
+//     //                         sessionNumber: decoded.sessionNumber,
+//     //                         duration: null,
+//     //                         resourceRequested: ptSessions[0].resourceRequested,
+//     //                         createdAt: ptSessions[0].createdAt
+//     //                     }
+//     //                     })
+//     //                 return;
+//     //             } else {
+//     //                 return;
+//     //             }
+//     //         }
+//     //         else
+//     //         {
+//     //             console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+//     //             return;
+//     //         }
+//     //     }).catch(function (err) {
+//     //         return next(err);
+//     //     })
+//     // } else {
+//     //     console.log('only log pt sessions');
+//     //     return;
+//     // }
+//     //
+//     // return;
+// }
