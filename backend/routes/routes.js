@@ -120,7 +120,7 @@ router.route('/romMetrics/:id/romMetricMeasures')
 // simplified route for exercise content (injury training)
 router.route('/patients/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
-    // .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession),
+    .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
     .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
 
 // router.route('/exercises/:id/exerciseCompletions')

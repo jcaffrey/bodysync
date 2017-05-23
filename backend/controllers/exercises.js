@@ -21,7 +21,7 @@ module.exports.createExercises = (req, res, next) => {
             if(decoded.id == pat.ptId)
             {
                 var data = [];
-                for(exerciseObj in req.body)
+                for(exerciseObj in req.body)  // TODO FRONTEND -  pass the request data in req.body.exercises
                 {
 
                     if(req.body[exerciseObj].name && req.body[exerciseObj].numRepsOrDuration && req.body[exerciseObj].numSets)
@@ -65,6 +65,12 @@ module.exports.createExercises = (req, res, next) => {
                 return res.status(403).send('not authorized to do that');
             }
         }
+        else
+        {
+            return res.status(404).send('no such patient exists');
+        }
+    }).catch(function (err) {
+        return next(err);
     })
 
 }
@@ -74,28 +80,43 @@ module.exports.createExercise = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    console.log('inside FN')
-    console.log(req.body);
-    console.log('PRINTING NAME..' + req.body.name);
 
-    models.exercise.create({
-        name: req.body.name,
-        numRepsOrDuration: req.body.numRepsOrDuration,
-        numSets: req.body.numSets,
-        ptNotes: req.body.ptNotes,
-        patientId: req.params.id
-    }).then(function (exercise) {
-        if(Object.keys(exercise).length !== 0)
+    models.patient.findOne({where: {id: req.params.id}}).then(function (pat) {
+        if(Object.keys(pat).length !== 0)
         {
-            res.json(exercise);
-            return next();
+            if(decoded.id == pat.ptId)
+            {
+                models.exercise.create({
+                    name: req.body.name,
+                    numRepsOrDuration: req.body.numRepsOrDuration,
+                    numSets: req.body.numSets,
+                    ptNotes: req.body.ptNotes,
+                    patientId: req.params.id
+                }).then(function (exercise) {
+                    if(Object.keys(exercise).length !== 0)
+                    {
+                        res.json(exercise);
+                        return next();
+                    }
+                    else
+                    {
+                        return res.status(404).send('could not create exercise. try again later.');
+                    }
+                }).catch(function(err) {
+                    console.log('failed to create')
+                    return next(err);
+                })
+            }
+            else
+            {
+                return res.status(403).send('not authorized to do that');
+            }
         }
         else
         {
-            return res.status(404).send('could not create exercise. try again later.');
+            return res.status(404).send('no such patient exists');
         }
-    }).catch(function(err) {
-        console.log('failed to create')
+    }).catch(function (err) {
         return next(err);
     })
 }
@@ -160,8 +181,127 @@ module.exports.updateExercises = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
+    // TODO frontend is going to need to pass in the original exercises and the corresponding updates in req.body
+    // check pt has permissions for each attempted update
+    // loop through all exercise pairs.
+    // find original exercise
+    // update that exercise
+
+    // data should be in the form:
+    //[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"}]
+    //[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"},{"id":"5","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes"}]
+
+
+    for(exercisePair in req.body)  // TODO FRONTEND -  pass the request data in req.body.exercises
+    {
+        if(req.body[exercisePair].id)
+        {
+
+            models.exercise.update(
+                {
+                    name: req.body[exercisePair].newName || req.body[exercisePair].name,
+                    numRepsOrDuration : req.body[exercisePair].newNumRepsOrDuration || req.body[exercisePair].numRepsOrDuration,
+                    numSets: req.body[exercisePair].newNumSets || req.body[exercisePair].numSets,
+                    ptNotes: req.body[exercisePair].newPtNotes || req.body[exercisePair].ptNotes,
+                },
+                {
+                    where: {
+                        id: req.body[exercisePair].id
+                    }
+                }
+            )
+        }
+        else
+        {
+            console.log('messed up at' + req.body[exercisePair])
+        }
+    }
+    res.status(200).send('good?');
+    return next();
+
+
+
+
+
+
+
+
+    // IGNORE THIS FOR NOW
+    // models.patient.findOne({where: {id: req.params.id}}).then(function (pat) {
+    //     if(Object.keys(pat).length !== 0)
+    //     {
+    //         if(decoded.id == pat.ptId)
+    //         {
+    //             var data = [];
+    //             for(exerciseObj in req.body)
+    //             {
+    //
+    //                 if(req.body[exerciseObj].name && req.body[exerciseObj].numRepsOrDuration && req.body[exerciseObj].numSets)
+    //                 {
+    //                     data.push({
+    //                         name: req.body[exerciseObj].name,
+    //                         numRepsOrDuration: req.body[exerciseObj].numRepsOrDuration,
+    //                         numSets: req.body[exerciseObj].numSets,
+    //                         ptNotes: req.body[exerciseObj].ptNotes,
+    //                         patientId: req.params.id
+    //                     })
+    //                 }
+    //
+    //             }
+    //
+    //             if(data.length !== 0)
+    //             {
+    //                 models.exercise.bulkCreate(data).then(function () {
+    //                     models.exercise.update({data},{where:{patientId:req.params.id}})
+    //                             // res.json(exercises);
+    //                             // return next();
+    //                     }).spread((affectedCount, affectedRows) => {
+    //                         console.log('affected count' + affectedCount);
+    //                         console.log('affected row' + affectedRows)
+    //                     }).then(function (exercises) {
+    //                         console.log(exercises);
+    //                         res.json(exercises);
+    //                         return next();
+    //             })
+    //
+    //                 //     .catch(function(err) {
+    //                 //         console.log('something weird')
+    //                 //         return next(err);
+    //                 //     })
+    //                 // }).catch(function(err) {
+    //                 //     console.log('failed to create')
+    //                 //     return next(err);
+    //                 // })
+    //             }
+    //             else
+    //             {
+    //                 return res.status(400).send('please include all required fields');
+    //             }
+    //         }
+    //         else
+    //         {
+    //             return res.status(403).send('not authorized to do that');
+    //         }
+    //     }
+    //     else
+    //     {
+    //         return res.status(404).send('no such patient exists');
+    //     }
+    // }).catch(function (err) {
+    //     return next(err);
+    // })
 
 }
+
+
+
+
+
+
+
+
+
+
 
 // /**
 //
