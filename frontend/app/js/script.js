@@ -345,121 +345,132 @@ function loadPatients(patients) {
         var psd = JSON.parse(patients);
         var isPatient = JSON.parse(localStorage.isPatient);
         if (psd[0].progress.length !== 0) {
+            var restricted = psd[0].isRestrictedFromRom;
             // fetch patient metrics here
             for (var i = 0; i < psd.length; i++) {
-                var div = document.createElement('div');
-                var picbox = document.createElement('div');
-                var pic = document.createElement('img');
-                var prog = document.createElement('img');
-                var inner = document.createElement('div');
-                var name = document.createElement('div');
-                var recbx = document.createElement('div');
-                var p1 = document.createElement('div');
-                var menu = document.createElement('div');
-                var rec = document.createElement('div');
-                var collapse = document.createElement('div');
+                if (!isPatient || !restricted) {
+                    var div = document.createElement('div');
+                    var picbox = document.createElement('div');
+                    var pic = document.createElement('img');
+                    var prog = document.createElement('img');
+                    var inner = document.createElement('div');
+                    var name = document.createElement('div');
+                    var recbx = document.createElement('div');
+                    var p1 = document.createElement('div');
+                    var menu = document.createElement('div');
+                    var rec = document.createElement('div');
+                    var collapse = document.createElement('div');
 
-                var sum = 0;
-                var count = 0;
-                for (var k = 0; k < psd[i].progress.length; k++) {
-                    var value = psd[i].progress[k];
-                    if (value != null) {
-                        sum += +value[0];
-                        count++;
-                    }
-                }
-                var percent = (sum / count).toFixed(1);
-                var indicator = color(percent);
-
-                // include default pictures for users without uploaded pictures
-                switch (psd[i].name) {
-                    case 'Josh Seides':
-                    case 'David Malan':
-                    case 'Zamyla Chan':
-                    case 'Sam Pelletier':
-                        pic.src = '../../img/' + psd[i].name + '.jpg';
-                        break;
-                    default:
-                        pic.src = '../../img/Josh Seides.jpg';
-                }
-
-                pic.setAttribute('id', 'profileImg');
-                prog.src = indicator[1];
-                prog.setAttribute('id', indicator[2]);
-                recbx.setAttribute('class', 'recovery-box');
-                p1.setAttribute('class', 'percent1');
-                if (indicator[0] === 'bbbbbb') {
-                    p1.innerHTML = "<span>N/A</span>";
-                }
-                else {
-                    p1.innerHTML = "<span>" + percent + "%</span>";
-                }
-                p1.style.color = "#" + indicator[0];
-                menu.setAttribute('class', 'arrow');
-                // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
-                menu.setAttribute('class', 'nav-icon');
-                menu.setAttribute('id', 'nav-icon' + i);
-                menu.innerHTML =
-                    '<span></span>' +
-                    '<span></span>' +
-                    '<span></span>' +
-                    '<span></span>';
-                collapse.setAttribute('class', 'buttonCollapse');
-                var collapseDiv = !isPatient ? '" style="display:none">' : '';
-                var collapseContent =
-                    '<div class="collapse" id= "collapse' + i + collapseDiv +
-                    '<hr><div class="space"></div>';
-                if (isPatient){
-                    collapseContent += '<hr><div class="space"></div>'
-                }
-                for (var j = 0; j < psd[i].progress.length; j++) {
-                    var val = psd[i].progress[j];
-                    if (val !== null) {
-                        c = '#' + color(val[0])[0];
-                        collapseContent +=
-                            '<div class="collapse-inner">' +
-                            '<div class="input-label">' + val[1] + '</div>' +
-                            '<div class="input-percent" style="color:' + c + '">';
-                        if (c === '#bbbbbb') {
-                            collapseContent += 'N/A</div>';
-                        } else {
-                            collapseContent += val[0] + '%</div>';
+                    var sum = 0;
+                    var count = 0;
+                    for (var k = 0; k < psd[i].progress.length; k++) {
+                        var value = psd[i].progress[k];
+                        if (value != null) {
+                            sum += +value[0];
+                            count++;
                         }
-                        collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                    }
+                    var percent = (sum / count).toFixed(1);
+                    var indicator = color(percent);
+
+                    // include default pictures for users without uploaded pictures
+                    switch (psd[i].name) {
+                        case 'Josh Seides':
+                        case 'David Malan':
+                        case 'Zamyla Chan':
+                        case 'Sam Pelletier':
+                            pic.src = '../../img/' + psd[i].name + '.jpg';
+                            break;
+                        default:
+                            pic.src = '../../img/Josh Seides.jpg';
+                    }
+
+                    pic.setAttribute('id', 'profileImg');
+                    prog.src = indicator[1];
+                    prog.setAttribute('id', indicator[2]);
+                    recbx.setAttribute('class', 'recovery-box');
+                    p1.setAttribute('class', 'percent1');
+                    if (indicator[0] === 'bbbbbb') {
+                        p1.innerHTML = "<span>N/A</span>";
+                    }
+                    else {
+                        p1.innerHTML = "<span>" + percent + "%</span>";
+                    }
+                    p1.style.color = "#" + indicator[0];
+                    menu.setAttribute('class', 'arrow');
+                    // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                    menu.setAttribute('class', 'nav-icon');
+                    menu.setAttribute('id', 'nav-icon' + i);
+                    menu.innerHTML =
+                        '<span></span>' +
+                        '<span></span>' +
+                        '<span></span>' +
+                        '<span></span>';
+                    collapse.setAttribute('class', 'buttonCollapse');
+                    var collapseDiv = !isPatient ? '" style="display:none">' : '';
+                    var collapseContent =
+                        '<div class="collapse" id= "collapse' + i + collapseDiv +
+                        '<hr><div class="space"></div>';
+                    if (isPatient) {
+                        collapseContent += '<hr><div class="space"></div>'
+                    }
+                    for (var j = 0; j < psd[i].progress.length; j++) {
+                        var val = psd[i].progress[j];
+                        if (val !== null) {
+                            c = '#' + color(val[0])[0];
+                            collapseContent +=
+                                '<div class="collapse-inner">' +
+                                '<div class="input-label">' + val[1] + '</div>' +
+                                '<div class="input-percent" style="color:' + c + '">';
+                            if (c === '#bbbbbb') {
+                                collapseContent += 'N/A</div>';
+                            } else {
+                                collapseContent += val[0] + '%</div>';
+                            }
+                            collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                        }
+                    }
+                    if (!isPatient) {
+                        collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
+                    }
+                    else {
+                        collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
+                    }
+                    collapse.innerHTML = collapseContent;
+                    rec.setAttribute('class', 'recovery');
+                    if (indicator[0] !== 'bbbbbb') {
+                        rec.innerHTML = "<span>Recovered</span>";
                     }
                 }
-                if (!isPatient) {
-                  collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
-                }
-                else {
-                  collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
-                }
-                collapse.innerHTML = collapseContent;
-                rec.setAttribute('class', 'recovery');
-                if (indicator[0] !== 'bbbbbb') {
-                    rec.innerHTML = "<span>Recovered</span>";
-                }
+
                 document.getElementById('loading').style.display = 'none';
-                recbx.appendChild(p1);
-                recbx.appendChild(rec);
-                div.setAttribute('class', 'pt-box');
-                // added to make entire pt-box clickable
-                div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
-                picbox.setAttribute('class', 'pic-box');
-                inner.setAttribute('class', 'info-box');
-                name.setAttribute('class', 'name');
-                picbox.appendChild(pic);
-                picbox.appendChild(prog);
-                name.appendChild(document.createTextNode(psd[i].name));
-                inner.appendChild(name);
-                inner.appendChild(recbx);
-                div.appendChild(picbox);
-                div.appendChild(inner);
-                if (!isPatient) {
-                  div.appendChild(menu);
+
+                if (!isPatient || !restricted) {
+                    recbx.appendChild(p1);
+                    recbx.appendChild(rec);
+                    div.setAttribute('class', 'pt-box');
+                    // added to make entire pt-box clickable
+                    div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
+                    picbox.setAttribute('class', 'pic-box');
+                    inner.setAttribute('class', 'info-box');
+                    name.setAttribute('class', 'name');
+                    picbox.appendChild(pic);
+                    picbox.appendChild(prog);
+                    name.appendChild(document.createTextNode(psd[i].name));
+                    inner.appendChild(name);
+                    inner.appendChild(recbx);
+                    div.appendChild(picbox);
+                    div.appendChild(inner);
+                    if (!isPatient) {
+                        div.appendChild(menu);
+                    }
+                    div.appendChild(collapse);
+                    document.getElementById('patients').appendChild(div);
+                } else {
+                    var div = document.createElement('div');
+                    div.innerHTML = '<p class="headerGrey" style="margin-bottom: 1%"></p>';
+                    document.getElementById('patients').appendChild(div);
                 }
-                div.appendChild(collapse);
-                document.getElementById('patients').appendChild(div);
             }
         }
         else {
