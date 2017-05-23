@@ -20,7 +20,7 @@ block content
                         input.ex-input.degrees(maxlength='3' name='numSets' placeholder='____' onblur='checkExerciseNum(this.value)')
                     .ex2
                         .exercise-label Number of Reps/Duration
-                        input.text-input.degrees(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
+                        input.text-input.degrees2(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
                     br
                     .exercise-label#notes Notes
                     textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
@@ -51,7 +51,7 @@ block content
                    var exadd = document.getElementById('exercise-add')
                    var newEx = document.createElement("div")
                    newEx.setAttribute('class', 'input-box')
-                   newEx.innerHTML = "<input class='text-input exercise-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME' onblur='checkExerciseName(this.value)'><div class='ex1'><div class='exercise-label'>Number of Sets</div><input class='ex-input degrees' name='ex1' placeholder='____' onblur='checkExerciseNum(this.value)' maxlength='3'></div><div class='ex2'><div class='exercise-label'>Number of Reps/Duration</div><input class='text-input degrees' name='ex2' placeholder='____' onblur='checkExerciseNum(this.value)' maxlength='3'></div><br><div class='exercise-label' id='notes'>Notes</div><textarea class='text-input notes' type='notes' id='notes' name='notes' cols='25' placeholder='Additional information about the exercise... ''></textarea>"
+                   newEx.innerHTML = "<input class='text-input exercise-name-input' type='text' name='motion-name' placeholder='ENTER EXERCISE NAME' onblur='checkExerciseName(this.value)'><div class='ex1'><div class='exercise-label'>Number of Sets</div><input class='ex-input degrees' name='ex1' placeholder='____' onblur='checkExerciseNum(this.value)' maxlength='3'></div><div class='ex2'><div class='exercise-label'>Number of Reps/Duration</div><input class='text-input degrees2' name='ex2' placeholder='____' onblur='checkExerciseNum(this.value)' maxlength='3'></div><br><div class='exercise-label' id='notes'>Notes</div><textarea class='text-input notes' type='notes' id='notes' name='notes' cols='25' placeholder='Additional information about the exercise... ''></textarea>"
                    inputs.insertBefore(newEx, exadd)
             }
             function checkExerciseName(str) {
@@ -81,5 +81,5 @@ block content
             }
 
 block submitForm
-    button.footerButton#buttonRight(type='button' onclick='submitExSet()') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='submitExerciseSet()') #{footerButton2}
     //- TODO: add functionality for the left footer button

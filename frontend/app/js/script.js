@@ -195,6 +195,35 @@ function submitPatient() {
     }).catch(submitError);
 }
 
+function submitExerciseSet() {
+    form.style.display = 'none';
+    var pat = JSON.parse(localStorage.focusPatient);
+    var exname = document.getElementsByClassName('exercise-name-input');
+    var deg1 = document.getElementsByClassName('degrees');
+    var deg2 = document.getElementsByClassName('degrees2');
+    var notes = document.getElementsByClassName('notes');
+
+    for (var i = 0; i < exname.length; i++) {
+        (function(x) {
+            fetch('patients/' + pat.id + '/createSingleExercise?token=' + localStorage.token, {
+                headers: {
+                    'x-access-token': localStorage.token,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    name: exname[x].value,
+                    numSets: deg1[x].value,
+                    numRepsOrDuration: deg2[x].value,
+                    ptNotes: notes[x].value
+                })
+            }).then(function(res) {
+                if (!res.ok) return submitError(res);
+            }).catch(submitError);
+        }(i))
+    }
+}
+
 // =============================================================
 // Form validation functions
 // =============================================================

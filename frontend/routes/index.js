@@ -163,6 +163,15 @@ router.get('/patients/:id/exercises', function(req, res, next) {
     }).pipe(res);
 });
 
+router.post('/patients/:id/createSingleExercise', function(req, res, next) {
+    if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
+    request.post({
+        url: config.apiUrl + '/patients/' + req.params.id + '/createSingleExercise',
+        headers: { 'x-access-token': req.headers['x-access-token'] || req.query.token },
+        form: req.body
+    }).pipe(res);
+});
+
 // -------------------------------------------------------------------------------
 
 router.get('/exercises/:id', function(req, res, next) {
