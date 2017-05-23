@@ -3,7 +3,7 @@
 $formRadius = 15px
 $formWidth = 315
 
-h1,h2,h3,h4,h5,h6 
+h1,h2,h3,h4,h5,h6
   font-family 'GothamBold',sans-serif
   color $mainColor
 button
@@ -455,3 +455,91 @@ a
       width: 50%
 .modal input[type='range']
   width 100%
+
+.modal input[type=range]{
+    -webkit-appearance: none;
+    background: transparent;
+    width: 100%;
+}
+
+.modal input[type=range]:focus {
+  outline: none;
+}
+
+.modal input[type=range]::-webkit-slider-runnable-track {
+    height: 5px;
+    width: 90%;
+    background: rgba(78,78,76,0.2);
+    cursor: pointer;
+}
+.modal input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 22px;
+    width: 22px;
+    background-color: $inactiveColor;
+    border: 3px solid $mainColor;
+    margin-top: -9px;
+    border-radius: 50%;
+    transition: .1s ease-in-out;
+}
+
+.modal input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1);
+}
+
+.modal input[type=range]:focus::-webkit-slider-runnable-track {
+  background: $inactiveColor;
+}
+
+/**MOZ**/
+
+.modal input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    height: 22px;
+    width: 22px;
+    background-color: $inactiveColor;
+    border: 3px solid $mainColor;
+    margin-top: -9px;
+    border-radius: 50%;
+    transition: .1s ease-in-out;
+}
+.modal input[type=range]::-moz-range-track {
+    height: 5px;
+    width: 100%;
+    background: $inactiveColor;
+    cursor: pointer;
+}
+.modal input[type=range]::-moz-focus-outer {
+  border: 0;
+}
+/**IE**/
+
+.modal input[type=range]::-ms-thumb {
+    background-color: $inactiveColor;
+    border: 2px solid $mainColor;
+    border-radius: 50%;
+    height: 11px;
+    width: 11px;
+    transition: .1s ease-in-out;
+    margin-top: 1px;
+}
+.modal input[type=range]::-ms-track {
+    height: 5px;
+    width: 100%;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+    cursor: pointer;
+}
+.modal input[type=range]::-ms-fill-lower {
+    background: $inactiveColor;
+}
+.modal input[type=range]:focus::-ms-fill-lower {
+    background: $inactiveColor;
+}
+.modal input[type=range]::-ms-fill-upper {
+    background: $inactiveColor;
+}
+.modal input[type=range]:focus::-ms-fill-upper {
+    background: $inactiveColor;
+}

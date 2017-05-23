@@ -10,7 +10,7 @@ block cssSheets
 
 block content
     form
-        #exercisesTitle Exercise Sets
+        #exercisesTitle Patient Exercises
         #exercisepg
         #loading
             p Loading
@@ -19,6 +19,8 @@ block content
         h3 On a scale of 1 (least) - 10 (most), how uncomfortable was that exercise?
         br
         input(name='painBar',type='range',min='1',max='10')
+        br
+        br
         button(style='background: red',onclick='cancel(this)') Cancel
         button(onclick='submitPain(this)') Submit
     script.
