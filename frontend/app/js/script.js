@@ -455,7 +455,7 @@ function loadPatients(patients) {
                             } else {
                                 collapseContent += val[0] + '%</div>';
                             }
-                            collapseContent += '<div class="graph-box"><img src="../../img/graph.png" id="graph"></div></div>';
+                            collapseContent += '</div>';
                         }
                     }
                     if (!isPatient) {
