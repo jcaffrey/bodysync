@@ -670,11 +670,16 @@ function renderExercisePage() {
             for (var j = 0; j < pat.exercises[0].length; j++){
 
                 //if (pat.exercises[j].exerciseSetId == exSetId){
-                    // adding exercise name
-                    bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
-                    // adding exercise sets and seconds
-                    bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
+
+                    //bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
+
+                    //bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>';
                 //}
+                // adding exercise name
+                bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>'+ pat.exercises[0][j].name +'</span></div>';
+
+                // adding exercise sets and seconds
+                bodyBoxHTML += '<div class="ex-info-details"><span>'+ pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration"  +'</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this)"></div></div>';
             }
         //}
     }
