@@ -18,15 +18,15 @@ router.post('/', function(req, res, next) {
 
 // -------------------------------------------------------------------------------
 router.get('/login', function(req, res, next) {
-    return res.render('login', {footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('login', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/forgotpassword', function(req, res, next) {
-    return res.render('forgotpassword', {footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('forgotpassword', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/reset/:token', function(req, res, next) {
-    return res.render('reset', {footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('reset', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('');
@@ -40,7 +40,7 @@ router.get('/loginnew', function(req, res, next) {
 });
 
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.post('/login', function(req, res, next) {
@@ -126,8 +126,8 @@ router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
 router.get('/patients/:id/injuries', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries?token=' + req.query.token, function(err, response, body) {
         if (!err && response.statusCode == 200)
-            return res.render('add-measure', { injuries: JSON.parse(body), id: req.params.id, footerButton: 'Cancel', footerButton2: 'Submit' });
-        else return res.render('add-measure', { injuries: [], id: req.params.id, footerButton: 'Cancel', footerButton2: 'Submit' });
+            return res.render('add-measure', { injuries: JSON.parse(body), id: req.params.id, url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+        else return res.render('add-measure', { injuries: [], id: req.params.id, url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
     })
 });
 
@@ -198,15 +198,15 @@ router.post('/exerciseSets/:id/exercises', function(req, res, next) {
 
 // -------------------------------------------------------------------------------
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form', { firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { footerButton: 'Cancel', footerButton2: 'Submit'});
+    return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
 router.get('/new-exercise', function(req, res, next) {
@@ -242,7 +242,7 @@ module.exports = router;
 
 // reset password view
 router.get('/reset-password', function(req, res, next) {
-    return res.render('reset-password', { footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('reset-password', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 // error page
