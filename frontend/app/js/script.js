@@ -218,6 +218,7 @@ function submitExerciseSet() {
                 })
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
+                if (x == (exname.length - 1)) window.location = '/patients';
             }).catch(submitError);
         }(i))
     }
@@ -598,10 +599,10 @@ function loadFocusPatient () {
     menuBox.style.display = 'none';
 
     // adding menu-top
-    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
+    var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button style="padding:0" id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
 
     // adding menu-options
-    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
+    menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change1(bottomBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
 
     // getting injuries
     var menuInjuries = '';
@@ -609,7 +610,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change(bottomBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -620,7 +621,7 @@ function loadFocusPatient () {
     var outBox = document.createElement('div');
 
     // adding top-box
-    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
+    var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button style="padding:0" id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
 
     // adding bottom-box
     // getting injury list
@@ -639,7 +640,7 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change(bottomBox); change1(bodyBox)"></div></div>';
               count++;
           }
     }
