@@ -23,6 +23,7 @@
     "grunt-contrib-stylus": "^1.2.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-lineending": "^1.0.0",
     "nodemon": "^1.11.0"
   }
 }
