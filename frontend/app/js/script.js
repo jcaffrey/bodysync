@@ -605,30 +605,30 @@ function loadFocusPatient () {
       }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Exercise Sets</span>';
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span>';
 
-      if (pfp.sets.length > 0) {
-          for (var i = 0; i < pfp.sets.length; i++){
-              var exSetId = pfp.sets[i][0].id;
-              // adding exercise set name
-              outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pfp.sets[i][0].name + '</span></div><br>';
+      if (pfp.exercises.length > 0) {
+        //   for (var i = 0; i < pfp.sets.length; i++){
+        //       var exSetId = pfp.sets[i][0].id;
+        //       // adding exercise set name
+        //       outBoxHTML += '<div class="exercise-description-label"><span id="exerciseText">' + pfp.sets[i][0].name + '</span></div><br>';
               // adding list of exercises
-              for (var j = 0; j < pfp.exercises.length; j++){
-                  if (pfp.exercises[j].exerciseSetId == exSetId){
+              for (var j = 0; j < pfp.exercises[0].length; j++){
+                //   if (pfp.exercises[j].exerciseSetId == exSetId){
                       // adding exercise name
-                      outBoxHTML += '<span id="exerciseText">' + pfp.exercises[j].name + '</span>';
+                      outBoxHTML += '<span id="exerciseText">' + pfp.exercises[0][j].name + '</span>';
                       // adding exercise sets and seconds
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
-                  }
+                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
+                 // }
               }
-          }
+         // }
       }
       else {
-          outBoxHTML += '<span id="exerciseText"> No Exercise Sets Currently Assigned </span>';
+          outBoxHTML += '<span id="exerciseText"> No Exercise Currently Assigned </span>';
       }
 
       if (!isPatient){
-          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise Set</a>' + '</div>';
+          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
       }
 
       // getting notes
@@ -655,21 +655,23 @@ function renderExercisePage() {
     var pat = JSON.parse(localStorage.patients)[0];
     var bodyBox = document.createElement('div');
     var bodyBoxHTML = "";
-    if (pat.sets.length > 0){
-        for (var i = 0; i < pat.sets.length; i++){
-            var exSetId = pat.sets[i][0].id;
-            // adding exercise set name
-            bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
+
+    if (pat.exercises.length > 0){
+        // for (var i = 0; i < pat.exercises.length; i++){
+            // var exSetId = pat.ex[i][0].id;
+            // // adding exercise set name
+            // bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
             // adding list of exercises
-            for (var j = 0; j < pat.exercises.length; j++){
-                if (pat.exercises[j].exerciseSetId == exSetId){
+            for (var j = 0; j < pat.exercises[0].length; j++){
+
+                //if (pat.exercises[j].exerciseSetId == exSetId){
                     // adding exercise name
-                    bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[j].name;
+                    bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
                     // adding exercise sets and seconds
-                    bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[j].numSets + " sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
-                }
+                    bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>'
+                //}
             }
-        }
+        //}
     }
     else {
         bodyBoxHTML += '<p class="headerGrey"> No Exercise Sets Currently Assigned </p>';
@@ -763,16 +765,16 @@ function loadProgress(patients) {
     for (var i = 0; i < pats.length; i++) {
         (function(x) {
             pats[x].progress = [];
-            pats[x].sets = [];
+            pats[x].exercises = [];
             fetch('/findInjuries/' + pats[x].id + '/?token=' + localStorage.token, {
                 method: 'GET'
             }).then(function(res) {
                 if (!res.ok) return submitError(res);
                 res.json().then(function (data) {
+                    loadExercises (pats[x].id, x);
                     var init = data[0].id || 0;
                     for (var j = init; j < data.length + init; j++) {
                         (function(y) { updateProgress(x, y, data[y - init].name) }(j));
-                        (function(y) { loadExerciseSets(x, y) }(j));
                     }
                 });
             }).catch(submitError);
@@ -793,37 +795,52 @@ function loadPatient(id) {
     }).catch(submitError);
 }
 
-function loadExerciseSets(patIndex, injuryId) {
-    fetch('/injuries/' + injuryId + '/exerciseSets/?token=' + localStorage.token, {
+function loadExercises(patId, patIndex) {
+    fetch('/patients/' + patId + '/exercises/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
             var patients = JSON.parse(localStorage.patients);
-            patients[patIndex].sets.push(data);
-            patients[patIndex].exercises = [];
+            patients[patIndex].exercises.push(data);
             localStorage.patients = JSON.stringify(patients);
-            for (var j = 0; j < data.length; j++) {
-                loadSpecificExercises(patIndex, data[j].id);
-            }
         });
     }).catch(submitError);
 }
 
-function loadSpecificExercises(patIndex, exSetId) {
-    fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {
-            for (var j = 0; j < data.length; j++){
-                var patients = JSON.parse(localStorage.patients);
-                patients[patIndex].exercises.push(data[j]);
-                localStorage.patients = JSON.stringify(patients);
-            }
-        });
-    }).catch(submitError);
-}
+
+// OLD CODE WHEN EXERCISES BELONGED TO EXERCISE SETS
+// function loadExerciseSets(patIndex, injuryId) {
+//     fetch('/injuries/' + injuryId + '/exerciseSets/?token=' + localStorage.token, {
+//         method: 'GET'
+//     }).then(function(res) {
+//         if (!res.ok) return submitError(res);
+//         res.json().then(function (data) {
+//             var patients = JSON.parse(localStorage.patients);
+//             patients[patIndex].sets.push(data);
+//             patients[patIndex].exercises = [];
+//             localStorage.patients = JSON.stringify(patients);
+//             for (var j = 0; j < data.length; j++) {
+//                 loadSpecificExercises(patIndex, data[j].id);
+//             }
+//         });
+//     }).catch(submitError);
+// }
+//
+// function loadSpecificExercises(patIndex, exSetId) {
+//     fetch('/exerciseSets/' + exSetId + '/exercises/?token=' + localStorage.token, {
+//         method: 'GET'
+//     }).then(function(res) {
+//         if (!res.ok) return submitError(res);
+//         res.json().then(function (data) {
+//             for (var j = 0; j < data.length; j++){
+//                 var patients = JSON.parse(localStorage.patients);
+//                 patients[patIndex].exercises.push(data[j]);
+//                 localStorage.patients = JSON.stringify(patients);
+//             }
+//         });
+//     }).catch(submitError);
+// }
 
 
 function loadStart() {
@@ -842,7 +859,6 @@ function loadStart() {
 }
 
 function loadExerciseStart() {
-    loadExerciseSets();
     renderExercisePage();
 }
 

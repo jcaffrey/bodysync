@@ -155,6 +155,14 @@ router.post('/romMetrics/:id/romMetricMeasures', function(req, res, next) {
     }).pipe(res);
 });
 
+// ------------------------------------------------------------------------------
+
+router.get('/patients/:id/exercises', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id + '/exercises?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 // -------------------------------------------------------------------------------
 router.get('/injuries/:id/exerciseSets', function(req, res, next) {
     request.get(config.apiUrl + '/injuries/' + req.params.id + '/exerciseSets?token=' + req.query.token, {
