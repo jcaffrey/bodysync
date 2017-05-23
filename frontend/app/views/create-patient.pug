@@ -4,7 +4,14 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-
+    style.
+        form input[type='radio'] {
+            opacity: 0;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            pointer-events: auto;
+        }
 block content
     #js-error-message
     #loading
@@ -32,11 +39,15 @@ block content
                 input.text-input(type='phone' id='phone' name='phone' placeholder='(123) 456-7891 ' onblur="checkPhone(this.value)" maxlength="13" onkeypress="return isNumberKey(event)")
                 .input-name Phone #
             .input-box.last-box
-                input.text-input(type='radio' name='isRestrictedFromRom' value='true' checked)
-                | Yes
-                input.text-input(type='radio' name='isRestrictedFromRom' value='false' checked)
-                | No
                 .input-name Restricted Data?
+                .radio1.restr-data-radio
+                    label(for="YES").user-radio YES
+                    #radBox1
+                    input(class="radio-button" type='radio' id="YES" name='isRestrictedFromRom' value='true' checked onclick="radBox2.style.background='#ffffff', radBox1.style.background='#2e3192'")
+                .radio2.restr-data-radio
+                    label(for="NO").user-radio NO
+                    #radBox2
+                    input(class="radio-button" type='radio' id="NO" name='isRestrictedFromRom' value='false' onclick="radBox1.style.background='#ffffff', radBox2.style.background='#2e3192'")
         br
         .inputs#rom-inputs
             .input-box
