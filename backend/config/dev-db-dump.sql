@@ -99,12 +99,12 @@ insert into exerciseCompletions
     (painInput, createdAt, updatedAt, exerciseId)
 values
     (1, now(), now(), 1),
-    (1, INTERVAL 1 DAY), now(), now(), 1),
-    (1, INTERVAL 2 DAY), now(), now(), 1),
-    (1, INTERVAL 3 DAY), now(), now(), 1),
-    (2, INTERVAL 5 DAY), now(), now(), 1),
-    (2, INTERVAL 7 DAY), now(), now(), 1),
-    (2, INTERVAL 8 DAY), now(), now(), 1),
-    (2, INTERVAL 9 DAY), now(), now(), 1),
-    (2, INTERVAL 10 DAY), now(), now(), 1),
-    (2, INTERVAL 12 DAY), now(), now(), 1);
+    (1, now(), now(), 1),
+    (1, now(), now(), 1),
+    (1, now(), now(), 1),
+    (2, now(), now(), 1),
+    (2, now(), now(), 1),
+    (2, now(), now(), 1),
+    (2, now(), now(), 1),
+    (2, now(), now(), 1),
+    (2, now(), now(), 1);
