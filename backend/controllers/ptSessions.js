@@ -196,7 +196,7 @@ module.exports.updateSession = (req, res, next) => {
 
 // module.exports.endSession = (req, res, next) => {
 //     // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
-//     // TODO: test this function! copied from update session above
+//     // TODO: test.js this function! copied from update session above
 //     // var token = req.query.token || req.body.token || req.headers['x-access-token'];
 //     // var decoded = jwt.verify(token, config.secret);
 //     //

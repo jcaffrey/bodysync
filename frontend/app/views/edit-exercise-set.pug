@@ -9,7 +9,7 @@ block cssSheets
         }
 block content
     form
-        #generalInfo
+        #loading
         h1 Exercise Set
 
         .inputs#exercise-inputs
@@ -63,5 +63,4 @@ block content
             }
 
 block submitForm
-    button.footerButton#buttonRight(type='button' onclick='submitExerciseSet()') #{footerButton2}
-    //- TODO: add functionality for the left footer button
+    button.footerButton#buttonRight(type='button' onclick='submitEditExercises()') #{footerButton2}

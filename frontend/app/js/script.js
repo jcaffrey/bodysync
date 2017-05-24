@@ -224,6 +224,12 @@ function submitExerciseSet() {
     }
 }
 
+function submitEditExercises() {
+    form.style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
+    var data = {};
+}
+
 // =============================================================
 // Form validation functions
 // =============================================================
