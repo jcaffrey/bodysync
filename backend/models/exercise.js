@@ -24,14 +24,18 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER
         },
         dateAssigned: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATEONLY
             //allowNull: false
         },
         ptNotes: {
             type: DataTypes.TEXT
         },
         mediaUrl: {
-            type: DataTypes. STRING
+            type: DataTypes.STRING
+        },
+        streak: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     }, {
         classMethods: {

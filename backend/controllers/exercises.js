@@ -252,16 +252,6 @@ module.exports.updateExercises = (req, res, next) => {
 
 }
 
-
-
-
-
-
-
-
-
-
-
 // /**
 //
 //  CREATE (HTTP POST)
