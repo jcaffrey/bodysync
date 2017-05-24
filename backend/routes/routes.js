@@ -123,9 +123,12 @@ router.route('/patients/:id/exercises')
     .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
     .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
 
+router.route('/exercises/:id')
+    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession);
+
 // router.route('/exercises/:id/exerciseCompletions')
 //     .post(auth.tokenRequired, exerciseCompletions.createCompletion, auth.updateSession);
-                                                                                            // query this on the backend to calculate the streak
+// query this on the backend to calculate the streak
 
 router.route('/patients/:id/createSingleExercise')
 //     .get(auth.tokenRequired, exercises.getExerciseById, ptSessions.logSession),
