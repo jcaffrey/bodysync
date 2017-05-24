@@ -96,15 +96,15 @@ values
 
 -- exerciseCompletions
 insert into exerciseCompletions
-    (painInput, createdAt, updatedAt, exerciseId)
+    (painInput, createdAt, updatedAt, exerciseId, completed)
 values
-    (1, now(), now(), 1),
-    (1, now(), now(), 1),
-    (1, now(), now(), 1),
-    (1, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1);
+    (1, now(), now(), 1, true),
+    (1, now(), now(), 1, false),
+    (1, now(), now(), 1, false),
+    (1, now(), now(), 1, true),
+    (2, now(), now(), 1, true),
+    (2, now(), now(), 1, false),
+    (2, now(), now(), 1, true),
+    (2, now(), now(), 1,     false),
+    (2, now(), now(), 1, false),
+    (2, now(), now(), 1, true);

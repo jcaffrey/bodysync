@@ -610,7 +610,7 @@ function loadFocusPatient () {
     for (var j = 0; j < pfp.progress.length; j++) {
         var val = pfp.progress[j];
         if (val !== null) {
-            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change(bottomBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
@@ -640,40 +640,41 @@ function loadFocusPatient () {
               } else {
                   collapseContent += val[0] + '%</div>';
               }
-              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change(bottomBox); change1(bodyBox)"></div></div>';
+              collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
               count++;
           }
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span>';
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span><br>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
                   // adding exercises
-                  outBoxHTML += '<span id="exerciseText">' + pfp.exercises[0][j].name + '</span>';
+                  outBoxHTML += '<span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
-                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
+                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
               }
       }
       else {
           outBoxHTML += '<span id="exerciseText"> No Exercise Currently Assigned </span>';
       }
 
-      if (!isPatient){
-          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
+      if (!isPatient) {
+          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a><br>';
+          outBoxHTML += '<a href="/edit-exercise-set" class="new-exercise-btn">Edit Exercises</a>';
       }
 
     // getting notes
     outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
 
-    // adding body-part-box
     // percentage-box
-
     outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+
     // graph
     outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+
     // legend
     outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
 
@@ -690,26 +691,26 @@ function renderExercisePage() {
     var bodyBox = document.createElement('div');
     var bodyBoxHTML = "";
 
-    if (pat.exercises.length > 0){
+    if (pat.exercises.length > 0) {
         // for (var i = 0; i < pat.exercises.length; i++){
-            // var exSetId = pat.ex[i][0].id;
-            // // adding exercise set name
-            // bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
-            // adding list of exercises
-            for (var j = 0; j < pat.exercises[0].length; j++){
+        // var exSetId = pat.ex[i][0].id;
+        // // adding exercise set name
+        // bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
+        // adding list of exercises
+        for (var j = 0; j < pat.exercises[0].length; j++) {
 
-                //if (pat.exercises[j].exerciseSetId == exSetId){
+            //if (pat.exercises[j].exerciseSetId == exSetId){
 
-                    //bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
+            //bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
 
-                    //bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>';
-                //}
-                // adding exercise name
-                bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>'+ pat.exercises[0][j].name +'</span></div>';
+            //bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>';
+            //}
+            // adding exercise name
+            bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>' + pat.exercises[0][j].name + '</span></div>';
 
-                // adding exercise sets and seconds
-                bodyBoxHTML += '<div class="ex-info-details"><span>'+ pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration"  +'</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this)"></div></div>';
-            }
+            // adding exercise sets and seconds
+            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this)"></div></div>';
+        }
         //}
     }
     else {
@@ -1132,6 +1133,10 @@ function submitExercise() {
         if (!res.ok) console.log(res);
     }).catch(function (err) {console.log(err) });
 }
+
+// function loadEditExercises() {
+//
+// }
 
 // =============================================================
 //  Progress Graph

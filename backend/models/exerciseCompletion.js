@@ -10,11 +10,11 @@ module.exports = function(sequelize, DataTypes) {
         painInput: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        completed: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
-        // ,
-        // dateCompleted: {
-        //     type: DataTypes.DATEONLY
-        // } // date without time
     }, {
         classMethods: {
             associate: function(models) {
