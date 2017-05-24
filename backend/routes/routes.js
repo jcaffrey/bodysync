@@ -123,8 +123,8 @@ router.route('/patients/:id/exercises')
     .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
     .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
 
-router.route('/exercises/:id')
-    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession);
+// router.route('/exercises/:id')
+//     .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession);
 
 // router.route('/exercises/:id/exerciseCompletions')
 //     .post(auth.tokenRequired, exerciseCompletions.createCompletion, auth.updateSession);
@@ -156,9 +156,14 @@ router.route('/patients/:id/createSingleExercise')
 //     //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
 //     .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 //
+
 router.route('/exercises/:id/exerciseCompletions')
-//     .get(auth.tokenRequired, exerciseCompletions.getCompletions) // TODO: logSession
-    .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+    .get(auth.tokenRequired, exerciseCompletions.getCompletions) // not a view
+    .post(auth.tokenRequired, exerciseCompletions.createCompletion, ptSessions.updateSession); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+
+//TODO MOST RECENT PAIN ROUTE
+
+
 //
 // router.route('/exerciseCompletions/:id')
 //     .get(auth.tokenRequired, exerciseCompletions.getCompletionById)
