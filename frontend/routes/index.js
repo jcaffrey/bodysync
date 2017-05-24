@@ -237,6 +237,10 @@ router.get('/exercise-set', function(req, res, next) {
     return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
+router.get('/edit-exercise-set', function(req, res, next) {
+    return res.render('edit-exercise-set', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
 module.exports = router;
 
 // reset password view
