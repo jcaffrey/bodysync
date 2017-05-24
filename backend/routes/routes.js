@@ -136,6 +136,7 @@ router.route('/patients/:id/createSingleExercise')
 
 
 
+
 // // routes for injury training (exercise content)
 // router.route('/injuries/:id/exerciseSets')
 //     .get(auth.tokenRequired, exerciseSets.getExerciseSets, ptSessions.logSession)
@@ -155,9 +156,9 @@ router.route('/patients/:id/createSingleExercise')
 //     //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
 //     .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 //
-// router.route('/exercises/:id/exerciseCompletions')
+router.route('/exercises/:id/exerciseCompletions')
 //     .get(auth.tokenRequired, exerciseCompletions.getCompletions) // TODO: logSession
-//     .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
+    .post(auth.tokenRequired, exerciseCompletions.createCompletion); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 //
 // router.route('/exerciseCompletions/:id')
 //     .get(auth.tokenRequired, exerciseCompletions.getCompletionById)
