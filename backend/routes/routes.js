@@ -165,7 +165,6 @@ router.route('/exercises/:id/exerciseCompletions')
 // //     .put(exerciseCompletions.updateExerciseCompletion)      // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 //     .delete(auth.tokenRequired, exerciseCompletions.deleteCompletion);  // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
-
 // TBU - routes for templated exercise sets
 
 
