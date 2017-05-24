@@ -662,7 +662,8 @@ function loadFocusPatient () {
       }
 
       if (!isPatient){
-          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>' + '</div>';
+          outBoxHTML += '<a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a>';
+          outBoxHTML += '<a href="/exercise-set-edit" class="new-exercise-btn">Edit Exercises</a>' + '</div>';
       }
 
     // getting notes

@@ -3,7 +3,10 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/exercise-set.css')
     link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-
+    script.
+        window.onload = function() {
+            loadEditExercises();
+        }
 block content
     form
         #generalInfo
@@ -23,24 +26,6 @@ block content
                     textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
                 .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
 
-
-
-        //- TODO: use the code below to format a delete button on the box div
-        //- button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
-        //- .pt-box
-        //-     .arrows
-        //-         .up ▲
-        //-         .down ▼
-        //-     .exercise-box
-        //-         .exName Back Bend
-        //-         .recovery-box
-        //-             .sets
-        //-                 span 2 sets, 20 seconds
-        //-     .rh-box
-        //-         .edit-button Edit
-        //-         .delete-button Delete
-        //- .plus-button
-        //-     a(href='/exercise-form').add +
     p#success
         script.
             function addExercise() {
