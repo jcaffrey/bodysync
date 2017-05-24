@@ -19,54 +19,50 @@ module.exports.createCompletion = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    if(!decoded.isPt) {
-        models.exercise.findOne({
-            where: {
-                id: req.params.id
+    if(!decoded.isPt)  // only patients can post exercise completions
+    {
+        models.exercise.findOne({where: {id: req.params.id}}).then(function(exer) {
+            if(Object.keys(exer).length !== 0)
+            {
+
+                // check if patient is authorized
+                if(decoded.id == exer.patientId)
+                {
+                    // post completion if so
+                    models.exerciseCompletion.create({
+                        painInput: req.body.painInput,
+                        exerciseId: req.params.id
+                    }).then(function (comp) {
+                        if(Object.keys(comp).length !== 0)
+                        {
+                            res.json(comp);
+                            return next();
+                        }
+                        else
+                        {
+                            throw new Error('could not create');
+                        }
+                    }).catch(function (err) {
+                        return next(err);
+                    })
+                }
+                else
+                {
+                    return res.status(403).send('not authorized to do that')
+                }
             }
-        }).then(function (exercise) {
-            if(Object.keys(exercise).length !== 0){
-                models.exerciseSet.findOne({
-                    where: {
-                        id: exercise.exerciseSetId
-                    }
-                }).then(function (set) {
-                    if(Object.keys(set).length !== 0) {
-                        models.injury.findOne({
-                            where: {
-                                id: set.injuryId
-                            }
-                        }).then(function (injury) {
-                            if(Object.keys(injury).length !== 0) {
-                                if(decoded.id == injury.patientId) {
-                                    models.exerciseCompletion.create({
-                                        dateCompleted: req.body.dateCompleted //TODO: calculate the date on the server?
-                                    }).then(function (comp) {  //TODO: ALSO: handle when incorrect numbers are inputted
-                                        if(Object.keys(comp).length !== 0) {
-                                            return res.json(comp);
-                                        }
-                                    })
-                                } else {
-                                    return res.status(401).send('Patient unauthorized');
-                                }
-                            }
-                        }).catch(function (err) {
-                            return next(err);
-                        })
-                    }
-                }).catch(function (err) {
-                    return next(err);
-                })
-            } else {
-                return res.status(404).send('No exercises with that id');
+            else
+            {
+                throw new Error('no such exercise exists');
             }
         }).catch(function (err) {
             return next(err);
         })
-    } else {
-        return res.status(401).send('PTs unauthorized');
     }
-
+    else
+    {
+        return res.status(403).send('not authorized to do that')
+    }
 };
 
 
