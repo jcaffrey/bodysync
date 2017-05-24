@@ -180,6 +180,12 @@ router.get('/exercises/:id', function(req, res, next) {
     }).pipe(res);
 });
 
+router.put('/exercises/:id', function(req, res, next) {
+    request.put(config.apiUrl + '/exercises/' + req.params.id + '/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.post('/exercises/:id/exerciseCompletions', function(req, res, next) {
     if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
     request.post({
