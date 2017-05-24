@@ -180,6 +180,12 @@ router.get('/exercises/:id', function(req, res, next) {
     }).pipe(res);
 });
 
+router.get('/exercises/:id/exerciseCompletions', function(req, res, next) {
+    request.get(config.apiUrl + '/exercises/' + req.params.id + '/exerciseCompletions/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 router.post('/exercises/:id/exerciseCompletions', function(req, res, next) {
     if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
     request.post({
@@ -228,11 +234,7 @@ router.get('/exercise-form', function(req, res, next) {
 
 // exercise set view
 router.get('/exercise-set', function(req, res, next) {
-    return res.render('exercise-set', { footerButton: 'Cancel', footerButton2: 'Submit' });
-});
-
-router.get('/edit-exercise-set', function(req, res, next) {
-    return res.render('edit-exercise-set', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
 module.exports = router;

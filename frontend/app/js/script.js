@@ -1134,9 +1134,27 @@ function submitExercise() {
     }).catch(function (err) {console.log(err) });
 }
 
-// function loadEditExercises() {
-//
-// }
+function loadEditExercises() {
+    var pfp = JSON.parse(localStorage.focusPatient);
+    var div = document.createElement('div');
+    var content = '';
+    for (var i = 0; i < pfp.exercises[0].length; i++){
+        // adding exercise name
+        content += '<input class="text-input exercise-name-input" type="text" name="motion-name" placeholder="ENTER EXERCISE NAME" onblur="checkExerciseName(this.value)" value="' + pfp.exercises[0][i].name +  '">';
+
+        //adding number of sets
+        content += '<div class="ex1"><div class="exercise-label">Number of Sets</div><input class="ex-input degrees" name="ex1" placeholder="____" onblur="checkExerciseNum(this.value)" maxlength="3" value="' + pfp.exercises[0][i].numSets + '"></div>';
+
+        // adding reps/Duration
+        content += '<div class="ex2"><div class="exercise-label">Number of Reps/Duration</div><input class="text-input degrees2" name="ex2" placeholder="____" onblur="checkExerciseNum(this.value)" maxlength="3" value="'+ pfp.exercises[0][i].numRepsOrDuration + '"></div><br>';
+
+        // adding notes
+        content += '<div class="exercise-label" id="notes">Notes</div><textarea class="text-input notes" type="notes" id="notes" name="notes" cols="25" placeholder="Additional information about the exercise..." value="' + pfp.exercise[0][i].ptNotes +'"></textarea>';
+    }
+
+    div.innerHTML = content;
+    document.getElementById('patientExercises').appendChild(div);
+}
 
 // =============================================================
 //  Progress Graph

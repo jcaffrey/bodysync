@@ -10,7 +10,7 @@ block cssSheets
 block content
     form
         #generalInfo
-        h1 Exercise Set
+        h1 Exercises
 
         .inputs#exercise-inputs
                 .input-box
@@ -24,6 +24,7 @@ block content
                     br
                     .exercise-label#notes Notes
                     textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
+                    #patientExercises
                 .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
 
     p#success
