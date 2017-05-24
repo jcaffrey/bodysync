@@ -646,15 +646,15 @@ function loadFocusPatient () {
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span>';
+      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span><br>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
                   // adding exercises
-                  outBoxHTML += '<span id="exerciseText">' + pfp.exercises[0][j].name + '</span>';
+                  outBoxHTML += '<span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
-                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><br>';
+                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
               }
       }
       else {
