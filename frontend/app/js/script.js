@@ -224,10 +224,26 @@ function submitExerciseSet() {
     }
 }
 
-function submitEditExercises() {
+function submitEditExercise() {
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
     var data = {};
+    if (form[0].value) data.name = form[0].value;
+    if (form[1].value) data.numSets = form[1].value;
+    if (form[2].value) data.numRepsOrDuration = form[2].value;
+    if (form[3].value) data.ptNotes = form[3].value;
+
+    fetch('exercises/' + JSON.parse(localStorage.focusExercise).id + '/?token=' + localStorage.token, {
+        headers: {
+            'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'
+        },
+        method: 'PUT',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        window.location = '/patients';
+    }).catch(submitError);
 }
 
 // =============================================================
@@ -235,7 +251,7 @@ function submitEditExercises() {
 // =============================================================
 
 function error(target) {
-    target.style.border = '3px solid #F00';
+    target.style.border = '3px solid #f00';
 }
 
 function clearError(target) {

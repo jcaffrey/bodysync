@@ -180,6 +180,7 @@ router.get('/exercises/:id', function(req, res, next) {
     }).pipe(res);
 });
 
+
 router.get('/exercises/:id/exerciseCompletions', function(req, res, next) {
     request.get(config.apiUrl + '/exercises/' + req.params.id + '/exerciseCompletions/?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}

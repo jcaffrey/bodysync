@@ -120,7 +120,7 @@ router.route('/romMetrics/:id/romMetricMeasures')
 // simplified route for exercise content (injury training)
 router.route('/patients/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
-    .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
+    // .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
     .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
 
 // router.route('/exercises/:id')
@@ -151,9 +151,9 @@ router.route('/patients/:id/createSingleExercise')
 //     .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
 //     .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
 //
-// router.route('/exercises/:id')
+router.route('/exercises/:id')
 //     .get(auth.tokenRequired, exercises.getExerciseById)  // TODO: logSession
-//     //.put(auth.ptRequired, exercises.updateExercise)             // Access: pt
+    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession);             // Access: pt
 //     .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 //
 

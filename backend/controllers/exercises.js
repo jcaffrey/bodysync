@@ -184,73 +184,61 @@ module.exports.updateExercise = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-
-}
-
-
-module.exports.updateExercises = (req, res, next) => {
-    var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    var decoded = jwt.verify(token, config.secret);
-
-    // TODO frontend is going to need to pass in the original exercises and the corresponding updates in req.body
-    // check pt has permissions for each attempted update
-    // loop through all exercise pairs.
-    // find original exercise
-    // update that exercise
-
-    // data should be in the form:
-    //{"exerciseData":[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"}]}
-    //[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"},{"id":"5","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes"}]
-
-
-    for(var i = 0; i < req.body.exerciseData.length; i++)  // TODO FRONTEND -  pass the request data in req.body.exercises
+    if(decoded.isPt)
     {
-        if(req.body.exerciseData[i].id)
-        {
+        models.exercise.findOne({
+            where : {
+                id: req.params.id
+            }
+        }).then(function(exer) {
+            if(Object.keys(exer).length !== 0)
+            {
+                exer.name = req.body.name || exer.name;
+                exer.numSets = req.body.numSets || exer.numSets;
+                exer.numRepsOrDuration = req.body.numRepsOrDuration || exer.numRepsOrDuration;
+                exer.ptNotes = req.body.ptNotes || exer.ptNotes;
 
-            models.patient.findOne({where:{id:req.params.id}}).then(function (pat) {
-                if(Object.keys(pat).length !== 0)
-                {
-                    if(decoded.id == pat.ptId)
-                    {
-                        models.exercise.update(
-                            {
-                                name: req.body.exerciseData[i].newName || req.body.exerciseData[i].name,
-                                numRepsOrDuration : req.body.exerciseData[i].newNumRepsOrDuration || req.body.exerciseData[i].numRepsOrDuration,
-                                numSets: req.body.exerciseData[i].newNumSets || req.body.exerciseData[i].numSets,
-                                ptNotes: req.body.exerciseData[i].newPtNotes || req.body.exerciseData[i].ptNotes,
-                            },
-                            {
-                                where: {
-                                    id: req.body.exerciseData[i].id
-                                }
-                            }
-                        )
-                    }
-                    else
-                    {
-                        throw new Error('not authorized to update that exercise');
-                    }
-                }
-                else
-                {
-                    return res.status(404).send('no exercises for that patient'); // make sure that the session is still logged here even though no data to read?
-                }
-            }).catch(function (err) {
-                return next(err);
-            })
-
-        }
-        else
-        {
-            throw new Error('messed up at' + req.body.exerciseData[i])
-        }
+                exer.save().then(()=>{});
+                res.json(exer);
+                return next();
+            }
+            else
+            {
+                return res.status(404).send('no exer with that id');
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
     }
-    res.status(200).send('updated');
-    return next();
-
-
+    else
+    {
+        return res.status(403).send('not authorized');
+    }
 }
+
+
+// module.exports.updateExercises = (req, res, next) => {
+//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
+//     var decoded = jwt.verify(token, config.secret);
+//
+//     // TODO frontend is going to need to pass in the original exercises and the corresponding updates in req.body
+//     // check pt has permissions for each attempted update
+//     // loop through all exercise pairs.
+//     // find original exercise
+//     // update that exercise
+//
+//     // data should be in the form:
+//     //{"exerciseData":[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"}]}
+//     //[{"id":"3","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes","newName":"updateOrignalName","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notes"},{"id":"4","name": "orignalNameTWO", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotesTWO","newName":"updateOrignalNameTWO","newNumSets":"3","newNumRepsOrDuration":"60","newPtNotes":"these are the new notesTWO"},{"id":"5","name": "orignalName", "numSets": "2", "numRepsOrDuration":"30", "ptNotes":"originalNotes"}]
+//
+//     var data
+//     for(var i = 0; i < req.body.exerciseData.length; i++)
+//     {
+//
+//     }
+//
+//
+// }
 
 // /**
 //
