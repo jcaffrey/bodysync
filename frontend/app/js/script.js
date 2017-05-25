@@ -224,6 +224,7 @@ function submitExerciseSet() {
     }
 }
 
+
 function submitEditExercise() {
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
@@ -733,7 +734,7 @@ function renderExercisePage() {
             bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>' + pat.exercises[0][j].name + '</span></div>';
 
             // adding exercise sets and seconds
-            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this)"></div></div>';
+            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this); localStorage.exId = ' + pat.exercises[0][j].id + '"></div></div>';
         }
         //}
     }
@@ -1166,6 +1167,22 @@ function submitExercise() {
         if (!res.ok) console.log(res);
     }).catch(function (err) {console.log(err) });
 }
+
+function submitExerciseCompletion(exId) {
+    var data = {};
+    data.painInput = Number(document.getElementById('painNum').value);
+    fetch('/exercises/' + exId + '/exerciseCompletions', {
+        headers: {
+            'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+    }).catch(function (err) {console.log(err) });
+}
+
 
 function loadEditExercise() {
     var pfe = JSON.parse(localStorage.focusExercise);

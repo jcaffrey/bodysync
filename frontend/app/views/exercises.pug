@@ -18,7 +18,7 @@ block content
     #painInput.modal
         h3 On a scale of 1 (least) - 10 (most), how uncomfortable was that exercise?
         br
-        input(name='painBar',type='range',min='1',max='10')
+        input#painNum(name='painBar',type='range',min='1',max='10')
         br
         br
         button(style='background: red',onclick='cancel(this)') Cancel
@@ -33,6 +33,7 @@ block content
             document.getElementById('painInput').style.display = 'none'
             selectedExercise.style.filter = 'grayscale(0%)'
             selectedExercise = null
+            submitExerciseCompletion(localStorage.exId);
         }
         function cancel(ele){
             document.getElementById('painInput').style.display = 'none'
