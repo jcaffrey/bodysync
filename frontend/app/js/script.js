@@ -731,14 +731,22 @@ function loadFocusPatient () {
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
-              for (var j = 0; j < pfp.exercises[0].length; j++){
+              for (var j = 0; j < pfp.exercises.length; j++){
                   // adding exercises
-                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[0][j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
-                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
+                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div>';
+                  // adding pain
+                  if (pfp.exercises[j].pain){
+                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div><br><br>';
+                  }
+                  else{
+                      outBoxHTML += '<div class="exercise-label" id="exercise-label">N/A</div><br><br>';
+                  }
+
 
                   // adding delete and edit buttons
-                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[0][j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[0][j].id + ')">Edit</a></div><br>'
+                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a></div><br>'
               }
       }
       else {
@@ -925,7 +933,25 @@ function loadExercises(patId, patIndex) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
             var patients = JSON.parse(localStorage.patients);
-            patients[patIndex].exercises.push(data);
+            for (var i = 0; i < data.length; i++){
+                console.log(data[i].id);
+                patients[patIndex].exercises.push(data[i]);
+                loadExercisesPain(data[i].id, patIndex, i);
+                //console.log(loadExercisesPain(data[i].id, patIndex));
+            }
+            localStorage.patients = JSON.stringify(patients);
+        });
+    }).catch(submitError);
+}
+
+function loadExercisesPain(exId, patIndex, exIndex) {
+    fetch('/exercises/' + exId + '/exerciseCompletions/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function (data) {
+            var patients = JSON.parse(localStorage.patients);
+            patients[patIndex].exercises[exIndex].pain = data;
             localStorage.patients = JSON.stringify(patients);
         });
     }).catch(submitError);
