@@ -458,37 +458,37 @@ module.exports.updateExercise = (req, res, next) => {
 //  */
 //
 //
-// module.exports.deleteExercise = (req, res, next) => {
-//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-//     var decoded = jwt.verify(token, config.secret);
-//
-//     models.exercise.findOne({
-//         where: {
-//             id: req.params.id
-//         }
-//     }).then(function (exercise) {
-//         if(Object.keys(exercise).length !== 0) {
-//             models.exerciseSet.findOne({
-//                 where: {
-//                     id: exercise.exerciseSetId
-//                 }
-//             }).then(function (set) {
-//                 if(Object.keys(set).length !== 0) {
-//                     if(decoded.isPt && decoded.id == set.ptId) {
-//                         exercise.destroy();
-//                         res.json(exercise);
-//                         return next();
-//                     } else {
-//                         return res.status(401).send('PT unauthorized');
-//                     }
-//                 }
-//             }).catch(function (err) {
-//                 return next(err);
-//             })
-//         } else {
-//             res.status(404).send('No exercise with that id');
-//         }
-//     }).catch(function (err) {
-//         return next(err);
-//     })
-// }
+module.exports.deleteExercise = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.exercise.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function (exercise) {
+        if(Object.keys(exercise).length !== 0) {
+            models.patient.findOne({
+                where: {
+                    id: exercise.patientId
+                }
+            }).then(function (pat) {
+                if(Object.keys(pat).length !== 0) {
+                    if(decoded.isPt && decoded.id == pat.ptId) {
+                        exercise.destroy();
+                        res.json(exercise);
+                        return next();
+                    } else {
+                        return res.status(401).send('PT unauthorized');
+                    }
+                }
+            }).catch(function (err) {
+                return next(err);
+            })
+        } else {
+            res.status(404).send('No exercise with that id');
+        }
+    }).catch(function (err) {
+        return next(err);
+    })
+}

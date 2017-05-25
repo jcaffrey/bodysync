@@ -154,8 +154,8 @@ router.route('/patients/:id/createSingleExercise')
 router.route('/exercises/:id')
 //     .get(auth.tokenRequired, exercises.getExerciseById)  // TODO: logSession
 //     .get(auth.tokenRequired, exercises.calculateStreak, ptSessions.logSession)
-    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession);             // Access: pt
-//     .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
+    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession)             // Access: pt
+    .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
 //
 
 router.route('/exercises/:id/exerciseCompletions')
