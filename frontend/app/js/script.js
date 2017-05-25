@@ -675,12 +675,12 @@ function loadFocusPatient () {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
                   // adding exercises
-                  outBoxHTML += '<br><span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<br><div id="exercise-overview' + pfp.exercises[0][j].id + '"<span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
                   outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
 
                   // adding delete and edit buttons
-                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[0][j].id + ')">Edit</a><br>'
+                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[0][j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[0][j].id + ')">Edit</a></div><br>'
               }
       }
       else {
@@ -1029,6 +1029,15 @@ function focusExercise (id) {
             localStorage.focusExercise = JSON.stringify(exercises[0][i]);
         }
     }
+}
+
+function deleteExercise (id) {
+    fetch('/exercises/' + id + '/?token=' + localStorage.token, {
+        method: 'DELETE'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+    }).catch(submitError);
+    document.getElementById('exercise-overview' + id).style.display = 'none';
 }
 
 // =============================================================
