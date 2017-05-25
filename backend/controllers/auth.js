@@ -41,7 +41,7 @@ exports.loginPt = (req, res, next) => {
 
                     var payload = {id: pt.id, isPt: true, sessionNumber: newSession, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 10 }); // TODO: set time. jwt.encode for 'jwt-simple'
 
                     pt.token = token;
                     pt.save()
@@ -56,7 +56,7 @@ exports.loginPt = (req, res, next) => {
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 10 }); // TODO: set time. jwt.encode for 'jwt-simple'
 
                     pt.token = token;
                     pt.save()

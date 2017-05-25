@@ -29,6 +29,14 @@ html
         div#content
             block content
 
+        div#token-modal.modal(style="display:none")
+            h3 Expired Token: Enter password in 30 seconds to prevent logout.
+            br
+            br
+            form#tokenForm
+                input(type='password' name='tokenHash' placeholder='********' maxlength='24')
+                button(onclick='submitToken()') Continue Session
+
         block footer
             if type != 'patient'
                 div#footer
@@ -50,4 +58,6 @@ html
             script localStorage.token = "#{token}"
         script.
             document.getElementById('profileName').innerHTML = localStorage.email
+        script.
+            tokenVerification();
         block postScript

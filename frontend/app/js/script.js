@@ -1,4 +1,6 @@
 var form = document.forms[0];
+var tokenForm = document.forms.namedItem('tokenForm');
+var hashTimeout;
 
 // =============================================================
 // Form submit functions
@@ -54,7 +56,6 @@ function submitPatientLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            console.log('logged in');
             getPatientView();
         });
     }).catch(submitError);
@@ -65,9 +66,63 @@ function logout() {
     localStorage.token = '';
     localStorage.patients = '';
     localStorage.display = '';
-    localStorage.graphData = '';
     localStorage.focusPatient = '';
+    localStorage.ctr1 = '';
+    localStorage.ctr2 = '';
+    localStorage.isPatient = '';
+    for (var key in localStorage) {
+        if (key.includes('graphData')) {
+            localStorage[key] = '';
+        }
+    }
     window.location = '/';
+}
+
+function tokenVerification() {
+    function checkToken() {
+        setTimeout (function() {
+            var expires = JSON.parse(atob(localStorage.token.split('.')[1])).exp;
+            console.log('token expires: ' + JSON.parse(atob(localStorage.token.split('.')[1])).exp + ' and now time: ' + (+(new Date())) / 1000);
+            if (expires < ((+(new Date())) / 1000)) {
+                expiredToken();
+            } else {
+                checkToken();
+            }
+        }, 5000);
+    }
+
+    checkToken();
+}
+
+function expiredToken() {
+    document.getElementById('token-modal').style.display = 'block';
+    hashTimeout = setTimeout(function(){ logout() }, 30000);
+}
+
+function submitToken() {
+    var data = {
+        email: localStorage.email,
+        password: tokenForm[0].value
+    };
+
+    var url = (localStorage.isPatient) ? '/loginPatient' : '/login';
+
+    console.log(JSON.stringify(data));
+
+    fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function(result) {
+            console.log('success');
+            clearTimeout(hashTimeout);
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            document.getElementById('token-modal').style.display = 'none';
+        });
+    }).catch(submitError);
 }
 
 function headers() {
