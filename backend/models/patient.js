@@ -15,11 +15,11 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        fogotPasswordHash: {
+        forgotPasswordHash: {
             type: DataTypes.STRING,
             allowNull: true
         },
-        fogotPasswordExpires: {
+        forgotPasswordExpires: {
             type: DataTypes.DATE,
             allowNull: true
         },
