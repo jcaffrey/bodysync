@@ -41,7 +41,7 @@ exports.loginPt = (req, res, next) => {
 
                     var payload = {id: pt.id, isPt: true, sessionNumber: newSession, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 10 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
 
                     pt.token = token;
                     pt.save()
@@ -56,7 +56,7 @@ exports.loginPt = (req, res, next) => {
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 10 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // TODO: set time. jwt.encode for 'jwt-simple'
 
                     pt.token = token;
                     pt.save()
@@ -87,7 +87,6 @@ exports.loginPatient = (req, res, next) => {
     if (typeof req.body.password !== 'string')
         return res.status(400).send('No password');
 
-
     models.patient.findOne({
         where: { email: req.body.email}
     })
@@ -105,8 +104,6 @@ exports.loginPatient = (req, res, next) => {
                     return res.json({token: token});
                     //return next();
                 });
-
-
         }
         else {
             return res.status(401).send('bad hash');

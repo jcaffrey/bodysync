@@ -36,7 +36,7 @@ function submitLogin() {
         else return res.json().then(function(result) {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-            window.location = '/patients'
+            window.location = '/patients';
         });
     }).catch(submitError);
 }
@@ -96,6 +96,7 @@ function tokenVerification() {
 
 function expiredToken() {
     document.getElementById('token-modal').style.display = 'block';
+    document.getElementById('content').style.display = 'none';
     hashTimeout = setTimeout(function(){ logout() }, 30000);
 }
 
@@ -105,9 +106,7 @@ function submitToken() {
         password: tokenForm[0].value
     };
 
-    var url = (localStorage.isPatient) ? '/loginPatient' : '/login';
-
-    console.log(JSON.stringify(data));
+    var url = (localStorage.isPatient == 'true') ? '/loginPatient' : '/login';
 
     fetch(url, {
         headers: { 'Content-Type': 'application/json' },
@@ -121,6 +120,9 @@ function submitToken() {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
             document.getElementById('token-modal').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            tokenForm[0].value = '';
+            tokenVerification();
         });
     }).catch(submitError);
 }

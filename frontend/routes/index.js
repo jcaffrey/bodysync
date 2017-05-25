@@ -8,6 +8,14 @@ router.get('/', function(req, res, next) {
     return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Submit'})
 });
 
+router.post('/login', function(req, res, next) {
+    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
+});
+
+router.post('/loginPatient', function(req, res, next) {
+    request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
+});
+
 router.get('/patient-home', function(req, res, next) {
     return res.render('patient-home', { type: 'patient', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
@@ -41,14 +49,6 @@ router.get('/loginnew', function(req, res, next) {
 
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
-});
-
-router.post('/login', function(req, res, next) {
-    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
-});
-
-router.post('/loginPatient', function(req, res, next) {
-    request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
 });
 
 // -------------------------------------------------------------------------------

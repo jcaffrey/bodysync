@@ -35,7 +35,7 @@ html
             br
             form#tokenForm
                 input(type='password' name='tokenHash' placeholder='********' maxlength='24')
-                button(onclick='submitToken()') Continue Session
+                div(id="token-btn" onclick='submitToken()') Continue Session
 
         block footer
             if type != 'patient'
