@@ -674,7 +674,7 @@ function loadFocusPatient () {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
                   // adding exercises
-                  outBoxHTML += '<br><div id="exercise-overview' + pfp.exercises[0][j].id + '"<span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[0][j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
                   outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
 
