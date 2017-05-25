@@ -204,6 +204,12 @@ router.put('/exercises/:id', function(req, res, next) {
     }).pipe(res);
 });
 
+router.delete('/exercises/:id', function(req, res, next) {
+    request.delete(config.apiUrl + '/exercises/' + req.params.id + '/?token=' + req.query.token, {
+        headers: {'x-access-token': req.query.token}
+    }).pipe(res);
+});
+
 // -------------------------------------------------------------------------------
 router.get('/pt-form', function(req, res, next) {
     return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
