@@ -159,7 +159,8 @@ router.route('/exercises/:id')
 //
 
 router.route('/exercises/:id/exerciseCompletions')
-    .get(auth.tokenRequired, exerciseCompletions.getCompletions) // not a view
+    .get(auth.tokenRequired, exerciseCompletions.getMostRecentCompletion, ptSessions.logSession)
+    // .get(auth.tokenRequired, exerciseCompletions.getCompletions) // not a view
     .post(auth.tokenRequired, exerciseCompletions.createCompletion, ptSessions.updateSession); // Access: patient only <-- TBU  do we want to make an auth.patientRequired?
 
 //TODO MOST RECENT PAIN ROUTE

@@ -109,13 +109,6 @@ module.exports.createCompletion = (req, res, next) => {
                     })
 
 
-
-
-
-
-
-
-
                 }
                 else
                 {
@@ -143,23 +136,86 @@ module.exports.createCompletion = (req, res, next) => {
 
  */
 
-// TODO: implement audit logging by querying all the way down to patient level..
-module.exports.getCompletions = (req, res, next) => {
+// module.exports.getCompletions = (req, res, next) => {
+//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
+//     var decoded = jwt.verify(token, config.secret);
+//
+//
+//     models.exercise.findOne({where:{id:req.params.id}}).then(function(exer) {
+//         if(Object.keys(exer).length !== 0)
+//         {
+//             models.exerciseCompletion.findAll({where:{exerciseId:exer.id}}).then(function (comps) {
+//                 if(comps.length !== 0)
+//                 {
+//                     return res.json(comps);
+//                 }
+//             }).catch(function (err) {
+//                 return next(err);
+//             })
+//         }
+//     }).catch(function (err) {
+//         return next(err);
+//     })
+// }
+
+module.exports.getMostRecentCompletion = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-
-    models.exercise.findOne({where:{id:req.params.id}}).then(function(exer) {
-        if(Object.keys(exer).length !== 0)
+    models.exerciseCompletion.findAll({
+        where: {
+            exerciseId: req.params.id
+        },
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    }).then(function (comps) {
+        if(comps.length !== 0)
         {
-            models.exerciseCompletion.findAll({where:{exerciseId:exer.id}}).then(function (comps) {
-                if(comps.length !== 0)
+            var mostRecent = comps[0];
+            models.exercise.findOne({where:{id:req.params.id}}).then(function (exer) {
+                if(Object.keys(exer).length !== 0)
                 {
-                    return res.json(comps);
+                    if(!decoded.isPt)
+                    {
+                        if(decoded.id == exer.patientId)
+                        {
+                            res.json(mostRecent);
+                            return next();
+                        }
+                        else
+                        {
+                            return res.status(403).send('not auth');
+                        }
+                    }
+                    models.patient.findOne({where:{id: exer.patientId}}).then(function (pat) {
+                        if(Object.keys(pat).length !== 0)
+                        {
+                            if(decoded.id == pat.ptId)
+                            {
+                                res.json(mostRecent);
+                                return next();
+                            }
+                            else
+                            {
+                                return res.status(403).send('not auth');
+                            }
+                        }
+                    }).catch(function (err) {
+                        return next(err);
+                    })
+                }
+                else
+                {
+                    return res.status(404).send('not found');
                 }
             }).catch(function (err) {
                 return next(err);
             })
+        }
+        else
+        {
+            return res.status(404).send('not found');
         }
     }).catch(function (err) {
         return next(err);
