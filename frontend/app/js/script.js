@@ -1,4 +1,5 @@
 var form = document.forms[0];
+var tokenForm = document.forms.namedItem('tokenForm');
 var hashTimeout;
 
 // =============================================================
@@ -108,24 +109,20 @@ function submitToken() {
 
     console.log(JSON.stringify(data));
 
-    if (localStorage.isPatient) {
-        
-    }
-
-    // fetch(url, {
-    //     headers: { 'Content-Type': 'application/json' },
-    //     method: 'POST',
-    //     body: JSON.stringify(data)
-    // }).then(function(res) {
-    //     if (!res.ok) return submitError(res);
-    //     res.json().then(function(result) {
-    //         console.log('success');
-    //         clearTimeout(hashTimeout);
-    //         localStorage.token = result.token;
-    //         localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
-    //         document.getElementById('token-modal').style.display = 'none';
-    //     });
-    // }).catch(submitError);
+    fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        res.json().then(function(result) {
+            console.log('success');
+            clearTimeout(hashTimeout);
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            document.getElementById('token-modal').style.display = 'none';
+        });
+    }).catch(submitError);
 }
 
 function headers() {

@@ -26,6 +26,9 @@ html
                                 .profileAction#logOutButton Log Out
         div#space
 
+        div#content
+            block content
+
         div#token-modal.modal(style="display:none")
             h3 Expired Token: Enter password in 30 seconds to prevent logout.
             br
@@ -33,9 +36,6 @@ html
             form#tokenForm
                 input(type='password' name='tokenHash' placeholder='********' maxlength='24')
                 button(onclick='submitToken()') Continue Session
-
-        div#content
-            block content
 
         block footer
             if type != 'patient'
