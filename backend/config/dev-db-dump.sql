@@ -19,7 +19,7 @@
  */
 insert into
     pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
-values 
+values
     ('Jeremy Welborn', '$2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti', '16174627953', 'att', 'jeremy@gmail.com', false, now(), now()),
     ('Joey Caffrey', '$2a$08$2yDwkwaNfQIK3yD9Hyc72upxGR3eliOfC3OYvHsvtJoDUYOfRpWSe', '12017254565', 'att', 'joey@gmail.com', false, now(), now()),
     -- temp admin, change if schema changes
@@ -27,7 +27,7 @@ values
 
 -- patients
 
-insert into patients 
+insert into patients
     (name, hash, phoneNumber, phoneProvider, email, isRestrictedFromRom, surgeryType, age, ptId, createdAt, updatedAt)
 values
     ('Josh Smith', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh1@gmail.com', false, 'BeingABaby', 12, (select id from pts where name = 'Jeremy Welborn'), now(), now()),
@@ -36,8 +36,8 @@ values
     ('Zamyla Chan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'zamyla@gmail.com', false, 'Walkthroughs', 12, (select id from pts where name = 'Joey Caffrey'), now(), now()),
     ('Sam Pelletier', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'sam@gmail.com', false, 'Rude', 12, (select id from pts where name = 'Joey Caffrey'), now(), now());
 
--- injuries 
-insert into injuries 
+-- injuries
+insert into injuries
     (name, patientId, createdAt, updatedAt)
 values
     ('shoulder injury', (select id from patients where name = 'Josh Seides'), now(), now()),
@@ -99,16 +99,16 @@ insert into exerciseCompletions
     (painInput, createdAt, updatedAt, exerciseId)
 values
     (1, now(), now(), 1),
-    (1, now(), now(), 1),
-    (1, now(), now(), 1),
-    (1, now(), now(), 1),
+    (1, now(), now(), 2),
+    (1, now(), now(), 3),
+    (1, now(), now(), 4),
+    (2, now(), now(), 5),
+    (2, now(), now(), 3),
     (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
-    (2, now(), now(), 1),
+    (2, now(), now(), 2),
     (2, now(), now(), 1),
     (2, now(), now(), 4),
+    (2, now(), now(), 6),
     (2, now(), now(), 4),
-    (2, now(), now(), 4),
-    (2, now(), now(), 4),
+    (2, now(), now(), 3),
     (2, now(), now(), 1);
