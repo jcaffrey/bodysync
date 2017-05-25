@@ -180,8 +180,9 @@ router.get('/exercises/:id', function(req, res, next) {
     }).pipe(res);
 });
 
-router.put('/exercises/:id', function(req, res, next) {
-    request.put(config.apiUrl + '/exercises/' + req.params.id + '/?token=' + req.query.token, {
+
+router.get('/exercises/:id/exerciseCompletions', function(req, res, next) {
+    request.get(config.apiUrl + '/exercises/' + req.params.id + '/exerciseCompletions/?token=' + req.query.token, {
         headers: {'x-access-token': req.query.token}
     }).pipe(res);
 });
@@ -234,7 +235,7 @@ router.get('/exercise-form', function(req, res, next) {
 
 // exercise set view
 router.get('/exercise-set', function(req, res, next) {
-    return res.render('exercise-set', { footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('exercise-set', { footerButton: 'Back', footerButton2: 'Submit' });
 });
 
 router.get('/edit-exercise-set', function(req, res, next) {
