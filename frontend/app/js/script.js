@@ -224,6 +224,7 @@ function submitExerciseSet() {
     }
 }
 
+
 function submitEditExercise() {
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
@@ -674,12 +675,12 @@ function loadFocusPatient () {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises[0].length; j++){
                   // adding exercises
-                  outBoxHTML += '<br><span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[0][j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[0][j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
                   // adding exercise sets and seconds
                   outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].numSets + " sets, " + pfp.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[0][j].streak + '</div><br><br>';
 
                   // adding delete and edit buttons
-                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[0][j].id + ')">Edit</a><br>'
+                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[0][j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[0][j].id + ')">Edit</a></div><br>'
               }
       }
       else {
@@ -733,7 +734,7 @@ function renderExercisePage() {
             bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>' + pat.exercises[0][j].name + '</span></div>';
 
             // adding exercise sets and seconds
-            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this)"></div></div>';
+            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this); localStorage.exId = ' + pat.exercises[0][j].id + '"></div></div>';
         }
         //}
     }
@@ -1030,6 +1031,15 @@ function focusExercise (id) {
     }
 }
 
+function deleteExercise (id) {
+    fetch('/exercises/' + id + '/?token=' + localStorage.token, {
+        method: 'DELETE'
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+    }).catch(submitError);
+    document.getElementById('exercise-overview' + id).style.display = 'none';
+}
+
 // =============================================================
 //  Add measure
 // =============================================================
@@ -1166,6 +1176,22 @@ function submitExercise() {
         if (!res.ok) console.log(res);
     }).catch(function (err) {console.log(err) });
 }
+
+function submitExerciseCompletion(exId) {
+    var data = {};
+    data.painInput = Number(document.getElementById('painNum').value);
+    fetch('/exercises/' + exId + '/exerciseCompletions', {
+        headers: {
+            'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) console.log(res);
+    }).catch(function (err) {console.log(err) });
+}
+
 
 function loadEditExercise() {
     var pfe = JSON.parse(localStorage.focusExercise);
