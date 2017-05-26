@@ -592,6 +592,14 @@ function loadPatients(patients) {
     }, 1000);
 }
 
+function loadEmpty() {
+    clear();
+    document.getElementById('loading').style.display = 'none';
+    var div = document.createElement('div');
+    div.innerHTML = (localStorage.isPatient == 'true') ? '<p class="empty-error">No data to display.</p>' : '<p class="empty-error">No patients to display.</p>';
+    document.getElementById('patients').appendChild(div);
+}
+
 function change(e) {
   e.style.display ="none";
 }
@@ -1046,10 +1054,16 @@ function search(query, array) {
             temp.push(arr[i]);
     }
     localStorage.display = JSON.stringify(temp);
-    load();
+    console.log(temp);
+    if (temp) {
+        loadEmpty();
+    } else {
+        load();
+    }
 }
 
 function pSearch() {
+    document.getElementById('loading').style.display = 'block';
     search(form.patientSearch.value, localStorage.patients);
 }
 
@@ -1069,6 +1083,7 @@ function progAscending() {
     return patients.sort(function (a, b) { a.progress - b.progress})
 }
 function sortAlpha() {
+    document.getElementById('loading').style.display = 'block';
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
     if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
@@ -1094,6 +1109,7 @@ function findAverage() {
 }
 
 function sortProg() {
+    document.getElementById('loading').style.display = 'block';
     localStorage.ctr2++;
     findAverage();
     var lst = JSON.parse(localStorage.patients);
