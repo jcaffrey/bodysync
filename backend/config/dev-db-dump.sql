@@ -33,7 +33,7 @@ values
     ('Josh Smith', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh1@gmail.com', false, 'BeingABaby', 12, (select id from pts where name = 'Jeremy Welborn'), now(), now(), 'What a beast.'),
     ('Josh Seides', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh@gmail.com', false, 'BeingABaby', 19, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'This dude is amazing!'),
     ('David Malan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'dave@gmail.com', false, 'BeingABaby', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Great work so far.'),
-    ('Zamyla Chan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'zamyla@gmail.com', false, 'Walkthroughs', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Progress is looking good.'),
+    ('Zamyla Chan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'zamyla@gmail.com', false, 'Walkthroughs', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), null),
     ('Sam Pelletier', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'sam@gmail.com', false, 'Rude', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Needs some help.');
 
 -- injuries
