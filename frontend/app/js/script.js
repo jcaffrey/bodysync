@@ -715,7 +715,7 @@ function loadFocusPatient () {
         var val = pfp.progress[j];
         if (val !== null) {
             //menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
-            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+            menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span class="menuInjuryName" onclick="change6(iconGraph' + (count + 1) + '); change(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
             count++;
         }
     }
