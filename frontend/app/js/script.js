@@ -747,8 +747,10 @@ function loadFocusPatient () {
                       outBoxHTML += '<div class="exercise-label" id="exercise-label">N/A</div><br><br>';
                   }
 
-                  // adding delete and edit buttons
-                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a></div><br>'
+                  // adding delete and edit buttons for pts
+                  if (!isPatient){
+                      outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a></div><br>';
+                  }
               }
       }
       else {
