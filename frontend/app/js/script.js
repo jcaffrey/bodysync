@@ -78,17 +78,17 @@ function logout() {
     window.location = '/';
 }
 
+// checks every 10 seconds if token is expired
 function tokenVerification() {
     function checkToken() {
         setTimeout (function() {
             var expires = JSON.parse(atob(localStorage.token.split('.')[1])).exp;
-            console.log('token expires: ' + JSON.parse(atob(localStorage.token.split('.')[1])).exp + ' and now time: ' + (+(new Date())) / 1000);
             if (expires < ((+(new Date())) / 1000)) {
                 expiredToken();
             } else {
                 checkToken();
             }
-        }, 5000);
+        }, 10000);
     }
 
     checkToken();
@@ -938,7 +938,6 @@ function loadExercises(patId, patIndex) {
         res.json().then(function (data) {
             var patients = JSON.parse(localStorage.patients);
             for (var i = 0; i < data.length; i++){
-                console.log(data[i].id);
                 patients[patIndex].exercises.push(data[i]);
                 loadExercisesPain(data[i].id, patIndex, i);
                 //console.log(loadExercisesPain(data[i].id, patIndex));
@@ -1179,33 +1178,37 @@ Date.prototype.toMysqlFormat = function() {
 };
 
 function submitMeasure (id, i, lastMeasure, last) {
-    fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function (res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {
-            var d = new Date();
-            var d1 = new Date();
-            d1.setDate(d1.getDate() + 7);
-            var data = {
-                dayMeasured: d.toMysqlFormat(),
-                dayOfNextGoal: d1.toMysqlFormat(),
-                nextGoal: form[(2 * i) + 1].value || lastMeasure,
-                degreeValue: form[2 * i].value || lastMeasure,
-                name: 'name' + id,
-                endRangeGoal: data.endRangeGoal
-            };
-            fetch('/romMetrics/' + id + '/romMetricMeasures', {
-                headers: {'x-access-token': localStorage.token,
-                    'Content-Type': 'application/json'},
-                method: 'POST',
-                body: JSON.stringify(data)
-            }).then(function(res) {
-                if (!res.ok) throw new Error('There was an error sending this measure');
-                if (last) window.location = '/patients';
-            }).catch(function (err) { console.log(err) });
-        });
-    }).catch(function () { console.log('wrong') });
+    if (form[(2 * i) + 1].value && form[2 * i].value) {
+        fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
+            method: 'GET'
+        }).then(function (res) {
+            if (!res.ok) return submitError(res);
+            res.json().then(function (data) {
+                var d = new Date();
+                var d1 = new Date();
+                d1.setDate(d1.getDate() + 7);
+                var data = {
+                    dayMeasured: d.toMysqlFormat(),
+                    dayOfNextGoal: d1.toMysqlFormat(),
+                    nextGoal: form[(2 * i) + 1].value,
+                    degreeValue: form[2 * i].value,
+                    name: 'name' + id,
+                    endRangeGoal: data.endRangeGoal
+                };
+                fetch('/romMetrics/' + id + '/romMetricMeasures', {
+                    headers: {'x-access-token': localStorage.token,
+                        'Content-Type': 'application/json'},
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('There was an error sending this measure');
+                    if (last) window.location = '/patients';
+                }).catch(function (err) { console.log(err) });
+            });
+        }).catch(function () { console.log('wrong') });
+    } else {
+        if (last) window.location = '/patients';
+    }
 }
 
 function submitMeasures () {
