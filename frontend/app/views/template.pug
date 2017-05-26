@@ -33,9 +33,10 @@ html
             h3 Expired Token: Enter password in 30 seconds to prevent logout.
             br
             br
-            form#tokenForm
+            form#tokenForm(onsubmit="return false")
                 input(type='password' name='tokenHash' placeholder='********' maxlength='24')
-                div(id="token-btn" onclick='submitToken()') Continue Session
+            button.buttonTab(id="token-btn" onclick='submitToken()') Continue Session
+            #error-label
 
         block footer
             if type != 'patient'
@@ -52,7 +53,6 @@ html
                     block submitForm
 
         script(src='/js/script.min.js')
-        script(src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js')
 
         if token
             script localStorage.token = "#{token}"

@@ -96,6 +96,7 @@ function tokenVerification() {
 
 function expiredToken() {
     document.getElementById('token-modal').style.display = 'block';
+    document.getElementById('error-label').innerHTML = '';
     document.getElementById('content').style.display = 'none';
     hashTimeout = setTimeout(function(){ logout() }, 30000);
 }
@@ -120,11 +121,14 @@ function submitToken() {
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
             document.getElementById('token-modal').style.display = 'none';
+            document.getElementById('error-label').innerHTML = '';
             document.getElementById('content').style.display = 'block';
             tokenForm[0].value = '';
             tokenVerification();
         });
-    }).catch(submitError);
+    }).catch(function() {
+        document.getElementById('error-label').innerHTML = '<p>Invalid password</p>';
+    });
 }
 
 function headers() {
@@ -745,7 +749,6 @@ function loadFocusPatient () {
                   else{
                       outBoxHTML += '<div class="exercise-label" id="exercise-label">N/A</div><br><br>';
                   }
-
 
                   // adding delete and edit buttons for pts
                   if (!isPatient){
