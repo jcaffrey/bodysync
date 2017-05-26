@@ -33,8 +33,16 @@ router.get('/forgotpassword', function(req, res, next) {
     return res.render('forgotpassword', { url: '/password-reset-message', footerButton:'Submit' });
 });
 
-router.get('/reset/:token', function(req, res, next) {
-    return res.render('reset', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+router.get('/reset-token/:token', function(req, res, next) {
+    return res.render('reset', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit', token: req.params.token });
+});
+
+router.post('/reset/:token', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/reset/' + req.params.token,
+        headers: {'x-access-token': req.headers['x-access-token']},
+        form: req.body
+    }).pipe(res);
 });
 
 router.get('');
@@ -80,8 +88,10 @@ router.post('/patients', function(req, res, next) {
 });
 
 router.put('/patients/:id', function(req, res, next) {
+    if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
     request.put({
         url: config.apiUrl + '/patients/' + req.params.id,
+        headers: { 'x-access-token': req.headers['x-access-token'] || req.query.token },
         form: req.body
     }).pipe(res);
 });

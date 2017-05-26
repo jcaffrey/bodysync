@@ -18,7 +18,7 @@
  * $2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa. is bcrypted joshpw
  */
 insert into
-    pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt) \
+    pts (name, hash, phoneNumber, phoneProvider, email, isAdmin, createdAt, updatedAt)
 values 
     ('Jeremy Welborn', '$2a$08$dtV592jmtL7UM1O0sacUGe57ndCFlAeXUH/wXaP0FE1DmJ62EWPti', '16174627953', 'att', 'jeremy@gmail.com', false, now(), now()),
     ('Joey Caffrey', '$2a$08$2yDwkwaNfQIK3yD9Hyc72upxGR3eliOfC3OYvHsvtJoDUYOfRpWSe', '12017254565', 'att', 'joey@gmail.com', false, now(), now()),
@@ -28,7 +28,7 @@ values
 -- patients
 
 insert into patients 
-    (name, hash, phoneNumber, phoneProvider, email, isRestrictedFromRom, surgeryType, age, ptId, createdAt, updatedAt)
+    (name, hash, phoneNumber, phoneProvider, email, isRestrictedFromRom, surgeryType, age, ptId, createdAt, updatedAt, ptNotes)
 values
     ('Josh Smith', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh1@gmail.com', false, 'BeingABaby', 12, (select id from pts where name = 'Jeremy Welborn'), now(), now(), 'What a beast.'),
     ('Josh Seides', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh@gmail.com', false, 'BeingABaby', 19, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'This dude is amazing!'),

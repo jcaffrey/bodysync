@@ -56,13 +56,11 @@ module.exports.createPatient = (req, res, next) => {
     return;
 };
 
-
 /**
 
     READ (HTTP GET)
 
  */
-
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getPatients = (req, res, next) => {
@@ -104,7 +102,6 @@ module.exports.getPatientById = (req, res, next) => {
 };
 */
 
-
 module.exports.getPatientById = (req, res, next) => {
     // auth
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -142,10 +139,6 @@ module.exports.getPatientById = (req, res, next) => {
         return next(err);
     })
 };
-
-
-
-
 
 /**
 
@@ -185,7 +178,7 @@ module.exports.updatePatientNotes = (req, res, next) => {
     }).catch((err) => {
         return next(err);
     })
-}
+};
 
 
 /**
@@ -233,4 +226,3 @@ module.exports.deletePatient = (req, res, next) => {
 
 
 };
-
