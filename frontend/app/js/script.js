@@ -78,17 +78,17 @@ function logout() {
     window.location = '/';
 }
 
+// checks every 10 seconds if token is expired
 function tokenVerification() {
     function checkToken() {
         setTimeout (function() {
             var expires = JSON.parse(atob(localStorage.token.split('.')[1])).exp;
-            console.log('token expires: ' + JSON.parse(atob(localStorage.token.split('.')[1])).exp + ' and now time: ' + (+(new Date())) / 1000);
             if (expires < ((+(new Date())) / 1000)) {
                 expiredToken();
             } else {
                 checkToken();
             }
-        }, 5000);
+        }, 10000);
     }
 
     checkToken();
@@ -602,6 +602,14 @@ function loadPatients(patients) {
     }, 1000);
 }
 
+function loadEmpty() {
+    clear();
+    document.getElementById('loading').style.display = 'none';
+    var div = document.createElement('div');
+    div.innerHTML = (localStorage.isPatient == 'true') ? '<p class="empty-error">No data to display.</p>' : '<p class="empty-error">No patients to display.</p>';
+    document.getElementById('patients').appendChild(div);
+}
+
 function change(e) {
   e.style.display ="none";
 }
@@ -762,8 +770,9 @@ function loadFocusPatient () {
 
                   // adding delete and edit buttons for pts
                   if (!isPatient){
-                      outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a></div><br>';
+                      outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
                   }
+                  outBoxHTML += '</div><br>';
               }
       }
       else {
@@ -775,10 +784,20 @@ function loadFocusPatient () {
       }
 
     // getting notes
-    outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+    outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><p id="notesSuccess"></p><textarea ';
+
+    if (isPatient) {
+        outBoxHTML += 'readonly ';
+    }
+
+    outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10">' + pfp.ptNotes + '</textarea>';
+
+    if (!isPatient) {
+        outBoxHTML += '<button onclick="submitNotes(' + pfp.id + ')">Update Notes</button>';
+    }
 
     // percentage-box
-    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+    outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
 
     // graph
     outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
@@ -844,6 +863,23 @@ function colorPercent (percent, col){
     else {
         return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
     }
+}
+
+function submitNotes(id) {
+    fetch('/patients/' + id, {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'PUT',
+        body: JSON.stringify({
+            notes: document.getElementById('notes').value
+        })
+    }).then(function(res) {
+        if (!res.ok) throw new Error('There was an error sending this measure');
+        document.getElementById('notesSuccess').innerHTML = 'Update Successful';
+    }).catch(function() {
+        document.getElementById('notesSuccess').style.color = '#c1272d';
+        document.getElementById('notesSuccess').innerHTML = 'Update Failed';
+    });
 }
 
 function clear() {
@@ -951,7 +987,6 @@ function loadExercises(patId, patIndex) {
         res.json().then(function (data) {
             var patients = JSON.parse(localStorage.patients);
             for (var i = 0; i < data.length; i++){
-                console.log(data[i].id);
                 patients[patIndex].exercises.push(data[i]);
                 loadExercisesPain(data[i].id, patIndex, i);
                 //console.log(loadExercisesPain(data[i].id, patIndex));
@@ -976,6 +1011,7 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 
 
 // OLD CODE WHEN EXERCISES BELONGED TO EXERCISE SETS
+//
 // function loadExerciseSets(patIndex, injuryId) {
 //     fetch('/injuries/' + injuryId + '/exerciseSets/?token=' + localStorage.token, {
 //         method: 'GET'
@@ -1057,10 +1093,16 @@ function search(query, array) {
             temp.push(arr[i]);
     }
     localStorage.display = JSON.stringify(temp);
-    load();
+    console.log(temp);
+    if (temp) {
+        loadEmpty();
+    } else {
+        load();
+    }
 }
 
 function pSearch() {
+    document.getElementById('loading').style.display = 'block';
     search(form.patientSearch.value, localStorage.patients);
 }
 
@@ -1080,6 +1122,7 @@ function progAscending() {
     return patients.sort(function (a, b) { a.progress - b.progress})
 }
 function sortAlpha() {
+    document.getElementById('loading').style.display = 'block';
     localStorage.ctr1++;
     var lst = JSON.parse(localStorage.patients);
     if (localStorage.ctr1 % 2 != 0) localStorage.display = JSON.stringify(lst.sort(compareAlpha));
@@ -1105,6 +1148,7 @@ function findAverage() {
 }
 
 function sortProg() {
+    document.getElementById('loading').style.display = 'block';
     localStorage.ctr2++;
     findAverage();
     var lst = JSON.parse(localStorage.patients);
@@ -1192,33 +1236,37 @@ Date.prototype.toMysqlFormat = function() {
 };
 
 function submitMeasure (id, i, lastMeasure, last) {
-    fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function (res) {
-        if (!res.ok) return submitError(res);
-        res.json().then(function (data) {
-            var d = new Date();
-            var d1 = new Date();
-            d1.setDate(d1.getDate() + 7);
-            var data = {
-                dayMeasured: d.toMysqlFormat(),
-                dayOfNextGoal: d1.toMysqlFormat(),
-                nextGoal: form[(2 * i) + 1].value || lastMeasure,
-                degreeValue: form[2 * i].value || lastMeasure,
-                name: 'name' + id,
-                endRangeGoal: data.endRangeGoal
-            };
-            fetch('/romMetrics/' + id + '/romMetricMeasures', {
-                headers: {'x-access-token': localStorage.token,
-                    'Content-Type': 'application/json'},
-                method: 'POST',
-                body: JSON.stringify(data)
-            }).then(function(res) {
-                if (!res.ok) throw new Error('There was an error sending this measure');
-                if (last) window.location = '/patients';
-            }).catch(function (err) { console.log(err) });
-        });
-    }).catch(function () { console.log('wrong') });
+    if (form[(2 * i) + 1].value && form[2 * i].value) {
+        fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
+            method: 'GET'
+        }).then(function (res) {
+            if (!res.ok) return submitError(res);
+            res.json().then(function (data) {
+                var d = new Date();
+                var d1 = new Date();
+                d1.setDate(d1.getDate() + 7);
+                var data = {
+                    dayMeasured: d.toMysqlFormat(),
+                    dayOfNextGoal: d1.toMysqlFormat(),
+                    nextGoal: form[(2 * i) + 1].value,
+                    degreeValue: form[2 * i].value,
+                    name: 'name' + id,
+                    endRangeGoal: data.endRangeGoal
+                };
+                fetch('/romMetrics/' + id + '/romMetricMeasures', {
+                    headers: {'x-access-token': localStorage.token,
+                        'Content-Type': 'application/json'},
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('There was an error sending this measure');
+                    if (last) window.location = '/patients';
+                }).catch(function (err) { console.log(err) });
+            });
+        }).catch(function () { console.log('wrong') });
+    } else {
+        if (last) window.location = '/patients';
+    }
 }
 
 function submitMeasures () {

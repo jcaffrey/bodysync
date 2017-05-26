@@ -79,6 +79,13 @@ router.post('/patients', function(req, res, next) {
     }).pipe(res);
 });
 
+router.put('/patients/:id', function(req, res, next) {
+    request.put({
+        url: config.apiUrl + '/patients/' + req.params.id,
+        form: req.body
+    }).pipe(res);
+});
+
 router.post('/pts/:id/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',

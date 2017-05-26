@@ -41,7 +41,7 @@ exports.loginPt = (req, res, next) => {
 
                     var payload = {id: pt.id, isPt: true, sessionNumber: newSession, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 5 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // expiresIn is in seconds
 
                     pt.token = token;
                     pt.save()
@@ -56,7 +56,7 @@ exports.loginPt = (req, res, next) => {
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
 
-                    var token = jwt.sign(payload, config.secret, {expiresIn: 5 }); // TODO: set time. jwt.encode for 'jwt-simple'
+                    var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // expiresIn is in seconds
 
                     pt.token = token;
                     pt.save()
@@ -96,7 +96,7 @@ exports.loginPatient = (req, res, next) => {
             // note: sessionId updated in next middelware chain (createPtSession)
             var payload = {id: patient.id, sessionNumber: null, isPt: false, isAdmin: false};
 
-            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // jwt.encode for 'jwt-simple'
+            var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // expiresIn is in seconds
 
             patient.token = token;
             patient.save()
