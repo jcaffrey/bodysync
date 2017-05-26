@@ -33,10 +33,10 @@ block content
                     #radioBox2
                     input(class="radio-button" type='radio' id="Patient" name='user-type' value="Patient" onclick="radioBox1.style.background='#ffffff', radioBox2.style.background='#2e3192'")
             .input-box
-                input.text-input(type='email' name='email' placeholder='example@domain.com' maxlength="24")
+                input.text-input(type='email' name='email' placeholder='example@domain.com ' maxlength="24")
                 .input-name Email
             .input-box.last-box
-                input.text-input(type='password' name='password' placeholder='********' maxlength="24"
+                input.text-input(type='password' name='password' placeholder='******** ' maxlength="24"
                     onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
                         "else { submitPatientLogin() }} else {} ")
                 .input-name Password
