@@ -216,43 +216,45 @@ function submitPatient() {
     if (form.age.value) data.age = form.age.value;
     if (form.weight.value) data.weight = form.weight.value;
 
-    fetch('/pts/' + localStorage.id + '/patients', {
-        headers: {
-            'x-access-token': localStorage.token,
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        else return res.json().then(function(result) {
-            var injuries = document.getElementsByClassName('rom-name-input');
-            var degrees = document.getElementsByClassName('degrees');
-            for (var i = 0; i < injuries.length; i++) {
-                (function(x) {
-                    fetch('/patients/' + result.id + '/injuries', {
-                        headers: {
-                            'x-access-token': localStorage.token,
-                            'Content-Type': 'application/json'
-                        },
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: injuries[x].value,
-                            injuryFromSurgery: "true"
-                        })
-                    }).then(function (res1) {
-                        if (!res1.ok) return submitError(res1);
-                        else return res1.json().then(function (result1) {
-                            postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
-                        })
-                    }).catch(submitError);
-                }(i))
-            }
-            setTimeout(function() {
-                window.location = '/patients';
-            }, 1000);
-        });
-    }).catch(submitError);
+    if (form.name.value && form.email.value && hash.name.value && form.phone.value && form.isRestrictedFromRom.value) {
+        fetch('/pts/' + localStorage.id + '/patients', {
+            headers: {
+                'x-access-token': localStorage.token,
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(data)
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+            else return res.json().then(function(result) {
+                var injuries = document.getElementsByClassName('rom-name-input');
+                var degrees = document.getElementsByClassName('degrees');
+                for (var i = 0; i < injuries.length; i++) {
+                    (function(x) {
+                        fetch('/patients/' + result.id + '/injuries', {
+                            headers: {
+                                'x-access-token': localStorage.token,
+                                'Content-Type': 'application/json'
+                            },
+                            method: 'POST',
+                            body: JSON.stringify({
+                                name: injuries[x].value,
+                                injuryFromSurgery: "true"
+                            })
+                        }).then(function (res1) {
+                            if (!res1.ok) return submitError(res1);
+                            else return res1.json().then(function (result1) {
+                                postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
+                            })
+                        }).catch(submitError);
+                    }(i))
+                }
+                setTimeout(function() {
+                    window.location = '/patients';
+                }, 1000);
+            });
+        }).catch(submitError);
+    }
 }
 
 function submitExerciseSet() {
@@ -790,7 +792,11 @@ function loadFocusPatient () {
         outBoxHTML += 'readonly ';
     }
 
-    outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10">' + pfp.ptNotes + '</textarea>';
+    if (pfp.ptNotes) {
+        outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10">' + pfp.ptNotes + '</textarea>';
+    } else {
+        outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="No notes entered..."></textarea>';
+    }
 
     if (!isPatient) {
         outBoxHTML += '<button onclick="submitNotes(' + pfp.id + ')">Update Notes</button>';
