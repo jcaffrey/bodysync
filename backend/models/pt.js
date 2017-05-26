@@ -16,13 +16,8 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        fogotPasswordHash: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        fogotPasswordExpires: {
-            type: DataTypes.DATE,
-            allowNull: true
+        forgotToken: {
+            type: DataTypes.STRING
         },
         email: {
             type: DataTypes.STRING,

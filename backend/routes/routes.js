@@ -51,6 +51,8 @@ router.route('/')
 
 // ** = add requester-specific auth to the controller 
 
+// $2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.
+
 
 router.route('/login/pt')
     .post(auth.loginPt, ptSessions.createSession);
@@ -88,7 +90,7 @@ router.route('/pts/:id/patients')
 
 router.route('/patients/:id')
     .get(auth.tokenRequired, patients.getPatientById, ptSessions.logSession)  //TODO only log if PT
-    //.put(auth.tokenRequired, patients.updatePatient) // Access: pt   **w/query
+    .put(auth.ptRequired, patients.updatePatientNotes, ptSessions.updateSession) // Access: pt   **w/query
     .delete(auth.ptRequired, patients.deletePatient, ptSessions.updateSession);
 
 // routes for pts, patients to see injuries

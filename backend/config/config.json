@@ -6,6 +6,9 @@
     "database": "bodysync",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "emailFromName": "Prompt Therapy Solutions",
+    "emailFromAddr": "prompttherapysolutions@gmail.com",
+    "emailPw": "HSADev678",
     "secret": "thisisthesecret"
   },
   "test": {
@@ -20,6 +23,9 @@
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
+    "emailFromName": "Prompt Therapy Solutions",
+    "emailFromAddr": "prompttherapysolutions@gmail.com",
+    "emailPw": "HSADev678",
     "dialect": "mysql"
   }
 }
