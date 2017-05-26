@@ -113,59 +113,426 @@ exports.loginPatient = (req, res, next) => {
     })
 }
 
-// NOTE: this could be implemented somewhat more efficiently with tokens
-// TODO: error handling
 exports.forgotPassword = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
+    if (typeof req.body.isPt !== 'boolean')
+        return res.status(400).send('No user type');
 
-    models.patient.findOne({
-        where: {email: req.body.email}
-    })
-    .then(function(user) {
-        if (!user) {
-            model.pt.findOne({
-                where: {email: req.body.email}
-            })
-            .then(function(user2) {
-                if (!user2)
-                    return res.status(400).send('No account associated with that email');
-                user = user2;
-            });
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: config.emailFromAddr,
+            pass: config.emailPw
         }
-
-        crypto.randomBytes(10, function(err, buf) {
-            var token = buf.toString('hex') + Date.now().toString();
-            user.forgotPasswordHash = token;
-            user.forgotPasswordExpires = Date.now() + 3600000; // 1 hour
-
-            user.save().then(function () {
-                var smtpTransport = nodemailer.createTransport('SMTP', {
-                    service: 'gmail',
-                    auth: {
-                      user: 'tech.bodysync@gmail.com',
-                      pass: '/MdeUWK#<3)LEdKq'
-                    }
-                });
-
-                var mailOptions = {
-                    to: user.email,
-                    from: 'tech.bodysync@gmail.com',
-                    subject: 'Bodysync Password Reset',
-                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                      'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                      'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                      'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                };
-
-                smtpTransport.sendMail(mailOptions, function(err) {
-                    res.send('An e-mail has been sent to ' + user.email + ' with further instructions.');
-                });
-
-            });
-        });
     });
+
+    if(!req.body.isPt)
+    {
+        models.patient.findOne({
+            where: {
+                email: req.body.email
+            }
+        }).then(function (pat) {
+            if(Object.keys(pat).length !== 0)
+            {
+                var payload = {id: pat.id, sessionNumber: null, isPt: false, isAdmin: false};
+                var token = jwt.sign(payload, config.secret, {expiresIn: 60 * 60});
+
+                pat.forgotToken = token;
+
+                var patPromise = pat.save();
+                patPromise.then((pat) => {
+                    var mailOptions = {
+                        to: req.body.email,
+                        from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+                        subject: 'Prompt Therapy Solutions Forgot Password',
+                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
+                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                    };
+                    transporter.sendMail(mailOptions);
+                });
+            }
+            else
+            {
+                return res.status(404).send('no such patients');
+            }
+        }).then(()=>{
+            return res.status(200).send('success');
+        }).catch((err) => {
+            return next(err);
+        })
+    }
+    else
+    {
+        models.pt.findOne({
+            where: {
+                email: req.body.email
+            }
+        }).then(function(pt) {
+            if(Object.keys(pt).length !== 0)
+            {
+                var payload = {id: pt.id, sessionNumber: null, isPt: true, isAdmin: false};
+                var token = jwt.sign(payload, config.secret, {expiresIn: 60 * 60});
+
+                pt.forgotToken = token;
+
+                var ptPromise = pt.save();
+                pat.Promise.then((pt) => {
+                    var mailOptions = {
+                        to: req.body.email,
+                        from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+                        subject: 'Prompt Therapy Solutions Forgot Password',
+                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
+                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                    };
+                    transporter.sendMail(mailOptions);
+                });
+            }
+            else
+            {
+                return res.status(404).send('no such patients');
+            }
+        }).then(() => {
+            return res.status(200).send('success');
+        }).catch((err) => {
+        return next(err);
+        })
+    }
 }
+
+// IMPT: after hitting the forgotPassword route, we will email the patient a link to the frontend
+// then the frontend will post to /reset/:id on the backend with {isPt: false, newPassword: "plaintext"}
+// if frontend recieves success from here, they should redirect to login
+
+exports.resetPassword = (req, res, next) => {
+    if(typeof req.body.isPt !== 'boolean')
+        return res.status(400).send('no isPt bool')
+    if(typeof req.body.newPassword !== 'string')
+        return res.status(400).send('no new pw')
+
+    if(!req.body.isPt)
+    {
+        models.patient.findOne({
+            where: {
+                forgotToken: req.params.token   // someone would have to guess the token to be able to reset the password of a user
+            }
+        }).then(function (pat) {
+            if(Object.keys(pat).length !== 0)
+            {
+                console.log('found pat' + pat.email);
+                // hash the newPassword and save it down as the hash
+                console.log('old hash' + pat.hash);
+                pat.hash = models.patient.generateHash(req.body.newPassword);
+                console.log('updated hash' + pat.hash);
+                pat.forgotToken = null;
+                pat.save().then(()=>{
+                    return res.status(200).send('successfully reset patient pw')
+                }).catch(function (err) {
+                    return next(err);
+                });
+
+            }
+            else
+            {
+                return res.status(400).send('no patient found')
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
+    }
+    else
+    {
+        models.pt.findOne({
+            where: {
+                forgotToken: req.params.token
+            }
+        }).then(function (pt) {
+            if(Object.keys(pt).length !== 0)
+            {
+                pt.hash = pt.generateHash(req.body.newPassword);
+                pt.forgotToken = null;
+                pt.save().then(() => {
+                    return res.status(200).send('successfully reset pt pw');
+                }).catch(function (err) {
+                    return next(err);
+                });
+            }
+            else
+            {
+                return res.status(400).send('no pt found')
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
+    }
+}
+
+
+//
+//
+// exports.resetPassword = (req, res, next) => {
+//     if (req.body.password !== req.body.confirm)
+//         return res.status(400).send('Passwords do not match');
+//
+//     models.patient.findOne({
+//         where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
+//     })
+//         .then(function(user){
+//             if (!user) {
+//                 models.patient.findOne({
+//                     where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
+//                 })
+//                     .then(function(user2){
+//                         if (!user2)
+//                             return res.status(400).send('Password reset token is invalid or has expired.');
+//                         user = user2;
+//                     });
+//             }
+//
+//             user.resetPasswordHash = undefined;
+//             user.resetPasswordExpires = undefined;
+//             // NOTE: currently storing passwords in plaintext, MUST change
+//             user.Hash = req.body.password;
+//
+//             user.save.then(function () {
+//                 var smtpTransport = nodemailer.createTransport('SMTP', {
+//                     service: 'gmail',
+//                     auth: {
+//                         user: 'tech.bodysync@gmail.com',
+//                         pass: '/MdeUWK#<3)LEdKq'
+//                     }
+//                 });
+//
+//                 var mailOptions = {
+//                     to: user.email,
+//                     from: 'tech.bodysync@gmail.com',
+//                     subject: 'Password Successfully Reset',
+//                     text: 'Hello,\n\n' +
+//                     'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+//                 };
+//
+//                 smtpTransport.sendMail(mailOptions, function(err) {
+//                     res.send('Your password has been successfully reset');
+//                 });
+//             });
+//         });
+// }
+
+
+
+// exports.forgotPassword = (req, res, next) => {
+//     if (typeof req.body.email !== 'string')
+//         return res.status(400).send('No email');
+//     console.log(typeof req.body.isPt);
+//     if (typeof req.body.isPt !== 'boolean')
+//         return res.status(400).send('No user type');
+//
+//     // console.log('PRINTING THE EMAIL FROM ADDR' + config.emailFromAddr);
+//     var transporter = nodemailer.createTransport({
+//         service: 'gmail',
+//         auth: {
+//             user: config.emailFromAddr,
+//             pass: config.emailPw
+//         }
+//     });
+//
+//
+//     if(!req.body.isPt)
+//     {
+//         console.log(req.body.email)
+//
+//         models.patient.findOne({
+//             where:{
+//                 email: req.body.email
+//             }
+//         }).then(function (pat) {
+//             if(Object.keys(pat).length !== 0) {
+//                 console.log(pat.email)
+//                 // make a new token
+//                 var payload = {id: pat.id, sessionNumber: null, isPt: false, isAdmin: false};
+//                 var token = jwt.sign(payload, config.secret, {expiresIn: 60 * 60});
+//
+//                 console.log('GOT HERE')
+//
+//                 pat.forgotToken = token;
+//                 var patPromise = pat.save();
+//                 patPromise.then((user) => {
+//                     var mailOptions = {
+//                         to: req.body.email,
+//                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+//                         subject: 'Prompt Therapy Solutions Forgot Password',
+//                         text: 'You are receiving this because you have requested to reset your password.\n\n' +
+//                         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+//                         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+//                         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+//                     };
+//                 transporter.sendMail(mailOptions);
+//             }).catch(function (err) {
+//                     return next(err);
+//                 })
+//             }
+//             else
+//             {
+//                 return res.status(404).send('could not find pat');
+//             }
+//         }
+//
+//                 // pat.save()
+//                 //     .then(function () {
+//                 //         // email the pt's email
+//                 //
+//                 //         console.log('GOT HERE')
+//                 //
+//                 //
+//                 //         try {
+//                 //             var mailOptions = {
+//                 //                 to: req.body.email,
+//                 //                 from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+//                 //                 subject: 'Prompt Therapy Solutions Forgot Password',
+//                 //                 text: 'You are receiving this because you have requested to reset your password.\n\n' +
+//                 //                 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+//                 //                 'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+//                 //                 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+//                 //             };
+//                 //         }
+//                 //         catch(err)
+//                 //         {
+//                 //             console.log('in this caatch');
+//                 //             return next(err);
+//                 //         }
+//                 //
+//                 //         console.log('about to try to sendMail');
+//                 //
+//                 //         try{
+//                 //             transporter.sendMail(mailOptions, function(err) {
+//                 //                 console.log(err);
+//                 //                 if(err){
+//                 //                     console.log('FAILED TO SEND');
+//                 //                     return next(err);
+//                 //                 }
+//                 //             });
+//                 //         }
+//                 //         catch(err)
+//                 //         {
+//                 //             console.log('carught it!!!!!!!!!!!!!!!!!!!')
+//                 //         }
+//                 //         return res.status(200).send('An e-mail has been sent to ' + user.email + ' with further instructions.');
+//                 //
+//                 //
+//                 //
+//                 //     }).catch(function (err) {
+//                 //         return next(err);
+//                 // })
+//
+//
+//
+//
+//         }).catch(function (err) {
+//             return next(err);
+//         })
+//     }
+//     // else //TODO pt
+//     // {
+//     //     models.pt.findOne({where:{email:req.body.email}}).then(function (pt) {
+//     //         if(Object.keys(pt).length !== 0)
+//     //         {
+//     //
+//     //
+//     //
+//     //
+//     //
+//     //
+//     //
+//     //         }
+//     //     }).catch(function (err) {
+//     //         return next(err);
+//     //     })
+//     // }
+//
+//
+// }
+//
+
+
+
+// // NOTE: this could be implemented somewhat more efficiently with tokens
+// // TODO: error handling
+// exports.forgotPassword = (req, res, next) => {
+//     if (typeof req.body.email !== 'string')
+//         return res.status(400).send('No email');
+//
+//     // TODO handle scenario where patient/pt have same emails
+//
+//     models.patient.findOne({
+//         where: {email: req.body.email}
+//     })
+//     .then(function(user) {
+//         if(Object.keys(user).length === 0)
+//         {
+//             // check pts, update pt if exists
+//
+//             models.pt.findOne({where:{email:req.body.email}}).then(function (pt) {
+//                 if(Object.keys(pt).length !== 0)
+//                 {
+//                     // pt exists with that email
+//                     user = pt;
+//                 }
+//                 else
+//                 {
+//                     return res.status(400).send('no user with that email');
+//                 }
+//             })
+//
+//             console.log('inside' + user);
+//
+//             //TODO test this for pts. asynchronocity problem?
+//
+//             // crypto.randomBytes(10, function(err, buf) {
+//             //     var token = buf.toString('hex') + Date.now().toString();
+//             //     user.forgotPasswordHash = token;
+//             //     user.forgotPasswordExpires = Date.now() + 3600000; // 1 hour
+//             //
+//                 user.save().then(function () {
+//                     var smtpTransport = nodemailer.createTransport('SMTP', {
+//                         service: 'gmail',
+//                         auth: {
+//                             user: 'tech.bodysync@gmail.com',
+//                             pass: '/MdeUWK#<3)LEdKq'
+//                         }
+//                     });
+//
+//                     var mailOptions = {
+//                         to: user.email,
+//                         from: 'tech.bodysync@gmail.com',
+//                         subject: 'Bodysync Password Reset',
+//                         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+//                         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+//                         'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+//                         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+//                     };
+//
+//                     smtpTransport.sendMail(mailOptions, function(err) {
+//                         res.send('An e-mail has been sent to ' + user.email + ' with further instructions.');
+//                     });
+//
+//                 });
+            // });
+//
+//         }
+//
+//         console.log('OUTSIDE THE IF OF USER '+user);
+//
+//     }).catch(function (err) {
+//         console.log(err.Error.BaseError);
+//         console.error(err);
+//         return res.status(404).send('couldn not find');
+//     })
+// }
 
 // function reset (db, req, res, next) {
 //     db.findOne({ resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
@@ -176,53 +543,7 @@ exports.forgotPassword = (req, res, next) => {
 //   });
 // }
 
-exports.resetPassword = (req, res, next) => {
-    if (req.body.password !== req.body.confirm)
-        return res.status(400).send('Passwords do not match');
 
-    models.patient.findOne({
-        where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
-    })
-    .then(function(user){
-        if (!user) {
-                models.patient.findOne({
-                    where: {resetPasswordHash: req.params.token, resetPasswordExpires: { $gt: Date.now() } }
-                })
-                .then(function(user2){
-                if (!user2)
-                    return res.status(400).send('Password reset token is invalid or has expired.');
-                user = user2;
-            });
-        }
-
-        user.resetPasswordHash = undefined;
-        user.resetPasswordExpires = undefined;
-        // NOTE: currently storing passwords in plaintext, MUST change
-        user.Hash = req.body.password;
-
-        user.save.then(function () {
-            var smtpTransport = nodemailer.createTransport('SMTP', {
-                service: 'gmail',
-                auth: {
-                  user: 'tech.bodysync@gmail.com',
-                  pass: '/MdeUWK#<3)LEdKq'
-                }
-            });
-
-            var mailOptions = {
-                to: user.email,
-                from: 'tech.bodysync@gmail.com',
-                subject: 'Password Successfully Reset',
-                text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-            };
-
-            smtpTransport.sendMail(mailOptions, function(err) {
-                res.send('Your password has been successfully reset');
-            });
-        });
-    });
-}
 
 /*
 
@@ -339,3 +660,7 @@ exports.checkRequestIdAgainstId = (req, res) => {
     }
     // is bool best way to do this?
 }
+
+
+
+

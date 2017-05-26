@@ -15,14 +15,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        forgotPasswordHash: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        forgotPasswordExpires: {
-            type: DataTypes.DATE,
-            allowNull: true
-        },
+
         //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
         surgeryType: {
             type: DataTypes.STRING,
@@ -40,6 +33,9 @@ module.exports = function(sequelize, DataTypes) {
         isRestrictedFromRom: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        forgotToken: {
+            type: DataTypes.STRING
         },
         token: {
             type: DataTypes.STRING

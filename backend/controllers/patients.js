@@ -153,7 +153,40 @@ module.exports.getPatientById = (req, res, next) => {
 
  */
 
-// TODO
+module.exports.updatePatientNotes = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    models.patient.findOne({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(pat) {
+        if(Object.keys(pat).length !== 0)
+        {
+            if(pat.ptId == decoded.id)
+            {
+                pat.ptNotes = req.body.ptNotes
+                pat.save().then(() => {
+                    return res.status(200).send('success');
+                }).catch((err) => {
+                    return next(err);
+                })
+            }
+            else
+            {
+                return res.status(403).send('not authorized');
+            }
+        }
+        else
+        {
+            return res.status(404).send('could not find')
+        }
+    }).catch((err) => {
+        return next(err);
+    })
+}
+
 
 /**
 
