@@ -760,8 +760,9 @@ function loadFocusPatient () {
 
                   // adding delete and edit buttons for pts
                   if (!isPatient){
-                      outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a></div><br>';
+                      outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
                   }
+                  outBoxHTML += '</div><br>';
               }
       }
       else {
@@ -773,10 +774,20 @@ function loadFocusPatient () {
       }
 
     // getting notes
-    outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><textarea class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="Enter notes here..."></textarea></div></div>';
+    outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><p id="notesSuccess"></p><textarea ';
+
+    if (isPatient) {
+        outBoxHTML += 'readonly ';
+    }
+
+    outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10">' + pfp.ptNotes + '</textarea>';
+
+    if (!isPatient) {
+        outBoxHTML += '<button onclick="submitNotes(' + pfp.id + ')">Update Notes</button>';
+    }
 
     // percentage-box
-    outBoxHTML += '<div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+    outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
 
     // graph
     outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
@@ -842,6 +853,23 @@ function colorPercent (percent, col){
     else {
         return '<font color = "#' + col + '"><span>' + percent + '%</span></font>';
     }
+}
+
+function submitNotes(id) {
+    fetch('/patients/' + id, {
+        headers: {'x-access-token': localStorage.token,
+            'Content-Type': 'application/json'},
+        method: 'POST',
+        body: JSON.stringify({
+            notes: document.getElementById('notes').value
+        })
+    }).then(function(res) {
+        if (!res.ok) throw new Error('There was an error sending this measure');
+        document.getElementById('notesSuccess').innerHTML = 'Update Successful';
+    }).catch(function() {
+        document.getElementById('notesSuccess').style.color = '#c1272d';
+        document.getElementById('notesSuccess').innerHTML = 'Update Failed';
+    });
 }
 
 function clear() {
@@ -973,6 +1001,7 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 
 
 // OLD CODE WHEN EXERCISES BELONGED TO EXERCISE SETS
+//
 // function loadExerciseSets(patIndex, injuryId) {
 //     fetch('/injuries/' + injuryId + '/exerciseSets/?token=' + localStorage.token, {
 //         method: 'GET'

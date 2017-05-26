@@ -5,6 +5,7 @@ $inactiveColor = #BBB
 $inactiveColor2 = #fafafa
 $darkgray = #333
 $white = #ffffff
+$errorColor = #c1272d
 
 text-color = #000000
 mobile-width = 600px
@@ -397,7 +398,7 @@ button:hover, .submit:hover
     z-index 9999
     bottom 9%
     left 0
-    background: #c1272d
+    background: $errorColor
     font-family 'GothamBold'
     color $white
     display block
@@ -415,7 +416,7 @@ p
     box-shadow: inset 0px 0px 5px #22B573
 
 .invalid
-    box-shadow: inset 0px 0px 5px #b5191e
+    box-shadow: inset 0px 0px 5px $errorColor
 
 @media screen and (max-width: 500px)
     #profileImg1
@@ -522,10 +523,10 @@ p
 
 #error-label
     margin-top 4%
-    color #c1272d
+    color $errorColor
     font-family 'GothamBold'
 
 #js-error-message
-    color #c1272d
+    color $errorColor
     font-family 'GothamBold'
     text-align center
