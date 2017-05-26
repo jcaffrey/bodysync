@@ -17,12 +17,17 @@ block content
                         input.ex-input.degrees(maxlength='3' name='numSets' placeholder='____' onblur='checkExerciseNum(this.value)')
                     .ex2
                         .exercise-label Number of Reps/Duration
-                        input.text-input.degrees2(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
+                        input.text-input2.degrees2(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
                     br
                     .exercise-label#notes Notes
                     textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
                 .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
-
+    #exSetModal.modal(style="display:none")
+        h3 New exercise submission was not processed correctly.
+        br
+        br
+        mbutton(style='background: red',onclick='redirectPg(this)') Discard
+        mbutton(onclick='hideModal(this)') Continue Editing
 
 
         //- TODO: use the code below to format a delete button on the box div
@@ -75,6 +80,14 @@ block content
                         errorDiv.removeChild(errorDiv.firstChild);
                     }
                 }
+            }
+            function hideModal(ele){
+                console.log('called');
+                document.getElementById('exSetModal').style.display = 'none';
+                document.forms[0].style.display = 'block';
+            }
+            function redirectPg(ele){
+                window.location = '/patients';
             }
 
 block submitForm

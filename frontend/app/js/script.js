@@ -263,25 +263,35 @@ function submitExerciseSet() {
     var deg2 = document.getElementsByClassName('degrees2');
     var notes = document.getElementsByClassName('notes');
 
+    for(var n=0; n < exname.length; n++){
+        if (exname[n].value == "" || deg1[n].value == "" || deg2[n].value == ""){
+            document.getElementById('exSetModal').style.display = 'block';
+            return;
+        }
+    }
+
     for (var i = 0; i < exname.length; i++) {
-        (function(x) {
-            fetch('patients/' + pat.id + '/createSingleExercise?token=' + localStorage.token, {
-                headers: {
-                    'x-access-token': localStorage.token,
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                body: JSON.stringify({
-                    name: exname[x].value,
-                    numSets: deg1[x].value,
-                    numRepsOrDuration: deg2[x].value,
-                    ptNotes: notes[x].value
-                })
-            }).then(function(res) {
-                if (!res.ok) return submitError(res);
-                if (x == (exname.length - 1)) window.location = '/patients';
-            }).catch(submitError);
-        }(i))
+        if (exname[i].value !== "" && deg1[i].value !== "" && deg2[i].value !== ""){
+            (function(x) {
+                fetch('patients/' + pat.id + '/createSingleExercise?token=' + localStorage.token, {
+                    headers: {
+                        'x-access-token': localStorage.token,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: exname[x].value,
+                        numSets: deg1[x].value,
+                        numRepsOrDuration: deg2[x].value,
+                        ptNotes: notes[x].value
+                    })
+                }).then(function(res) {
+                    if (!res.ok) return submitError(res);
+                    if (x == (exname.length - 1)) window.location = '/patients';
+                }).catch(submitError);
+            }(i))
+        }
+        //else if (i == (exname.length - 1)) window.location = '/patients';
     }
 }
 
