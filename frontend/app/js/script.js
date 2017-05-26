@@ -818,14 +818,14 @@ function renderExercisePage() {
     var bodyBox = document.createElement('div');
     var bodyBoxHTML = "";
 
+
     if (pat.exercises.length > 0) {
         // for (var i = 0; i < pat.exercises.length; i++){
         // var exSetId = pat.ex[i][0].id;
         // // adding exercise set name
         // bodyBoxHTML += '<p class="headerGrey">' + pat.sets[i][0].name + '</p>';
         // adding list of exercises
-        for (var j = 0; j < pat.exercises[0].length; j++) {
-
+        for (var j = 0; j < pat.exercises.length; j++) {
             //if (pat.exercises[j].exerciseSetId == exSetId){
 
             //bodyBoxHTML += '<div class="exercise"><div class="input-box-top"><div class="input-name">' + pat.exercises[0][j].name;
@@ -833,10 +833,10 @@ function renderExercisePage() {
             //bodyBoxHTML += '<div class="input-name metaData">' + pat.exercises[0][j].numSets + " sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</div></div></div><br></div></div>';
             //}
             // adding exercise name
-            bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>' + pat.exercises[0][j].name + '</span></div>';
+            bodyBoxHTML += '<div class="ex pt-box"><div class="ex-info"><div class="ex-info-name"><span>' + pat.exercises[j].name + '</span></div>';
 
             // adding exercise sets and seconds
-            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[0][j].numSets + " Sets, " + pat.exercises[0][j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this); localStorage.exId = ' + pat.exercises[0][j].id + '"></div></div>';
+            bodyBoxHTML += '<div class="ex-info-details"><span>' + pat.exercises[j].numSets + " Sets, " + pat.exercises[j].numRepsOrDuration + " Reps/Duration" + '</span></div></div><div class="ex-complete"><img class="complete-icon" src="../../img/checkIcon-13.png" onclick="painInput(this); localStorage.exId = ' + pat.exercises[j].id + '"></div></div>';
         }
         //}
     }
@@ -1000,13 +1000,13 @@ function loadExercisesPain(exId, patIndex, exIndex) {
     fetch('/exercises/' + exId + '/exerciseCompletions/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function(res) {
-        if (!res.ok) return submitError(res);
+        if (!res.ok) return;
         res.json().then(function (data) {
             var patients = JSON.parse(localStorage.patients);
             patients[patIndex].exercises[exIndex].pain = data;
             localStorage.patients = JSON.stringify(patients);
         });
-    }).catch(submitError);
+    }).catch(function(res) { if (res.status != 404) submitError(res) });
 }
 
 
@@ -1068,10 +1068,10 @@ function loadPatientStart() {
             localStorage.isPatient = JSON.stringify(true);
             localStorage.patients = JSON.stringify([patient]);
             localStorage.display = JSON.stringify([patient]);
-            localStorage.focusPatient = JSON.stringify(patient);
             clear();
             loadProgress(localStorage.patients);
             loadPatients(localStorage.patients);
+
         });
     }).catch(submitError);
 }
