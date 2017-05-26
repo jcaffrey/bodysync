@@ -859,7 +859,7 @@ function submitNotes(id) {
     fetch('/patients/' + id, {
         headers: {'x-access-token': localStorage.token,
             'Content-Type': 'application/json'},
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
             notes: document.getElementById('notes').value
         })
