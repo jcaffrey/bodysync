@@ -45,6 +45,13 @@ router.post('/reset/:token', function(req, res, next) {
     }).pipe(res);
 });
 
+router.post('/forgetpassword', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/forgetpassword',
+        form: req.body
+    }).pipe(res);
+});
+
 router.get('');
 
 router.get('/exercises', function(req, res, next) {
