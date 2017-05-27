@@ -30,7 +30,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/forgotpassword', function(req, res, next) {
-    return res.render('forgotpassword', { url: '/password-reset-message', footerButton:'Submit' });
+    return res.render('forgotpassword', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
 router.get('/reset-token/:token', function(req, res, next) {
