@@ -277,7 +277,7 @@ module.exports = router;
 
 // reset password view
 router.get('/reset-password', function(req, res, next) {
-    return res.render('reset-password', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('reset-password', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
 router.get('/password-reset-message', function(req, res, next) {
