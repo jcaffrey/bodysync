@@ -45,9 +45,9 @@ router.post('/reset/:token', function(req, res, next) {
     }).pipe(res);
 });
 
-router.post('/forgetpassword', function(req, res, next) {
+router.post('/forgotpassword', function(req, res, next) {
     request.post({
-        url: config.apiUrl + '/forgetpassword',
+        url: config.apiUrl + '/forgotpassword',
         form: req.body
     }).pipe(res);
 });
