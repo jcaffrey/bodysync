@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
-var nodemailer = require('nodemailer')
+var nodemailer = require('nodemailer');
 
 
 
@@ -14,7 +14,6 @@ exports.loginPt = (req, res, next) => {
         return res.status(400).send('No email');
     if (typeof req.body.password !== 'string') // plaintext passworc
         return res.status(400).send('No password');
-
 
     models.pt.findOne({
         where: { email: req.body.email}
@@ -72,8 +71,7 @@ exports.loginPt = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
-}
-
+};
 
 exports.loginPatient = (req, res, next) => {
     if (typeof req.body.email !== 'string')
@@ -105,12 +103,12 @@ exports.loginPatient = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
-}
+};
 
 exports.forgotPassword = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.isPt !== 'boolean')
+    if (typeof req.body.isPt !== 'boolean' && typeof req.body.isPt !== 'string')
         return res.status(400).send('No user type');
 
     var transporter = nodemailer.createTransport({
@@ -121,7 +119,7 @@ exports.forgotPassword = (req, res, next) => {
         }
     });
 
-    if(!req.body.isPt)
+    if(req.body.isPt == 'false')
     {
         models.patient.findOne({
             where: {
@@ -158,9 +156,7 @@ exports.forgotPassword = (req, res, next) => {
         }).catch((err) => {
             return next(err);
         })
-    }
-    else
-    {
+    } else {
         models.pt.findOne({
             where: {
                 email: req.body.email
@@ -174,7 +170,7 @@ exports.forgotPassword = (req, res, next) => {
                 pt.forgotToken = token;
 
                 var ptPromise = pt.save();
-                pat.Promise.then((pt) => {
+                ptPromise.then((pt) => {
                     var mailOptions = {
                         to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
@@ -197,7 +193,7 @@ exports.forgotPassword = (req, res, next) => {
             return next(err);
         })
     }
-}
+};
 
 // IMPT: after hitting the forgotPassword route, we will email the patient a link to the frontend
 // then the frontend will post to /reset/:id on the backend with {isPt: false, newPassword: "plaintext"}

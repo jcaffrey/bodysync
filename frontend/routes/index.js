@@ -30,7 +30,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/forgotpassword', function(req, res, next) {
-    return res.render('forgotpassword', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
+    return res.render('forgotpassword', { url: '/login', footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
 router.get('/reset-token/:token', function(req, res, next) {
@@ -50,6 +50,15 @@ router.post('/forgotpassword', function(req, res, next) {
         url: config.apiUrl + '/forgotpassword',
         form: req.body
     }).pipe(res);
+});
+
+// reset password view
+router.get('/reset-password', function(req, res, next) {
+    return res.render('reset-password', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
+});
+
+router.get('/password-reset-message', function(req, res, next) {
+    return res.render('password-reset-message', { url: '/login', footerButton: 'login' });
 });
 
 router.get('');
@@ -281,15 +290,6 @@ router.get('/edit-exercise-set', function(req, res, next) {
 });
 
 module.exports = router;
-
-// reset password view
-router.get('/reset-password', function(req, res, next) {
-    return res.render('reset-password', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
-});
-
-router.get('/password-reset-message', function(req, res, next) {
-    return res.render('password-reset-message', { url: '/', footerButton: 'login' });
-});
 
 // error page
 router.get('/error', function(req, res, next) {
