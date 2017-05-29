@@ -1082,7 +1082,7 @@ function loadPatientStart() {
                 loadProgress(localStorage.patients);
                 loadPatients(localStorage.patients);
             } else {
-
+                loadEmpty();
             }
         });
     }).catch(submitError);
