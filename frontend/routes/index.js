@@ -33,8 +33,8 @@ router.get('/forgotpassword', function(req, res, next) {
     return res.render('forgotpassword', { url: '/login', footerButton: 'Cancel', footerButton2: 'Submit'});
 });
 
-router.get('/reset-token/:token', function(req, res, next) {
-    return res.render('reset', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit', token: req.params.token });
+router.get('/reset-token/:token/:isPt', function(req, res, next) {
+    return res.render('reset-password', { url: '/login', footerButton: 'Cancel', footerButton2: 'Submit', token: req.params.token, isPt: req.params.isPt });
 });
 
 router.post('/reset/:token', function(req, res, next) {
@@ -60,8 +60,6 @@ router.get('/reset-password', function(req, res, next) {
 router.get('/password-reset-message', function(req, res, next) {
     return res.render('password-reset-message', { url: '/login', footerButton: 'login' });
 });
-
-router.get('');
 
 router.get('/exercises', function(req, res, next) {
     return res.render('exercises', { type: 'patient'});

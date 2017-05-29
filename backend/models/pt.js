@@ -58,11 +58,6 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-
-
-
-
-
     // ,
     //     instanceMethods:
     //         {

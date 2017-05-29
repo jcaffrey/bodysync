@@ -7,12 +7,10 @@ var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 var nodemailer = require('nodemailer');
 
-
-
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.password !== 'string') // plaintext passworc
+    if (typeof req.body.password !== 'string') // plaintext password
         return res.status(400).send('No password');
 
     models.pt.findOne({
@@ -141,7 +139,7 @@ exports.forgotPassword = (req, res, next) => {
                         subject: 'Prompt Therapy Solutions Forgot Password',
                         text: 'You are receiving this because you have requested to reset your password.\n\n' +
                         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'http://' + config.frontendServer + '/reset-token/' + token + '/false' + '\n\n' +
                         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                     };
                     transporter.sendMail(mailOptions);
@@ -177,7 +175,7 @@ exports.forgotPassword = (req, res, next) => {
                         subject: 'Prompt Therapy Solutions Forgot Password',
                         text: 'You are receiving this because you have requested to reset your password.\n\n' +
                         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                        'http://' + config.frontendServer + '/reset-token/' + token + '/true' + '\n\n' +
                         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                     };
                     transporter.sendMail(mailOptions);
@@ -200,13 +198,16 @@ exports.forgotPassword = (req, res, next) => {
 // if frontend recieves success from here, they should redirect to login
 
 exports.resetPassword = (req, res, next) => {
-    if(typeof req.body.isPt !== 'boolean')
-        return res.status(400).send('no isPt bool')
-    if(typeof req.body.newPassword !== 'string')
-        return res.status(400).send('no new pw')
+    if (typeof req.body.isPt !== 'boolean' && typeof req.body.isPt !== 'string')
+        return res.status(400).send('no isPt bool');
+    if (typeof req.body.newPassword !== 'string')
+        return res.status(400).send('no new pw');
 
-    if(!req.body.isPt)
+    console.log('made it');
+
+    if (req.body.isPt == 'false')
     {
+        console.log('made it 1');
         models.patient.findOne({
             where: {
                 forgotToken: req.params.token   // someone would have to guess the token to be able to reset the password of a user
@@ -226,43 +227,41 @@ exports.resetPassword = (req, res, next) => {
                     return next(err);
                 });
 
-            }
-            else
-            {
+            } else {
                 return res.status(400).send('no patient found')
             }
         }).catch(function (err) {
             return next(err);
         })
-    }
-    else
-    {
+    } else {
+        console.log('made it 2');
         models.pt.findOne({
             where: {
                 forgotToken: req.params.token
             }
         }).then(function (pt) {
-            if(Object.keys(pt).length !== 0)
+            console.log('made it 3');
+            if (Object.keys(pt).length !== 0)
             {
-                pt.hash = pt.generateHash(req.body.newPassword);
+                console.log('made it 4');
+                pt.hash = models.pt.generateHash(req.body.newPassword);
                 pt.forgotToken = null;
+                console.log('made it 5');
                 pt.save().then(() => {
                     return res.status(200).send('successfully reset pt pw');
                 }).catch(function (err) {
+                    console.log('made it 6');
                     return next(err);
                 });
-            }
-            else
-            {
-                return res.status(400).send('no pt found')
+            } else {
+                return res.status(400).send('no pt found');
             }
         }).catch(function (err) {
+            console.log('made it 7');
             return next(err);
         })
     }
-}
-
-
+};
 
 /*
 

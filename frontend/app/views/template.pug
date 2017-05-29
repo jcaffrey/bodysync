@@ -60,5 +60,5 @@ html
         script.
             document.getElementById('profileName').innerHTML = localStorage.email
         script.
-            tokenVerification();
+            if (window.location.pathname != '/login' && window.location.pathname != '/') tokenVerification();
         block postScript

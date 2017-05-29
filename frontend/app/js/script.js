@@ -1050,7 +1050,6 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 //     }).catch(submitError);
 // }
 
-
 function loadStart() {
     fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
     ).then(function(res) {
@@ -1059,9 +1058,13 @@ function loadStart() {
             localStorage.isPatient = JSON.stringify(false);
             localStorage.patients = JSON.stringify(pts);
             localStorage.display = JSON.stringify(pts);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
+            if (localStorage.patients != '[]') {
+                clear();
+                loadProgress(localStorage.patients);
+                loadPatients(localStorage.patients);
+            } else {
+                loadEmpty();
+            }
         });
     }).catch(submitError);
 }
@@ -1074,10 +1077,13 @@ function loadPatientStart() {
             localStorage.isPatient = JSON.stringify(true);
             localStorage.patients = JSON.stringify([patient]);
             localStorage.display = JSON.stringify([patient]);
-            clear();
-            loadProgress(localStorage.patients);
-            loadPatients(localStorage.patients);
+            if (localStorage.patients != '[]') {
+                clear();
+                loadProgress(localStorage.patients);
+                loadPatients(localStorage.patients);
+            } else {
 
+            }
         });
     }).catch(submitError);
 }
