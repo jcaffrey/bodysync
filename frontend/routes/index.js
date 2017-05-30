@@ -111,7 +111,8 @@ router.post('/patients', function(req, res, next) {
 
 router.post('/pts', function(req, res, next) {
     request.post({
-        url: config.apiUrl + '/pts',
+        url: config.apiUrl + '/pts/',
+        headers: {'x-access-token': req.headers['x-access-token']},
         form: req.body
     }).pipe(res);
 });
