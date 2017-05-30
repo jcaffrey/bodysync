@@ -809,7 +809,7 @@ function loadFocusPatient () {
     outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
 
     // legend
-    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div></div></div></div></div>';
+    outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div><div class="point-legend"><div class="measurement-legend">Measurements</div><div class="legend-measure-circle"></div></div></div></div></div></div>';
 
     // adding transition-box
     outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';

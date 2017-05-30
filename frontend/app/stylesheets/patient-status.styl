@@ -424,17 +424,19 @@ form h1
   background $mainColor
 
 .legend
-  margin-left 22.5%
-  width 55%
+  width 80%
+  margin-left 10%
   border-radius $formRadius
   border-color $mainColor
   border solid 1px
   font-size 13px
-  @media screen and (max-width: 500px)
+  @media screen and (max-width: 350px)
+    font-size 6px
+  @media screen and (min-wdith: 350) and (max-width: 500px)
     font-size 10px
 
 .weekly-legend
-  width 49%
+  width 33%
   display inline-block
   border-right solid 1px
   border-color $mainColor
@@ -444,22 +446,39 @@ form h1
   margin 3%
   width 100%
 
-.legend-circle
+.legend-circle, .legend-measure-circle
   width 10px
   height 10px
   border-radius 50%
   border solid 3px
   display inline-block
-  background-color #74e586
-  border-color #00a136
   margin-top 3%
 
+.legend-circle
+  background-color #74e586
+  border-color #00a136
+
+.measurement-legend
+  margin 3%
+
+.legend-measure-circle
+  background-color $white
+  border-color $mainColor
+
 .final-goal-legend
-  width 50%
+  width 33%
   display inline-block
 
+
 .dashes
-  padding-top 10%
+  padding-top 15px
+
+.point-legend
+  width 33%
+  height 100%
+  display inline-block
+  border-left solid 1px
+  border-color $mainColor
 
 .graph-view
   width 100%
