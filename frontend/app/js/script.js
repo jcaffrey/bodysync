@@ -61,6 +61,26 @@ function submitPatientLogin() {
     }).catch(submitError);
 }
 
+function submitAdminLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+    localStorage.email = data.email;
+    fetch('/loginAdmin', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            window.location = '/admin';
+        });
+    }).catch(submitError);
+}
+
 function logout() {
     localStorage.id = '';
     localStorage.token = '';
@@ -198,7 +218,6 @@ function postMeasure (id, degree, lastGoal, endRangeGoal) {
     }).catch(function (err) { console.log(err) });
 }
 
-// surgeryType, romStart, romEnd, notes in schema????
 function submitPatient() {
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';

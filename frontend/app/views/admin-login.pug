@@ -1,0 +1,22 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+block header
+
+block content
+    .loginTitle Login
+    form#loginForm.form
+        .inputs
+            .input-box
+                input.text-input(type='email' name='email' placeholder='example@domain.com ' maxlength="24")
+                .input-name Email
+            .input-box.last-box
+                input.text-input(type='password' name='password' placeholder='******** ' maxlength="24"
+                    onkeypress="if (event.keyCode == 13) submitAdminLogin()")
+                .input-name Password
+
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='submitAdminLogin()') #{footerButton2}

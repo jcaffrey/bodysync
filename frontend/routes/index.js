@@ -16,6 +16,10 @@ router.post('/loginPatient', function(req, res, next) {
     request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
 });
 
+router.post('/loginAdmin', function(req, res, next) {
+    request.post(config.apiUrl + '/login/admin', { form: req.body }).pipe(res);
+});
+
 router.get('/patient-home', function(req, res, next) {
     return res.render('patient-home', { type: 'patient', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Add Measure'})
 });
@@ -27,6 +31,10 @@ router.post('/', function(req, res, next) {
 // -------------------------------------------------------------------------------
 router.get('/login', function(req, res, next) {
     return res.render('login', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/admin-login', function(req, res, next) {
+    return res.render('admin-login', { url: '/admin', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/forgotpassword', function(req, res, next) {
@@ -251,7 +259,7 @@ router.get('/add-measure', function(req, res, next) {
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit'});
+    return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/new-exercise', function(req, res, next) {
@@ -271,6 +279,11 @@ router.get('/patient-status-patient', function(req, res, next) {
 // patient view
 router.get('/patients', function(req, res, next) {
     return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
+});
+
+// admin view
+router.get('/admin', function(req, res, next) {
+    return res.render('admin', { type: 'admin', url: '/admin', footerButton: 'Clear', footerButton2: 'Submit' });
 });
 
 // exercise form view
