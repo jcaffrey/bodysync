@@ -799,7 +799,7 @@ function loadFocusPatient () {
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span><br>';
+      outBoxHTML +='<div class="exercise-set"><button onclick="window.location=\'/add-injury\'">Add Injury</button><br><br><br><span id="exerciseTitle">Patient Exercises</span><br>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises

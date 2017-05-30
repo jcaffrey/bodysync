@@ -15,10 +15,10 @@ html
                     div#navbar
                         if type == 'patient'
                             a(href='/patient-home').navButton.active Home
-                        else if type == 'pt'
-                            a(href='/patients').navButton.active Home
-                        else
+                        else if type == 'admin'
                             a(href='/admin').navButton.active Home
+                        else
+                            a(href='/patients').navButton.active Home
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left

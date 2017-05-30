@@ -259,11 +259,15 @@ router.delete('/exercises/:id', function(req, res, next) {
 
 // -------------------------------------------------------------------------------
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('pt-form', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('add-measure', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/add-injury', function(req, res, next) {
+    return res.render('add-injury', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/create-patient', function(req, res, next) {
@@ -277,7 +281,7 @@ router.get('/new-exercise', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {  type: 'pt', url: '/add-measure', firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  type: 'pt', url: '/add-measure', footerButton: 'Add Measure' });
 });
 
 router.get('/patient-status-patient', function(req, res, next) {
