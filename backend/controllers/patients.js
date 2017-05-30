@@ -35,11 +35,11 @@ module.exports.createPatient = (req, res, next) => {
                     phoneNumber: req.body.phoneNumber,
                     phoneProvider: req.body.phoneProvider,
                     surgeryType: req.body.surgeryType,
+                    surgeonName: req.body.surgeonName,
                     isRestrictedFromRom: req.body.isRestrictedFromRom,
                     age: req.body.age,
                     weight: req.body.weight,
                     ptId: req.params.id,
-                    hash: models.patient.generateHash(req.body.hash) // add hash and token
                 }).then(function(patient) {
                     res.json(patient);
                     return next();
