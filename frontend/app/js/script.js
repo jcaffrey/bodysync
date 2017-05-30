@@ -209,14 +209,14 @@ function submitPatient() {
         errorMessage += 'Email address is invalid.';
     data.email = form.email.value;
     if (form.phone.value) data.phoneNumber = form.phone.value;
-    if (form.hash.value) data.hash = form.hash.value;
     if (form.surgery.value) data.surgeryType = form.surgery.value;
+    if (form.surgeon.value) data.surgeonName = form.surgeon.value;
     if (form.notes.value) data.ptNotes = form.notes.value;
     if (form.isRestrictedFromRom.value) data.isRestrictedFromRom = form.isRestrictedFromRom.value;
     if (form.age.value) data.age = form.age.value;
     if (form.weight.value) data.weight = form.weight.value;
 
-    if (form.name.value && form.email.value && hash.name.value && form.phone.value && form.isRestrictedFromRom.value) {
+    if (form.name.value && form.email.value && form.phone.value && form.isRestrictedFromRom.value) {
         fetch('/pts/' + localStorage.id + '/patients', {
             headers: {
                 'x-access-token': localStorage.token,

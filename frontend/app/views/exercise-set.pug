@@ -8,20 +8,19 @@ block content
     form
         #generalInfo
         h1 Exercise Set
-
         .inputs#exercise-inputs
-                .input-box
-                    input.text-input.exercise-name-input(type='text' name='exercise-name' placeholder='ENTER EXERCISE NAME' onblur='checkExerciseName(this.value)')
-                    .ex1
-                        .exercise-label Number of Sets
-                        input.ex-input.degrees(maxlength='3' name='numSets' placeholder='____' onblur='checkExerciseNum(this.value)')
-                    .ex2
-                        .exercise-label Number of Reps/Duration
-                        input.text-input2.degrees2(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
-                    br
-                    .exercise-label#notes Notes
-                    textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
-                .input-box.last-box#exercise-add(onclick="addExercise()") Add Motion
+            .input-box
+                input.text-input.exercise-name-input(type='text' name='exercise-name' placeholder='ENTER EXERCISE NAME' onblur='checkExerciseName(this.value)')
+                .ex1
+                    .exercise-label Number of Sets
+                    input.ex-input.degrees(maxlength='3' name='numSets' placeholder='____' onblur='checkExerciseNum(this.value)')
+                .ex2
+                    .exercise-label Number of Reps/Duration
+                    input.text-input.degrees2(maxlength='3' name='numRepsOrDuration' placeholder='____' onblur='checkExerciseNum(this.value)')
+                br
+                .exercise-label#notes Notes
+                textarea.text-input.notes(id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
+            .input-box.last-box#exercise-add(onclick="addExercise(); scrollToBottom()") Add Motion
     #exSetModal.modal(style="display:none")
         h3 New exercise submission was not processed correctly.
         br
@@ -88,6 +87,10 @@ block content
             }
             function redirectPg(ele){
                 window.location = '/patients';
+            }
+            function scrollToBottom() {
+                var objDiv = document.getElementById("content");
+                objDiv.scrollTop = objDiv.scrollHeight;
             }
 
 block submitForm
