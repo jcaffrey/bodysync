@@ -1106,7 +1106,7 @@ function search(query, array) {
     }
     localStorage.display = JSON.stringify(temp);
     console.log(temp);
-    if (temp) {
+    if (temp.length === 0) {
         loadEmpty();
     } else {
         load();
