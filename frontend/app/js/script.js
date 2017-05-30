@@ -1037,12 +1037,14 @@ function loadExercises(patId, patIndex) {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            var patients = JSON.parse(localStorage.patients);
-            for (var i = 0; i < data.length; i++){
-                patients[patIndex].exercises.push(data[i]);
-                loadExercisesPain(data[i].id, patIndex, i);
+            if (data != {}) {
+                var patients = JSON.parse(localStorage.patients);
+                for (var i = 0; i < data.length; i++){
+                    patients[patIndex].exercises.push(data[i]);
+                    loadExercisesPain(data[i].id, patIndex, i);
+                }
+                localStorage.patients = JSON.stringify(patients);
             }
-            localStorage.patients = JSON.stringify(patients);
         });
     }).catch(submitError);
 }
@@ -1053,9 +1055,11 @@ function loadExercisesPain(exId, patIndex, exIndex) {
     }).then(function(res) {
         if (!res.ok) return;
         res.json().then(function (data) {
-            var patients = JSON.parse(localStorage.patients);
-            patients[patIndex].exercises[exIndex].pain = data;
-            localStorage.patients = JSON.stringify(patients);
+            if (data != {}) {
+                var patients = JSON.parse(localStorage.patients);
+                patients[patIndex].exercises[exIndex].pain = data;
+                localStorage.patients = JSON.stringify(patients);
+            }
         });
     }).catch(function(res) { if (res.status != 404) submitError(res) });
 }

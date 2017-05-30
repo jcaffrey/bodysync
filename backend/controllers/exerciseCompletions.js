@@ -214,7 +214,7 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
         }
         else
         {
-            return res.status(404).send('not found');
+            res.json({});
         }
     }).catch(function (err) {
         return next(err);

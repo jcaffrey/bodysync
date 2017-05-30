@@ -73,8 +73,7 @@ module.exports.createExercises = (req, res, next) => {
         return next(err);
     })
 
-}
-
+};
 
 module.exports.createExercise = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -171,14 +170,14 @@ module.exports.getExercises = (req, res, next) => {
 
         }
         else {
-            return res.status(404).send('no exercises for that patient'); // make sure that the session is still logged here even though no data to read?
+            res.json({}); // make sure that the session is still logged here even though no data to read?
         }
     }).catch(function(err) {
         console.log('failed to find')
         return next(err);
     })
 
-}
+};
 
 module.exports.updateExercise = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -214,8 +213,7 @@ module.exports.updateExercise = (req, res, next) => {
     {
         return res.status(403).send('not authorized');
     }
-}
-
+};
 
 // module.exports.updateExercises = (req, res, next) => {
 //     var token = req.query.token || req.body.token || req.headers['x-access-token'];
