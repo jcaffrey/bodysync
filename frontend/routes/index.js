@@ -17,7 +17,7 @@ router.post('/loginPatient', function(req, res, next) {
 });
 
 router.post('/loginAdmin', function(req, res, next) {
-    request.post(config.apiUrl + '/login/admin', { form: req.body }).pipe(res);
+    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
 router.get('/patient-home', function(req, res, next) {
@@ -103,6 +103,13 @@ router.get('/patients/:id/injuries', function(req, res, next) {
 });
 
 router.post('/patients', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/pts',
+        form: req.body
+    }).pipe(res);
+});
+
+router.post('/pts', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts',
         form: req.body

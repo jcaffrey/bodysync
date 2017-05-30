@@ -296,6 +296,7 @@ function submitPT() {
             if (!res.ok) return submitError(res);
             else return res.json().then(function(result) {
                 document.getElementById('loading').style.display = 'none';
+                document.getElementById('adminTitle').style.display = 'none';
                 document.getElementById('success').innerHTML = '<p>PT account successfully created!</p><br><button onclick="window.location=\'/admin\'">Create a New PT</button>'
             });
         }).catch(submitError);
