@@ -26,6 +26,7 @@ module.exports.createPt = (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
+        phoneProvider: 'att',
         isAdmin: false,
         hash: 'temp' // add hash and token
     }).then(function(pt) {

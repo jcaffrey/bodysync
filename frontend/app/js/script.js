@@ -297,7 +297,7 @@ function submitPT() {
             if (!res.ok) return submitError(res);
             else return res.json().then(function(result) {
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('success').innerHTML = '<p>PT account successfully created!</p><br><button onclick="window.location=\'/admin\'">Create a New PT</button>'
+                document.getElementById('success').innerHTML = '<h1 style="text-align:center">PT account successfully created!</h1><br><div id="adminButton" onclick="window.location=\'/admin\'">Create a New PT</div>'
             });
         }).catch(submitError);
     }
