@@ -21,15 +21,13 @@ var config = require('../config/config.json')[env];
 
  */
 
-
 module.exports.createPt = (req, res, next) => {
     models.pt.create({
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        phoneProvider: req.body.phoneProvider,
-        isAdmin: req.body.isAdmin,
-        hash: models.pt.generateHash(req.body.hash) // add hash and token
+        isAdmin: false,
+        hash: 'temp' // add hash and token
     }).then(function(pt) {
         res.json(pt);
         return next();

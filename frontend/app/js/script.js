@@ -136,7 +136,6 @@ function submitToken() {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function(result) {
-            console.log('success');
             clearTimeout(hashTimeout);
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
@@ -1041,7 +1040,6 @@ function loadExercises(patId, patIndex) {
             for (var i = 0; i < data.length; i++){
                 patients[patIndex].exercises.push(data[i]);
                 loadExercisesPain(data[i].id, patIndex, i);
-                //console.log(loadExercisesPain(data[i].id, patIndex));
             }
             localStorage.patients = JSON.stringify(patients);
         });
@@ -1431,7 +1429,6 @@ function loadEditExercise() {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
-    console.log(id);
     document.getElementById('graph').innerHTML = '';
     document.getElementById('loading1').style.display = 'inline';
     document.getElementById('graph-container').style.display = 'none';
@@ -1465,7 +1462,7 @@ function createGraph(id) {
                 degreeValue.push(+(injuryInfo[i].measure));
                 var year = +(injuryInfo[i].date).substring(0,4);
                 var month = +(injuryInfo[i].date).substring(5,7) - 1;
-                var day = +(injuryInfo[i].date).substring(8,10) - 1;
+                var day = +(injuryInfo[i].date).substring(8,10);
                 dayMeasured.push((new Date(year, month, day)));
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }

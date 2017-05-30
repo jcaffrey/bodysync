@@ -40,6 +40,7 @@ module.exports.createPatient = (req, res, next) => {
                     age: req.body.age,
                     weight: req.body.weight,
                     ptId: req.params.id,
+                    hash: 'temp'
                 }).then(function(patient) {
                     res.json(patient);
                     return next();
