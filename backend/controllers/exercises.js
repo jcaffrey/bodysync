@@ -170,7 +170,7 @@ module.exports.getExercises = (req, res, next) => {
 
         }
         else {
-            res.json({}); // make sure that the session is still logged here even though no data to read?
+            res.json([]); // make sure that the session is still logged here even though no data to read?
         }
     }).catch(function(err) {
         console.log('failed to find')

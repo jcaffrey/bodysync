@@ -1037,7 +1037,7 @@ function loadExercises(patId, patIndex) {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            if (data != {}) {
+            if (data != []) {
                 var patients = JSON.parse(localStorage.patients);
                 for (var i = 0; i < data.length; i++){
                     patients[patIndex].exercises.push(data[i]);
