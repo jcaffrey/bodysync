@@ -224,8 +224,7 @@ function submitPatient() {
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
-    if (form.email.value && !validateEmail(form.email))
-        errorMessage += 'Email address is invalid.';
+    if (form.email.value && !validateEmail(form.email)) errorMessage += 'Email address is invalid.';
     data.email = form.email.value;
     if (form.phone.value) data.phoneNumber = form.phone.value;
     if (form.surgery.value) data.surgeryType = form.surgery.value;
@@ -271,6 +270,34 @@ function submitPatient() {
                 setTimeout(function() {
                     window.location = '/patients';
                 }, 1000);
+            });
+        }).catch(submitError);
+    }
+}
+
+function submitPT() {
+    form.style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
+    var data = {};
+    var errorMessage = '';
+    if (form.name.value) data.name = form.name.value;
+    if (form.email.value && !validateEmail(form.email)) errorMessage += 'Email address is invalid.';
+    data.email = form.email.value;
+    if (form.phone.value) data.phoneNumber = form.phone.value;
+
+    if (form.name.value && form.email.value && form.phone.value) {
+        fetch('/pts', {
+            headers: {
+                'x-access-token': localStorage.token,
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(data)
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+            else return res.json().then(function(result) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').innerHTML = '<p>PT account successfully created!</p><br><button onclick="window.location=\'/admin\'">Create a New PT</button>'
             });
         }).catch(submitError);
     }

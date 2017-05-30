@@ -21,47 +21,9 @@ block content
             .input-box
                 input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)" maxlength="50")
                 .input-name Email
-            .input-box
-                input.text-input(type='text' name='surgery' placeholder='Arm' maxlength='24')
-                .input-name Surgery
-            .input-box
-                input.text-input(type='text' name='surgeon' placeholder='Jane Doe' maxlength='24')
-                .input-name Surgeon
-            .input-box
-                input.text-input(type='number' name='age' value='0' min='0' step='1')
-                .input-name Age
-            .input-box
-                input.text-input(type='number' name='weight' value='0' min='0' step='1')
-                .input-name Weight
-            .input-box
+            .input-box.last-box
                 input.text-input(type='phone' id='phone' name='phone' placeholder='(123) 456-7891 ' onblur="checkPhone(this.value)" maxlength="13" onkeypress="return isNumberKey(event)")
                 .input-name Phone #
-            .input-box.last-box
-                .input-name Restricted Data?
-                .radio1.restr-data-radio
-                    label(for="YES").pad-data-radio YES
-                    #radBox1
-                    input(class="radio-button" type='radio' id="YES" name='isRestrictedFromRom' value='true' checked onclick="radBox2.style.background='#ffffff', radBox1.style.background='#2e3192'")
-                .radio2.restr-data-radio
-                    label(for="NO").pad-data-radio NO
-                    #radBox2
-                    input(class="radio-button" type='radio' id="NO" name='isRestrictedFromRom' value='false' onclick="radBox1.style.background='#ffffff', radBox2.style.background='#2e3192'")
-        br
-        .inputs#rom-inputs
-            .input-box
-                input.text-input.rom-name-input(type='text' name='motion-name' placeholder='ENTER TARGETED MOTION...' onblur="checkMotionRangeName(this.value)")
-                .rom1
-                    .rom-label Starting Range of Motion
-                    input.rom-input.degrees(maxlength='3' type='rom' name='rom1' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
-                .rom2
-                    .rom-label Ending Range of Motion
-                    input.text-input.degrees(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
-            .input-box.last-box#rom-add(onclick="addMotion()") Add Motion
-        br
-        .inputs
-            .input-box.last-box
-                .rom-label#notes Notes
-                textarea.text-input.notes(type='notes' id='notes' name='notes' cols="25" placeholder="Lots of improvement. ")
     p#success
         script.
             function checkName(str) {
