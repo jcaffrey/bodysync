@@ -5,7 +5,7 @@ const auth = require('./auth');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
-    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Submit'})
+    return res.render('login', { url: 'mailto:prompttherapysolutions@gmail.com', footerButton: 'Contact', footerButton2: 'Submit'})
 });
 
 router.post('/login', function(req, res, next) {
@@ -272,10 +272,6 @@ router.get('/add-injury', function(req, res, next) {
 
 router.get('/create-patient', function(req, res, next) {
     return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
-});
-
-router.get('/new-exercise', function(req, res, next) {
-    return res.render('new-exercise');
 });
 
 // -------------------------------------------------------------------------------

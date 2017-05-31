@@ -6,6 +6,7 @@ $inactiveColor2 = #fafafa
 $darkgray = #333
 $white = #ffffff
 $errorColor = #c1272d
+$confirmColor = #1a924c
 
 text-color = #000000
 mobile-width = 600px
@@ -530,3 +531,125 @@ p
     color $errorColor
     font-family 'GothamBold'
     text-align center
+
+.modal
+    display none
+    position absolute
+    background white
+    padding 5%
+    top 50%
+    left 50%
+    transform translate(-50%,-50%)
+    -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 25px 0px $inactiveColor;
+    border-radius: $formRadius
+    width: 85%
+    text-align center
+    @media all and (min-width: 770px)
+        width: 50%
+.modal input[type='range']
+    width 100%
+
+.modal input[type=range]{
+    -webkit-appearance: none;
+    background: transparent;
+    width: 100%;
+}
+
+.modal input[type=range]:focus {
+    outline: none;
+}
+
+.modal input[type=range]::-webkit-slider-runnable-track {
+    height: 5px;
+    width: 90%;
+    background: rgba(78,78,76,0.2);
+    cursor: pointer;
+}
+.modal input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 22px;
+    width: 22px;
+    background-color: $inactiveColor;
+    border: 3px solid $mainColor;
+    margin-top: -9px;
+    border-radius: 50%;
+    transition: .1s ease-in-out;
+}
+
+.modal input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1);
+}
+
+.modal input[type=range]:focus::-webkit-slider-runnable-track {
+    background: $inactiveColor;
+}
+
+/**MOZ**/
+
+.modal input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    height: 22px;
+    width: 22px;
+    background-color: $inactiveColor;
+    border: 3px solid $mainColor;
+    margin-top: -9px;
+    border-radius: 50%;
+    transition: .1s ease-in-out;
+}
+.modal input[type=range]::-moz-range-track {
+    height: 5px;
+    width: 100%;
+    background: $inactiveColor;
+    cursor: pointer;
+}
+.modal input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+/**IE**/
+
+.modal input[type=range]::-ms-thumb {
+    background-color: $inactiveColor;
+    border: 2px solid $mainColor;
+    border-radius: 50%;
+    height: 11px;
+    width: 11px;
+    transition: .1s ease-in-out;
+    margin-top: 1px;
+}
+.modal input[type=range]::-ms-track {
+    height: 5px;
+    width: 100%;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+    cursor: pointer;
+}
+.modal input[type=range]::-ms-fill-lower {
+    background: $inactiveColor;
+}
+.modal input[type=range]:focus::-ms-fill-lower {
+    background: $inactiveColor;
+}
+.modal input[type=range]::-ms-fill-upper {
+    background: $inactiveColor;
+}
+.modal input[type=range]:focus::-ms-fill-upper {
+    background: $inactiveColor;
+}
+
+.submitTab
+    width 30%
+    display inline-block
+
+#submit-btn
+    background-color $errorColor
+    margin-right 5%
+    &:hover
+        opacity 0.8
+
+#submit-btn2
+    background-color $confirmColor
+    &:hover
+        opacity 0.8

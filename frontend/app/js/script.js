@@ -157,9 +157,10 @@ function headers() {
     };
 }
 
-function confirmSubmit() {
+function confirmSubmit(f) {
+    document.getElementById('confirm-modal').style.display = 'block';
     document.getElementById('confirm-modal').innerHTML =
-        '<div class="modal" id="submit-modal" style="display:none;"><h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab" id="submit-btn" onclick="localStorage.confirm = \'false\'; continueForm()">No</button><button class="buttonTab" id="submit-btn2" onclick="localStorage.confirm = \'true\'; continueForm()">Yes</button><div id="error-label"></div></div>';
+        '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="' + f + '()">Yes</button><div id="error-label"></div>';
 }
 
 function submitForm() {
