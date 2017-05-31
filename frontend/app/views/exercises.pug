@@ -18,16 +18,18 @@ block content
     #painInput.modal
         h3 On a scale of 1 (least) - 10 (most), how uncomfortable was that exercise?
         br
-        input#painNum(name='painBar',type='range',min='1',max='10' onchange='updateTextInput(this.value)')
-        input#painVal(type='text' value='')
+        input#painNum(name='painBar',type='range',min='1',max='10' onchange='show_value(this.value);')
         br
         br
-        button(style='background: red',onclick='cancel(this)') Cancel
-        button(onclick='submitPain(this)') Submit
+        h3#slider_value Value: 5
+        br
+        button(style='background: red; width: 50%' ,onclick='cancel(this)') Cancel
+        button(style='width: 50%', onclick='submitPain(this)') Submit
     script.
         var selectedExercise
         function painInput(ele){
             document.getElementById('painInput').style.display = 'block'
+            document.getElementById('painNum').value = 5;
             selectedExercise = ele
         }
         function submitPain(ele){
@@ -42,5 +44,10 @@ block content
         function updateTextInput(val) {
           document.getElementById('painVal').value=val;
         }
+        function show_value(x) {
+            innerCode = 'Value: ' + x;
+            document.getElementById("slider_value").innerHTML = innerCode;
+        }
+
 
 block footer
