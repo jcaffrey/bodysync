@@ -15,7 +15,6 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-
         //   proPicUrl: { type: DataTypes.STRING, defaultValue: stockImage.url}
         surgeryType: {
             type: DataTypes.STRING,

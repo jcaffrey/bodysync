@@ -5,7 +5,7 @@ const auth = require('./auth');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
-    return res.render('login', { firstName: 'Josh', iconUrl: '#', footerButton: 'Contact', footerButton2: 'Submit'})
+    return res.render('login', { url: 'mailto:prompttherapysolutions@gmail.com', footerButton: 'Contact', footerButton2: 'Submit'})
 });
 
 router.post('/login', function(req, res, next) {
@@ -14,6 +14,10 @@ router.post('/login', function(req, res, next) {
 
 router.post('/loginPatient', function(req, res, next) {
     request.post(config.apiUrl + '/login/patient', { form: req.body }).pipe(res);
+});
+
+router.post('/loginAdmin', function(req, res, next) {
+    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
 router.get('/patient-home', function(req, res, next) {
@@ -27,6 +31,10 @@ router.post('/', function(req, res, next) {
 // -------------------------------------------------------------------------------
 router.get('/login', function(req, res, next) {
     return res.render('login', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/admin-login', function(req, res, next) {
+    return res.render('admin-login', { url: '/admin', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/forgotpassword', function(req, res, next) {
@@ -97,6 +105,14 @@ router.get('/patients/:id/injuries', function(req, res, next) {
 router.post('/patients', function(req, res, next) {
     request.post({
         url: config.apiUrl + '/pts',
+        form: req.body
+    }).pipe(res);
+});
+
+router.post('/pts', function(req, res, next) {
+    request.post({
+        url: config.apiUrl + '/pts/',
+        headers: {'x-access-token': req.headers['x-access-token']},
         form: req.body
     }).pipe(res);
 });
@@ -243,25 +259,25 @@ router.delete('/exercises/:id', function(req, res, next) {
 
 // -------------------------------------------------------------------------------
 router.get('/pt-form', function(req, res, next) {
-    return res.render('pt-form', { firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('pt-form', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/add-measure', function(req, res, next) {
-    return res.render('add-measure', { injuries: [{id: 1, name: 'knee'}], firstName: 'Josh', url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+    return res.render('add-measure', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
+});
+
+router.get('/add-injury', function(req, res, next) {
+    return res.render('add-injury', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 router.get('/create-patient', function(req, res, next) {
-    return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit'});
-});
-
-router.get('/new-exercise', function(req, res, next) {
-    return res.render('new-exercise');
+    return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', {  type: 'pt', url: '/add-measure', firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  type: 'pt', url: '/add-measure', footerButton: 'Add Measure' });
 });
 
 router.get('/patient-status-patient', function(req, res, next) {
@@ -271,6 +287,11 @@ router.get('/patient-status-patient', function(req, res, next) {
 // patient view
 router.get('/patients', function(req, res, next) {
     return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
+});
+
+// admin view
+router.get('/admin', function(req, res, next) {
+    return res.render('admin', { type: 'admin', url: '/admin', footerButton: 'Clear', footerButton2: 'Submit' });
 });
 
 // exercise form view

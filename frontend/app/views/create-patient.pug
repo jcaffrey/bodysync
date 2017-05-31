@@ -55,7 +55,7 @@ block content
                     input.rom-input.degrees(maxlength='3' type='rom' name='rom1' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
                 .rom2
                     .rom-label Ending Range of Motion
-                    input.text-input.degrees(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
+                    input.rom-input.degrees.secondRom(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
             .input-box.last-box#rom-add(onclick="addMotion()") Add Motion
         br
         .inputs
@@ -130,7 +130,7 @@ block content
                 var romadd = document.getElementById('rom-add')
                 var newMotion = document.createElement("div")
                 newMotion.setAttribute('class', 'input-box')
-                newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='ENTER TARGETED MOTION...' onblur='checkMotionRangeName(this.value)'><div class='rom1'><div class='rom-label'>Starting Range of Motion</div><input class='rom-input degrees' type='rom' name='rom1' placeholder='___° ' onblur='checkMotionRangeNum(this.value)' maxlength='3'></div><div class='rom2'><div class='rom-label'>Ending Range of Motion</div><input class='text-input degrees' type='rom' name='rom2' placeholder='___° ' onblur='onblur='checkMotionRangeNum(this.value)' maxlength='3'></div>"
+                newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='ENTER TARGETED MOTION...' onblur='checkMotionRangeName(this.value)'><div class='rom1'><div class='rom-label'>Starting Range of Motion</div><input class='rom-input degrees' type='rom' name='rom1' placeholder='___° ' onblur='checkMotionRangeNum(this.value)' maxlength='3'></div><div class='rom2'><div class='rom-label'>Ending Range of Motion</div><input class='rom-input degrees secondRom' type='rom' name='rom2' placeholder='___° ' onblur='onblur='checkMotionRangeNum(this.value)' maxlength='3'></div>"
                 inputs.insertBefore(newMotion, romadd)
             }
             function isNumberKey(evt) {
@@ -155,4 +155,4 @@ block content
             }
 
 block submitForm
-    button.footerButton#buttonRight(type='button' onclick='submitPatient()') #{footerButton2}
+    button.footerButton#buttonRight(type='button' onclick='confirmSubmit(\'submitPatient\')') #{footerButton2}

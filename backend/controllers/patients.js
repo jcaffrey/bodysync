@@ -35,11 +35,12 @@ module.exports.createPatient = (req, res, next) => {
                     phoneNumber: req.body.phoneNumber,
                     phoneProvider: req.body.phoneProvider,
                     surgeryType: req.body.surgeryType,
+                    surgeonName: req.body.surgeonName,
                     isRestrictedFromRom: req.body.isRestrictedFromRom,
                     age: req.body.age,
                     weight: req.body.weight,
                     ptId: req.params.id,
-                    hash: models.patient.generateHash(req.body.hash) // add hash and token
+                    hash: 'temp'
                 }).then(function(patient) {
                     res.json(patient);
                     return next();
@@ -110,7 +111,7 @@ module.exports.getPatientById = (req, res, next) => {
     }).then(function(patient) {
         // auth is done here so only one query
         // pt and patient alike have access
-  
+
         // if pt
         if (decoded.isPt) {
             // if requesting pt is requested patient's pt
@@ -118,7 +119,7 @@ module.exports.getPatientById = (req, res, next) => {
                 req.body.patientId = patient.id;
                 res.json(patient);
                 return next();
-            }  
+            }
             else {
                 return res.status(401).send('You are not authorized to see this resource');
             }
@@ -128,10 +129,10 @@ module.exports.getPatientById = (req, res, next) => {
             // if requesting patient is requested patient
             if (decoded.id == req.params.id) { // should be === ?
                 return res.json(patient);
-            } 
+            }
             else {
                 return res.status(401).send('You are not authorized to see this resource');
-            }        
+            }
         }
     }).catch(function(err) {
         return next(err);
@@ -157,7 +158,7 @@ module.exports.updatePatientNotes = (req, res, next) => {
         {
             if(pat.ptId == decoded.id)
             {
-                pat.ptNotes = req.body.ptNotes
+                pat.ptNotes = req.body.notes
                 pat.save().then(() => {
                     return res.status(200).send('success');
                 }).catch((err) => {

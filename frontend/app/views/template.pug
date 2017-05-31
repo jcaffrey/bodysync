@@ -14,9 +14,11 @@ html
                 div.profile-box
                     div#navbar
                         if type == 'patient'
-                          a(href='/patient-home').navButton.active Home
+                            a(href='/patient-home').navButton.active Home
+                        else if type == 'admin'
+                            a(href='/admin').navButton.active Home
                         else
-                          a(href='/patients').navButton.active Home
+                            a(href='/patients').navButton.active Home
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left
@@ -38,6 +40,8 @@ html
                 input(type='password' name='tokenHash' placeholder='********' maxlength='24')
             button.buttonTab(id="token-btn" onclick='submitToken()') Continue Session
             #error-label
+
+        div#confirm-modal.modal
 
         block footer
             if type != 'patient'

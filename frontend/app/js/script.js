@@ -61,6 +61,26 @@ function submitPatientLogin() {
     }).catch(submitError);
 }
 
+function submitAdminLogin() {
+    var data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+    localStorage.email = data.email;
+    fetch('/loginAdmin', {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(function(res) {
+        if (!res.ok) return submitError(res);
+        else return res.json().then(function(result) {
+            localStorage.token = result.token;
+            localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
+            window.location = '/admin';
+        });
+    }).catch(submitError);
+}
+
 function logout() {
     localStorage.id = '';
     localStorage.token = '';
@@ -116,7 +136,6 @@ function submitToken() {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function(result) {
-            console.log('success');
             clearTimeout(hashTimeout);
             localStorage.token = result.token;
             localStorage.id = JSON.parse(atob(result.token.split('.')[1])).id;
@@ -136,6 +155,12 @@ function headers() {
         'x-access-token': localStorage.token,
         'Content-Type': 'application/json'
     };
+}
+
+function confirmSubmit(f) {
+    document.getElementById('confirm-modal').style.display = 'block';
+    document.getElementById('confirm-modal').innerHTML =
+        '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="' + f + '()">Yes</button><div id="error-label"></div>';
 }
 
 function submitForm() {
@@ -198,15 +223,13 @@ function postMeasure (id, degree, lastGoal, endRangeGoal) {
     }).catch(function (err) { console.log(err) });
 }
 
-// surgeryType, romStart, romEnd, notes in schema????
 function submitPatient() {
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
     var data = {};
     var errorMessage = '';
     if (form.name.value) data.name = form.name.value;
-    if (form.email.value && !validateEmail(form.email))
-        errorMessage += 'Email address is invalid.';
+    if (form.email.value && !validateEmail(form.email)) errorMessage += 'Email address is invalid.';
     data.email = form.email.value;
     if (form.phone.value) data.phoneNumber = form.phone.value;
     if (form.surgery.value) data.surgeryType = form.surgery.value;
@@ -249,9 +272,76 @@ function submitPatient() {
                         }).catch(submitError);
                     }(i))
                 }
+
+                // wait for POST to finish
                 setTimeout(function() {
                     window.location = '/patients';
                 }, 1000);
+            });
+        }).catch(submitError);
+    }
+}
+
+function submitInjuries() {
+    form.style.display = 'none';
+    document.getElementById('injuryTitle').style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
+
+    var data = {};
+    var injuries = document.getElementsByClassName('rom-name-input');
+    var degrees = document.getElementsByClassName('degrees');
+
+    for (var i = 0; i < injuries.length; i++) {
+        (function(x) {
+            fetch('/patients/' + JSON.parse(localStorage.focusPatient).id + '/injuries', {
+                headers: {
+                    'x-access-token': localStorage.token,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    name: injuries[x].value,
+                    injuryFromSurgery: "true"
+                })
+            }).then(function (res1) {
+                if (!res1.ok) return submitError(res1);
+                else return res1.json().then(function (result1) {
+                    postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
+                })
+            }).catch(submitError);
+        }(i))
+    }
+
+    // wait for POST to finish
+    setTimeout(function() {
+        window.location = '/patients';
+    }, 1000);
+}
+
+function submitPT() {
+    form.style.display = 'none';
+    document.getElementById('adminTitle').style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
+    var data = {};
+    var errorMessage = '';
+    if (form.name.value) data.name = form.name.value;
+    if (form.email.value && !validateEmail(form.email)) errorMessage += 'Email address is invalid.';
+    data.email = form.email.value;
+    if (form.phone.value) data.phoneNumber = form.phone.value;
+
+    if (form.name.value && form.email.value && form.phone.value) {
+        fetch('/pts', {
+            headers: {
+                'x-access-token': localStorage.token,
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(data)
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+            else return res.json().then(function(result) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').innerHTML = '<h1 style="text-align:center">PT account successfully created!</h1><br><div id="adminButton" onclick="window.location=\'/admin\'">Create a New PT</div>'
             });
         }).catch(submitError);
     }
@@ -753,21 +843,24 @@ function loadFocusPatient () {
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><span id="exerciseTitle">Patient Exercises</span><br>';
+
+      outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><span id="exerciseTitle">Patient Exercises</span>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises.length; j++){
                   // adding exercises
-                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br>';
+
+                  outBoxHTML += '<table style="width:100%"><tr><td><div id="exerciseText">' + pfp.exercises[j].name + '</div></td><td><div id="exerciseTextStreak">Streak</div></td><td><div id="exerciseTextPain">Pain</div></td></tr>';
                   // adding exercise sets and seconds
-                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div>';
+                  outBoxHTML += '<tr><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></td><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div></td>';
                   // adding pain
-                  if (pfp.exercises[j].pain){
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div><br><br>';
+                  if (pfp.exercises[j].pain.painInput){
+                      outBoxHTML += '<td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div></td></tr></table><br><br>';
                   }
                   else{
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">N/A</div><br><br>';
+                      outBoxHTML += '<td><div class="exercise-label" id="exercise-label">N/A</div></td></tr></table><br><br>';
                   }
 
                   // adding delete and edit buttons for pts
@@ -799,7 +892,7 @@ function loadFocusPatient () {
     }
 
     if (!isPatient) {
-        outBoxHTML += '<button onclick="submitNotes(' + pfp.id + ')">Update Notes</button>';
+        outBoxHTML += '<div class="buttonDiv" onclick="submitNotes(' + pfp.id + ')">Update Notes</div>';
     }
 
     // percentage-box
@@ -991,13 +1084,14 @@ function loadExercises(patId, patIndex) {
     }).then(function(res) {
         if (!res.ok) return submitError(res);
         res.json().then(function (data) {
-            var patients = JSON.parse(localStorage.patients);
-            for (var i = 0; i < data.length; i++){
-                patients[patIndex].exercises.push(data[i]);
-                loadExercisesPain(data[i].id, patIndex, i);
-                //console.log(loadExercisesPain(data[i].id, patIndex));
+            if (data != []) {
+                var patients = JSON.parse(localStorage.patients);
+                for (var i = 0; i < data.length; i++){
+                    patients[patIndex].exercises.push(data[i]);
+                    loadExercisesPain(data[i].id, patIndex, i);
+                }
+                localStorage.patients = JSON.stringify(patients);
             }
-            localStorage.patients = JSON.stringify(patients);
         });
     }).catch(submitError);
 }
@@ -1008,9 +1102,11 @@ function loadExercisesPain(exId, patIndex, exIndex) {
     }).then(function(res) {
         if (!res.ok) return;
         res.json().then(function (data) {
-            var patients = JSON.parse(localStorage.patients);
-            patients[patIndex].exercises[exIndex].pain = data;
-            localStorage.patients = JSON.stringify(patients);
+            if (data != {}) {
+                var patients = JSON.parse(localStorage.patients);
+                patients[patIndex].exercises[exIndex].pain = data;
+                localStorage.patients = JSON.stringify(patients);
+            }
         });
     }).catch(function(res) { if (res.status != 404) submitError(res) });
 }
@@ -1385,7 +1481,6 @@ function loadEditExercise() {
 //  Progress Graph
 // =============================================================
 function createGraph(id) {
-    console.log(id);
     document.getElementById('graph').innerHTML = '';
     document.getElementById('loading1').style.display = 'inline';
     document.getElementById('graph-container').style.display = 'none';
@@ -1419,7 +1514,7 @@ function createGraph(id) {
                 degreeValue.push(+(injuryInfo[i].measure));
                 var year = +(injuryInfo[i].date).substring(0,4);
                 var month = +(injuryInfo[i].date).substring(5,7) - 1;
-                var day = +(injuryInfo[i].date).substring(8,10) - 1;
+                var day = +(injuryInfo[i].date).substring(8,10);
                 dayMeasured.push((new Date(year, month, day)));
                 points.push([+(injuryInfo[i].measure), (i + 1)]);
             }

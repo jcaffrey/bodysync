@@ -1,0 +1,74 @@
+extends template
+
+block cssSheets
+    link(rel='stylesheet', href='/stylesheets/create-patient.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    style.
+        form input[type='radio'] {
+            opacity: 0;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            pointer-events: auto;
+        }
+block content
+    #loading
+    h1(style="text-align: center" id="injuryTitle") Add Injuries
+    br
+    br
+    form
+        .inputs#rom-inputs
+            .input-box
+                input.text-input.rom-name-input(type='text' name='motion-name' placeholder='ENTER TARGETED MOTION...' onblur="checkMotionRangeName(this.value)")
+                .rom1
+                    .rom-label Starting Range of Motion
+                    input.rom-input.degrees(maxlength='3' type='rom' name='rom1' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
+                .rom2
+                    .rom-label Ending Range of Motion
+                    input.rom-input.degrees.secondRom(maxlength='3' type='rom' name='rom2' placeholder='___° ' onblur="checkMotionRangeNum(this.value)")
+            .input-box.last-box#rom-add(onclick="addMotion()") Add Motion
+    p#success
+        script.
+            function checkMotionRangeName(str) {
+                var errorDiv = document.getElementById('rangeMotionError');
+                if (str == "") {
+                    errorDiv.innerHTML = "Missing Motion Name";
+                    errorDiv.style.height = "6%";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                }
+            }
+            function checkMotionRangeNum(str) {
+                var errorDiv = document.getElementById('rangeMotionError');
+                var num = parseInt(str)
+                if (num < 0 || isNaN(num)) {
+                    errorDiv.innerHTML = "Invalid Range of Motion";
+                    errorDiv.style.height = "6%";
+                }
+                else {
+                    while (errorDiv.firstChild) {
+                        errorDiv.removeChild(errorDiv.firstChild);
+                    }
+                }
+            }
+            function addMotion() {
+                var inputs = document.getElementById('rom-inputs')
+                var romadd = document.getElementById('rom-add')
+                var newMotion = document.createElement("div")
+                newMotion.setAttribute('class', 'input-box')
+                newMotion.innerHTML = "<input class='text-input rom-name-input' type='text' name='motion-name' placeholder='ENTER TARGETED MOTION...' onblur='checkMotionRangeName(this.value)'><div class='rom1'><div class='rom-label'>Starting Range of Motion</div><input class='rom-input degrees' type='rom' name='rom1' placeholder='___° ' onblur='checkMotionRangeNum(this.value)' maxlength='3'></div><div class='rom2'><div class='rom-label'>Ending Range of Motion</div><input class='rom-input degrees secondRom' type='rom' name='rom2' placeholder='___° ' onblur='onblur='checkMotionRangeNum(this.value)' maxlength='3'></div>"
+                inputs.insertBefore(newMotion, romadd)
+            }
+            function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 40) && (charCode != 41) && (charCode != 45))
+                    return false;
+
+                return true;
+            }
+
+block submitForm
+    button.footerButton#buttonRight(type='button' onclick='confirmSubmit(\'submitInjuries\')') #{footerButton2}
