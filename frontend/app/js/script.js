@@ -1502,7 +1502,8 @@ function createGraph(id) {
             .scale(y)
             .ticks(5)
             .tickSize(0)
-            .orient("left");
+            .orient("left")
+            .tickFormat(function(d) { return d + "°"; });
 
         graph.append("svg:g")
             .attr("class", "x axis")
