@@ -157,6 +157,11 @@ function headers() {
     };
 }
 
+function confirmSubmit() {
+    document.getElementById('confirm-modal').innerHTML =
+        '<div class="modal" id="submit-modal" style="display:none;"><h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab" id="submit-btn" onclick="localStorage.confirm = \'false\'; continueForm()">No</button><button class="buttonTab" id="submit-btn2" onclick="localStorage.confirm = \'true\'; continueForm()">Yes</button><div id="error-label"></div></div>';
+}
+
 function submitForm() {
     var data = {};
     var errorMessage = '';
@@ -266,12 +271,50 @@ function submitPatient() {
                         }).catch(submitError);
                     }(i))
                 }
+
+                // wait for POST to finish
                 setTimeout(function() {
                     window.location = '/patients';
                 }, 1000);
             });
         }).catch(submitError);
     }
+}
+
+function submitInjuries() {
+    form.style.display = 'none';
+    document.getElementById('injuryTitle').style.display = 'none';
+    document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
+
+    var data = {};
+    var injuries = document.getElementsByClassName('rom-name-input');
+    var degrees = document.getElementsByClassName('degrees');
+
+    for (var i = 0; i < injuries.length; i++) {
+        (function(x) {
+            fetch('/patients/' + JSON.parse(localStorage.focusPatient).id + '/injuries', {
+                headers: {
+                    'x-access-token': localStorage.token,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    name: injuries[x].value,
+                    injuryFromSurgery: "true"
+                })
+            }).then(function (res1) {
+                if (!res1.ok) return submitError(res1);
+                else return res1.json().then(function (result1) {
+                    postMetric(result1.id, degrees[2 * x].value, degrees[(2 * x) + 1].value, degrees[(2 * x) + 1].value);
+                })
+            }).catch(submitError);
+        }(i))
+    }
+
+    // wait for POST to finish
+    setTimeout(function() {
+        window.location = '/patients';
+    }, 1000);
 }
 
 function submitPT() {
@@ -799,7 +842,7 @@ function loadFocusPatient () {
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><button onclick="window.location=\'/add-injury\'">Add Injury</button><br><br><br><span id="exerciseTitle">Patient Exercises</span><br>';
+      outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><br><span id="exerciseTitle">Patient Exercises</span><br>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
@@ -845,7 +888,7 @@ function loadFocusPatient () {
     }
 
     if (!isPatient) {
-        outBoxHTML += '<button onclick="submitNotes(' + pfp.id + ')">Update Notes</button>';
+        outBoxHTML += '<div class="buttonDiv" onclick="submitNotes(' + pfp.id + ')">Update Notes</div>';
     }
 
     // percentage-box
