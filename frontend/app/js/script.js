@@ -843,21 +843,24 @@ function loadFocusPatient () {
     }
       outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
       // getting exercise set
-      outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><br><span id="exerciseTitle">Patient Exercises</span><br>';
+
+      outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><span id="exerciseTitle">Patient Exercises</span>';
 
       if (pfp.exercises.length > 0) {
               // adding list of exercises
               for (var j = 0; j < pfp.exercises.length; j++){
                   // adding exercises
-                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br><span><div id="exerciseText">' + pfp.exercises[j].name + '</div><div id="exerciseTextStreak">Streak</div><div id="exerciseTextPain">Pain</div></span><br>';
+                  outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br>';
+
+                  outBoxHTML += '<table style="width:100%"><tr><td><div id="exerciseText">' + pfp.exercises[j].name + '</div></td><td><div id="exerciseTextStreak">Streak</div></td><td><div id="exerciseTextPain">Pain</div></td></tr>';
                   // adding exercise sets and seconds
-                  outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div>';
+                  outBoxHTML += '<tr><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></td><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div></td>';
                   // adding pain
-                  if (pfp.exercises[j].pain){
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div><br><br>';
+                  if (pfp.exercises[j].pain.painInput){
+                      outBoxHTML += '<td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div></td></tr></table><br><br>';
                   }
                   else{
-                      outBoxHTML += '<div class="exercise-label" id="exercise-label">N/A</div><br><br>';
+                      outBoxHTML += '<td><div class="exercise-label" id="exercise-label">N/A</div></td></tr></table><br><br>';
                   }
 
                   // adding delete and edit buttons for pts
