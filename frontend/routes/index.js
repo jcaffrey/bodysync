@@ -274,10 +274,6 @@ router.get('/create-patient', function(req, res, next) {
     return res.render('create-patient', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-router.get('/new-exercise', function(req, res, next) {
-    return res.render('new-exercise');
-});
-
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
