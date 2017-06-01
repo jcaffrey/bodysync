@@ -16,6 +16,11 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        proPicUrl: {
+            type: DataTypes.STRING,
+            defaultValue: 'https://s3.amazonaws.com/bodysync-photo-upload/Josh+Seides.jpg',
+            allowNull: true
+        },
         forgotToken: {
             type: DataTypes.STRING
         },

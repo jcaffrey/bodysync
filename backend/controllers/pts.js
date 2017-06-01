@@ -25,6 +25,7 @@ module.exports.createPt = (req, res, next) => {
     models.pt.create({
         name: req.body.name,
         email: req.body.email,
+        proPicUrl: req.body.proPicUrl,
         phoneNumber: req.body.phoneNumber,
         phoneProvider: 'att',
         isAdmin: false,
