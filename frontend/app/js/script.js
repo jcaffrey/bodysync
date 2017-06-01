@@ -329,6 +329,7 @@ function submitPT() {
     if (form.email.value && !validateEmail(form.email)) errorMessage += 'Email address is invalid.';
     data.email = form.email.value;
     if (form.phone.value) data.phoneNumber = form.phone.value;
+    if (localStorage.pictureUrl !== '') data.proPicUrl = localStorage.pictureUrl;
 
     if (form.name.value && form.email.value && form.phone.value) {
         fetch('/pts', {
