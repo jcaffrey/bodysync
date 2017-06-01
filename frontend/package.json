@@ -25,5 +25,9 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-lineending": "^1.0.0",
     "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node": "6.9.2",
+    "npm": "3.10.9"
   }
 }
