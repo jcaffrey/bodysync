@@ -29,13 +29,13 @@ values
 -- patients
 
 insert into patients 
-    (name, hash, phoneNumber, phoneProvider, email, isRestrictedFromRom, surgeryType, surgeonName, age, ptId, createdAt, updatedAt, ptNotes)
+    (name, hash, phoneNumber, phoneProvider, email, isRestrictedFromRom, surgeryType, surgeonName, age, ptId, createdAt, updatedAt, ptNotes, proPicUrl)
 values
-    ('Josh Smith', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh1@gmail.com', false, 'BeingABaby', 'Bob Smith', 12, (select id from pts where name = 'Jeremy Welborn'), now(), now(), 'What a beast.'),
-    ('Josh Seides', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh@gmail.com', false, 'BeingABaby', 'Jim Green', 19, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'This dude is amazing!'),
-    ('David Malan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'dave@gmail.com', false, 'BeingABaby', 'Lane Rogers', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Great work so far.'),
-    ('Zamyla Chan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'zamyla@gmail.com', false, 'Walkthroughs', 'Mats Zuccarello', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), null),
-    ('Sam Pelletier', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'sam@gmail.com', false, 'Rude', 'Henrik Lundqvist', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Needs some help.');
+    ('Josh Smith', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh1@gmail.com', false, 'BeingABaby', 'Bob Smith', 12, (select id from pts where name = 'Jeremy Welborn'), now(), now(), 'What a beast.', 'https://s3.amazonaws.com/bodysync-photo-upload/Josh+Seides.jpg'),
+    ('Josh Seides', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'josh@gmail.com', false, 'BeingABaby', 'Jim Green', 19, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'This dude is amazing!', 'https://s3.amazonaws.com/bodysync-photo-upload/Josh+Seides.jpg'),
+    ('David Malan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'dave@gmail.com', false, 'BeingABaby', 'Lane Rogers', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Great work so far.', 'https://s3.amazonaws.com/bodysync-photo-upload/David+Malan.jpg'),
+    ('Zamyla Chan', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'zamyla@gmail.com', false, 'Walkthroughs', 'Mats Zuccarello', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), null, 'https://s3.amazonaws.com/bodysync-photo-upload/Zamyla+Chan.jpg'),
+    ('Sam Pelletier', '$2a$08$tfLDCj0ypAzW20TxF4B7N.hqUhzmdYBUk5.RsE3QRbiAZVvh51Pa.', '16788233590', 'att', 'sam@gmail.com', false, 'Rude', 'Henrik Lundqvist', 12, (select id from pts where name = 'Joey Caffrey'), now(), now(), 'Needs some help.', 'https://s3.amazonaws.com/bodysync-photo-upload/Sam+Pelletier.jpg');
 
 -- injuries 
 insert into injuries 

@@ -17,7 +17,10 @@ block content
         .inputs
             .input-box#patname
                 input.text-input(type='name' name='name' placeholder='John Smith ' onblur="checkName(this.value)" maxlength="24")
-                img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
+                .input-name Name
+            .input-box
+                input.text-input#file-upload(type='file' name='file-upload' onchange='handleFileInput()')
+                .input-name Photo
             .input-box
                 input.text-input(type='email' name='email' placeholder='abc@xyz.com' onblur="checkEmail(this.value)" maxlength="50")
                 .input-name Email
@@ -156,3 +159,6 @@ block content
 
 block submitForm
     button.footerButton#buttonRight(type='button' onclick='confirmSubmit(\'submitPatient\')') #{footerButton2}
+
+block postScript
+    script(src='/js/photoUpload.min.js')

@@ -3,6 +3,7 @@ const router = express.Router();
 const config = require('../app/models/config');
 const auth = require('./auth');
 const request = require('request');
+const aws = require('aws-sdk');
 
 router.get('/', function(req, res, next) {
     return res.render('login', { url: 'mailto:prompttherapysolutions@gmail.com', footerButton: 'Contact', footerButton2: 'Submit'})
@@ -315,5 +316,36 @@ router.get('/error', function(req, res, next) {
     return res.render('error');
 });
 
+// AWS photo upload
+router.get('/sign-s3', (req, res, next) => {
+    const s3 = new aws.S3({
+        accessKeyId: config.AWS_ACCESS_KEY_ID,
+        secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+        signatureVersion: 'v4',
+        region: 'us-east-1',
+    });
+    const fileName = req.query['file-name'];
+    const fileType = req.query['file-type'];
+    const s3Params = {
+        Bucket: config.S3_BUCKET,
+        Key: fileName,
+        Expires: 60,
+        ContentType: fileType,
+        ACL: 'public-read'
+    };
+
+    s3.getSignedUrl('putObject', s3Params, (err, data) => {
+        if(err){
+            console.log(err);
+            return res.end();
+        }
+        const returnData = {
+            signedRequest: data,
+            url: `https://${config.S3_BUCKET}.s3.amazonaws.com/${encodeURIComponent(fileName)}`
+        };
+        res.write(JSON.stringify(returnData));
+        res.end();
+    });
+});
 
 module.exports = router;

@@ -238,6 +238,7 @@ function submitPatient() {
     if (form.isRestrictedFromRom.value) data.isRestrictedFromRom = form.isRestrictedFromRom.value;
     if (form.age.value) data.age = form.age.value;
     if (form.weight.value) data.weight = form.weight.value;
+    if (localStorage.pictureUrl !== '') data.proPicUrl = localStorage.pictureUrl;
 
     if (form.name.value && form.email.value && form.phone.value && form.isRestrictedFromRom.value) {
         fetch('/pts/' + localStorage.id + '/patients', {
@@ -588,18 +589,7 @@ function loadPatients(patients) {
                     var percent = (sum / count).toFixed(1);
                     var indicator = color(percent);
 
-                    // include default pictures for users without uploaded pictures
-                    switch (psd[i].name) {
-                        case 'Josh Seides':
-                        case 'David Malan':
-                        case 'Zamyla Chan':
-                        case 'Sam Pelletier':
-                            pic.src = '../../img/' + psd[i].name + '.jpg';
-                            break;
-                        default:
-                            pic.src = '../../img/Josh Seides.jpg';
-                    }
-
+                    pic.src = psd[i].proPicUrl;
                     pic.setAttribute('id', 'profileImg');
                     prog.src = indicator[1];
                     prog.setAttribute('id', indicator[2]);
@@ -766,18 +756,8 @@ function loadFocusPatient () {
     // html for pt-box
     var ptBox = document.createElement('div');
     // adding pic-box
-    var source;
-    switch (pfp.name) {
-        case 'Josh Seides':
-        case 'David Malan':
-        case 'Zamyla Chan':
-        case 'Sam Pelletier':
-            source =  pfp.name;
-            break;
-        default:
-            source = 'Josh Seides';
-    }
-    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="../../img/' + source + '.jpg'
+
+    var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="' + pfp.proPicUrl
         + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
     // adding info-box
     ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +

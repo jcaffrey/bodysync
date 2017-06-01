@@ -5,5 +5,10 @@ module.exports = {
     apiUrl: process.env.APIURL || 'http://localhost:3000',
 
     // secret for creating tokens
-    secret: 'thisisthesecret'
+    secret: 'thisisthesecret',
+
+    // AWS photo upload settings
+    AWS_ACCESS_KEY_ID: 'AKIAI5SG5LBSUSQCYM4Q',
+    AWS_SECRET_ACCESS_KEY: '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',
+    S3_BUCKET: 'bodysync-photo-upload'
 };

@@ -4,3 +4,4 @@ node_modules/
 bootstrap.js
 *.min.js
 *.log
+.env

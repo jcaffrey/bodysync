@@ -21,7 +21,10 @@ block content
             .inputs
                 .input-box#patname
                     input.text-input(type='name' name='name' placeholder='John Smith ' onblur="checkName(this.value)" maxlength="24")
-                    img.input-name(src="http://localhost:3001/img/profile_pic.jpg" alt="Icon")
+                    .input-name Name
+                .input-box
+                    input.text-input#file-upload(type='file' name='file-upload' onchange='handleFileInput()')
+                    .input-name Photo
                 .input-box
                     input.text-input(type='text' name='ptCenter' placeholder='Premier-Vineland' maxlength="50")
                     .input-name PT Center
