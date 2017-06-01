@@ -1,8 +1,8 @@
 module.exports = {
-    port: 3001,
+    port:  process.env.PORT || 3001,
 
     // location of backend, do not include trailing /
-    apiUrl: 'http://localhost:3000',
+    apiUrl: process.env.APIURL || 'http://localhost:3000',
 
     // secret for creating tokens
     secret: 'thisisthesecret'
