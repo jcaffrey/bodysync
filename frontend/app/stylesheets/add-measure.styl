@@ -126,6 +126,10 @@ form h1
     float left
     text-align left
     font-size 45px
+    @media all and (max-width: 770px)
+      font-size 30px
+    @media all and (max-width: 350px)
+      font-size 25px
 .num input
     text-align right
     color $mainColor
@@ -140,8 +144,13 @@ form h1
     padding 0
     outline none
     border none
+    @media all and (max-width: 770px)
+      font-size 30px
+    @media all and (max-width: 350px)
+      font-size 25px
 .num input:focus
     outline none
 
-
-
+#oldValue
+  color #000000
+  text-align left

@@ -1312,7 +1312,8 @@ function loadAddMeasure () {
                 '<div class="input-box input-bottom">' +
                 '<div class="measure-container">' +
                 '<div class="m-old">' +
-                '<div class="num"><span>' + data.progress[i][2] + '</span></div>' +
+                '<div class="num">' +
+                '<input type="text" id="oldValue" value="' + data.progress[i][2] + '" readonly></div>' +
                 '<div class="m-label">PREVIOUS</div></div>' +
                 '<div class="m-new">' +
                 '<div class="num">' +

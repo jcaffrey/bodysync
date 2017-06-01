@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "build": "npm install && grunt publish",
-    "dev": "grunt & nodemon frontend-server.js"
+    "dev": "grunt & nodemon frontend-server.js",
+    "start": "grunt & nodemon frontend-server.js"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -15,9 +16,7 @@
     "morgan": "~1.6.1",
     "pug": "^2.0.0-beta6",
     "request": "^2.79.0",
-    "serve-favicon": "~2.3.0"
-  },
-  "devDependencies": {
+    "serve-favicon": "~2.3.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-stylus": "^1.2.0",
