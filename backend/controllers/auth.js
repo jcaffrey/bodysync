@@ -290,12 +290,13 @@ exports.resetPassword = (req, res, next) => {
                             intro: 'Password reset successful - Welcome back to Prompt Therapy Solutions!',
                             action: {
                                 instructions: 'To login, click here:',
-                                button : {
+                                button: {
                                     color: '#2e3192',
                                     text: 'Login',
                                     link: config.frontendRoute + '/login/'
                                 }
 
+                            }
                         }
                     }
 

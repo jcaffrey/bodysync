@@ -59,7 +59,7 @@ router.route('/login/pt')
 router.route('/login/patient')
     .post(auth.loginPatient);
 
-// TODO: TEST THIS WITH FRONTEND
+// TODO: MAKE SURE THE FRONTEND PINGS THIS ON LOGOUT
 router.route('/logoff')
     .get(auth.ptRequired, ptSessions.updateSession);
 
@@ -74,10 +74,10 @@ router.route('/reset/:token')
 
 // routes for admin
 router.route('/pts')
-    .get(auth.adminRequired, pts.getPts)  // not a view
+    // .get(auth.adminRequired, pts.getPts)  // not a view
     .post(auth.adminRequired, pts.createPt);
-router.route('/patients') 
-    .get(auth.adminRequired, patients.getAllPatients); // not a view, just for development
+// router.route('/patients')
+//     .get(auth.adminRequired, patients.getAllPatients); // not a view, just for development
 router.route('/pts/:id')
     .get(auth.ptRequired, pts.getPtById) // not a view
    // .put(auth.ptRequired, pts.updatePt) // Access: pt should be able to self update?
