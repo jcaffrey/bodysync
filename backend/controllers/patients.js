@@ -9,7 +9,9 @@ var jwt = require('jsonwebtoken');
 var auth = require('./auth');
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
-var config = require('../config/config.json')[env];  
+var config = require('../config/config.json')[env];
+var nodemailer = require('nodemailer');
+var Mailgen = require('mailgen');
 
 
 /**
@@ -97,7 +99,8 @@ module.exports.createPatient = (req, res, next) => {
                                 // 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                             };
                             transporter.sendMail(mailOptions, function (err) {
-
+                                if(err)
+                                    return next(err); // test this.
                             });
 
                             res.json(pat);
@@ -353,7 +356,7 @@ module.exports.deletePatient = (req, res, next) => {
 //     })
 // }
 
-};
+//};
 
 // module.exports.emailPtsAboutRom = (req, res, next) => {
 //     // figure out who needs to get emailed - if a certain romMetricMeasures hasn't been created in more than a week

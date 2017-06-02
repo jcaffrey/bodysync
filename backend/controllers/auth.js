@@ -5,7 +5,8 @@ var jwt = require('jsonwebtoken');
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
-var nodemailer = require('nodemailer')
+var nodemailer = require('nodemailer');
+var Mailgen = require('mailgen');
 
 
 
@@ -45,8 +46,6 @@ exports.loginPt = (req, res, next) => {
                             res.json({token: token});
                             return next();
                         });
-
-
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
 
@@ -60,7 +59,6 @@ exports.loginPt = (req, res, next) => {
                             res.json({token: token});
                             return next();
                         });
-
                 }
             }).catch(function (err) {
                 return next(err);
@@ -137,14 +135,39 @@ exports.forgotPassword = (req, res, next) => {
 
                 var patPromise = pat.save();
                 patPromise.then((pat) => {
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To resent your password, please click here:',
+                                button : {
+                                    color: '#2e3192',
+                                    text: 'Reset your password',
+                                    link: config.frontendServer + '/reset-token/' + token + '/false'
+                                }
+                            },
+                            outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
                         to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Forgot Password',
-                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + config.frontendServer + '/reset-token/' + token + '/false' + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        subject: 'Forgot Password',
+                        html: emailBody,
+                        text: emailText,
                     };
                     transporter.sendMail(mailOptions);
                 });
@@ -175,15 +198,42 @@ exports.forgotPassword = (req, res, next) => {
 
                 var ptPromise = pt.save();
                 ptPromise.then((pt) => {
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+
+                    var e = {
+                        body: {
+                            intro: 'Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To resent your password, please click here:',
+                                button : {
+                                    color: '#2e3192',
+                                    text: 'Reset your password',
+                                    link: config.frontendServer + '/reset-token/' + token + '/false'
+                                }
+                            },
+                            outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
                         to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Forgot Password',
-                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + config.frontendServer + '/reset-token/' + token + '/true' + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        subject: 'Forgot Password',
+                        html: emailBody,
+                        text: emailText,
                     };
+
                     transporter.sendMail(mailOptions);
                 });
             }
@@ -225,14 +275,41 @@ exports.resetPassword = (req, res, next) => {
                 console.log('updated hash' + pat.hash);
                 pat.forgotToken = null;
                 pat.save().then(() => {
+
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Password reset successful - Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To login, click here:',
+                                button : {
+                                    color: '#2e3192',
+                                    text: 'Login',
+                                    link: config.frontendRoute + '/login/'
+                                }
+
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
-                        to: pat.email,
+                        to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Reset Password Successfully',
-                        text: 'You are receiving this because you have successfully reset your password.\n\n' +
-                        'Click here to login\n\n' +
-                        'http://' + config.frontendRoute + '/login/' + '\n\n'
+                        subject: 'Reset Successful',
+                        html: emailBody,
+                        text: emailText,
                     };
+
                     // TODO test this route
                     transporter.sendMail(mailOptions);
                     return res.status(200).send('successfully reset patient pw')
