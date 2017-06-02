@@ -10,8 +10,6 @@ var http = require('http');
 var models = require('../models');
 
 // Source and set port, create server
-// CAN REWRITE THIS USING CODE FROM DORM-SUPPLIES IF WANT
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
   if (isNaN(port)) {  return val; }
@@ -22,7 +20,6 @@ function normalizePort(val) {
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 var server = http.createServer(app);
-
 
 // sync schemas / model schemas defined in app to the db (think of this as creating the tables we want)
 models.sequelize.sync().then(function() {

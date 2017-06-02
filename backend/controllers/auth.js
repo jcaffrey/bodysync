@@ -38,6 +38,7 @@ exports.loginPt = (req, res, next) => {
                     pt.save()
                         .then(function () {
                             // returns token to frontend (and backend)..
+                            console.log('here');
                             req.body.token = token;
                             res.json({token: token});
                             return next();
@@ -45,11 +46,13 @@ exports.loginPt = (req, res, next) => {
 
 
                 } else {
-                    var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin}
+                    console.log('hfd');
+                    var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin};
 
                     var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // expiresIn is in seconds
 
                     pt.token = token;
+                    console.log(pt);
                     pt.save()
                         .then(function () {
                             // returns token to frontend (and backend)..

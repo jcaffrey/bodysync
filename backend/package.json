@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dump": "mysql --host=us-cdbr-iron-east-03.cleardb.net --user=b5e6c7c87a412c --password=10c182d1 --reconnect heroku_0e8f5ec101ddcc6 < ./config/dev-db-dump.sql",
-    "start": "node ./bin/www && npm run dump"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
