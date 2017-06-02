@@ -340,13 +340,38 @@ exports.resetPassword = (req, res, next) => {
                 pt.forgotToken = null;
                 pt.save().then(() => {
 
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Password reset successful - Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To login, click here:',
+                                button: {
+                                    color: '#2e3192',
+                                    text: 'Login',
+                                    link: config.frontendRoute + '/login/'
+                                }
+
+                            }
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
-                        to: pt.email,
+                        to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Reset Password Successfully',
-                        text: 'You are receiving this because you have successfully reset your password.\n\n' +
-                        'Click here to login\n\n' +
-                        'http://' + config.frontendRoute + '/login/' + '\n\n'
+                        subject: 'Reset Successful',
+                        html: emailBody,
+                        text: emailText,
                     };
                     // TODO test this route
                     transporter.sendMail(mailOptions);
