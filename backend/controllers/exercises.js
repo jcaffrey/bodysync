@@ -135,13 +135,14 @@ module.exports.getExercises = (req, res, next) => {
                 models.patient.findOne({where:{id: req.params.id}}).then(function(pat) {
                     if(Object.keys(pat).length !== 0)
                     {
-                        console.log('PRINTING PAT ptId')
-                        console.log(pat.ptId);
-                        console.log(decoded.id);
+                        // console.log('PRINTING PAT ptId')
+                        // console.log(pat.ptId);
+                        // console.log(decoded.id);
                         if(pat.ptId == decoded.id)
                         {
-                            res.json(exercises);
-                            return next();
+                            return res.json(exercises);
+                            // res.json(exercises);
+                            // return next();
                         }
                         else
                         {
@@ -158,8 +159,9 @@ module.exports.getExercises = (req, res, next) => {
             {
                 if(decoded.id == req.params.id)
                 {
-                    res.json(exercises);
-                    return next();
+                    return res.json(exercises);
+                    // res.json(exercises);
+                    // return next();
                 }
                 else
                 {

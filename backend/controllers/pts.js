@@ -22,7 +22,7 @@ var config = require('../config/config.json')[env];
  */
 
 module.exports.createPt = (req, res, next) => {
-    // TODO add in authentication to make sure the admin is who their token says they are
+    // TODO add in authentication to make sure the admin is who their token says they are?
     models.pt.create({
         name: req.body.name,
         email: req.body.email,
@@ -44,31 +44,31 @@ module.exports.createPt = (req, res, next) => {
 
  */
 
-module.exports.getPts = (req, res, next) => {
-    models.pt.findAll({}).then(function(pts) {
-        res.json(pts);
-        return next();
-    });
-};
+// module.exports.getPts = (req, res, next) => {
+//     models.pt.findAll({}).then(function(pts) {
+//         res.json(pts);
+//         return next();
+//     });
+// };
 
 
-module.exports.getPtById = (req, res, next) => {
-  
-    if(auth.checkRequestIdAgainstId(req, res)) {
-        models.pt.findAll({ // should not be find all!!! this returns an array
-            where: {
-                id: req.params.id
-            }
-        }).then(function(pt) {
-            req.body.patientId =
-            res.json(pt);
-            return next();
-        });
-    }
-    
-    return;
-
-};
+// module.exports.getPtById = (req, res, next) => {
+//
+//     if(auth.checkRequestIdAgainstId(req, res)) {
+//         models.pt.findAll({ // should not be find all!!! this returns an array
+//             where: {
+//                 id: req.params.id
+//             }
+//         }).then(function(pt) {
+//             req.body.patientId = req.params.id
+//             res.json(pt);
+//             return next();
+//         });
+//     }
+//
+//     return;
+//
+// };
 
 
 /**

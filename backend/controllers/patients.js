@@ -159,12 +159,13 @@ module.exports.getPatients = (req, res, next) => {
     }
 };
 
-// not to be used in actual app, unless for an admin
-module.exports.getAllPatients = (req, res, next) => {
-    models.patient.findAll({}).then(function(patients) {
-        res.json(patients);
-    });
-};
+
+// / // not to be used in actual app, unless for an admin
+// module.exports.getAllPatients = (req, res, next) => {
+//     models.patient.findAll({}).then(function(patients) {
+//         res.json(patients);
+//     });
+// };
 /*
 module.exports.getPatientById = (req, res, next) => {
     models.patient.findone({
@@ -227,6 +228,7 @@ module.exports.getPatientById = (req, res, next) => {
 module.exports.updatePatientNotes = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
+    // TODO : test that req.body.ptNotes exists
 
     models.patient.findOne({
         where: {
@@ -237,8 +239,10 @@ module.exports.updatePatientNotes = (req, res, next) => {
         {
             if(pat.ptId == decoded.id)
             {
-                pat.ptNotes = req.body.ptNotes
+                pat.ptNotes = req.body.ptNotes || pat.ptNotes;
                 pat.save().then(() => {
+                    // req.body.patientId = req.params.id || pat.id; // don't need to store down an idea on ptSessions.updateSession
+                    res.json(pat);
                     return res.status(200).send('success');
                 }).catch((err) => {
                     return next(err);

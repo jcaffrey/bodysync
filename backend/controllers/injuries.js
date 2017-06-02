@@ -27,10 +27,10 @@ module.exports.createInjury = (req, res, next) => {
     }).then(function(patient) {
         if (Object.keys(patient).length !== 0) {
             // check the requesting pt has permission to view this patient
-            console.log(patient.ptId);
-            console.log(decoded.id);
-            console.log(patient.ptId === decoded.id);
-            console.log(patient.ptId == decoded.id);
+            // console.log(patient.ptId);
+            // console.log(decoded.id);
+            // console.log(patient.ptId === decoded.id);
+            // console.log(patient.ptId == decoded.id);
 
 
             if(patient.ptId === decoded.id) {

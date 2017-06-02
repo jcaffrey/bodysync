@@ -192,6 +192,7 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
                         {
                             if(decoded.id == pat.ptId)
                             {
+                                req.body.patientId = pat.id;  // this was the important change
                                 res.json(mostRecent);
                                 return next();
                             }

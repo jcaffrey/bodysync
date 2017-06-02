@@ -75,21 +75,21 @@ router.route('/reset/:token')
 // routes for admin
 router.route('/pts')
     // .get(auth.adminRequired, pts.getPts)  // not a view
-    .post(auth.adminRequired, pts.createPt);
+    .post(auth.adminRequired, pts.createPt);   // TODO add in authentication
 // router.route('/patients')
 //     .get(auth.adminRequired, patients.getAllPatients); // not a view, just for development
 router.route('/pts/:id')
-    .get(auth.ptRequired, pts.getPtById) // not a view
+    // .get(auth.ptRequired, pts.getPtById) // not a view
    // .put(auth.ptRequired, pts.updatePt) // Access: pt should be able to self update?
     .delete(auth.adminRequired, pts.deletePt); 
 
 // routes for pts to see patients
 router.route('/pts/:id/patients')
-    .get(auth.ptRequired, patients.getPatients, ptSessions.logSession)       // TODO: log this
-    .post(auth.ptRequired, patients.createPatient, ptSessions.updateSession);   // should patients have any access?
+    .get(auth.ptRequired, patients.getPatients, ptSessions.logSession)
+    .post(auth.ptRequired, patients.createPatient, ptSessions.updateSession);
 
 router.route('/patients/:id')
-    .get(auth.tokenRequired, patients.getPatientById, ptSessions.logSession)  //TODO only log if PT
+    .get(auth.tokenRequired, patients.getPatientById, ptSessions.logSession)
     .put(auth.ptRequired, patients.updatePatientNotes, ptSessions.updateSession) // Access: pt   **w/query
     .delete(auth.ptRequired, patients.deletePatient, ptSessions.updateSession);
 
@@ -121,7 +121,7 @@ router.route('/romMetrics/:id/romMetricMeasures')
 
 // simplified route for exercise content (injury training)
 router.route('/patients/:id/exercises')
-    .get(auth.tokenRequired, exercises.getExercises, ptSessions.logSession)
+    .get(auth.tokenRequired, exercises.getExercises) //, ptSessions.logSession)   // patient only: don't need to log session.
     // .put(auth.ptRequired, exercises.updateExercises, ptSessions.updateSession)
     .post(auth.ptRequired, exercises.createExercises, ptSessions.updateSession);
 
