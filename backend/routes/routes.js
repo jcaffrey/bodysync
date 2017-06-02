@@ -69,8 +69,8 @@ router.route('/forgotpassword')
 router.route('/reset/:token') 
     .post(auth.resetPassword);
 
-router.route('/notifyPts')
-    .get(pts.notifyPtsOnRom);  // security - need to know the secret to hit this route?/ make sure that this route is only hit at most once a day (and that you need more than a token to hit it)
+// router.route('/notifyPts')
+//     .get(pts.notifyPtsOnRom);  // security - need to know the secret to hit this route?/ make sure that this route is only hit at most once a day (and that you need more than a token to hit it)
 
 // routes for admin
 router.route('/pts')

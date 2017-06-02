@@ -95,6 +95,7 @@ function logout() {
             localStorage[key] = '';
         }
     }
+    fetch('/logout')
     window.location = '/';
 }
 

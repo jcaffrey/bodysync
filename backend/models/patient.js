@@ -36,6 +36,9 @@ module.exports = function(sequelize, DataTypes) {
                 isEmail: true
             }
         },
+        surgeonName: {
+            type: DataTypes.STRING
+        },
         // workers comp patients should have this set to true -> not allowed to see their ROM
         isRestrictedFromRom: {
             type: DataTypes.BOOLEAN,
