@@ -20,13 +20,15 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "b5e6c7c87a412c",
+    "password": "10c182d1",
+    "database": "heroku_0e8f5ec101ddcc6",
+    "host": "us-cdbr-iron-east-03.cleardb.net",
+    "frontend": "https://secure-falls-33539.herokuapp.com",
     "emailFromName": "Prompt Therapy Solutions",
     "emailFromAddr": "prompttherapysolutions@gmail.com",
     "emailPw": "HSADev678",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "frontendServer": "https://secure-falls-33539.herokuapp.com"
   }
 }
