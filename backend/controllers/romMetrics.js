@@ -198,14 +198,4 @@ module.exports.deleteRomMetric = (req, res, next) => {
         return next(err);
     })
 
-    // models.romMetric.destroy({
-    //     where: {
-    //         id: req.params.id
-    //     }
-    // }).then(function(instance) {
-    //     if (instance)
-    //         res.sendStatus(200);
-    //     else
-    //         res.status(404).send('sorry not found');
-    // });
 }

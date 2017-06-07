@@ -419,10 +419,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
-    // console.log(isPtRequired);
-    // console.log(isAdminRequired);
-    // console.log(decoded.isPt);
-    // console.log(decoded.isAdmin);
+
     if (isPtRequired && !decoded.isPt)
         return res.status(403).send('You do not have access');
 
@@ -450,7 +447,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
             req.body.token = token;
             next();
         })
-    // resource is not restricted to pts,  validate patient or pt, depending on the isPt token flag
+    // resource is not restricted to pts, validate patient or pt, depending on the isPt token flag
     } else {
         // query pt table if pt
         if (decoded.isPt) {
@@ -495,17 +492,12 @@ exports.checkRequestIdAgainstId = (req, res) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    // debugging
-    // console.log('token id: ' + String(decoded.id));
-    // console.log('query id: ' + String(req.params.id));
-
     if (req.params.id != decoded.id) {
         res.status(401).send('You are not authorized to see this resource');
         return false;
     } else {
         return true;
     }
-    // is bool best way to do this?
 }
 
 

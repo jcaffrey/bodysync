@@ -93,10 +93,6 @@ module.exports.createPatient = (req, res, next) => {
                                 subject: 'Welcome',
                                 html: emailBody,
                                 text: emailText
-                                // text: 'You are receiving this because you have requested to reset your password.\n\n' +
-                                // 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                                // config.frontendRoute + '/reset/' + token + '\n\n' +
-                                // 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                             };
                             transporter.sendMail(mailOptions, function (err) {
                                 if(err)
@@ -160,23 +156,6 @@ module.exports.getPatients = (req, res, next) => {
 };
 
 
-// / // not to be used in actual app, unless for an admin
-// module.exports.getAllPatients = (req, res, next) => {
-//     models.patient.findAll({}).then(function(patients) {
-//         res.json(patients);
-//     });
-// };
-/*
-module.exports.getPatientById = (req, res, next) => {
-    models.patient.findone({
-        where: {id: req.params.id}
-    }).then(function(patient) {
-        return res.json(patient);
-    });
-};
-*/
-
-
 module.exports.getPatientById = (req, res, next) => {
     // auth
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
@@ -203,7 +182,7 @@ module.exports.getPatientById = (req, res, next) => {
         // else if patient
         else {
             // if requesting patient is requested patient
-            if (decoded.id == req.params.id) { // should be === ?
+            if (decoded.id == req.params.id) {
                 return res.json(patient);
             } 
             else {
@@ -241,7 +220,6 @@ module.exports.updatePatientNotes = (req, res, next) => {
             {
                 pat.ptNotes = req.body.ptNotes || pat.ptNotes;
                 pat.save().then(() => {
-                    // req.body.patientId = req.params.id || pat.id; // don't need to store down an idea on ptSessions.updateSession
                     res.json(pat);
                     return res.status(200).send('success');
                 }).catch((err) => {
@@ -280,17 +258,12 @@ module.exports.deletePatient = (req, res, next) => {
     }).then(function (patient) {
         if (patient.length !== 0)
         {
-            console.log(patient.length);
-            console.log(patient.ptId);
-            // if pt
             if (decoded.isPt) {
                 // if requesting pt is requested patient's pt
                 if (decoded.id === patient.ptId) {
-                    // DESTROY IF THIS IS THE CASE
                     patient.destroy();
                     res.json(patient);
                     return next();
-                    // return res.json(patient);
                 }
                 else {
                     return res.status(401).send('You are not authorized to destroy this resource');
@@ -305,381 +278,3 @@ module.exports.deletePatient = (req, res, next) => {
                             // Error: No default engine was specified and no extension was provided.
     });
 };
-
-
-
-// TODO figure out how to make sure that this is called once a week
-// ? - create route and ping this route from the frontend once a week
-// have a timer on the backend?
-// var emailData = [] // push ptEmail objects into this
-
-// function packageData(measure, index, measuresArr) {
-//     models.romMetric.findAll({
-//         where: {
-//             id : measure.romMetricId
-//         }
-//     }).then(function(metric) {
-//         if(metric.length !== 0)
-//         {
-//             emailData.push(metric)
-//             console.log('here')
-//         }
-//     })
-// }
-
-// function printPts(ele, ind, ptArr) {
-//     console.log('pts['+ ind +'].email' + '=' + ptArr[ind].email);
-// }
-//
-// function findPatientsPt(ele, ind, patArr) {
-//     console.log('patients['+ ind +'].email' + '=' + patArr[ind].email);
-//
-//     models.pt.findAll({
-//         where: {
-//             id: patArr[ind].ptId
-//         }
-//     }).then(function(pts) {
-//         if(pts.length !== 0)
-//         {
-//             // loop over pts
-//             console.log('printing pts')
-//             pts.forEach(printPts);
-//             // call findMeasuresToUpdate
-//         }
-//     })
-// }
-//
-// module.exports.emailPtsAboutRom = (req, res, next) => {
-//     models.patient.findAll({}).then(function(pats) {
-//         if(pats.length !== 0)
-//         {
-//             pats.forEach(findPatientsPt);
-//             console.log('finsihed');
-//             return;
-//         } else return res.status(404).send('no pts')
-//     })
-// }
-
-//};
-
-// module.exports.emailPtsAboutRom = (req, res, next) => {
-//     // figure out who needs to get emailed - if a certain romMetricMeasures hasn't been created in more than a week
-//     // package the email for that person - thing to measure, name of person, link to measure that person (need the romMetric id to make this link)
-//
-//
-//     models.romMetricMeasure.findAll({
-//         where: {
-//             dayMeasured: {
-//                 $lte: moment().subtract(7, 'days').toDate()
-//             } // only find things that were measured more than 7 days ago.
-//         }
-//     }).then(function(measuresArr) {
-//         if(measuresArr.length !== 0)
-//         {
-//             console.log('number of iters' + measuresArr.length)
-//             // measuresArr.forEach(packageData)
-//
-//             for(var i = 0; i < measuresArr.length; i++)
-//             {
-//                 (function(x) {
-//                     models.romMetric.findOne({
-//                         where: {
-//                             id : measuresArr[x].romMetricId
-//                         }
-//                     }).then(function(metric) {
-//                         if(Object.keys(metric).length !== 0)
-//                         {
-//                             // find the injury.
-//                             models.injury.findOne({
-//                                 where: {
-//                                     id: metric.injuryId
-//                                 }
-//                             }).then(function(injury) {
-//                                 if(Object.keys(injury).length !== 0)
-//                                 {
-//                                     // find the patient.
-//                                     models.patient.findOne({
-//                                         where: {
-//                                             id: injury.patientId
-//                                         }
-//                                     }).then(function(pat) {
-//                                         if(Object.keys(pat).length !== 0)
-//                                         {
-//                                             // find the pt
-//                                             models.pt.findOne({
-//                                                 where: {
-//                                                     id: pat.ptId
-//                                                 }
-//                                             }).then(function(pt) {
-//                                                 if(Object.keys(pt).length !== 0)
-//                                                 {
-//                                                     // now we have everything!
-//                                                     // add to the global emailData. either add new or update old
-//
-//
-//                                                     var index = -1;
-//                                                     for(var j = 0; emailData.length; j++)
-//                                                     {
-//                                                         // TODO: error is emailData[j].email
-//                                                         console.log(emailData);
-//                                                         if(emailData[j].email && emailData[j].email === pt.email)
-//                                                         {
-//                                                             var index = j;
-//                                                         }
-//                                                     }
-//                                                     console.log('printing email: ' + pt.email)
-//                                                     if(index !== -1)
-//                                                     {
-//                                                         console.log('INDEX IS: ' + index);
-//
-//                                                         // insert into patient object at index in emailData
-//                                                         var patObj = {
-//                                                             patEmail: pat.email
-//                                                             // measureName : measuresArr[x].name,
-//                                                             // injuryName: injury.name,
-//                                                             // orderCt: x,
-//                                                         }
-//                                                         console.log('IF ADDING DATA IN IF')
-//                                                         var e = pt.email;
-//
-//                                                         emailData[index].e.push(patObj)
-//                                                     }
-//                                                     else {
-//                                                         // create new ptObject which has an array with the patient Object
-//                                                         // push ptObject to the emailData array
-//                                                         var e = pt.email;
-//
-//                                                         var ptObj = {
-//                                                             e: []
-//                                                         }
-//                                                         ptObj.e.push({
-//                                                             patEmail: pat.email
-//                                                             // measureName : measuresArr[x].name,
-//                                                             // injuryName: injury.name,
-//                                                             // orderCt: x,
-//                                                         })
-//
-//
-//                                                         // var ptObj = {
-//                                                         //     e: [{
-//                                                         //         patEmail: pat.email
-//                                                         //         // measureName : measuresArr[x].name,
-//                                                         //         // injuryName: injury.name,
-//                                                         //         // orderCt: x,
-//                                                         //     }]
-//                                                         // }
-//                                                         console.log('ELSE ADDING DATA IN ELSE')
-//                                                         emailData.push(ptObj)
-//                                                     }
-//                                                     console.log(JSON.stringify(emailData))
-//                                                     console.log('all the way')
-//                                                     // continue this massive loop :)...
-//                                                 }
-//                                             }).catch(function(err) {
-//                                                 console.log('pt')
-//                                                 console.log(err);
-//                                             })
-//                                         }
-//                                     }).catch(function(err) {
-//                                         console.log('pat')
-//                                         console.log(err);
-//                                     })
-//                                 }
-//                             }).catch(function(err) {
-//                                 console.log('injury')
-//                                 console.log(err);
-//                             })
-//                         }
-//                     }).catch(function(err) {
-//                         console.log('metric')
-//                         console.log(err);
-//                     })
-//                 })(i)
-//
-//             }
-//             console.log('OUT');
-//             res.json(emailData);
-//             return;
-//         }
-//     })
-//
-//
-// }
-
-// function sendEmails(data) {
-//
-// }
-//
-// module.exports.emailPtsAboutRom = (req, res, next) => {
-//
-//     models.romMetricMeasure.findAll({
-//         where: {
-//             dayMeasured: {
-//                 $lte: moment().subtract(7, 'days').toDate()
-//             } // only find things that were measured more than 7 days ago.
-//         }
-//     }).then(function(measures) {
-//         if(measures.length !== 0)
-//         {
-//             console.log('here');
-//             console.log(JSON.stringify(measures));
-//             var emailData = [];
-//             // loop over all measures
-//             for(var i = 0; i < measures.length; i++)
-//             {
-//                 // figure out who needs an email to be sent
-//                 // either create new ptObj or append to the existing one
-//
-//                 // loop over existing emailData arr to figure out if we need a new ptObj
-//                 if(emailData.length !== 0)
-//                 {
-//                     var isUpdated = false;
-//
-//                     for(var j = 0; j < emailData.length; j++)
-//                     {
-//                         // console.log(emailData)
-//                         if(emailData[j].hasOwnProperty(measures[i].ptEmail))
-//                         {
-//                             isUpdated = true;
-//                             // append to existing ptObj
-//                             var email = measures[i].ptEmail;
-//                             emailData[j][email].push({
-//                                 patientName: measures[i].patientName,
-//                                 metricsToMeasure: [{
-//                                     romMetricName: measures[i].romMetricName
-//                                 }]
-//                             })
-//                         }
-//                     }
-//                     if(!isUpdated)
-//                     {
-//                         // push new ptObj into emailData similar to below
-//                         var email = measures[i].ptEmail;
-//                         var ptObj = {}
-//                         ptObj[email] = [{
-//                             patientName: measures[i].patientName,
-//                             metricsToMeasure: [{
-//                                 romMetricName: measures[i].romMetricName
-//                             }]
-//                         }]
-//                         emailData.push(ptObj);
-//                     }
-//                 }
-//                 else
-//                 {
-//                     //     // push brand new ptObj into emailData (w/ one metricsToMeasure)
-//                     var email = measures[i].ptEmail;
-//
-//                     var ptObj = {}
-//                     ptObj[email] = [{
-//                         patientName: measures[i].patientName,
-//                         metricsToMeasure: [{
-//                             romMetricName: measures[i].romMetricName
-//                         }]
-//                     }]
-//
-//                     emailData.push(ptObj);
-//                 }
-//             }
-//
-//
-//             // SEND THESE EMAILS
-//             sendEmails(emailData);
-//
-//         }
-//     }).catch(function(err) {
-//         console.log('romMetricMeasure error');
-//         return next(err);
-//     })
-// }
-
-// module.exports.emailPtsAboutRom = (req, res, next) => {
-//
-//     models.romMetricMeasure.findAll({
-//         where: {
-//             dayMeasured: {
-//                 $lte: moment().subtract(7, 'days').toDate()
-//             } // only find things that were measured more than 7 days ago.
-//         }
-//     }).then(function(measures) {
-//         console.log('entering the if');
-//         if(measures.length !== 0)
-//         {
-//             console.log('printing measures..');
-//             console.log(JSON.stringify(measures));
-//             for(var i = 0; i < measures.length; i++)
-//             {
-//                 (function(x) {
-//                     models.romMetric.findOne({
-//                         where : {
-//                             id: measures[x].romMetricId
-//                         }
-//                     }).then(function(measure) {
-//                         if(Object.keys(measure).length !== 0)
-//                         {
-//                             console.log('printing measure.. at ' + x);
-//                         }
-//                     }).catch(function(err) {
-//                         console.log('romMetric error');
-//                         return next(err);
-//                     })
-//                 })(i)
-//             }
-//             console.log('OUT OF THE FOR LOOP')
-//         }
-//     }).catch(function(err) {
-//         console.log('romMetricMeasure error');
-//         return next(err);
-//     })
-// }
-
-// module.exports.emailPtsAboutRom = (req, res, next) => {
-//     Promise.all([
-//         models.romMetricMeasure.findAll({
-//             where: {
-//                 dayMeasured: {
-//                     $lte: moment().subtract(7, 'days').toDate()
-//                 } // only find things that were measured more than 7 days ago.
-//             }
-//         })
-//         models.romMetric.findAll({
-//
-//         })
-//
-//
-//     ]).then(function(results) {
-//         console.log(results[0]);
-//         return;
-//     })
-//
-//
-//     // models.patient.findAll({}).then(function(pats) {
-//     //     if(pats.length !== 0)
-//     //     {
-//     //         for(var i = 0; i < pats.length; i++)
-//     //         {
-//     //             // (function(x) {
-//     //             //     console.log('pats[i].email = '+pats[i].email);
-//     //
-//     //             var loopP = new Promise(success, ()=>{
-//     //                 models.pt.findAll({
-//     //                     where: {
-//     //                         id: pats[x].ptId
-//     //                     }
-//     //                 }).then(function(pts) {
-//     //                     if(pts.length !== 0)
-//     //                     {
-//     //                         for(var j = 0; j < pts.length; j++)
-//     //                         {
-//     //                             console.log('pts[j].email ='+ pts[j].email);
-//     //                         }
-//     //                     }
-//     //                 })
-//     //             })
-//     //
-//     //             // })(i)
-//     //
-//     //         }
-//     //     }
-//     // })
-// }
