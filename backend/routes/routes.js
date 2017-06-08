@@ -49,7 +49,7 @@ router.route('/login/pt')
 router.route('/login/patient')
     .post(auth.loginPatient);
 
-// TODO: MAKE SURE THE FRONTEND PINGS THIS ON LOGOUT
+// TODO: MAKE SURE THE FRONTEND PINGS THIS ON LOGOUT FOR PTS
 router.route('/logoff')
     .get(auth.ptRequired, ptSessions.updateSession);
 
