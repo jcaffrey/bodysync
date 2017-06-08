@@ -171,8 +171,7 @@ module.exports.updateSession = (req, res, next) => {
                             resourceRequested: ptSessions[0].resourceRequested,
                             createdAt: ptSessions[0].createdAt
                         }
-                        })
-
+                        });
                     if(req.url === '/logoff')
                         return res.status(200).send('successful logoff');
 
