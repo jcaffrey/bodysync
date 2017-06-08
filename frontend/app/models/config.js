@@ -2,7 +2,7 @@ module.exports = {
     port:  process.env.PORT || 3001,
 
     // location of backend, do not include trailing /
-    apiUrl: 'https://whispering-refuge-74086.herokuapp.com',
+    apiUrl: 'http://localhost:3000',
 
     // secret for creating tokens
     secret: 'thisisthesecret',

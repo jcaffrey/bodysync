@@ -82,19 +82,15 @@ function submitAdminLogin() {
 }
 
 function logout() {
-    localStorage.id = '';
-    localStorage.token = '';
-    localStorage.patients = '';
-    localStorage.display = '';
-    localStorage.focusPatient = '';
-    localStorage.ctr1 = '';
-    localStorage.ctr2 = '';
-    localStorage.isPatient = '';
-    for (var key in localStorage) {
-        if (key.includes('graphData')) {
-            localStorage[key] = '';
-        }
+    if (localStorage.isPatient == 'false') {
+        fetch('/logoff/?token=' + localStorage.token, {
+            method: 'GET'
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+        }).catch(submitError);
     }
+
+    localStorage.clear();
     window.location = '/';
 }
 

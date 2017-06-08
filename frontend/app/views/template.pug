@@ -14,11 +14,14 @@ html
                 div.profile-box
                     div#navbar
                         if type == 'patient'
-                            a(href='/patient-home').navButton.active Home
+                            a(href='/patient-home').navButton.active
+                                img(src="img/promptLogo.png" class="promptLogo")
                         else if type == 'admin'
-                            a(href='/admin').navButton.active Home
+                            a(href='/admin').navButton.active
+                                img(src="img/promptLogo.png" class="promptLogo")
                         else
-                            a(href='/patients').navButton.active Home
+                            a(href='/patients').navButton.active
+                                img(src="img/promptLogo.png" class="promptLogo")
                     div.profile-box-right
                         img(src='img/profile_pic.jpg' id='profileImg1')
                     div.profile-box-left
