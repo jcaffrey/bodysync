@@ -1,7 +1,6 @@
 var models = require('../models/index');
 var jwt = require('jsonwebtoken');
 var auth = require('./auth');
-// app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
@@ -192,7 +191,7 @@ module.exports.updateSession = (req, res, next) => {
         return;
     }
 };
-//
+
 
 // module.exports.endSession = (req, res, next) => {
 //     // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.

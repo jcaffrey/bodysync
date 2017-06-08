@@ -6,12 +6,16 @@ var jwt = require('jsonwebtoken');
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 var nodemailer = require('nodemailer');
+var Mailgen = require('mailgen');
+
+
 
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
-    if (typeof req.body.password !== 'string') // plaintext password
+    if (typeof req.body.password !== 'string') // plaintext passworc
         return res.status(400).send('No password');
+
 
     models.pt.findOne({
         where: { email: req.body.email}
@@ -38,13 +42,10 @@ exports.loginPt = (req, res, next) => {
                     pt.save()
                         .then(function () {
                             // returns token to frontend (and backend)..
-                            console.log('here');
                             req.body.token = token;
                             res.json({token: token});
                             return next();
                         });
-
-
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin};
 
@@ -58,7 +59,6 @@ exports.loginPt = (req, res, next) => {
                             res.json({token: token});
                             return next();
                         });
-
                 }
             }).catch(function (err) {
                 return next(err);
@@ -70,7 +70,8 @@ exports.loginPt = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
-};
+}
+
 
 exports.loginPatient = (req, res, next) => {
     if (typeof req.body.email !== 'string')
@@ -102,13 +103,13 @@ exports.loginPatient = (req, res, next) => {
     }).catch(function(e) {
         return res.status(401).send(JSON.stringify(e));
     })
-};
+}
 
 exports.forgotPassword = (req, res, next) => {
     if (typeof req.body.email !== 'string')
         return res.status(400).send('No email');
     if (typeof req.body.isPt !== 'boolean' && typeof req.body.isPt !== 'string')
-        return res.status(400).send('No user type');
+        return res.status(400).send('No isPt flag');
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -118,7 +119,7 @@ exports.forgotPassword = (req, res, next) => {
         }
     });
 
-    if(req.body.isPt == 'false')
+    if(!req.body.isPt)
     {
         models.patient.findOne({
             where: {
@@ -134,14 +135,39 @@ exports.forgotPassword = (req, res, next) => {
 
                 var patPromise = pat.save();
                 patPromise.then((pat) => {
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To resent your password, please click here:',
+                                button : {
+                                    color: '#2e3192',
+                                    text: 'Reset your password',
+                                    link: config.frontendServer + '/reset-token/' + token + '/false'
+                                }
+                            },
+                            outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
                         to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Forgot Password',
-                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + config.frontendServer + '/reset-token/' + token + '/false' + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        subject: 'Forgot Password',
+                        html: emailBody,
+                        text: emailText,
                     };
                     transporter.sendMail(mailOptions);
                 });
@@ -155,7 +181,9 @@ exports.forgotPassword = (req, res, next) => {
         }).catch((err) => {
             return next(err);
         })
-    } else {
+    }
+    else
+    {
         models.pt.findOne({
             where: {
                 email: req.body.email
@@ -170,15 +198,42 @@ exports.forgotPassword = (req, res, next) => {
 
                 var ptPromise = pt.save();
                 ptPromise.then((pt) => {
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+
+                    var e = {
+                        body: {
+                            intro: 'Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To resent your password, please click here:',
+                                button : {
+                                    color: '#2e3192',
+                                    text: 'Reset your password',
+                                    link: config.frontendServer + '/reset-token/' + token + '/false'
+                                }
+                            },
+                            outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
                     var mailOptions = {
                         to: req.body.email,
                         from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
-                        subject: 'Prompt Therapy Solutions Forgot Password',
-                        text: 'You are receiving this because you have requested to reset your password.\n\n' +
-                        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                        'http://' + config.frontendServer + '/reset-token/' + token + '/true' + '\n\n' +
-                        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                        subject: 'Forgot Password',
+                        html: emailBody,
+                        text: emailText,
                     };
+
                     transporter.sendMail(mailOptions);
                 });
             }
@@ -192,23 +247,20 @@ exports.forgotPassword = (req, res, next) => {
             return next(err);
         })
     }
-};
+}
 
 // IMPT: after hitting the forgotPassword route, we will email the patient a link to the frontend
 // then the frontend will post to /reset/:id on the backend with {isPt: false, newPassword: "plaintext"}
 // if frontend recieves success from here, they should redirect to login
 
 exports.resetPassword = (req, res, next) => {
-    if (typeof req.body.isPt !== 'boolean' && typeof req.body.isPt !== 'string')
-        return res.status(400).send('no isPt bool');
-    if (typeof req.body.newPassword !== 'string')
-        return res.status(400).send('no new pw');
+    if(typeof req.body.isPt !== 'boolean')
+        return res.status(400).send('no isPt bool')
+    if(typeof req.body.newPassword !== 'string')
+        return res.status(400).send('no new pw')
 
-    console.log('made it');
-
-    if (req.body.isPt == 'false')
+    if(!req.body.isPt)
     {
-        console.log('made it 1');
         models.patient.findOne({
             where: {
                 forgotToken: req.params.token   // someone would have to guess the token to be able to reset the password of a user
@@ -222,47 +274,123 @@ exports.resetPassword = (req, res, next) => {
                 pat.hash = models.patient.generateHash(req.body.newPassword);
                 console.log('updated hash' + pat.hash);
                 pat.forgotToken = null;
-                pat.save().then(()=>{
+                pat.save().then(() => {
+
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Password reset successful - Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To login, click here:',
+                                button: {
+                                    color: '#2e3192',
+                                    text: 'Login',
+                                    link: config.frontendRoute + '/login/'
+                                }
+
+                            }
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
+                    var mailOptions = {
+                        to: req.body.email,
+                        from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+                        subject: 'Reset Successful',
+                        html: emailBody,
+                        text: emailText,
+                    };
+
+                    // TODO test this route
+                    transporter.sendMail(mailOptions);
                     return res.status(200).send('successfully reset patient pw')
                 }).catch(function (err) {
                     return next(err);
                 });
 
-            } else {
+            }
+            else
+            {
                 return res.status(400).send('no patient found')
             }
         }).catch(function (err) {
             return next(err);
         })
-    } else {
-        console.log('made it 2');
+    }
+    else
+    {
         models.pt.findOne({
             where: {
                 forgotToken: req.params.token
             }
         }).then(function (pt) {
-            console.log('made it 3');
-            if (Object.keys(pt).length !== 0)
+            if(Object.keys(pt).length !== 0)
             {
-                console.log('made it 4');
-                pt.hash = models.pt.generateHash(req.body.newPassword);
+                pt.hash = pt.generateHash(req.body.newPassword);
                 pt.forgotToken = null;
-                console.log('made it 5');
                 pt.save().then(() => {
+
+                    var mailGenerator = new Mailgen({
+                        theme: 'default',
+                        product: {
+                            name: 'Prompt Therapy Solutions',
+                            link: 'LINK TO THE WEBSITE'
+                        }
+                    });
+
+                    var e = {
+                        body: {
+                            intro: 'Password reset successful - Welcome back to Prompt Therapy Solutions!',
+                            action: {
+                                instructions: 'To login, click here:',
+                                button: {
+                                    color: '#2e3192',
+                                    text: 'Login',
+                                    link: config.frontendRoute + '/login/'
+                                }
+
+                            }
+                        }
+                    }
+
+                    var emailBody = mailGenerator.generate(e);
+                    var emailText = mailGenerator.generatePlaintext(e);
+
+                    var mailOptions = {
+                        to: req.body.email,
+                        from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+                        subject: 'Reset Successful',
+                        html: emailBody,
+                        text: emailText,
+                    };
+                    // TODO test this route
+                    transporter.sendMail(mailOptions);
                     return res.status(200).send('successfully reset pt pw');
                 }).catch(function (err) {
-                    console.log('made it 6');
                     return next(err);
                 });
-            } else {
-                return res.status(400).send('no pt found');
+            }
+            else
+            {
+                return res.status(400).send('no pt found')
             }
         }).catch(function (err) {
-            console.log('made it 7');
             return next(err);
         })
     }
-};
+}
+
+
 
 /*
 
@@ -291,10 +419,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
     } catch (err) {
         return res.status(403).send('Failed to authenticate token');
     }
-    // console.log(isPtRequired);
-    // console.log(isAdminRequired);
-    // console.log(decoded.isPt);
-    // console.log(decoded.isAdmin);
+
     if (isPtRequired && !decoded.isPt)
         return res.status(403).send('You do not have access');
 
@@ -322,7 +447,7 @@ function validateToken(req, res, next, isPtRequired, isAdminRequired) {
             req.body.token = token;
             next();
         })
-    // resource is not restricted to pts,  validate patient or pt, depending on the isPt token flag
+    // resource is not restricted to pts, validate patient or pt, depending on the isPt token flag
     } else {
         // query pt table if pt
         if (decoded.isPt) {
@@ -367,17 +492,12 @@ exports.checkRequestIdAgainstId = (req, res) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-    // debugging
-    // console.log('token id: ' + String(decoded.id));
-    // console.log('query id: ' + String(req.params.id));
-
     if (req.params.id != decoded.id) {
         res.status(401).send('You are not authorized to see this resource');
         return false;
     } else {
         return true;
     }
-    // is bool best way to do this?
 }
 
 

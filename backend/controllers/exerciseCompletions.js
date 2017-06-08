@@ -37,21 +37,13 @@ module.exports.createCompletion = (req, res, next) => {
                         if(comps.length !== 0)
                         {
                             // update streak here if most recent comp is within one day of now
-
                             var today = new Date().getDate();
-
 
                             var mostRecent = new Date(comps[0].createdAt).getDate();
 
-
-                            // ONLY TO TEST...
-                            console.log(typeof mostRecent)
                             mostRecent = mostRecent - 1;
 
-                            console.log('mostRecent day' + mostRecent)
-                            console.log('todays day' + today)
-
-                            if(today - mostRecent === 1)
+                            if(today - mostRecent === 1)  // TODO: does this work?
                             {
                                 // update the streak
                                 console.log('type of exer.streak is ' + typeof exer.streak)
@@ -69,13 +61,16 @@ module.exports.createCompletion = (req, res, next) => {
                                         }
                                         else
                                         {
-                                            throw new Error('could not create');
+                                            return res.status(404).send('could not create');
                                         }
                                     }).catch(function (err) {
                                         return next(err);
                                     })
+                                }).catch(function (err) {
+                                    return next(err);
                                 })
                             }
+                            // else // TODO: still need to create the completion even if there isn't a streak..
 
 
                         }
@@ -135,28 +130,6 @@ module.exports.createCompletion = (req, res, next) => {
 
  */
 
-// module.exports.getCompletions = (req, res, next) => {
-//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-//     var decoded = jwt.verify(token, config.secret);
-//
-//
-//     models.exercise.findOne({where:{id:req.params.id}}).then(function(exer) {
-//         if(Object.keys(exer).length !== 0)
-//         {
-//             models.exerciseCompletion.findAll({where:{exerciseId:exer.id}}).then(function (comps) {
-//                 if(comps.length !== 0)
-//                 {
-//                     return res.json(comps);
-//                 }
-//             }).catch(function (err) {
-//                 return next(err);
-//             })
-//         }
-//     }).catch(function (err) {
-//         return next(err);
-//     })
-// }
-
 module.exports.getMostRecentCompletion = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
@@ -192,6 +165,7 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
                         {
                             if(decoded.id == pat.ptId)
                             {
+                                req.body.patientId = pat.id;
                                 res.json(mostRecent);
                                 return next();
                             }
@@ -221,124 +195,3 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
     })
 };
 
-// module.exports.getCompletionById = (req, res, next) => {
-//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-//     var decoded = jwt.verify(token, config.secret);
-//
-//     models.exerciseCompletion.findOne({
-//         where: {
-//             id: req.params.id
-//         }
-//     }).then(function(comp) {
-//         if(Object.keys(comp).length !== 0) {
-//             models.exercise.findOne({
-//                 where: {
-//                     id: comp.exerciseId
-//                 }
-//             }).then(function (exercise) {
-//                 if(Object.keys(exercise).length !== 0) {
-//                     models.exerciseSet.findOne({
-//                         where: {
-//                             id: exercise.exerciseSetId
-//                         }
-//                     }).then(function (set) {
-//                         if(Object.keys(set).length !== 0) {
-//                             if(decoded.isPt) {
-//                                 if(decoded.id == set.ptId) {
-//                                     return res.json(comp);
-//                                 } else {
-//                                     return res.status(401).send('PT unauthorized');
-//                                 }
-//
-//                             }
-//                             // is patient
-//                             else {
-//                                 models.injury.findOne({
-//                                     where: {
-//                                         id: set.injuryId
-//                                     }
-//                                 }).then(function (injury) {
-//                                     if(Object.keys(injury).length !== 0) {
-//                                         if(decoded.id == injury.patientId) {
-//                                             return res.json(comp);
-//                                         } else {
-//                                             return res.status(401).send('Patient unauthorized');
-//                                         }
-//                                     }
-//                                 })
-//                             }
-//                         }
-//                     })
-//                 }
-//             })
-//         }
-//         else {
-//             res.status(404).send('No stats associated with that exercise');
-//         }
-//     }).catch(function (err) {
-//         return next(err);
-//     })
-// }
-
-/**
-
- UPDATE (HTTP PUT)
-
- */
-
-// TODO
-
-/**
-
- DELETE (HTTP DELETE)
-
- */
-
-// module.exports.deleteCompletion = (req, res, next) => {
-//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
-//     var decoded = jwt.verify(token, config.secret);
-//
-//     models.exerciseCompletion.findOne({
-//         where: {
-//             id: req.params.id
-//         }
-//     }).then(function (comp) {
-//         if(Object.keys(comp).length !== 0) {
-//             models.exercise.findOne({
-//                 where: {
-//                     id: comp.exerciseId
-//                 }
-//             }).then(function (exercise) {
-//                 if(Object.keys(exercise).length !== 0) {
-//                     models.exerciseSet.findOne({
-//                         where: {
-//                             id: exercise.exerciseSetId
-//                         }
-//                     }).then(function (set) {
-//                         if(Object.keys(set).length !== 0) {
-//                             models.injury.findOne({
-//                                 where: {
-//                                     id: set.injuryId
-//                                 }
-//                             }).then(function (injury) {
-//                                 if(Object.keys(injury).length !== 0) {
-//                                     if(!decoded.isPt && decoded.id == injury.patientId) {
-//                                         comp.destroy();
-//                                         return res.json(comp);
-//                                     } else {
-//                                         return res.status(401).send('Patient unauthorized');
-//                                     }
-//                                 }
-//                             })
-//                         }
-//
-//                     })
-//                 }
-//             })
-//         } else {
-//             res.status(404).send('No exercise with that id');
-//         }
-//     }).catch(function (err) {
-//         return next(err);
-//     })
-// }

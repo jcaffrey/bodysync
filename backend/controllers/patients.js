@@ -10,12 +10,16 @@ var auth = require('./auth');
 // app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
+var nodemailer = require('nodemailer');
+var Mailgen = require('mailgen');
+
 
 /**
 
     CREATE (HTTP POST)
 
  */
+
 
 module.exports.createPatient = (req, res, next) => {
     if(auth.checkRequestIdAgainstId(req, res)) {
@@ -32,35 +36,100 @@ module.exports.createPatient = (req, res, next) => {
                 models.patient.create({
                     name: req.body.name,
                     email: req.body.email,
-                    proPicUrl: req.body.proPicUrl,
                     phoneNumber: req.body.phoneNumber,
                     phoneProvider: req.body.phoneProvider,
                     surgeryType: req.body.surgeryType,
-                    surgeonName: req.body.surgeonName,
                     isRestrictedFromRom: req.body.isRestrictedFromRom,
                     age: req.body.age,
                     weight: req.body.weight,
                     ptId: req.params.id,
-                    hash: 'temp'
-                }).then(function(patient) {
-                    res.json(patient);
-                    return next();
-                }).catch(function (err) {
-                    return next(err);
-                })
+                    hash: "temp" // add hash and token
+                }).then(function(pat) {
+                    if(Object.keys(pat).length !== 0)
+                    {
+                        var payload = {id: pat.id, sessionNumber: null, isPt: false, isAdmin: false};
+                        var token = jwt.sign(payload, config.secret, {expiresIn: 60 * 60});
+
+                        pat.forgotToken = token;
+                        pat.save().then(() => {
+                            // email patient
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: config.emailFromAddr,
+                                    pass: config.emailPw
+                                }
+                            });
+
+                            var mailGenerator = new Mailgen({
+                                theme: 'default',
+                                product: {
+                                    name: 'Prompt Therapy Solutions',
+                                    link: 'LINK TO THE WEBSITE'
+                                }
+                            });
+
+                            var e = {
+                                body: {
+                                    intro: 'Welcome to Prompt Therapy Solutions - the road to recovery starts here!',
+                                    action: {
+                                        instructions: 'To get started with Prompt Therapy Solutions, please click here:',
+                                        button : {
+                                            color: '#2e3192',
+                                            text: 'Set your password',
+                                            link: config.frontendRoute + '/reset/' + token
+                                        }
+                                    },
+                                    outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                                }
+                            }
+
+                            var emailBody = mailGenerator.generate(e);
+                            var emailText = mailGenerator.generatePlaintext(e);
+
+                            var mailOptions = {
+                                to: req.body.email,
+                                from: `"${config.emailFromName}"<${config.emailFromAddr}>`,
+                                subject: 'Welcome',
+                                html: emailBody,
+                                text: emailText
+                            };
+                            transporter.sendMail(mailOptions, function (err) {
+                                if(err)
+                                    return next(err); // test this.
+                            });
+
+                            res.json(pat);
+                            return next();
+                        }).catch(function (err) {
+                            console.log('did not save')
+                            return next(err);
+                        })
+                }
+                else {
+                    return res.status(404).send('not found!');
+                }
+            }).catch(function (err) {
+                console.log('in here')
+                return next(err);
+            })
             }
+
         }).catch(function (err) {
-            return next(err);
-        })
+                console.log('THIS ERRORED')
+                return next(err);
+            })
     }
     return;
 };
+
 
 /**
 
     READ (HTTP GET)
 
  */
+
 
 // TODO: figure out what to return when patients object below is []
 module.exports.getPatients = (req, res, next) => {
@@ -86,21 +155,6 @@ module.exports.getPatients = (req, res, next) => {
     }
 };
 
-// not to be used in actual app, unless for an admin
-module.exports.getAllPatients = (req, res, next) => {
-    models.patient.findAll({}).then(function(patients) {
-        res.json(patients);
-    });
-};
-/*
-module.exports.getPatientById = (req, res, next) => {
-    models.patient.findone({
-        where: {id: req.params.id}
-    }).then(function(patient) {
-        return res.json(patient);
-    });
-};
-*/
 
 module.exports.getPatientById = (req, res, next) => {
     // auth
@@ -112,7 +166,7 @@ module.exports.getPatientById = (req, res, next) => {
     }).then(function(patient) {
         // auth is done here so only one query
         // pt and patient alike have access
-
+  
         // if pt
         if (decoded.isPt) {
             // if requesting pt is requested patient's pt
@@ -120,7 +174,7 @@ module.exports.getPatientById = (req, res, next) => {
                 req.body.patientId = patient.id;
                 res.json(patient);
                 return next();
-            }
+            }  
             else {
                 return res.status(401).send('You are not authorized to see this resource');
             }
@@ -128,17 +182,21 @@ module.exports.getPatientById = (req, res, next) => {
         // else if patient
         else {
             // if requesting patient is requested patient
-            if (decoded.id == req.params.id) { // should be === ?
+            if (decoded.id == req.params.id) {
                 return res.json(patient);
-            }
+            } 
             else {
                 return res.status(401).send('You are not authorized to see this resource');
-            }
+            }        
         }
     }).catch(function(err) {
         return next(err);
     })
 };
+
+
+
+
 
 /**
 
@@ -149,6 +207,7 @@ module.exports.getPatientById = (req, res, next) => {
 module.exports.updatePatientNotes = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
+    // TODO : test that req.body.ptNotes exists
 
     models.patient.findOne({
         where: {
@@ -159,8 +218,9 @@ module.exports.updatePatientNotes = (req, res, next) => {
         {
             if(pat.ptId == decoded.id)
             {
-                pat.ptNotes = req.body.notes
+                pat.ptNotes = req.body.ptNotes || pat.ptNotes;
                 pat.save().then(() => {
+                    res.json(pat);
                     return res.status(200).send('success');
                 }).catch((err) => {
                     return next(err);
@@ -178,7 +238,7 @@ module.exports.updatePatientNotes = (req, res, next) => {
     }).catch((err) => {
         return next(err);
     })
-};
+}
 
 
 /**
@@ -198,17 +258,12 @@ module.exports.deletePatient = (req, res, next) => {
     }).then(function (patient) {
         if (patient.length !== 0)
         {
-            console.log(patient.length);
-            console.log(patient.ptId);
-            // if pt
             if (decoded.isPt) {
                 // if requesting pt is requested patient's pt
                 if (decoded.id === patient.ptId) {
-                    // DESTROY IF THIS IS THE CASE
                     patient.destroy();
                     res.json(patient);
                     return next();
-                    // return res.json(patient);
                 }
                 else {
                     return res.status(401).send('You are not authorized to destroy this resource');
@@ -222,7 +277,4 @@ module.exports.deletePatient = (req, res, next) => {
                         // doesn't quite catch error how we would want? still get:
                             // Error: No default engine was specified and no extension was provided.
     });
-    // })
-
-
 };

@@ -1,10 +1,6 @@
-
-
 var models = require('../models/index');
-
 var jwt = require('jsonwebtoken');
 var auth = require('./auth');
-// app.locals.config = config not working?
 var env = process.env.NODE_ENV || 'development';
 var config = require('../config/config.json')[env];
 
@@ -27,12 +23,6 @@ module.exports.createInjury = (req, res, next) => {
     }).then(function(patient) {
         if (Object.keys(patient).length !== 0) {
             // check the requesting pt has permission to view this patient
-            console.log(patient.ptId);
-            console.log(decoded.id);
-            console.log(patient.ptId === decoded.id);
-            console.log(patient.ptId == decoded.id);
-
-
             if(patient.ptId === decoded.id) {
                 models.injury.create({
                     name: req.body.name,
@@ -42,7 +32,6 @@ module.exports.createInjury = (req, res, next) => {
                     if(Object.keys(injury).length !== 0) {
                         res.json(injury);
                         return next();
-
                     }
                     else {
                         res.status(404).send('Could not create that injury')
@@ -85,7 +74,6 @@ module.exports.getInjuries = (req, res, next) => {
         {
             // if pt
             if(decoded.isPt) {
-                // query using req.params.id (which is the patients' id) and check patient.ptId === decoded.id
                 models.patient.findOne({
                     where : {
                         id: req.params.id
