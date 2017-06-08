@@ -22,8 +22,7 @@ module.exports.createSession = (req, res, next) => {
     }).catch(function (e) {
         return next(e);
     })
-}
-
+};
 
 /**
 
@@ -191,7 +190,6 @@ module.exports.updateSession = (req, res, next) => {
         return;
     }
 };
-
 
 // module.exports.endSession = (req, res, next) => {
 //     // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.

@@ -49,7 +49,6 @@ router.route('/login/pt')
 router.route('/login/patient')
     .post(auth.loginPatient);
 
-// TODO: MAKE SURE THE FRONTEND PINGS THIS ON LOGOUT
 router.route('/logoff')
     .get(auth.ptRequired, ptSessions.updateSession);
 
@@ -100,14 +99,12 @@ router.route('/romMetrics/:id/romMetricMeasures')
     .get(auth.tokenRequired, romMetricMeasures.getMeasures, ptSessions.logSession)
     .post(auth.ptRequired, romMetricMeasures.createMeasure, ptSessions.updateSession);
 
-
 // simplified route for exercise content (injury training)
 router.route('/patients/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises);
 
 router.route('/patients/:id/createSingleExercise')
     .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
-
 
 router.route('/exercises/:id')
     .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession)
@@ -116,7 +113,6 @@ router.route('/exercises/:id')
 router.route('/exercises/:id/exerciseCompletions')
     .get(auth.tokenRequired, exerciseCompletions.getMostRecentCompletion, ptSessions.logSession)
     .post(auth.tokenRequired, exerciseCompletions.createCompletion, ptSessions.updateSession);
-
 
 /*
 Comments on routing structure: 
@@ -134,7 +130,6 @@ since we'd only ever access a specific exerciseSet with id :id if we are the pt 
 the specific patient with the speciific injury, so we're removing redundancy. 
 
 */
-
 
 // expose routes through router object
 module.exports = router;

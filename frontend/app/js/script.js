@@ -83,11 +83,13 @@ function submitAdminLogin() {
 
 function logout() {
     if (localStorage.isPatient == 'false') {
+        console.log('here');
         fetch('/logoff/?token=' + localStorage.token, {
             method: 'GET'
         }).then(function(res) {
             if (!res.ok) return submitError(res);
-        }).catch(submitError);
+            console.log('here1');
+        }).catch(console.log('err'));
     }
 
     localStorage.clear();
@@ -1014,7 +1016,7 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal];
+            pats[patient].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal, last.dayMeasured];
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
