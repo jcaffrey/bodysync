@@ -22,7 +22,6 @@ function uploadFile(file, signedRequest, url) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                console.log('Success!');
                 localStorage.pictureUrl = url;
             }
             else {
@@ -36,7 +35,6 @@ function uploadFile(file, signedRequest, url) {
 function handleFileInput() {
     var files = document.getElementById('file-upload').files;
     var file = files[0];
-    console.log(file);
     if (file == null) {
         return console.log('No file selected.');
     }

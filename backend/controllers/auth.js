@@ -49,6 +49,7 @@ exports.loginPt = (req, res, next) => {
                 } else {
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin};
 
+
                     var token = jwt.sign(payload, config.secret, {expiresIn: 60*60 }); // expiresIn is in seconds
 
                     pt.token = token;

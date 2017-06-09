@@ -36,6 +36,7 @@ module.exports.createPatient = (req, res, next) => {
                 models.patient.create({
                     name: req.body.name,
                     email: req.body.email,
+                    proPicUrl: req.body.proPicUrl,
                     phoneNumber: req.body.phoneNumber,
                     phoneProvider: req.body.phoneProvider,
                     surgeryType: req.body.surgeryType,
