@@ -26,8 +26,8 @@ module.exports.createPt = (req, res, next) => {
         isAdmin: false,
         hash: 'temp'
     }).then(function(pt) {
-        res.json(pt);
-        return next();
+        return res.json(pt);
+        //return next();
     });
 };
 
@@ -47,10 +47,42 @@ module.exports.deletePt = (req, res, next) => {
     }).then(function(instance) {
         if (instance)
         {
-            res.sendStatus(200);
-            return next();
+            return res.sendStatus(200);
+            //return next();
         }
         else
             res.status(404).send('sorry not found');
     });
+}
+
+module.exports.isVerified = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
+
+    console.log('in ISVERIFIED CHECKING ==')
+    console.log(decoded.id == req.params.id);
+    if(decoded.isPt && decoded.id == req.params.id)
+    {
+        models.pt.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(function (pt) {
+            if(pt && Object.keys(pt).length !== 0)
+            {
+                if(pt.isVerified)
+                    return res.json({ptIsVerified: true});
+                else
+                    return res.json({ptIsVerified: false});
+            }
+            else
+            {
+                return res.status(404).send('no such pt found');
+            }
+        })
+    }
+    else
+    {
+        return res.status(403).send('not authorized');
+    }
 }

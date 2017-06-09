@@ -46,7 +46,7 @@ module.exports.createCompletion = (req, res, next) => {
                             if(today - mostRecent === 1)  // TODO: does this work?
                             {
                                 // update the streak
-                                console.log('type of exer.streak is ' + typeof exer.streak)
+                                // console.log('type of exer.streak is ' + typeof exer.streak)
                                 exer.streak = exer.streak + 1;
                                 exer.save().then(function () {
                                     // post completion if so
@@ -56,8 +56,8 @@ module.exports.createCompletion = (req, res, next) => {
                                     }).then(function (comp) {
                                         if(Object.keys(comp).length !== 0)
                                         {
-                                            res.json(comp);
-                                            return next();
+                                            return res.json(comp);
+                                            // return next();
                                         }
                                         else
                                         {
@@ -86,8 +86,8 @@ module.exports.createCompletion = (req, res, next) => {
                                 }).then(function (comp) {
                                     if(Object.keys(comp).length !== 0)
                                     {
-                                        res.json(comp);
-                                        return next();
+                                        return res.json(comp);
+                                        //return next();
                                     }
                                     else
                                     {
@@ -152,8 +152,8 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
                     {
                         if(decoded.id == exer.patientId)
                         {
-                            res.json(mostRecent);
-                            return next();
+                            return res.json(mostRecent);
+                            //return next();
                         }
                         else
                         {
@@ -165,9 +165,9 @@ module.exports.getMostRecentCompletion = (req, res, next) => {
                         {
                             if(decoded.id == pat.ptId)
                             {
-                                req.body.patientId = pat.id;
-                                res.json(mostRecent);
-                                return next();
+                                //req.body.patientId = pat.id;
+                                return res.json(mostRecent);
+                                //return next();
                             }
                             else
                             {

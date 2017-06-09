@@ -13,10 +13,10 @@ module.exports = function(sequelize, DataTypes) {
         duration: {
             type: DataTypes.INTEGER  // TODO: look up how to subtract dates
         },
-        resourceRequested: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
+        // resourceRequested: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true
+        // },
         patientId: {
             type: DataTypes.INTEGER,
             allowNull: true

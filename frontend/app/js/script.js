@@ -81,6 +81,26 @@ function submitAdminLogin() {
     }).catch(submitError);
 }
 
+// function logout() {
+//     console.log(localStorage.isPatient == 'false');
+//     if (localStorage.isPatient == 'false') {
+//         console.log('here');
+//         fetch('/logoff/?token=' + localStorage.token, {
+//             method: 'GET'
+//         }).then(function(res) {
+//             console.log('PRINTING RES.OK')
+//             console.log(res.ok);
+//             // if (!res.ok) return submitError(res);
+//             console.log('here1');
+//             localStorage.clear();
+//             window.location = '/';
+//         }).catch(console.log('err'));
+//     } else {
+//         localStorage.clear();
+//         window.location = '/';
+//     }
+// }
+
 function logout() {
     if (localStorage.isPatient == 'false') {
         fetch('/ptSessions/' + localStorage.id + '/-2/?token=' + localStorage.token, {

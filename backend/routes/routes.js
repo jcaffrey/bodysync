@@ -44,13 +44,19 @@ router.route('/')
     to pass as a parameter to a callback that could handle both in a single route
 */
 
+router.route('/ptSessions/:patientId')  // logout will get -2 for patientId
+    .get(auth.ptRequired, ptSessions.handleSession);
+
+router.route('/agree')
+    .get(auth.tokenRequired, auth.updateVerified);
+
 router.route('/login/pt')
-    .post(auth.loginPt, ptSessions.createSession);
+    .post(auth.loginPt, ptSessions.createSession);   // keep this?
 router.route('/login/patient')
     .post(auth.loginPatient);
 
-router.route('/logoff')
-    .get(auth.ptRequired, ptSessions.updateSession);
+// router.route('/logoff')
+//     .get(auth.ptRequired, ptSessions.updateSession);
 
 router.route('/forgotpassword') 
     .post(auth.forgotPassword);
@@ -62,57 +68,60 @@ router.route('/reset/:token')
 router.route('/pts')
     .post(auth.adminRequired, pts.createPt);   // TODO add in authentication
 
+router.route('/pts/isVerified/:id')
+    .get(auth.ptRequired, pts.isVerified);
+
 router.route('/pts/:id')
     .delete(auth.adminRequired, pts.deletePt); 
 
 // routes for pts to see patients
 router.route('/pts/:id/patients')
-    .get(auth.ptRequired, patients.getPatients, ptSessions.logSession)
-    .post(auth.ptRequired, patients.createPatient, ptSessions.updateSession);
+    .get(auth.ptRequired, patients.getPatients)
+    .post(auth.ptRequired, patients.createPatient);
 
 router.route('/patients/:id')
-    .get(auth.tokenRequired, patients.getPatientById, ptSessions.logSession)
-    .put(auth.ptRequired, patients.updatePatientNotes, ptSessions.updateSession)
-    .delete(auth.ptRequired, patients.deletePatient, ptSessions.updateSession);
+    .get(auth.tokenRequired, patients.getPatientById)
+    .put(auth.ptRequired, patients.updatePatientNotes)
+    .delete(auth.ptRequired, patients.deletePatient);
 
 // routes for pts, patients to see injuries
 router.route('/patients/:id/injuries') 
-    .get(auth.tokenRequired, injuries.getInjuries, ptSessions.logSession) // views handled differently on frontend using token
-    .post(auth.ptRequired, injuries.createInjury, ptSessions.updateSession);
+    .get(auth.tokenRequired, injuries.getInjuries) // views handled differently on frontend using token
+    .post(auth.ptRequired, injuries.createInjury);
 
 router.route('/injuries/:id')
-    .get(auth.tokenRequired, injuries.getInjuryById, ptSessions.logSession)
+    .get(auth.tokenRequired, injuries.getInjuryById)
     //.put(auth.ptRequired, injuries.updateInjury) // Access: pt 
-    .delete(auth.ptRequired, injuries.deleteInjury, ptSessions.updateSession);
+    .delete(auth.ptRequired, injuries.deleteInjury);
 
 // routes for injury tracking (rom content)
 router.route('/injuries/:id/romMetrics')
-    .get(auth.tokenRequired, romMetrics.getRomMetrics, ptSessions.logSession)
-    .post(auth.ptRequired, romMetrics.createRomMetric, ptSessions.updateSession);
+    .get(auth.tokenRequired, romMetrics.getRomMetrics)
+    .post(auth.ptRequired, romMetrics.createRomMetric);
 
 router.route('/romMetrics/:id')
-    .get(auth.ptRequired, romMetrics.getRomMetricById, ptSessions.logSession)
+    .get(auth.ptRequired, romMetrics.getRomMetricById)
     //.put(auth.ptRequired, romMetrics.updateRomMetric) // Access: pt
-    .delete(auth.ptRequired, romMetrics.deleteRomMetric, ptSessions.updateSession);
+    .delete(auth.ptRequired, romMetrics.deleteRomMetric);
 
 router.route('/romMetrics/:id/romMetricMeasures')
-    .get(auth.tokenRequired, romMetricMeasures.getMeasures, ptSessions.logSession)
-    .post(auth.ptRequired, romMetricMeasures.createMeasure, ptSessions.updateSession);
+    .get(auth.tokenRequired, romMetricMeasures.getMeasures)
+    .post(auth.ptRequired, romMetricMeasures.createMeasure);
 
 // simplified route for exercise content (injury training)
 router.route('/patients/:id/exercises')
     .get(auth.tokenRequired, exercises.getExercises);
 
 router.route('/patients/:id/createSingleExercise')
-    .post(auth.ptRequired, exercises.createExercise, ptSessions.updateSession);
+    .post(auth.ptRequired, exercises.createExercise);
 
 router.route('/exercises/:id')
-    .put(auth.ptRequired, exercises.updateExercise, ptSessions.updateSession)
-    .delete(auth.ptRequired, exercises.deleteExercise, ptSessions.updateSession);
+    .put(auth.ptRequired, exercises.updateExercise)
+    .delete(auth.ptRequired, exercises.deleteExercise);
 
 router.route('/exercises/:id/exerciseCompletions')
-    .get(auth.tokenRequired, exerciseCompletions.getMostRecentCompletion, ptSessions.logSession)
-    .post(auth.tokenRequired, exerciseCompletions.createCompletion, ptSessions.updateSession);
+    .get(auth.tokenRequired, exerciseCompletions.getMostRecentCompletion)
+    .post(auth.tokenRequired, exerciseCompletions.createCompletion);
 
 /*
 Comments on routing structure: 

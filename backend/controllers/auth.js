@@ -8,7 +8,36 @@ var config = require('../config/config.json')[env];
 var nodemailer = require('nodemailer');
 var Mailgen = require('mailgen');
 
+exports.updateVerified = (req, res, next) => {
+    var token = req.query.token || req.body.token || req.headers['x-access-token'];
+    var decoded = jwt.verify(token, config.secret);
 
+    // update the is verified flag on each model
+    if(decoded.isPt)
+    {
+        models.pt.update({
+            isVerified: true
+        },
+        {
+            where: {
+                id: decoded.id
+            }
+        }).then(function (pt) {
+
+        })
+    }
+    else
+    {
+        models.patient.update({
+            isVerified: true
+        },
+        {
+            where: {
+                id: decoded.id
+            }
+        })
+    }
+}
 
 exports.loginPt = (req, res, next) => {
     if (typeof req.body.email !== 'string')
@@ -31,6 +60,7 @@ exports.loginPt = (req, res, next) => {
                 ]
             }).then(function (ptSessions) {
                 if(ptSessions.length !== 0) {
+                    console.log('LOGGING IN NOT NOT NOT NOT NOT FIRST SESSION------~~~~~~~~~')
                     var newSession = ptSessions[0].sessionNumber + 1;
                     console.log('PRINTING THE NEW SESSIONNUMBER: ' + newSession);
 
@@ -47,6 +77,7 @@ exports.loginPt = (req, res, next) => {
                             return next();
                         });
                 } else {
+                    console.log('LOGGING IN A NEW SESSION')
                     var payload = {id: pt.id, isPt: true, sessionNumber: 1, isAdmin: pt.isAdmin};
 
 

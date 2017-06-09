@@ -25,8 +25,8 @@ module.exports.createExercise = (req, res, next) => {
                 }).then(function (exercise) {
                     if(Object.keys(exercise).length !== 0)
                     {
-                        res.json(exercise);
-                        return next();
+                        return res.json(exercise);
+                        //return next();
                     }
                     else
                     {
@@ -74,8 +74,8 @@ module.exports.getExercises = (req, res, next) => {
                         }
                         else
                         {
-                            next();
-                            res.status(403).send('not authorized for that');
+                            // next();
+                            return res.status(403).send('not authorized for that');
                         }
                     }
                 }).catch(function(err) {
@@ -93,14 +93,14 @@ module.exports.getExercises = (req, res, next) => {
                 }
                 else
                 {
-                    next();
-                    res.status(403).send('not authorized for that');
+                    //next();
+                    return res.status(403).send('not authorized for that');
                 }
             }
 
         }
         else {
-            res.json([]); // make sure that the session is still logged here even though no data to read?
+            return res.json([]); // make sure that the session is still logged here even though no data to read?
         }
     }).catch(function(err) {
         console.log('failed to find')
@@ -128,8 +128,8 @@ module.exports.updateExercise = (req, res, next) => {
                 exer.ptNotes = req.body.ptNotes || exer.ptNotes;
 
                 exer.save().then(()=>{});
-                res.json(exer);
-                return next();
+                return res.json(exer);
+                //return next();
             }
             else
             {
@@ -164,8 +164,8 @@ module.exports.deleteExercise = (req, res, next) => {
                 if(Object.keys(pat).length !== 0) {
                     if(decoded.isPt && decoded.id == pat.ptId) {
                         exercise.destroy();
-                        res.json(exercise);
-                        return next();
+                        return res.json(exercise);
+                        //return next();
                     } else {
                         return res.status(401).send('PT unauthorized');
                     }
