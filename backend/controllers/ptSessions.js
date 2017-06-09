@@ -34,6 +34,10 @@ module.exports.handleSession = (req, res, next) => {
                     where: {
                         ptId: decoded.id,
                         sessionNumber: decoded.sessionNumber
+                    },
+                    order: [
+                        ['createdAt', 'DESC']
+                    ]
                 }).then(function(ptSessions) {
                     if(ptSessions && ptSessions.length !== 0)
                     {
@@ -121,8 +125,8 @@ module.exports.handleSession = (req, res, next) => {
             order: [
                 ['createdAt', 'DESC']
             ]
-        }).then(function(sessions) {
-            if(sessions && sessions.length !== 0)
+        }).then(function(ptSessions) {
+            if(ptSessions && ptSessions.length !== 0)
             {
                 // check if time has not been set already (if not set we want to update duration)
 
@@ -155,10 +159,62 @@ module.exports.handleSession = (req, res, next) => {
     else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient
     {
         // keep counting for that patientId, close out the rest
+        models.ptSession.findAll({
+            where: {
+                ptId: decoded.id,
+                sessionNumber: decoded.sessionNumber
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(function(ptSessions) {
+            if(ptSessions && ptSessions.length !== 0)
+            {
+                // check if time has not been set already (if not set we want to update duration)
 
+                // backfill the duration..
+                var cDate = new Date(ptSessions[0].createdAt);
+                var diff = today.getTime() - cDate.getTime();
+
+                // // ************update where not patientId**************
+                // models.ptSession.update({
+                //         duration: diff
+                //     },
+                //     {
+                //         where: {
+                //             ptId: decoded.id,
+                //             sessionNumber: decoded.sessionNumber,
+                //             duration: null,
+                //         }
+                //     }).then(function () {
+                //     return res.status(200).send('backfilled rows');
+                //
+                // }).catch(function (err) {
+                //     return next(err);
+                // })
+                for (var i = 0; i < ptSessions.length; i++)
+                {
+                    (function(x) {
+                        if (ptSessions[i].id !== req.params.patientId) {
+                            // update this duration
+                            ptSessions[i].duration = diff;
+                            ptSessions[i].save();
+                        }
+                    })(i)
+                }
+                return res.status(200).send('backfilled rows except for that certain patient');
+
+            }
+            else
+            {
+                return res.status(404).send('no rows to update')
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
     }
-    res.json({success: 'success'});
-};
+}
+
 
 
 module.exports.createSession = (req, res, next) => {
