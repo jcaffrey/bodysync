@@ -44,14 +44,14 @@ router.route('/')
     to pass as a parameter to a callback that could handle both in a single route
 */
 
-router.route('/ptSessions/:patientId')  // logout will get -2 for patientId
+router.route('/ptSessions/:ptId/:patientId')  // logout will get -2 for patientId
     .get(auth.ptRequired, ptSessions.handleSession);
 
 router.route('/agree')
     .get(auth.tokenRequired, auth.updateVerified);
 
 router.route('/login/pt')
-    .post(auth.loginPt, ptSessions.createSession);   // keep this?
+    .post(auth.loginPt, ptSessions.createSession);  // keep this?
 router.route('/login/patient')
     .post(auth.loginPatient);
 
@@ -68,7 +68,7 @@ router.route('/reset/:token')
 router.route('/pts')
     .post(auth.adminRequired, pts.createPt);   // TODO add in authentication
 
-router.route('/pts/isVerified/:id')
+router.route('/pts/:id/isVerified')
     .get(auth.ptRequired, pts.isVerified);
 
 router.route('/pts/:id')

@@ -148,7 +148,7 @@ module.exports.handleSession = (req, res, next) => {
                 // check if time has not been set already (if not set we want to update duration)
 
                 // backfill the duration..
-                var cDate = new Date(ptSessions[0].createdAt);
+                var cDate = new Date(sessions[0].createdAt);
                 var diff = today.getTime() - cDate.getTime();
 
                 models.ptSession.update({
@@ -171,6 +171,7 @@ module.exports.handleSession = (req, res, next) => {
             {
                 return res.status(404).send('no rows to update')
             }
+        });
     }
     else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient
     {
@@ -178,7 +179,7 @@ module.exports.handleSession = (req, res, next) => {
 
     }
     res.json({success: 'success'});
-}
+};
 
 
 module.exports.createSession = (req, res, next) => {
