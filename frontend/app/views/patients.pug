@@ -22,3 +22,10 @@ block content
         .plus-button
             a(href='/create-patient').add +
         .space
+
+    div#accept-modal.modal(style="display: none")
+        h3 You must agree to the terms and conditions to use Prompt Therapy Solutions.
+        br
+        br
+        button.buttonTab(id="agree-btn" onclick='agree()') I Agree
+        button.buttonTab(id="disagree-btn" onclick='logout()') I Do Not Agree

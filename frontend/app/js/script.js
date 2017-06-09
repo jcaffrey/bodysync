@@ -148,6 +148,15 @@ function submitToken() {
     });
 }
 
+function agree() {
+    fetch('/agree/?token=' + localStorage.token, {
+        method: 'GET'
+    }).then(function (res) {
+        if (!res.ok) return submitError(res);
+        window.location = (localStorage.isPatient == 'true') ? '/patient-home' : '/patients';
+    }).catch(submitError);
+}
+
 function headers() {
     return {
         'x-access-token': localStorage.token,
@@ -158,7 +167,7 @@ function headers() {
 function confirmSubmit(f) {
     document.getElementById('confirm-modal').style.display = 'block';
     document.getElementById('confirm-modal').innerHTML =
-        '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="' + f + '()">Yes</button><div id="error-label"></div>';
+        '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="document.getElementById(\'confirm-modal\').style.display = \'none\';' + f + '()">Yes</button><div id="error-label"></div>';
 }
 
 function submitForm() {
@@ -278,6 +287,8 @@ function submitPatient() {
                 }, 1000);
             });
         }).catch(submitError);
+    } else {
+        window.location = '/patients';
     }
 }
 
@@ -1154,8 +1165,12 @@ function loadPatientStart() {
             localStorage.display = JSON.stringify([patient]);
             if (localStorage.patients != '[]') {
                 clear();
-                loadProgress(localStorage.patients);
-                loadPatients(localStorage.patients);
+                if (patient.isVerified == 'false') {
+                    document.getElementById('accept-modal').style.display = 'block';
+                } else {
+                    loadProgress(localStorage.patients);
+                    loadPatients(localStorage.patients);
+                }
             } else {
                 loadEmpty();
             }
