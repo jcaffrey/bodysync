@@ -83,17 +83,17 @@ function submitAdminLogin() {
 
 function logout() {
     if (localStorage.isPatient == 'false') {
-        console.log('here');
-        fetch('/logoff/?token=' + localStorage.token, {
+        fetch('/ptSessions/' + localStorage.id + '/-2/?token=' + localStorage.token, {
             method: 'GET'
         }).then(function(res) {
             if (!res.ok) return submitError(res);
-            console.log('here1');
-        }).catch(console.log('err'));
+            localStorage.clear();
+            window.location = '/';
+        }).catch(submitError);
+    } else {
+        localStorage.clear();
+        window.location = '/';
     }
-
-    localStorage.clear();
-    window.location = '/';
 }
 
 // checks every 10 seconds if token is expired
@@ -1141,16 +1141,26 @@ function loadStart() {
     ).then(function(res) {
         if (!res.ok) throw(res);
         res.json().then(function(pts) {
-            localStorage.isPatient = JSON.stringify(false);
-            localStorage.patients = JSON.stringify(pts);
-            localStorage.display = JSON.stringify(pts);
-            if (localStorage.patients != '[]') {
-                clear();
-                loadProgress(localStorage.patients);
-                loadPatients(localStorage.patients);
-            } else {
-                loadEmpty();
-            }
+            fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token
+            ).then(function(res1) {
+                if (!res1.ok) throw(res1);
+                res1.json().then(function(data) {
+                    if (data.isVerified == 'false') {
+                        document.getElementById('accept-modal').style.display = 'block';
+                    } else {
+                        localStorage.isPatient = JSON.stringify(false);
+                        localStorage.patients = JSON.stringify(pts);
+                        localStorage.display = JSON.stringify(pts);
+                        if (localStorage.patients != '[]') {
+                            clear();
+                            loadProgress(localStorage.patients);
+                            loadPatients(localStorage.patients);
+                        } else {
+                            loadEmpty();
+                        }
+                    }
+                });
+            });
         });
     }).catch(submitError);
 }
@@ -1160,19 +1170,19 @@ function loadPatientStart() {
     ).then(function(res) {
         if (!res.ok) throw(res);
         res.json().then(function(patient) {
-            localStorage.isPatient = JSON.stringify(true);
-            localStorage.patients = JSON.stringify([patient]);
-            localStorage.display = JSON.stringify([patient]);
-            if (localStorage.patients != '[]') {
-                clear();
-                if (patient.isVerified == 'false') {
-                    document.getElementById('accept-modal').style.display = 'block';
-                } else {
+            if (patient.isVerified == 'false') {
+                document.getElementById('accept-modal').style.display = 'block';
+            } else {
+                localStorage.isPatient = JSON.stringify(true);
+                localStorage.patients = JSON.stringify([patient]);
+                localStorage.display = JSON.stringify([patient]);
+                if (localStorage.patients != '[]') {
+                    clear();
                     loadProgress(localStorage.patients);
                     loadPatients(localStorage.patients);
+                } else {
+                    loadEmpty();
                 }
-            } else {
-                loadEmpty();
             }
         });
     }).catch(submitError);

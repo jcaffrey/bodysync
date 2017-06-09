@@ -67,6 +67,18 @@ router.post('/forgotpassword', function(req, res, next) {
     }).pipe(res);
 });
 
+router.get('/agree', function(req, res, next) {
+    request.get(config.apiUrl + '/agree/?token=' + req.query.token, {
+        headers: { 'x-access-token': req.query.token }
+    }).pipe(res);
+});
+
+router.get('/ptSessions/:ptId/:patientId', function(req, res, next) {
+    request.get(config.apiUrl + '/ptSessions/' + req.params.ptId + '/' + req.params.patientId + '/?token=' + req.query.token, {
+        headers: { 'x-access-token': req.query.token }
+    }).pipe(res);
+});
+
 // reset password view
 router.get('/reset-password', function(req, res, next) {
     return res.render('reset-password', { url: '/password-reset-message', footerButton: 'Cancel', footerButton2: 'Submit'});
@@ -124,6 +136,7 @@ router.post('/pts', function(req, res, next) {
     }).pipe(res);
 });
 
+
 router.put('/patients/:id', function(req, res, next) {
     if (!req.headers['x-access-token'] && !req.query.token) return res.sendStatus(400);
     request.put({
@@ -138,6 +151,12 @@ router.post('/pts/:id/patients', function(req, res, next) {
         url: config.apiUrl + '/pts/' + req.params.id + '/patients',
         headers: {'x-access-token': req.headers['x-access-token']},
         form: req.body
+    }).pipe(res);
+});
+
+router.get('/pts/:id/isVerified', function(req, res, next) {
+    request.get(config.apiUrl + '/pts/' + req.params.id + '/isVerified/?token=' + req.query.token, {
+        headers: { 'x-access-token': req.query.token }
     }).pipe(res);
 });
 
