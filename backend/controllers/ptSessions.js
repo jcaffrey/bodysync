@@ -17,24 +17,6 @@ module.exports.handleSession = (req, res, next) => {
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
-
-
-    var data = [];
-    for (var i in req.body.patientIds) {
-        data.push({
-            ptId: decoded.id,
-            resourceRequested: req.url,
-            sessionNumber: decoded.sessionNumber,
-            duration: null,
-            patientId: req.body.patientIds[i]
-        })
-    }
-    models.ptSession.bulkCreate(data)
-        .then(function() {
-            return;
-        }).catch(function(err) { return next(err); });
-
-
     var today = new Date();
     if(req.params.patientId == -1)  // ~~~~~~~~~ case where we create new rows for all patients
     {
@@ -52,12 +34,8 @@ module.exports.handleSession = (req, res, next) => {
                     where: {
                         ptId: decoded.id,
                         sessionNumber: decoded.sessionNumber
-                    },
-                    order: [
-                        ['createdAt', 'DESC']
-                    ]
-                }).then(function(sessions) {
-                    if(sessions && sessions.length !== 0)
+                }).then(function(ptSessions) {
+                    if(ptSessions && ptSessions.length !== 0)
                     {
                         // check if time has not been set already (if not set we want to update duration)
 

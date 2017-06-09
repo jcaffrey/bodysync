@@ -23,7 +23,9 @@ exports.updateVerified = (req, res, next) => {
                 id: decoded.id
             }
         }).then(function (pt) {
-
+            return res.status(200).send('updated verify field for pt')
+        }).catch(function (err) {
+            return next(err);
         })
     }
     else
@@ -35,6 +37,10 @@ exports.updateVerified = (req, res, next) => {
             where: {
                 id: decoded.id
             }
+        }).then(function (pt) {
+            return res.status(200).send('updated verify field for pt')
+        }).catch(function (err) {
+            return next(err);
         })
     }
 }
