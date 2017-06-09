@@ -47,11 +47,16 @@ router.route('/')
 router.route('/ptSessions/:ptId/:patientId')  // logout will get -2 for patientId
     .get(auth.ptRequired, ptSessions.handleSession);
 
+<<<<<<< HEAD
 router.route('/agree')
     .get(auth.tokenRequired, auth.updateVerified);
 
 router.route('/login/pt')
     .post(auth.loginPt, ptSessions.createSession);  // keep this?
+=======
+router.route('/login/pt')
+    .post(auth.loginPt, ptSessions.createSession);   // keep this?
+>>>>>>> refactored auditLog
 router.route('/login/patient')
     .post(auth.loginPatient);
 

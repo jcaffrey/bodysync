@@ -13,6 +13,7 @@ var config = require('../config/config.json')[env];
 // here we assume that the PT is reading all of the resources associated with each patient (because they are)
 // the exact resources being read can be found by querying where createdAt is less than the createdAt of the row in the ptSessions table
 module.exports.handleSession = (req, res, next) => {
+
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
 
