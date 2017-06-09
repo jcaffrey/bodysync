@@ -31,7 +31,7 @@ module.exports.createPatient = (req, res, next) => {
             }
         }).then(function (user) {
             if(Object.keys(user).length !== 0) {
-                res.status(405).send('sorry that email is taken');
+                return res.status(405).send('sorry that email is taken');
             } else {
                 models.patient.create({
                     name: req.body.name,
@@ -99,10 +99,10 @@ module.exports.createPatient = (req, res, next) => {
                                     return next(err); // test this.
                             });
 
-                            res.json(pat);
-                            return next();
+                            return res.json(pat);
+                            //return next();
                         }).catch(function (err) {
-                            console.log('did not save')
+                            // console.log('did not save')
                             return next(err);
                         })
                 }
@@ -142,13 +142,13 @@ module.exports.getPatients = (req, res, next) => {
             }
 
         }).then(function(patients) {
-            res.json(patients);
-            var pIds = [];
-            for (var p in patients) {
-                pIds.push(patients[p].id);
-            }
-            req.body.patientIds = pIds;
-            return next();
+            return res.json(patients);
+            // var pIds = [];
+            // for (var p in patients) {
+            //     pIds.push(patients[p].id);
+            // }
+            // req.body.patientIds = pIds;
+            // return next();
         }).catch(function (e) {
             return next(e);
         })
@@ -171,9 +171,9 @@ module.exports.getPatientById = (req, res, next) => {
         if (decoded.isPt) {
             // if requesting pt is requested patient's pt
             if (decoded.id == patient.ptId) { // should be === ?
-                req.body.patientId = patient.id;
-                res.json(patient);
-                return next();
+               // req.body.patientId = patient.id;
+                return res.json(patient);
+                //return next();
             }  
             else {
                 return res.status(401).send('You are not authorized to see this resource');
@@ -220,8 +220,8 @@ module.exports.updatePatientNotes = (req, res, next) => {
             {
                 pat.ptNotes = req.body.ptNotes || pat.ptNotes;
                 pat.save().then(() => {
-                    res.json(pat);
-                    return res.status(200).send('success');
+                    return res.json(pat);
+                    //return res.status(200).send('success');
                 }).catch((err) => {
                     return next(err);
                 })
@@ -262,8 +262,8 @@ module.exports.deletePatient = (req, res, next) => {
                 // if requesting pt is requested patient's pt
                 if (decoded.id === patient.ptId) {
                     patient.destroy();
-                    res.json(patient);
-                    return next();
+                    return res.json(patient);
+                    //return next();
                 }
                 else {
                     return res.status(401).send('You are not authorized to destroy this resource');
@@ -271,7 +271,7 @@ module.exports.deletePatient = (req, res, next) => {
             }
         }
         else
-            res.status(404).send('Sorry not found');
+            return res.status(404).send('Sorry not found');
     }).catch(function(err) {
         return next(err);
                         // doesn't quite catch error how we would want? still get:

@@ -38,37 +38,38 @@ module.exports.createMeasure = (req, res, next) => {
                                     romMetricId: req.params.id
                                 }).then(function (measure) {
                                     if(Object.keys(measure).length !== 0){
-                                        res.json(measure);
-                                        return next();
+                                        return res.json(measure);
+                                        //return next();
                                     }
                                     else {
-                                        res.status(500).send('Could not create');
+                                        return res.status(500).send('Could not create');
                                     }
                                 }).catch(function (err) {
                                     return next(err);
                                 })
                             } else {
-                                res.status(401).send('Unauthorized');
+                                return res.status(401).send('Unauthorized');
                             }
                         } else {
-                            res.status(404).send('No patient with that injury');
+                            return res.status(404).send('No patient with that injury');
                         }
                     }).catch(function (err) {
                         // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
                         console.log("here1");
+                        return next(err);
                     })
                 } else {
-                    res.status(404).send('No patient with that injury');
+                    return res.status(404).send('No patient with that injury');
                 }
             }).catch(function (err) {
                 // CURRENTLY CATCHING ERROR HERE--GERARDO COULDN'T FIGURE IT OUT
                 return console.log("here2");
             })
         } else {
-            res.status(404).send('No injury with that rom');
+            return res.status(404).send('No injury with that rom');
         }
     }).catch(function (err) {
-        return console.log("here3");
+        return next(err);
     })
 }
 
@@ -108,18 +109,18 @@ module.exports.getMeasures = (req, res, next) => {
                                         if(!patient.isRestrictedFromRom || patient.id == decoded.id) {
                                             return res.json(measures);
                                         } else {
-                                            res.status(401).send('Patient unauthorized');
+                                            return res.status(401).send('Patient unauthorized');
                                         }
                                     }
                                     // is pt
                                     else {
                                         if(decoded.id == patient.ptId) {
-                                            req.body.patientId = patient.id || injury.patientId;
-                                            res.json(measures);
-                                            return next();
+                                            //req.body.patientId = patient.id || injury.patientId;
+                                            return res.json(measures);
+                                            //return next();
                                         }
                                         else {
-                                            res.status(401).send('PT unauthorized');
+                                            return res.status(401).send('PT unauthorized');
                                         }
                                     }
                                 }
@@ -135,7 +136,7 @@ module.exports.getMeasures = (req, res, next) => {
                 return next(err);
             })
         } else {
-            res.status(404).send('No Measures for that RomMetric');
+            return res.status(404).send('No Measures for that RomMetric');
         }
     }).catch(function (err) {
         return next(err);

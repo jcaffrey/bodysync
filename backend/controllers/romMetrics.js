@@ -29,16 +29,16 @@ module.exports.createRomMetric = (req, res, next) => {
                             startRange: req.body.startRange,
                             injuryId: req.params.id
                         }).then(function(rom) {
-                            res.json(rom);
-                            return next();
+                            return res.json(rom);
+                            //return next();
                         });
                     } else {
-                        res.status(401).send('PT unauthorized');
+                        return res.status(401).send('PT unauthorized');
                     }
                 }
             })
         } else {
-            res.status(404).send('No rom');
+            return res.status(404).send('No rom');
         }
     }).catch(function (err) {
         return next(err);
@@ -81,15 +81,19 @@ module.exports.getRomMetrics = (req, res, next) => {
                     }).then(function (patient) {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
-                                req.body.patientId = patient.id || injury.patientId;
-                                res.json(roms);
-                                return next();
+                                //req.body.patientId = patient.id || injury.patientId;
+                                return res.json(roms);
+                                //return next();
                             } else {
                                 return res.status(401).send('PT unauthorized');
                             }
                         }
+                    }).catch(function (err) {
+                        return next(err);
                     })
                 }
+            }).catch(function (err) {
+                return next(err);
             })
         } else {
             return res.status(404).send('No roms found');
@@ -126,27 +130,27 @@ module.exports.getRomMetricById = (req, res, next) => {
                         }).then(function (patient) {
                             if(Object.keys(patient).length !== 0) {
                                 if(decoded.id == patient.ptId) {
-                                    req.body.patientId = patient.id || injury.patientId;
-                                    res.json(rom);
-                                    return next();
+                                    //req.body.patientId = patient.id || injury.patientId;
+                                    return res.json(rom);
+                                    //return next();
                                 } else {
-                                    res.status(401).send('PT unauthorized');
+                                    return res.status(401).send('PT unauthorized');
                                 }
                             } else {
-                                res.status(404).send('No patient with that injury');
+                                return res.status(404).send('No patient with that injury');
                             }
                         }).catch(function (err) {
                             return next(err);
                         })
                     }
                 } else {
-                    res.status(404).send('no injury with that rom');
+                    return res.status(404).send('no injury with that rom');
                 }
             }).catch(function (err) {
                 return next(err);
             })
         } else {
-            res.status(404).send('No Metric with that id');
+            return res.status(404).send('No Metric with that id');
         }
     }).catch(function(err) {
         return next(err);
@@ -177,22 +181,26 @@ module.exports.deleteRomMetric = (req, res, next) => {
                         if(Object.keys(patient).length !== 0) {
                             if(decoded.id == patient.ptId) {
                                 rom.destroy();
-                                res.json(rom);
-                                return next();
+                                return res.json(rom);
+                                //return next();
                             }
                         } else {
-                            res.status(404).send('No patient with that injury');
+                            return res.status(404).send('No patient with that injury');
                         }
 
+                    }).catch(function (err) {
+                        return next(err);
                     })
                 } else {
-                    res.status(404).send('No injury with that rom');  // this indicates loss of data (as does the one above)..should never trigger
+                    return res.status(404).send('No injury with that rom');  // this indicates loss of data (as does the one above)..should never trigger
 
                 }
 
-                })
+                }).catch(function (err) {
+                return next(err);
+            })
         } else {
-            res.status(404).send('No rom with that id');
+            return res.status(404).send('No rom with that id');
         }
     }).catch(function (err) {
         return next(err);

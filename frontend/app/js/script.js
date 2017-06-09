@@ -81,19 +81,69 @@ function submitAdminLogin() {
     }).catch(submitError);
 }
 
+// function logout() {
+//     console.log(localStorage.isPatient == 'false');
+//     if (localStorage.isPatient == 'false') {
+//         console.log('here');
+//         fetch('/logoff/?token=' + localStorage.token, {
+//             method: 'GET'
+//         }).then(function(res) {
+//             console.log('PRINTING RES.OK')
+//             console.log(res.ok);
+//             // if (!res.ok) return submitError(res);
+//             console.log('here1');
+//             localStorage.clear();
+//             window.location = '/';
+//         }).catch(console.log('err'));
+//     } else {
+//         localStorage.clear();
+//         window.location = '/';
+//     }
+// }
+
 function logout() {
-    if (localStorage.isPatient == 'false') {
-        console.log('here');
+    if(localStorage.isPatient=='false' && !!localStorage.token)
+    {
+        console.log('FETHCING LOGOFF');
         fetch('/logoff/?token=' + localStorage.token, {
             method: 'GET'
-        }).then(function(res) {
-            if (!res.ok) return submitError(res);
-            console.log('here1');
-        }).catch(console.log('err'));
-    }
+        }).then(function(res) { // res is obj
+            if(!res.ok)
+            {
+                localStorage.clear();
+                window.location = '/';
+                return submitError(res, 'failed in logout');
+            }
+            res.json().then(function (success) {
+                if(success)
+                {
+                    console.log(success + 'it is happening');
+                    localStorage.clear();
+                    window.location = '/';
+                }
+                else
+                {
+                    console.log('GOT TO HERE')
+                }
+            }).catch(function (err) {
+                localStorage.clear();
+                window.location = '/';
+                console.log(err);
+                return;
+            })
 
-    localStorage.clear();
-    window.location = '/';
+        }).catch(function (err) {
+            localStorage.clear();
+            window.location = '/';
+            console.log(err);
+            return;
+        })
+    }
+    else
+    {
+        localStorage.clear();
+        window.location = '/';
+    }
 }
 
 // checks every 10 seconds if token is expired

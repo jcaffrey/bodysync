@@ -30,18 +30,18 @@ module.exports.createInjury = (req, res, next) => {
                     patientId: req.params.id
                 }).then(function(injury) {
                     if(Object.keys(injury).length !== 0) {
-                        res.json(injury);
-                        return next();
+                        return res.json(injury);
+                        //return next();
                     }
                     else {
-                        res.status(404).send('Could not create that injury')
+                        return res.status(404).send('Could not create that injury')
                     }
                 }).catch(function(err) {
                     return next(err);
                 })
             }
             else {
-                res.status(404).send('No patient with that id');
+                return res.status(404).send('No patient with that id');
             }
         }
 
@@ -83,17 +83,17 @@ module.exports.getInjuries = (req, res, next) => {
                      {
                         if (patient.ptId === decoded.id) {
                             // return the injuries!
-                            req.body.patientId = req.params.id;
-                            res.json(injuries);
-                            return next();
+                            //req.body.patientId = req.params.id;
+                            return res.json(injuries);
+                            //return next();
                         }
                         else {
-                            res.status(401).send('Unauthorized');
+                            return res.status(401).send('Unauthorized');
                         }
                      }
                      else
                      {
-                         res.status(404).send('no pat found');
+                         return res.status(404).send('no pat found');
                      }
                 }).catch(function(err) {
                     return next(err);
@@ -104,13 +104,13 @@ module.exports.getInjuries = (req, res, next) => {
                     return res.json(injuries);
                 }
                 else {
-                    res.status(403).send('Unauthorized');
+                    return res.status(403).send('Unauthorized');
                 }
             }
         }
         else
         {
-            res.status(404).send('Sorry no injuries found');
+            return res.status(404).send('Sorry no injuries found');
         }
     });
 };
@@ -144,21 +144,21 @@ module.exports.getInjuryById = (req, res, next) => {
                 }).then(function(patient) {
                     if (Object.keys(patient).length !== 0) {
                         if (patient.ptId == decoded.id) {
-                            req.body.patientId = patient.id || injury.patientId;
-                            res.json(injury);
-                            return next();
+                            //req.body.patientId = patient.id || injury.patientId;
+                            return res.json(injury);
+                            // return next();
                         } else {
-                            res.status(401).send('PTs are unauthorized to see injuries of patients who are not their own');
+                            return res.status(401).send('PTs are unauthorized to see injuries of patients who are not their own');
                         }
                     } else {
-                        res.status(404).send('No patient with that injury');
+                        return res.status(404).send('No patient with that injury');
                     }
                 }).catch(function(err) {
                     return next(err);
                 })
             }
         } else {
-            res.status(404).send('No injury with that Id');
+            return res.status(404).send('No injury with that Id');
         }
     }).catch(function(err) {
         return next(err);
@@ -200,10 +200,10 @@ module.exports.deleteInjury = (req, res, next) => {
                     // check requesting pt is authorized to delete!
                     if(patient.ptId == decoded.id) {
                         injury.destroy();
-                        res.json(injury);
-                        return next();
+                        return res.json(injury);
+                        // return next();
                     } else {
-                        res.status(401).send('PT unauthorized to delete that injury');
+                        return res.status(401).send('PT unauthorized to delete that injury');
                     }
                 }
             }).catch(function (err) {
@@ -211,7 +211,7 @@ module.exports.deleteInjury = (req, res, next) => {
             })
         }
     }).catch(function(err) {
-        next(err);
+        return next(err);
     })
 
 
