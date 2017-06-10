@@ -250,11 +250,11 @@ exports.forgotPassword = (req, res, next) => {
                         body: {
                             intro: 'Welcome back to Prompt Therapy Solutions!',
                             action: {
-                                instructions: 'To resent your password, please click here:',
+                                instructions: 'To reset your password, please click here:',
                                 button : {
                                     color: '#2e3192',
                                     text: 'Reset your password',
-                                    link: config.frontendServer + '/reset-token/' + token + '/false'
+                                    link: config.frontendServer + '/reset-token/' + token + '/true'
                                 }
                             },
                             outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'

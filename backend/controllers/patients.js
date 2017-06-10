@@ -78,7 +78,7 @@ module.exports.createPatient = (req, res, next) => {
                                         button : {
                                             color: '#2e3192',
                                             text: 'Get Started',
-                                            link: config.frontendServer + '/reset/' + token   // TODO: WHAT SHOULD THIS ROUTE BE ON FRONTEND?
+                                            link: config.frontendServer + '/reset-token/' + token + '/false'   // TODO: WHAT SHOULD THIS ROUTE BE ON FRONTEND?
                                         }
                                     },
                                     outro: 'Need help, or have questions? Just reply to this email.'
