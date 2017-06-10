@@ -331,7 +331,7 @@ exports.resetPassword = (req, res, next) => {
                                 button: {
                                     color: '#2e3192',
                                     text: 'Login',
-                                    link: config.frontendRoute + '/login/'
+                                    link: config.frontendServer + '/login/'
                                 }
 
                             }
@@ -394,7 +394,7 @@ exports.resetPassword = (req, res, next) => {
                                 button: {
                                     color: '#2e3192',
                                     text: 'Login',
-                                    link: config.frontendRoute + '/login/'
+                                    link: config.frontendServer + '/login/'
                                 }
 
                             }

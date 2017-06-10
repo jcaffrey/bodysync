@@ -10,7 +10,7 @@
     "emailFromAddr": "prompttherapysolutions@gmail.com",
     "emailPw": "HSADev678",
     "secret": "thisisthesecret",
-    "frontendServer": "localhost:3001"
+    "frontendServer": "http:localhost:3001"
   },
   "test": {
     "username": "root",

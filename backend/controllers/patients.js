@@ -74,14 +74,14 @@ module.exports.createPatient = (req, res, next) => {
                                 body: {
                                     intro: 'Welcome to Prompt Therapy Solutions - the road to recovery starts here!',
                                     action: {
-                                        instructions: 'To get started with Prompt Therapy Solutions, please click here:',
+                                        instructions: 'To get started, please click here:',
                                         button : {
                                             color: '#2e3192',
-                                            text: 'Set your password',
-                                            link: config.frontendRoute + '/reset/' + token
+                                            text: 'Get Started',
+                                            link: config.frontendServer + '/reset/' + token   // TODO: WHAT SHOULD THIS ROUTE BE ON FRONTEND?
                                         }
                                     },
-                                    outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
+                                    outro: 'Need help, or have questions? Just reply to this email.'
                                 }
                             }
 

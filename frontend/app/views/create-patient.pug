@@ -16,7 +16,7 @@ block content
     form
         .inputs
             .input-box#patname
-                input.text-input(type='name' name='name' placeholder='John Smith ' onblur="checkName(this.value)" maxlength="24")
+                input.text-input(type='name' name='name' placeholder='John Smith ' onblur="checkName(this.value)" maxlength="35")
                 .input-name Name
             .input-box
                 input.text-input#file-upload(type='file' name='file-upload' onchange='handleFileInput()')
@@ -40,7 +40,7 @@ block content
                 input.text-input(type='phone' id='phone' name='phone' placeholder='(123) 456-7891 ' onblur="checkPhone(this.value)" maxlength="13" onkeypress="return isNumberKey(event)")
                 .input-name Phone #
             .input-box.last-box
-                .input-name Restricted Data?
+                .input-name Worker's Comp? (no ROM)
                 .radio1.restr-data-radio
                     label(for="YES").pad-data-radio Yes
                     #radBox2
