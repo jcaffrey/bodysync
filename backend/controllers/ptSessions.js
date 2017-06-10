@@ -71,11 +71,11 @@ module.exports.handleSession = (req, res, next) => {
                                 }
                                 models.ptSession.bulkCreate(data)
                                     .then(function() {
-                                        return;
+                                        return res.status(200).send('updated sessions successfully');
                                     }).catch(function(err) { return next(err); });
 
 
-                                return;
+                                //return;
                             }).catch(function (err) {
                                 return next(err);
                             })

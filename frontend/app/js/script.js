@@ -103,7 +103,7 @@ function submitAdminLogin() {
 
 function logout() {
     if (localStorage.isPatient == 'false') {
-        fetch('/ptSessions/' + localStorage.id + '/-2/?token=' + localStorage.token, {
+        fetch('/ptSessions/-2/?token=' + localStorage.token, {
             method: 'GET'
         }).then(function(res) {
             if (!res.ok) return submitError(res);
@@ -771,7 +771,7 @@ function chooseInjury (c) {
 
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
-    fetch('/ptSessions/' + localStorage.id + '/' + pfp.id + '/?token=' + localStorage.token, {
+    fetch('/ptSessions/' +  pfp.id + '/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function(res) {
         if (!res.ok) return submitError(res);
@@ -1129,7 +1129,7 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 }
 
 function loadStart() {
-    fetch('/ptSessions/' + localStorage.id + '/-1/?token=' + localStorage.token, {
+    fetch('/ptSessions/-1/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function(res) {
         if (!res.ok) return submitError(res);
