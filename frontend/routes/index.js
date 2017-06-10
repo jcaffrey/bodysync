@@ -73,8 +73,8 @@ router.get('/agree', function(req, res, next) {
     }).pipe(res);
 });
 
-router.get('/ptSessions/:ptId/:patientId', function(req, res, next) {
-    request.get(config.apiUrl + '/ptSessions/' + req.params.ptId + '/' + req.params.patientId + '/?token=' + req.query.token, {
+router.get('/ptSessions/:patientId', function(req, res, next) {
+    request.get(config.apiUrl + '/ptSessions/' + req.params.patientId + '/?token=' + req.query.token, {
         headers: { 'x-access-token': req.query.token }
     }).pipe(res);
 });

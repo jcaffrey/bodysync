@@ -13,26 +13,9 @@ var config = require('../config/config.json')[env];
 // here we assume that the PT is reading all of the resources associated with each patient (because they are)
 // the exact resources being read can be found by querying where createdAt is less than the createdAt of the row in the ptSessions table
 module.exports.handleSession = (req, res, next) => {
+
     var token = req.query.token || req.body.token || req.headers['x-access-token'];
     var decoded = jwt.verify(token, config.secret);
-
-
-
-    var data = [];
-    for (var i in req.body.patientIds) {
-        data.push({
-            ptId: decoded.id,
-            resourceRequested: req.url,
-            sessionNumber: decoded.sessionNumber,
-            duration: null,
-            patientId: req.body.patientIds[i]
-        })
-    }
-    models.ptSession.bulkCreate(data)
-        .then(function() {
-            return;
-        }).catch(function(err) { return next(err); });
-
 
     var today = new Date();
     if(req.params.patientId == -1)  // ~~~~~~~~~ case where we create new rows for all patients
@@ -55,8 +38,8 @@ module.exports.handleSession = (req, res, next) => {
                     order: [
                         ['createdAt', 'DESC']
                     ]
-                }).then(function(sessions) {
-                    if(sessions && sessions.length !== 0)
+                }).then(function(ptSessions) {
+                    if(ptSessions && ptSessions.length !== 0)
                     {
                         // check if time has not been set already (if not set we want to update duration)
 
@@ -72,6 +55,7 @@ module.exports.handleSession = (req, res, next) => {
                                     ptId: decoded.id,
                                     sessionNumber: decoded.sessionNumber,
                                     duration: null,
+                                    createdAt: ptSessions[0].createdAt // SHOULD THIS BE HERE??
                                 }
                             }).then(function() {
                                 // create new rows
@@ -88,11 +72,11 @@ module.exports.handleSession = (req, res, next) => {
                                 }
                                 models.ptSession.bulkCreate(data)
                                     .then(function() {
-                                        return;
+                                        return res.status(200).send('updated sessions successfully');
                                     }).catch(function(err) { return next(err); });
 
 
-                                return;
+                                //return;
                             }).catch(function (err) {
                                 return next(err);
                             })
@@ -142,13 +126,13 @@ module.exports.handleSession = (req, res, next) => {
             order: [
                 ['createdAt', 'DESC']
             ]
-        }).then(function(sessions) {
-            if(sessions && sessions.length !== 0)
+        }).then(function(ptSessions) {
+            if(ptSessions && ptSessions.length !== 0)
             {
                 // check if time has not been set already (if not set we want to update duration)
 
                 // backfill the duration..
-                var cDate = new Date(sessions[0].createdAt);
+                var cDate = new Date(ptSessions[0].createdAt);
                 var diff = today.getTime() - cDate.getTime();
 
                 models.ptSession.update({
@@ -159,6 +143,7 @@ module.exports.handleSession = (req, res, next) => {
                             ptId: decoded.id,
                             sessionNumber: decoded.sessionNumber,
                             duration: null,
+                            // createdAt: ptSessions[0].createdAt, // SHOULD THIS BE HERE??
                         }
                     }).then(function () {
                     return res.status(200).send('backfilled rows');
@@ -173,13 +158,70 @@ module.exports.handleSession = (req, res, next) => {
             }
         });
     }
-    else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient
+    else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient. todo 1: handle case where pt updates a patient that isn't theirs?
     {
         // keep counting for that patientId, close out the rest
+        models.ptSession.findAll({
+            where: {
+                ptId: decoded.id,
+                sessionNumber: decoded.sessionNumber
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(function(ptSessions) {
+            if(ptSessions && ptSessions.length !== 0)
+            {
+                // check if time has not been set already (if not set we want to update duration)
 
+                // backfill the duration..
+                var cDate = new Date(ptSessions[0].createdAt);
+                var diff = today.getTime() - cDate.getTime();
+
+                // // ************update where not patientId**************
+                models.ptSession.update({
+                        duration: diff
+                    },
+                    {
+                        where: {
+                            ptId: decoded.id,
+                            sessionNumber: decoded.sessionNumber,
+                            duration: null,
+                            patientId: {$ne: req.params.patientId}
+                        }
+                    }).then(function () {
+                    return res.status(200).send('backfilled rows');
+
+                }).catch(function (err) {
+                    return next(err);
+                })
+
+                // for (var i = 0; i < ptSessions.length; i++)
+                // {
+                //     (function(x) {
+                //         console.log(ptSessions[i].id !== req.params.patientId);
+                //         console.log(ptSessions[i].id);
+                //         console.log(req.params.patientId);
+                //         if (ptSessions[i].patientId !== req.params.patientId) {
+                //             // update this duration
+                //             ptSessions[i].duration = diff;
+                //             ptSessions[i].save();   // todo 1: catch error here?
+                //         }
+                //     })(i)
+                // }
+                return res.status(200).send('backfilled rows except for that certain patient');
+
+            }
+            else
+            {
+                return res.status(404).send('no rows to update')
+            }
+        }).catch(function (err) {
+            return next(err);
+        })
     }
-    res.json({success: 'success'});
-};
+}
+
 
 
 module.exports.createSession = (req, res, next) => {
@@ -202,170 +244,170 @@ module.exports.createSession = (req, res, next) => {
  Audit log ptSessions after every GET request for sensitive patient electronic health records.
 
  */
-module.exports.logSession = (req, res, next) => {
-    var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    var decoded = jwt.verify(token, config.secret);
-
-    var today = new Date();
-
-    console.log('---------IN LOG LOG LOG LOG SESSIONS')
-
-
-    // get duration
-    // query ptSession table for most recent row ON ptId AND sessionId, update duration of this data using
-    // current request's start time as that request's end time - iff it is not set already (because of updateSession)
-    // (so, we're backfilling the table)
-    if(decoded.isPt)
-    {
-        models.ptSession.findAll({
-            where: {
-                ptId: decoded.id,
-                sessionNumber: decoded.sessionNumber
-            },
-            order: [
-                ['createdAt', 'DESC']
-            ]
-        }).then(function (ptSessions) {
-            if(ptSessions.length !== 0)
-            {
-                // check if time has not been set already (if not set we want to update duration)
-                if(ptSessions[0].duration == null)
-                {
-                    var diff;
-                    // backfill the duration..
-                    var cDate = new Date(ptSessions[0].createdAt);
-                    diff = today.getTime() - cDate.getTime();
-
-                    models.ptSession.update({
-                        duration: diff
-                    },
-                        {
-                            where: {
-                                ptId: decoded.id,
-                                sessionNumber: decoded.sessionNumber,
-                                duration: null,
-                                resourceRequested: ptSessions[0].resourceRequested,
-                                createdAt: ptSessions[0].createdAt
-                            }
-                    }).then(function() {
-                        return;
-                    })
-                }
-
-                if (req.body.patientIds) {
-                    var data = [];
-                    for (var i in req.body.patientIds) {
-                        data.push({
-                            ptId: decoded.id,
-                            resourceRequested: req.url,
-                            sessionNumber: decoded.sessionNumber,
-                            duration: null,
-                            patientId: req.body.patientIds[i]
-                        })
-                    }
-                    models.ptSession.bulkCreate(data)
-                        .then(function() {
-                            return;
-                        }).catch(function(err) { return next(err); });
-                } else if(req.body.patientId) {
-                    models.ptSession.create({
-                        ptId: decoded.id,
-                        resourceRequested: req.url,
-                        sessionNumber: decoded.sessionNumber,
-                        duration: null,
-                        patientId: req.body.patientId
-                    }).then(function () {
-                        return;
-                    }).catch(function (err) {
-                        return next(err);
-                    })
-                } else {
-                    console.log('error: no patientId associated with logging route');
-                    return;
-                }
-            }
-            else
-            {
-                console.log('oops something went wrong. no ptSession with that sessionNumber and id');
-                return;
-            }
-        }).catch(function (err) {
-            return next(err);
-        })
-
-    }
-    else
-    {
-        console.log('only log pt sessions');
-        return;
-    }
-}
-
-// a helper function to update durations when a non-GET request follows a GET request
-// (since we're only tracking when sensitive information is being viewed i.e. via GET)
-// no need to log post requests..
-// TODO: call update session when the frontend hits the logout route on backend..
-// TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
-module.exports.updateSession = (req, res, next) => {
-   // return res.json({success: 'sucess'});
-    var token = req.query.token || req.body.token || req.headers['x-access-token'];
-    var decoded = jwt.verify(token, config.secret);
-
-    var today = new Date();
-
-    console.log('IN UPDATE SESSIONS------------')
-    // query ptSesssion table ON ptId and sessionId
-    // check if duration is set and update accordingly
-    if(decoded.isPt)
-    {
-        models.ptSession.findAll({
-            where: {
-                ptId: decoded.id,
-                sessionNumber: decoded.sessionNumber
-            },
-            order: [
-                ['createdAt', 'DESC']
-            ]
-        }).then(function (ptSessions) {
-            if(ptSessions.length !== 0)
-            {
-                if(ptSessions[0].duration == null) {
-                    var cDate = new Date(ptSessions[0].createdAt);
-                    var diff = today.getTime() - cDate.getTime();
-
-                    models.ptSession.update(
-                        {duration: diff},
-                        {where: {
-                            ptId: decoded.id,
-                            sessionNumber: decoded.sessionNumber,
-                            duration: null,
-                            resourceRequested: ptSessions[0].resourceRequested,
-                            createdAt: ptSessions[0].createdAt
-                        }
-                        });
-                    console.log('ALKSDFALJSFLKJAL----------'+req.url.includes('/logoff'));
-
-                    if(req.url.includes('/logoff'))
-                        return res.json({success: 'success'});
-
-                    return;
-                } else {
-                    return;
-                }
-            }
-            else
-            {
-                console.log('oops something went wrong. no ptSession with that sessionNumber and id');
-                return;
-            }
-        }).catch(function (err) {
-            return next(err);
-        })
-    } else {
-        console.log('only log pt sessions');
-        return;
-    }
-};
+// module.exports.logSession = (req, res, next) => {
+//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
+//     var decoded = jwt.verify(token, config.secret);
+//
+//     var today = new Date();
+//
+//     console.log('---------IN LOG LOG LOG LOG SESSIONS')
+//
+//
+//     // get duration
+//     // query ptSession table for most recent row ON ptId AND sessionId, update duration of this data using
+//     // current request's start time as that request's end time - iff it is not set already (because of updateSession)
+//     // (so, we're backfilling the table)
+//     if(decoded.isPt)
+//     {
+//         models.ptSession.findAll({
+//             where: {
+//                 ptId: decoded.id,
+//                 sessionNumber: decoded.sessionNumber
+//             },
+//             order: [
+//                 ['createdAt', 'DESC']
+//             ]
+//         }).then(function (ptSessions) {
+//             if(ptSessions.length !== 0)
+//             {
+//                 // check if time has not been set already (if not set we want to update duration)
+//                 if(ptSessions[0].duration == null)
+//                 {
+//                     var diff;
+//                     // backfill the duration..
+//                     var cDate = new Date(ptSessions[0].createdAt);
+//                     diff = today.getTime() - cDate.getTime();
+//
+//                     models.ptSession.update({
+//                         duration: diff
+//                     },
+//                         {
+//                             where: {
+//                                 ptId: decoded.id,
+//                                 sessionNumber: decoded.sessionNumber,
+//                                 duration: null,
+//                                 resourceRequested: ptSessions[0].resourceRequested,
+//                                 createdAt: ptSessions[0].createdAt
+//                             }
+//                     }).then(function() {
+//                         return;
+//                     })
+//                 }
+//
+//                 if (req.body.patientIds) {
+//                     var data = [];
+//                     for (var i in req.body.patientIds) {
+//                         data.push({
+//                             ptId: decoded.id,
+//                             resourceRequested: req.url,
+//                             sessionNumber: decoded.sessionNumber,
+//                             duration: null,
+//                             patientId: req.body.patientIds[i]
+//                         })
+//                     }
+//                     models.ptSession.bulkCreate(data)
+//                         .then(function() {
+//                             return;
+//                         }).catch(function(err) { return next(err); });
+//                 } else if(req.body.patientId) {
+//                     models.ptSession.create({
+//                         ptId: decoded.id,
+//                         resourceRequested: req.url,
+//                         sessionNumber: decoded.sessionNumber,
+//                         duration: null,
+//                         patientId: req.body.patientId
+//                     }).then(function () {
+//                         return;
+//                     }).catch(function (err) {
+//                         return next(err);
+//                     })
+//                 } else {
+//                     console.log('error: no patientId associated with logging route');
+//                     return;
+//                 }
+//             }
+//             else
+//             {
+//                 console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+//                 return;
+//             }
+//         }).catch(function (err) {
+//             return next(err);
+//         })
+//
+//     }
+//     else
+//     {
+//         console.log('only log pt sessions');
+//         return;
+//     }
+// }
+//
+// // a helper function to update durations when a non-GET request follows a GET request
+// // (since we're only tracking when sensitive information is being viewed i.e. via GET)
+// // no need to log post requests..
+// // TODO: call update session when the frontend hits the logout route on backend..
+// // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
+// module.exports.updateSession = (req, res, next) => {
+//    // return res.json({success: 'sucess'});
+//     var token = req.query.token || req.body.token || req.headers['x-access-token'];
+//     var decoded = jwt.verify(token, config.secret);
+//
+//     var today = new Date();
+//
+//     console.log('IN UPDATE SESSIONS------------')
+//     // query ptSesssion table ON ptId and sessionId
+//     // check if duration is set and update accordingly
+//     if(decoded.isPt)
+//     {
+//         models.ptSession.findAll({
+//             where: {
+//                 ptId: decoded.id,
+//                 sessionNumber: decoded.sessionNumber
+//             },
+//             order: [
+//                 ['createdAt', 'DESC']
+//             ]
+//         }).then(function (ptSessions) {
+//             if(ptSessions.length !== 0)
+//             {
+//                 if(ptSessions[0].duration == null) {
+//                     var cDate = new Date(ptSessions[0].createdAt);
+//                     var diff = today.getTime() - cDate.getTime();
+//
+//                     models.ptSession.update(
+//                         {duration: diff},
+//                         {where: {
+//                             ptId: decoded.id,
+//                             sessionNumber: decoded.sessionNumber,
+//                             duration: null,
+//                             resourceRequested: ptSessions[0].resourceRequested,
+//                             createdAt: ptSessions[0].createdAt
+//                         }
+//                         });
+//                     console.log('ALKSDFALJSFLKJAL----------'+req.url.includes('/logoff'));
+//
+//                     if(req.url.includes('/logoff'))
+//                         return res.json({success: 'success'});
+//
+//                     return;
+//                 } else {
+//                     return;
+//                 }
+//             }
+//             else
+//             {
+//                 console.log('oops something went wrong. no ptSession with that sessionNumber and id');
+//                 return;
+//             }
+//         }).catch(function (err) {
+//             return next(err);
+//         })
+//     } else {
+//         console.log('only log pt sessions');
+//         return;
+//     }
+// };
 
 // module.exports.endSession = (req, res, next) => {
 //     // TODO: have the frontend fetch the /logout route (w/ the token) on the backend when the user logs out.
