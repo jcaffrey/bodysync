@@ -101,12 +101,15 @@ function submitAdminLogin() {
 //     }
 // }
 
+// TODO: fix this
 function logout() {
+    // localStorage.clear();
+    // window.location = '/';
     if (localStorage.isPatient == 'false') {
         fetch('/ptSessions/-2/?token=' + localStorage.token, {
             method: 'GET'
         }).then(function(res) {
-            if (!res.ok) return submitError(res);
+            // if (!res.ok) return submitError(res);
             localStorage.clear();
             window.location = '/';
         }).catch(submitError);

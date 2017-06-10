@@ -55,6 +55,7 @@ module.exports.handleSession = (req, res, next) => {
                                     ptId: decoded.id,
                                     sessionNumber: decoded.sessionNumber,
                                     duration: null,
+                                    createdAt: ptSessions[0].createdAt // SHOULD THIS BE HERE??
                                 }
                             }).then(function() {
                                 // create new rows
@@ -131,7 +132,7 @@ module.exports.handleSession = (req, res, next) => {
                 // check if time has not been set already (if not set we want to update duration)
 
                 // backfill the duration..
-                var cDate = new Date(sessions[0].createdAt);
+                var cDate = new Date(ptSessions[0].createdAt);
                 var diff = today.getTime() - cDate.getTime();
 
                 models.ptSession.update({
@@ -142,6 +143,7 @@ module.exports.handleSession = (req, res, next) => {
                             ptId: decoded.id,
                             sessionNumber: decoded.sessionNumber,
                             duration: null,
+                            // createdAt: ptSessions[0].createdAt, // SHOULD THIS BE HERE??
                         }
                     }).then(function () {
                     return res.status(200).send('backfilled rows');
@@ -156,7 +158,7 @@ module.exports.handleSession = (req, res, next) => {
             }
         });
     }
-    else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient
+    else    // ~~~~~~~~~ case where we backfill everything except for that SINGLE patient. todo 1: handle case where pt updates a patient that isn't theirs?
     {
         // keep counting for that patientId, close out the rest
         models.ptSession.findAll({
@@ -177,31 +179,36 @@ module.exports.handleSession = (req, res, next) => {
                 var diff = today.getTime() - cDate.getTime();
 
                 // // ************update where not patientId**************
-                // models.ptSession.update({
-                //         duration: diff
-                //     },
-                //     {
-                //         where: {
-                //             ptId: decoded.id,
-                //             sessionNumber: decoded.sessionNumber,
-                //             duration: null,
-                //         }
-                //     }).then(function () {
-                //     return res.status(200).send('backfilled rows');
-                //
-                // }).catch(function (err) {
-                //     return next(err);
-                // })
-                for (var i = 0; i < ptSessions.length; i++)
-                {
-                    (function(x) {
-                        if (ptSessions[i].id !== req.params.patientId) {
-                            // update this duration
-                            ptSessions[i].duration = diff;
-                            ptSessions[i].save();
+                models.ptSession.update({
+                        duration: diff
+                    },
+                    {
+                        where: {
+                            ptId: decoded.id,
+                            sessionNumber: decoded.sessionNumber,
+                            duration: null,
+                            patientId: {$ne: req.params.patientId}
                         }
-                    })(i)
-                }
+                    }).then(function () {
+                    return res.status(200).send('backfilled rows');
+
+                }).catch(function (err) {
+                    return next(err);
+                })
+
+                // for (var i = 0; i < ptSessions.length; i++)
+                // {
+                //     (function(x) {
+                //         console.log(ptSessions[i].id !== req.params.patientId);
+                //         console.log(ptSessions[i].id);
+                //         console.log(req.params.patientId);
+                //         if (ptSessions[i].patientId !== req.params.patientId) {
+                //             // update this duration
+                //             ptSessions[i].duration = diff;
+                //             ptSessions[i].save();   // todo 1: catch error here?
+                //         }
+                //     })(i)
+                // }
                 return res.status(200).send('backfilled rows except for that certain patient');
 
             }
