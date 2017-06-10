@@ -20,6 +20,13 @@ var exerciseCompletions = require('../controllers/exerciseCompletions');
 var ptSessions = require('../controllers/ptSessions');
 
 
+ // HIPPA TODO:
+    // todo: make sure we soft-delete
+    // todo: store photos with ids (not personal info)
+    // todo: require strong passwords
+
+
+
 // N.B.: 
 // role-specific auth (are you at pt? a patient?) containing in ../controllers/auth,js 
 // requester-specific auth (are you a pt asking for your patients?) containing in controllers
