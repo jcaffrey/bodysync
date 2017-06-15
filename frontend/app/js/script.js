@@ -612,6 +612,7 @@ function loadPatients(patients) {
 
                     var sum = 0;
                     var count = 0;
+
                     for (var k = 0; k < psd[i].progress.length; k++) {
                         var value = psd[i].progress[k];
                         if (value != null) {
@@ -619,6 +620,7 @@ function loadPatients(patients) {
                             count++;
                         }
                     }
+
                     var percent = (sum / count).toFixed(1);
                     var indicator = color(percent);
 
@@ -628,12 +630,14 @@ function loadPatients(patients) {
                     prog.setAttribute('id', indicator[2]);
                     recbx.setAttribute('class', 'recovery-box');
                     p1.setAttribute('class', 'percent1');
+
                     if (indicator[0] === 'bbbbbb') {
                         p1.innerHTML = "<span>N/A</span>";
                     }
                     else {
                         p1.innerHTML = "<span>" + percent + "%</span>";
                     }
+
                     p1.style.color = "#" + indicator[0];
                     menu.setAttribute('class', 'arrow');
                     // menu.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
@@ -649,18 +653,37 @@ function loadPatients(patients) {
                     var collapseContent =
                         '<div class="collapse" id= "collapse' + i + collapseDiv +
                         '<hr><div class="space"></div>';
+
                     if (isPatient) {
                         collapseContent += '<hr><div class="space"></div>'
                     }
+
+                    function measuredRecently(date) {
+                        var year = +date.substring(0, 4);
+                        var month = +date.substring(5, 7) - 1;
+                        var day = +date.substring(8, 10);
+                        var oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        return (new Date(year, month, day)) < oneWeekAgo;
+                    }
+
+                    var unmeasured = false;
+
                     // TODO: val[5] is date last measured
                     for (var j = 0; j < psd[i].progress.length; j++) {
                         var val = psd[i].progress[j];
                         if (val !== null) {
                             c = '#' + color(val[0])[0];
-                            // TODO: check date here
+                            var notification = '';
+
+                            if (measuredRecently(val[5])) {
+                                unmeasured = true;
+                                notification = '<span style="color: #ce2310">!!&ensp;</span>';
+                            }
+
                             collapseContent +=
                                 '<div class="collapse-inner">' +
-                                '<div class="input-label">' + val[1] + '</div>' +
+                                '<div class="input-label">' + notification + val[1] + '</div>' +
                                 '<div class="input-percent" style="color:' + c + '">';
                             if (c === '#bbbbbb') {
                                 collapseContent += 'N/A</div>';
@@ -670,14 +693,17 @@ function loadPatients(patients) {
                             collapseContent += '</div>';
                         }
                     }
+
                     if (!isPatient) {
                         collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
                     }
                     else {
                         collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
                     }
+
                     collapse.innerHTML = collapseContent;
                     rec.setAttribute('class', 'recovery');
+
                     if (indicator[0] !== 'bbbbbb') {
                         rec.innerHTML = "<span>Recovered</span>";
                     }
@@ -689,7 +715,11 @@ function loadPatients(patients) {
                     recbx.appendChild(p1);
                     recbx.appendChild(rec);
                     div.setAttribute('class', 'pt-box');
-                    // added to make entire pt-box clickable
+
+                    if (unmeasured) {
+                        div.style.background = 'rgba(249, 168, 159, 0.25)';
+                    }
+
                     div.setAttribute("onclick", "displayCollapse('collapse" + i + "'); toggleOpen('nav-icon" + i + "')");
                     picbox.setAttribute('class', 'pic-box');
                     inner.setAttribute('class', 'info-box');
@@ -1532,9 +1562,9 @@ function createGraph(id) {
 
         var next_weeks_goal = +(injuryInfo[nextGoalId].goal);
 
-        var year = +(injuryInfo[injuryInfo.length - 2].date.substring(0,4));
-        var month = +(injuryInfo[injuryInfo.length - 2].date.substring(5,7)) - 1;
-        var day = +(injuryInfo[injuryInfo.length - 2].date.substring(8,10)) - 1;
+        var year = +(injuryInfo[injuryInfo.length - 2].date.substring(0, 4));
+        var month = +(injuryInfo[injuryInfo.length - 2].date.substring(5, 7)) - 1;
+        var day = +(injuryInfo[injuryInfo.length - 2].date.substring(8, 10)) - 1;
         var next_weeks_goal_date = new Date(year, month, day);
 
         var goal_point = [next_weeks_goal, (injuryInfo.length - 2)];
