@@ -5,3 +5,4 @@ bootstrap.js
 *.min.js
 *.log
 .env
+.DS_Store

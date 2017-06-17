@@ -1,7 +1,0 @@
-node_modules/
-.idea/
-*.css
-bootstrap.js
-*.min.js
-*.log
-.DS_Store
