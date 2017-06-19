@@ -2,7 +2,7 @@ module.exports = {
     port:  process.env.PORT || 3001,
 
     // location of backend, do not include trailing /
-    apiUrl: process.env.apiUrl ||'http://bodysync-api.h8wv74ic.healthcareblocks.com',
+    apiUrl: process.env.apiUrl ||'http://localhost:3000',
 
     // secret for creating tokens
     secret: 'thisisthesecret',
