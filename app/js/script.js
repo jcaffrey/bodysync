@@ -676,7 +676,7 @@ function loadPatients(patients) {
                             c = '#' + color(val[0])[0];
                             var notification = '';
 
-                            if (measuredRecently(val[5])) {
+                            if (!isPatient && measuredRecently(val[5])) {
                                 unmeasured = true;
                                 notification = '<span style="color: #ce2310">!!&ensp;</span>';
                             }
@@ -716,7 +716,7 @@ function loadPatients(patients) {
                     recbx.appendChild(rec);
                     div.setAttribute('class', 'pt-box');
 
-                    if (unmeasured) {
+                    if (!isPatient && unmeasured) {
                         div.style.background = 'rgba(249, 168, 159, 0.25)';
                     }
 
@@ -1517,7 +1517,7 @@ function loadEditExercise() {
 // =============================================================
 function createGraph(id) {
     document.getElementById('graph').innerHTML = '';
-    document.getElementById('loading1').style.display = 'inline';
+    document.getElementById('loading1').style.display = 'block';
     document.getElementById('graph-container').style.display = 'none';
     setTimeout(function () {
         var injuryInfo = JSON.parse(localStorage["graphData" + id]);
