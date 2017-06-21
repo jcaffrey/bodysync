@@ -31,14 +31,14 @@ app.use((req, res, next) => {
 });
 
 // development error handler
-if (app.locals.dev) {
-    app.use((err, req, res, next) => {
-        if (err.status !== 404) console.log(err);
-        res.status(err.status || 500).send();
-    });
-}
+// if (app.locals.dev) {
+app.use((err, req, res, next) => {
+    if (err.status !== 404) console.log(err);
+    res.status(err.status || 500).send();
+});
+// }
 
-app.use((err, req, res, next) => res.status(err.status || 500).send());
+// app.use((err, req, res, next) => res.status(err.status || 500).send());
 
 var server = app.listen(config.port);
 console.log('Listening at front-url:%s in %s mode',
