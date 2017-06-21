@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-    request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
+  request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
 router.post('/loginPatient', function(req, res, next) {
