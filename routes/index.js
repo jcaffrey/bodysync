@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-  console.log(config.apiUrl);
+  console.log('printing config.apiUrl'+config.apiUrl);
   request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 
