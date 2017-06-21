@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const config = require('../app/models/config');
+// var env = process.env.NODE_ENV || 'development';
+const config = require('../app/models/config');//[env];
 const auth = require('./auth');
 const request = require('request');
 const aws = require('aws-sdk');
@@ -10,6 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
+  console.log(config.apiUrl);
   request.post(config.apiUrl + '/login/pt', { form: req.body }).pipe(res);
 });
 

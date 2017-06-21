@@ -41,7 +41,6 @@ if (app.locals.dev) {
 app.use((err, req, res, next) => res.status(err.status || 500).send());
 
 var server = app.listen(config.port);
-console.log('Listening at http://localhost:%s in %s mode',
-    server.address().port, app.get('env'));
+server.address().port, app.get('env'));
 
 module.exports = app;
