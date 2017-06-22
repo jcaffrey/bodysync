@@ -1162,38 +1162,96 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 }
 
 function loadStart() {
-    fetch('/ptSessions/-1/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
-        ).then(function(res) {
-            if (!res.ok) throw(res);
-            res.json().then(function(pts) {
-                fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token
-                ).then(function(res1) {
-                    if (!res1.ok) throw(res1);
-                    res1.json().then(function(data) {
-                        if (data.isVerified == 'false') {
-                            document.getElementById('accept-modal').style.display = 'block';
-                        } else {
-                            localStorage.isPatient = JSON.stringify(false);
-                            localStorage.patients = JSON.stringify(pts);
-                            localStorage.display = JSON.stringify(pts);
-                            if (localStorage.patients != '[]') {
-                                clear();
-                                loadProgress(localStorage.patients);
-                                loadPatients(localStorage.patients);
-                            } else {
-                                loadEmpty();
-                            }
-                        }
-                    });
-                });
-            });
-        }).catch(submitError);
-    }).catch(submitError);
+    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token).then(function (res) {
+      if(!res.ok) return submitError(res);
+      res.json().then(function (pts) {
+        if(pts && pts.length !== 0) {
+            // fetch pts/id/isVerified
+
+              fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token).then(function (res1) {
+                if(!res1.ok) return submitError(res1);
+                console.log('three')
+
+                res1.json().then(function (data) {
+                  if (data.isVerified == 'false') {
+                    document.getElementById('accept-modal').style.display = 'block';
+                  }
+                  else {
+                    localStorage.isPatient = JSON.stringify(false);
+                    localStorage.patients = JSON.stringify(pts);
+                    localStorage.display = JSON.stringify(pts);
+                    console.log('IN HERE PRINGING localStorage.patients' + localStorage.patients);
+                    if (localStorage.patients != '[]') {
+                      clear();
+                      loadProgress(localStorage.patients);
+                      loadPatients(localStorage.patients);
+                    } else {
+                      loadEmpty();
+                    }
+                    fetch('/ptSessions/-1/?token=' + localStorage.token, {
+                      method: 'GET'
+                    }).then(function (res2) {
+                      console.log('two');
+                      res2.json().then(function(data2) {
+                        console.log(data2);
+                      })
+                    }).catch(submitError)
+                  }
+                }).catch(submitError)
+              }).catch(submitError)
+        }
+        else
+        {
+          if (JSON.stringify(pts) != '[]') {
+            clear();
+            loadProgress(localStorage.patients);
+            loadPatients(localStorage.patients);
+          } else {
+            loadEmpty();
+          }
+        }
+      }).catch(submitError)
+    }).catch(submitError)
 }
+
+
+// function loadStart() {
+//     console.log('dsjk');
+//     fetch('/ptSessions/-1/?token=' + localStorage.token, {
+//         method: 'GET'
+//     }).then(function(res) {
+//         if (!res.ok) return submitError(res);
+//         fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
+//         ).then(function(res) {
+//           console.log('dsjdsak');
+//             if (!res.ok) throw(res);
+//             res.json().then(function(pts) {
+//               console.log('fdsfds');
+//                 fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token
+//                 ).then(function(res1) {
+//                     if (!res1.ok) throw(res1);
+//                     res1.json().then(function(data) {
+//                         if (data.isVerified == 'false') {
+//                             document.getElementById('accept-modal').style.display = 'block';
+//                         } else {
+//                             console.log(pts);
+//                             localStorage.isPatient = JSON.stringify(false);
+//                             localStorage.patients = JSON.stringify(pts);
+//                             localStorage.display = JSON.stringify(pts);
+//                             if (localStorage.patients != '[]') {
+//                                 clear();
+//                                 loadProgress(localStorage.patients);
+//                                 loadPatients(localStorage.patients);
+//                             } else {
+//                                 loadEmpty();
+//                             }
+//                         }
+//                     });
+//                 });
+//             });
+//         }).catch(submitError);
+//     }).catch(submitError);
+// }
 
 function loadPatientStart() {
     fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
