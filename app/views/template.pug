@@ -57,7 +57,10 @@ html
                         div#passwordError.validationError
                         div#passwordConfirmError.validationError
                         div#phoneError.validationError
-                    a.footerButton#buttonLeft(href=url) #{footerButton}
+                    if url
+                        a.footerButton#buttonLeft(href=url) #{footerButton}
+                    else
+                        a.footerButton#buttonLeft(onclick='window.history.back()') #{footerButton}
                     block submitForm
 
         script(src='/js/script.min.js')

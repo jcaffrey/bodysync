@@ -3,10 +3,6 @@ extends template
 block cssSheets
     link(rel='stylesheet', href='/stylesheets/create-patient.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    script.
-        window.onload = function() {
-            if (localStorage.token) window.location = '/patients';
-        }
     style.
         form input[type='radio'] {
             opacity: 0;
@@ -40,7 +36,6 @@ block content
                     onkeypress="if (event.keyCode == 13) {if (form.PT.checked == true) {submitLogin()} " +
                         "else { submitPatientLogin() }} else {} ")
                 .input-name Password
-    //a#forgotPassword Forgot Password
     a.loginTitle.forgotPassword(style="font-size: 1em;" href="/forgotpassword") Forgot Password
     p#success
     p#js-error-message

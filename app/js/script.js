@@ -248,7 +248,9 @@ function submitPatient() {
     if (form.weight.value) data.weight = form.weight.value;
     if (localStorage.pictureUrl !== '') data.proPicUrl = localStorage.pictureUrl;
 
-    if (form.name.value && form.email.value && form.phone.value && form.isRestrictedFromRom.value) {
+    var degrees = document.getElementsByClassName('degrees');
+
+    if (degrees[0].value !== '' && degrees[1].value !== '' && form.name.value && form.email.value && form.phone.value && form.isRestrictedFromRom.value) {
         form.style.display = 'none';
         document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
         fetch('/pts/' + localStorage.id + '/patients', {
@@ -262,7 +264,6 @@ function submitPatient() {
             if (!res.ok) return submitError(res);
             else return res.json().then(function(result) {
                 var injuries = document.getElementsByClassName('rom-name-input');
-                var degrees = document.getElementsByClassName('degrees');
                 for (var i = 0; i < injuries.length; i++) {
                     (function(x) {
                         fetch('/patients/' + result.id + '/injuries', {
@@ -876,6 +877,11 @@ function loadFocusPatient () {
                     count++;
                 }
             }
+
+            if (count === 0) {
+                outBoxHTML += '<div class=\'no-measurements\'><h3>No measurements recorded.</h3></div>';
+            }
+
             outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
             // getting exercise set
 
@@ -1032,7 +1038,7 @@ function loadFocusPatient () {
         outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
         // getting exercise set
 
-        outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><span id="exerciseTitle">Patient Exercises</span>';
+        outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Motion</div><br><br><span id="exerciseTitle">Patient Exercises</span>';
 
         if (pfp.exercises.length > 0) {
             // adding list of exercises
