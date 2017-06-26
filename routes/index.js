@@ -99,7 +99,7 @@ router.get('/reset-password', function(req, res, next) {
 });
 
 router.get('/password-reset-message', function(req, res, next) {
-    return res.render('password-reset-message', { footerButton: 'login' });
+    return res.render('password-reset-message', { url: '/login', footerButton: 'login' });
 });
 
 router.get('/exercises', function(req, res, next) {
@@ -317,21 +317,21 @@ router.get('/create-patient', function(req, res, next) {
 // -------------------------------------------------------------------------------
 
 router.get('/patient-status', function(req, res, next) {
-    return res.render('patient-status', { type: 'pt', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  type: 'pt', url: '/add-measure', footerButton: 'Add Measure' });
 });
 
 router.get('/patient-status-patient', function(req, res, next) {
-    return res.render('patient-status', { type: 'patient', firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  type: 'patient', url: '/add-measure', footerButton: 'Add Measure' });
 });
 
 // patient view
 router.get('/patients', function(req, res, next) {
-    return res.render('patients', { type: 'pt', footerButton: 'Add Patient' });
+    return res.render('patients', { type: 'pt', url: '/create-patient', footerButton: 'Add Patient' });
 });
 
 // admin view
 router.get('/admin', function(req, res, next) {
-    return res.render('admin', { type: 'admin', footerButton: 'Clear', footerButton2: 'Submit' });
+    return res.render('admin', { type: 'admin', url: '/admin', footerButton: 'Clear', footerButton2: 'Submit' });
 });
 
 // exercise set view
