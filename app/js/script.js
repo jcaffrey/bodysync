@@ -423,6 +423,7 @@ function submitExerciseSet() {
 
 
 function submitEditExercise() {
+    console.log('IN SUBMIT EDIT EXERCISE')
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
     var data = {};
@@ -1068,7 +1069,10 @@ function loadFocusPatient () {
 
                 // adding delete and edit buttons for pts
                 if (!isPatient){
-                    outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
+                    // old vv
+                  // outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';   onclick="window.location=\'/admin\'"
+
+                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + '); window.location=\'/edit-exercise-set\';  ">Edit</a>';
                 }
                 outBoxHTML += '</div><br>';
             }
@@ -1316,38 +1320,96 @@ function loadExercisesPain(exId, patIndex, exIndex) {
 }
 
 function loadStart() {
-    fetch('/ptSessions/-1/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
-        fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
-        ).then(function(res) {
-            if (!res.ok) throw(res);
-            res.json().then(function(pts) {
-                fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token
-                ).then(function(res1) {
-                    if (!res1.ok) throw(res1);
-                    res1.json().then(function(data) {
-                        if (data.isVerified == 'false') {
-                            document.getElementById('accept-modal').style.display = 'block';
-                        } else {
-                            localStorage.isPatient = JSON.stringify(false);
-                            localStorage.patients = JSON.stringify(pts);
-                            localStorage.display = JSON.stringify(pts);
-                            if (localStorage.patients != '[]') {
-                                clear();
-                                loadProgress(localStorage.patients);
-                                loadPatients(localStorage.patients);
-                            } else {
-                                loadEmpty();
-                            }
-                        }
-                    });
-                });
-            });
-        }).catch(submitError);
-    }).catch(submitError);
+    fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token).then(function (res) {
+      if(!res.ok) return submitError(res);
+      res.json().then(function (pts) {
+        if(pts && pts.length !== 0) {
+            // fetch pts/id/isVerified
+
+              fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token).then(function (res1) {
+                if(!res1.ok) return submitError(res1);
+                console.log('three')
+
+                res1.json().then(function (data) {
+                  if (data.isVerified == 'false') {
+                    document.getElementById('accept-modal').style.display = 'block';
+                  }
+                  else {
+                    localStorage.isPatient = JSON.stringify(false);
+                    localStorage.patients = JSON.stringify(pts);
+                    localStorage.display = JSON.stringify(pts);
+                    console.log('IN HERE PRINGING localStorage.patients' + localStorage.patients);
+                    if (localStorage.patients != '[]') {
+                      clear();
+                      loadProgress(localStorage.patients);
+                      loadPatients(localStorage.patients);
+                    } else {
+                      loadEmpty();
+                    }
+                    fetch('/ptSessions/-1/?token=' + localStorage.token, {
+                      method: 'GET'
+                    }).then(function (res2) {
+                      console.log('two');
+                      res2.json().then(function(data2) {
+                        console.log(data2);
+                      })
+                    }).catch(submitError)
+                  }
+                }).catch(submitError)
+              }).catch(submitError)
+        }
+        else
+        {
+          if (JSON.stringify(pts) != '[]') {
+            clear();
+            loadProgress(localStorage.patients);
+            loadPatients(localStorage.patients);
+          } else {
+            loadEmpty();
+          }
+        }
+      }).catch(submitError)
+    }).catch(submitError)
 }
+
+
+// function loadStart() {
+//     console.log('dsjk');
+//     fetch('/ptSessions/-1/?token=' + localStorage.token, {
+//         method: 'GET'
+//     }).then(function(res) {
+//         if (!res.ok) return submitError(res);
+//         fetch('/pts/' + localStorage.id + '/patients?token=' + localStorage.token
+//         ).then(function(res) {
+//           console.log('dsjdsak');
+//             if (!res.ok) throw(res);
+//             res.json().then(function(pts) {
+//               console.log('fdsfds');
+//                 fetch('/pts/' + localStorage.id + '/isVerified?token=' + localStorage.token
+//                 ).then(function(res1) {
+//                     if (!res1.ok) throw(res1);
+//                     res1.json().then(function(data) {
+//                         if (data.isVerified == 'false') {
+//                             document.getElementById('accept-modal').style.display = 'block';
+//                         } else {
+//                             console.log(pts);
+//                             localStorage.isPatient = JSON.stringify(false);
+//                             localStorage.patients = JSON.stringify(pts);
+//                             localStorage.display = JSON.stringify(pts);
+//                             if (localStorage.patients != '[]') {
+//                                 clear();
+//                                 loadProgress(localStorage.patients);
+//                                 loadPatients(localStorage.patients);
+//                             } else {
+//                                 loadEmpty();
+//                             }
+//                         }
+//                     });
+//                 });
+//             });
+//         }).catch(submitError);
+//     }).catch(submitError);
+// }
 
 function loadPatientStart() {
     fetch('/patients/' + localStorage.id + '/?token=' + localStorage.token
@@ -1464,9 +1526,9 @@ function focusPatient (id) {
 
 function focusExercise (id) {
     var exercises = JSON.parse(localStorage.focusPatient).exercises;
-    for (var i = 0; i < exercises[0].length; i++) {
-        if (exercises[0][i].id == id) {
-            localStorage.focusExercise = JSON.stringify(exercises[0][i]);
+    for (var i = 0; i < exercises.length; i++) {
+        if (exercises[i].id == id) {
+            localStorage.focusExercise = JSON.stringify(exercises[i]);
         }
     }
 }
@@ -1639,7 +1701,10 @@ function submitExerciseCompletion(exId) {
 
 
 function loadEditExercise() {
+    console.log('ABOUT TO PARSE');
+    console.log(localStorage.focusExercise)
     var pfe = JSON.parse(localStorage.focusExercise);
+    console.log('~~~~~~~~~~~~~~GOT IN HERE~~~~~~~~~~~~~~~~~')
     setTimeout(function() {
         if (pfe.id) {
             var div = document.createElement('div');
@@ -1665,6 +1730,41 @@ function loadEditExercise() {
         }
     }, 50);
 }
+
+// function loadAddMeasure () {
+//   var data = JSON.parse(localStorage.focusPatient);
+//   var div = document.createElement('div');
+//   var content = '';
+//   var count = 0;
+//   for (var i = 0; i < data.progress.length; i++) {
+//     if (data.progress[i] !== null) {
+//       content +=
+//         '<div class="inputs" id="box' + count + '" style="display:block">' +
+//         '<div class="input-box input-header">' +
+//         '<div class="input-name"><span>' + data.progress[i][1] + '</span>' +
+//         '<div class="input-label"></div></div>' +
+//         '<div class="progress-icon"></div></div>' +
+//         '<div class="input-box input-bottom">' +
+//         '<div class="measure-container">' +
+//         '<div class="m-old">' +
+//         '<div class="num">' +
+//         '<input type="text" id="oldValue" value="' + data.progress[i][2] + '" readonly></div>' +
+//         '<div class="m-label">PREVIOUS</div></div>' +
+//         '<div class="m-new">' +
+//         '<div class="num">' +
+//         '<input type="text" name="newMeasure" placeholder="NEW" id="middle-input"></div>' +
+//         '<div class="m-label">NEW</div></div>' +
+//         '<div class="m-new1">' +
+//         '<div class="num">' +
+//         '<input type="text" name="newMeasure" placeholder="GOAL"></div>' +
+//         '<div class="m-label">GOAL</div></div></div></div>' +
+//         '<div class="input-box action-box input-bottom submit" onclick="submitOne(' + data.progress[i][3] + ', ' + count + ', ' + data.progress[i][2] + ')">SUBMIT</div></div><br><br>';
+//       count++;
+//     }
+//   }
+//   div.innerHTML = content;
+//   document.getElementById('fields').appendChild(div);
+// }
 
 // =============================================================
 //  Progress Graph

@@ -336,7 +336,7 @@ router.get('/edit-exercise-set', function(req, res, next) {
     return res.render('edit-exercise-set', { url: '/patients', footerButton: 'Cancel', footerButton2: 'Submit' });
 });
 
-module.exports = router;
+// module.exports = router;
 
 // error page
 router.get('/error', function(req, res, next) {
