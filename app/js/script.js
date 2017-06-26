@@ -81,27 +81,6 @@ function submitAdminLogin() {
     }).catch(submitError);
 }
 
-// function logout() {
-//     console.log(localStorage.isPatient == 'false');
-//     if (localStorage.isPatient == 'false') {
-//         console.log('here');
-//         fetch('/logoff/?token=' + localStorage.token, {
-//             method: 'GET'
-//         }).then(function(res) {
-//             console.log('PRINTING RES.OK')
-//             console.log(res.ok);
-//             // if (!res.ok) return submitError(res);
-//             console.log('here1');
-//             localStorage.clear();
-//             window.location = '/';
-//         }).catch(console.log('err'));
-//     } else {
-//         localStorage.clear();
-//         window.location = '/';
-//     }
-// }
-
-// TODO: fix this
 function logout() {
     // localStorage.clear();
     // window.location = '/';
@@ -172,6 +151,7 @@ function submitToken() {
 }
 
 function agree() {
+    console.log('fjkdsj')
     fetch('/agree/?token=' + localStorage.token, {
         method: 'GET'
     }).then(function (res) {

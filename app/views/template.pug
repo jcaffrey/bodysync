@@ -64,8 +64,10 @@ html
 
         if token
             script localStorage.token = "#{token}"
+
         script.
             document.getElementById('profileName').innerHTML = localStorage.email
         script.
             if (window.location.pathname != '/login' && window.location.pathname != '/') tokenVerification();
+
         block postScript

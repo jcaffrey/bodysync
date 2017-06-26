@@ -69,6 +69,18 @@ router.post('/forgotpassword', function(req, res, next) {
     }).pipe(res);
 });
 
+router.get('/pts/:id/isVerified', function(req, res, next) {
+    request.get(config.apiUrl + '/pts/' + req.params.id + '/isVerified?token=' + req.query.token, {
+        headers: { 'x-access-token': req.query.token }
+    }).pipe(res);
+});
+
+router.get('/patients/:id/isVerified', function(req, res, next) {
+    request.get(config.apiUrl + '/patients/' + req.params.id + '/isVerified?token=' + req.query.token, {
+        headers: { 'x-access-token': req.query.token }
+    }).pipe(res);
+});
+
 router.get('/agree', function(req, res, next) {
     request.get(config.apiUrl + '/agree/?token=' + req.query.token, {
         headers: { 'x-access-token': req.query.token }
