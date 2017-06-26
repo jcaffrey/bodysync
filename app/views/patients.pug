@@ -4,7 +4,23 @@ block cssSheets
     link(rel='stylesheet', href='/stylesheets/patients.css')
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script.
-        window.onload = function() { loadStart() }
+        window.onload = function() {
+            var url = (localStorage.isPatient == 'true') ? '/patients/' : '/pts/';
+            fetch(url + localStorage.id + '/isVerified/?token=' + localStorage.token, {
+                method: 'GET'
+            }).then(function (res) {
+                if (!res.ok) return submitError(res);
+                res.json().then(function(data) {
+                    if (!data.isVerified) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementsByClassName('plus-button')[0].style.display = 'none';
+                        document.getElementById('legal-modal').style.display = 'block';
+                    } else {
+                        loadStart();
+                    }
+                })
+            }).catch(submitError);
+        }
 
 block content
     form
@@ -23,7 +39,7 @@ block content
             a(href='/create-patient').add +
         .space
 
-    div#accept-modal.modal(style="display: none")
+    div#legal-modal.modal(style="display: none")
         h3 You must agree to the terms and conditions to use Prompt Therapy Solutions.
         br
         br
