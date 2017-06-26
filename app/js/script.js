@@ -922,7 +922,7 @@ function loadFocusPatient () {
                 }
             }
             else {
-                outBoxHTML += '<span id="exerciseText"> No Exercise Currently Assigned </span>';
+                outBoxHTML += '<br><span id="exerciseText"> No Exercise Currently Assigned </span><br>';
             }
 
             if (!isPatient) {
