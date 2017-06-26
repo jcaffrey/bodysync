@@ -20,7 +20,7 @@ block content
                 br
                 .exercise-label#notes Notes
                 textarea.text-input.notes(id='notes' name='notes' cols="25" placeholder="Additional information about the exercise... ")
-            .input-box.last-box#exercise-add(onclick="addExercise(); scrollToBottom()") Add Motion
+            .input-box.last-box#exercise-add(onclick="addExercise(); scrollToBottom()") Add Exercise
     #exSetModal.modal(style="display:none")
         h3 New exercise submission was not processed correctly.
         br
@@ -28,23 +28,6 @@ block content
         mbutton(style='background: red',onclick='redirectPg(this)') Discard
         mbutton(onclick='hideModal(this)') Continue Editing
 
-
-        //- TODO: use the code below to format a delete button on the box div
-        //- button(type='button' onclick="window.location.href='/exercise-form';")#applyTemplate Apply Template
-        //- .pt-box
-        //-     .arrows
-        //-         .up ▲
-        //-         .down ▼
-        //-     .exercise-box
-        //-         .exName Back Bend
-        //-         .recovery-box
-        //-             .sets
-        //-                 span 2 sets, 20 seconds
-        //-     .rh-box
-        //-         .edit-button Edit
-        //-         .delete-button Delete
-        //- .plus-button
-        //-     a(href='/exercise-form').add +
     p#success
         script.
             function addExercise() {
