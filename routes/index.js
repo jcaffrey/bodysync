@@ -309,7 +309,7 @@ router.get('/patient-status', function(req, res, next) {
 });
 
 router.get('/patient-status-patient', function(req, res, next) {
-    return res.render('patient-status', {  type: 'patient', url: '/add-measure', firstName: 'Josh', footerButton: 'Add Measure' });
+    return res.render('patient-status', {  type: 'patient', url: '/add-measure', footerButton: 'Add Measure' });
 });
 
 // patient view

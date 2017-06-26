@@ -423,7 +423,6 @@ function submitExerciseSet() {
 
 
 function submitEditExercise() {
-    console.log('IN SUBMIT EDIT EXERCISE')
     form.style.display = 'none';
     document.getElementById('loading').innerHTML = '<p>Loading</p><img src="../../img/loading.gif">';
     var data = {};
@@ -699,7 +698,10 @@ function loadPatients(patients) {
                         collapseContent += '<div class="space"></div><a href="/patient-status" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
                     }
                     else {
-                        collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + ')">View Progress</a>';
+                        // collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + '); ">View Progress</a>';
+                        // TODO CHECK IF PATIENT IS ABLE TO ACCESS ROM
+                        collapseContent += '<div class="space"></div><a class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + '); window.location=\'/patient-status\'; ">View Progress</a>';
+
                     }
 
                     collapse.innerHTML = collapseContent;
@@ -1547,10 +1549,7 @@ function submitExerciseCompletion(exId) {
 
 
 function loadEditExercise() {
-    console.log('ABOUT TO PARSE');
-    console.log(localStorage.focusExercise)
     var pfe = JSON.parse(localStorage.focusExercise);
-    console.log('~~~~~~~~~~~~~~GOT IN HERE~~~~~~~~~~~~~~~~~')
     setTimeout(function() {
         if (pfe.id) {
             var div = document.createElement('div');
