@@ -804,10 +804,164 @@ function chooseInjury (c) {
 
 function loadFocusPatient () {
     var pfp = JSON.parse(localStorage.focusPatient);
-    fetch('/ptSessions/' +  pfp.id + '/?token=' + localStorage.token, {
-        method: 'GET'
-    }).then(function(res) {
-        if (!res.ok) return submitError(res);
+    if (localStorage.isPatient == 'false') {
+        fetch('/ptSessions/' +  pfp.id + '/?token=' + localStorage.token, {
+            method: 'GET'
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+            getGraphData();
+            var isPatient = JSON.parse(localStorage.isPatient);
+            var sum = 0;
+            var count = 0;
+            for (var k = 0; k < pfp.progress.length; k++) {
+                var value = pfp.progress[k];
+                if (value != null) {
+                    sum += +value[0];
+                    count++;
+                }
+            }
+            var percent = (sum / count).toFixed(1);
+            var indicator = color(percent);
+
+            // html for pt-box
+            var ptBox = document.createElement('div');
+            // adding pic-box
+
+            var ptBoxHTML ='<div class="pt-box"><div class="pic-box"><img id="profileImg" src="' + pfp.proPicUrl
+                + '"></img><img id="upIcon" src=" ' + indicator[1] + '"></img></div>';
+            // adding info-box
+            ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
+                '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
+                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+            ptBox.innerHTML = ptBoxHTML;
+
+            // html for menu-box
+            var menuBox = document.createElement('div');
+            menuBox.setAttribute('class', 'menu-box');
+            menuBox.setAttribute('id', 'menuBox');
+            menuBox.style.display = 'inline-block';
+            menuBox.style.display = 'none';
+
+            // adding menu-top
+            var menuBoxHTML = '<div class="menu-top"><div class="exit-sign"><button style="padding:0" id="exitButton" onclick="change(menuBox); change4(bottomBox)">X</button></div></div>';
+
+            // adding menu-options
+            //menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:inline-block";></div><span onclick="change1(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change1(bottomBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
+            menuBoxHTML += '<div class="menu-options"><div class="option option0"><div class="menu-icon" id="iconOverview" style="display:none";></div><span onclick="change(iconOverview); change(bodyBox); change(menuBox); change1(overviewBox); change1(bottomBox); change4(bottomBox); change6(iconOverview); change2(iconOverviewTrans);change(menuBox); change4(bottomBox)">Overview</span></div>';
+
+
+            // getting injuries
+            var menuInjuries = '';
+            var count = 0;
+            for (var j = 0; j < pfp.progress.length; j++) {
+                var val = pfp.progress[j];
+                if (val !== null) {
+                    //menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span onclick="change6(iconGraph' + (count + 1) + '); change1(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+                    menuInjuries += '<div class="option option' + (count + 1) + '" onclick="createGraph(' + val[3] + '); changePercent(' + val[3] + ')"><div class="menu-icon" id="iconGraph' + (count + 1) + '"></div><span class="menuInjuryName" onclick="change6(iconGraph' + (count + 1) + '); change(iconGraph' + (count + 1) + '); change(iconOverview); change2(iconOverviewTrans); change(overviewBox); change1(bodyBox); change(menuBox); change4(bottomBox)">'+ val[1] +'</span></div>';
+                    count++;
+                }
+            }
+            menuBoxHTML += menuInjuries + '</div>';
+            menuBox.innerHTML = menuBoxHTML;
+
+            // html for outer-info-box
+            var outBox = document.createElement('div');
+
+            // adding top-box
+            var outBoxHTML = '<div class="outer-info-box"><div class="top-box"><button style="padding:0" id="menuButton" onclick="change1(menuBox); change5(bottomBox)")>&#9776</button></div>';
+
+            // adding bottom-box
+            // getting injury list
+            var collapseContent = '';
+            var count = 0;
+            for (var j = 0; j < pfp.progress.length; j++) {
+                var val = pfp.progress[j];
+                if (val !== null) {
+                    c = '#' + color(val[0])[0];
+                    collapseContent +=
+                        '<div class="collapse-inner">' +
+                        '<div class="input-label" id="input-label' + count + '">' + val[1] + '</div>' +
+                        '<div class="input-percent" id="input-percent' + count + '" style="color:' + c + '">';
+                    if (c === '#bbbbbb') {
+                        collapseContent += 'N/A</div>';
+                    } else {
+                        collapseContent += val[0] + '%</div>';
+                    }
+                    collapseContent += '<div class="graph-box"><img src="../../img/graph.png" class="graph-symbol" id="graph-symbol' + (count + 1) + '" onclick="changePercent(' + val[3] + '); createGraph(' + val[3] + '); change(iconOverview); change(overviewBox); change1(bodyBox)"></div></div>';
+                    count++;
+                }
+            }
+            outBoxHTML += '<div class="bottom-box" id="bottomBox" style="overflow-y:auto;"><div class="overview-box" id="overviewBox">'+ collapseContent;
+            // getting exercise set
+
+            outBoxHTML +='<div class="exercise-set"><div class="buttonDiv" onclick="window.location=\'/add-injury\'">Add Injury</div><br><br><span id="exerciseTitle">Patient Exercises</span>';
+
+            if (pfp.exercises.length > 0) {
+                // adding list of exercises
+                for (var j = 0; j < pfp.exercises.length; j++){
+                    // adding exercises
+                    outBoxHTML += '<div id="exercise-overview' + pfp.exercises[j].id + '"><br>';
+
+                    outBoxHTML += '<table style="width:100%"><tr><td><div id="exerciseText">' + pfp.exercises[j].name + '</div></td><td><div id="exerciseTextStreak">Streak</div></td><td><div id="exerciseTextPain">Pain</div></td></tr>';
+                    // adding exercise sets and seconds
+                    outBoxHTML += '<tr><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].numSets + " sets, " + pfp.exercises[j].numRepsOrDuration + " Reps/Duration" + '</div></td><td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].streak + '</div></td>';
+                    // adding pain
+                    if (pfp.exercises[j].pain.painInput){
+                        outBoxHTML += '<td><div class="exercise-label" id="exercise-label">' + pfp.exercises[j].pain.painInput + '</div></td></tr></table><br><br>';
+                    }
+                    else{
+                        outBoxHTML += '<td><div class="exercise-label" id="exercise-label">N/A</div></td></tr></table><br><br>';
+                    }
+
+                    // adding delete and edit buttons for pts
+                    if (!isPatient){
+                        outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
+                    }
+                    outBoxHTML += '</div><br>';
+                }
+            }
+            else {
+                outBoxHTML += '<span id="exerciseText"> No Exercise Currently Assigned </span>';
+            }
+
+            if (!isPatient) {
+                outBoxHTML += '<br><a href="/exercise-set" class="new-exercise-btn">Add New Exercise</a><br><br>';
+            }
+
+            // getting notes
+            outBoxHTML += '</div><div class="notes"><span id="noteTitle">Notes</span><p id="notesSuccess"></p><textarea ';
+
+            if (isPatient) {
+                outBoxHTML += 'readonly ';
+            }
+
+            if (pfp.ptNotes) {
+                outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10">' + pfp.ptNotes + '</textarea>';
+            } else {
+                outBoxHTML += 'class="note-input" type="notes" id="notes" name="notes" cols="25" rows="10" placeholder="No notes entered..."></textarea>';
+            }
+
+            if (!isPatient) {
+                outBoxHTML += '<div class="buttonDiv" onclick="submitNotes(' + pfp.id + ')">Update Notes</div>';
+            }
+
+            // percentage-box
+            outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+
+            // graph
+            outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
+
+            // legend
+            outBoxHTML += '<div class="legend"><div class="weekly-legend"><div class="weekly-goal-legend">Weekly Goal</div><div class="legend-circle"></div></div><div class="final-goal-legend">Final Goal<div class="dashes">- - - - -</div></div><div class="point-legend"><div class="measurement-legend">Measurements</div><div class="legend-measure-circle"></div></div></div></div></div></div>';
+
+            // adding transition-box
+            outBoxHTML += '<div class="transition-box"><div class="icon" id="iconOverviewTrans" style="background: rgb(46, 49, 146)"></div><div class="icon" id="iconGraphTrans"></div><div class="icon button-2"></div><div class="icon button-3"></div></div>';
+            outBox.innerHTML = outBoxHTML;
+            var container = document.getElementById('status').appendChild(ptBox);
+            container.appendChild(menuBox);
+            container.appendChild(outBox);
+        });
+    } else {
         getGraphData();
         var isPatient = JSON.parse(localStorage.isPatient);
         var sum = 0;
@@ -959,7 +1113,7 @@ function loadFocusPatient () {
         var container = document.getElementById('status').appendChild(ptBox);
         container.appendChild(menuBox);
         container.appendChild(outBox);
-    });
+    }
 }
 
 function renderExercisePage() {
