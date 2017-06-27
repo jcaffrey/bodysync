@@ -173,6 +173,12 @@ function confirmSubmit(f) {
         '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="document.getElementById(\'confirm-modal\').style.display = \'none\';' + f + '()">Yes</button><div id="error-label"></div>';
 }
 
+function confirmSubmit2(f, arg) {
+  document.getElementById('confirm-modal').style.display = 'block';
+  document.getElementById('confirm-modal').innerHTML =
+    '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="document.getElementById(\'confirm-modal\').style.display = \'none\';' + f + '(' + arg + ')">Yes</button><div id="error-label"></div>';
+}
+
 function submitForm() {
     var data = {};
     var errorMessage = '';
@@ -572,6 +578,43 @@ function color(n) {
     }
 }
 
+// fetch('/patients/' + id, {
+//   headers: {'x-access-token': localStorage.token,
+//     'Content-Type': 'application/json'},
+//   method: 'PUT',
+//   body: JSON.stringify({
+//     notes: document.getElementById('notes').value
+//   })
+// }).then(function(res) {
+//   if (!res.ok) throw new Error('There was an error sending this measure');
+//   document.getElementById('notesSuccess').innerHTML = 'Update Successful';
+// }).catch(function() {
+//   document.getElementById('notesSuccess').style.color = '#c1272d';
+//   document.getElementById('notesSuccess').innerHTML = 'Update Failed';
+// });
+
+fetch('/exercises/' + id + '/?token=' + localStorage.token, {
+  method: 'DELETE'
+}).then(function(res) {
+  if (!res.ok) return submitError(res);
+}).catch(submitError);
+
+function deletePatient(id) {
+    if(id) {
+        var btn = document.getElementById(id);
+
+        // remove from dom
+        btn.parentNode.parentNode.parentNode.parentNode.removeChild(btn.parentNode.parentNode.parentNode);
+
+        // remove from backend
+        fetch('/patients/' + id + '/?token=' + localStorage.token, {
+            method: 'DELETE'
+        }).then(function(res) {
+            if (!res.ok) return submitError(res);
+        }).catch(submitError);
+    }
+}
+
 function loadPatients(patients) {
     setTimeout(function() {
         var psd = JSON.parse(patients);
@@ -593,7 +636,8 @@ function loadPatients(patients) {
                     var rec = document.createElement('div');
                     var collapse = document.createElement('div');
 
-                    var sum = 0;
+
+                  var sum = 0;
                     var count = 0;
 
                     for (var k = 0; k < psd[i].progress.length; k++) {
@@ -639,9 +683,14 @@ function loadPatients(patients) {
 
                     if (isPatient) {
                         collapseContent += '<hr><div class="space"></div>'
+                    } else
+                    {
+                      collapseContent +='<a href="#" class="edit-exercise-btn" id="'+ psd[i].id +'" style="background-color:red" onclick="confirmSubmit2(deletePatient, ' + psd[i].id + ')">Delete</a>'
                     }
 
-                    function measuredRecently(date) {
+
+
+                  function measuredRecently(date) {
                         var year = +date.substring(0, 4);
                         var month = +date.substring(5, 7) - 1;
                         var day = +date.substring(8, 10);
@@ -652,7 +701,12 @@ function loadPatients(patients) {
 
                     var unmeasured = false;
 
-                    // TODO: val[5] is date last measured
+                    // add delete button above injuries
+                    // console.log('PRINGINT PATIENT ID + ' + psd[i].id);
+                    //
+                    // deletePat +=
+                    //   '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deletePatient(' + psd[i].id + ')">Delete</a>'
+
                     for (var j = 0; j < psd[i].progress.length; j++) {
                         var val = psd[i].progress[j];
                         if (val !== null) {
