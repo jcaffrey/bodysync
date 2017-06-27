@@ -41,6 +41,6 @@ app.use((err, req, res, next) => {
 // app.use((err, req, res, next) => res.status(err.status || 500).send());
 
 var server = app.listen(config.port);
-console.log('Listening at front-url:%s in %s mode',
+console.log('Listening at port %s in %s mode',
   server.address().port, app.get('env'));
 module.exports = app;

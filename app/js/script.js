@@ -562,10 +562,10 @@ function color(n) {
     if (isNaN(n)) {
         return ['bbbbbb', '../../img/flatIcon.png', 'flatIcon']
     }
-    else if (n < 33.3) {
+    else if (n < -5) {
         return ['ce2310', '../../img/downIcon.png', 'downIcon'];
     }
-    else if (n < 66.7) {
+    else if (n <= 0) {
         return ['fab03c', '../../img/flatIcon.png', 'flatIcon'];
     }
     else {
@@ -689,7 +689,7 @@ function loadPatients(patients) {
                     rec.setAttribute('class', 'recovery');
 
                     if (indicator[0] !== 'bbbbbb') {
-                        rec.innerHTML = "<span>Recovered</span>";
+                        rec.innerHTML = "<span>Improvement</span>";
                     }
                 }
 
@@ -816,7 +816,7 @@ function loadFocusPatient () {
             // adding info-box
             ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
                 '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-                '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+                '</div><div class="recovery"><span>Improvement</span></div></div></div></div>';
             ptBox.innerHTML = ptBoxHTML;
 
             // html for menu-box
@@ -935,7 +935,7 @@ function loadFocusPatient () {
             }
 
             // percentage-box
-            outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+            outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">Improvement</div></div>';
 
             // graph
             outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
@@ -974,7 +974,7 @@ function loadFocusPatient () {
         // adding info-box
         ptBoxHTML += '<div class="info-box"><div class="name">' + pfp.name +
             '</div><div class="recovery-box"><div class="percent1">' + colorPercent(percent, indicator[0]) +
-            '</div><div class="recovery"><span>RECOVERED</span></div></div></div></div>';
+            '</div><div class="recovery"><span>Improvement</span></div></div></div></div>';
         ptBox.innerHTML = ptBoxHTML;
 
         // html for menu-box
@@ -1091,7 +1091,7 @@ function loadFocusPatient () {
         }
 
         // percentage-box
-        outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">recovered</div></div>';
+        outBoxHTML += ' </div></div><div class="body-part-box" id="bodyBox"><div id="injuryTitle"></div><div class="percentage-box"><div class="percentage" style="color:' + c + '" id="singlePercent"></div><div class="recoveryText">Improvement</div></div>';
 
         // graph
         outBoxHTML += '<div id="loading1"><p>Loading</p><img src="../../img/loading.gif"></div><div class="graph-view" id="graph-container"><div class="svgh" id="graph"></div>';
@@ -1233,7 +1233,12 @@ function updateProgress(patient, injury, name) {
         res.json().then(function (data) {
             var pats = JSON.parse(localStorage.patients);
             var last = data[data.length - 1];
-            pats[patient].progress[injury] = [Math.min((((last.degreeValue / last.nextGoal) * 100).toFixed(1)), 100.0), name, last.degreeValue.toFixed(1), injury, last.nextGoal, last.dayMeasured];
+            if (data.length >= 2) {
+                var secondToLast = data[data.length - 2];
+                pats[patient].progress[injury] = [(((last.degreeValue - secondToLast.degreeValue) / last.degreeValue) * 100).toFixed(1), name, last.degreeValue.toFixed(1), injury, last.nextGoal, last.dayMeasured];
+            } else {
+                pats[patient].progress[injury] = [0, name, last.degreeValue.toFixed(1), injury, last.nextGoal, last.dayMeasured];
+            }
             localStorage.patients = JSON.stringify(pats);
         });
     }).catch(submitError);
