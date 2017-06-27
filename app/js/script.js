@@ -173,12 +173,6 @@ function confirmSubmit(f) {
         '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="document.getElementById(\'confirm-modal\').style.display = \'none\';' + f + '()">Yes</button><div id="error-label"></div>';
 }
 
-function confirmSubmit2(f, arg) {
-  document.getElementById('confirm-modal').style.display = 'block';
-  document.getElementById('confirm-modal').innerHTML =
-    '<h3>Are you sure you want to submit?</h3><br><br><button class="buttonTab submitTab" id="submit-btn" onclick="document.getElementById(\'confirm-modal\').innerHTML = \'\'; document.getElementById(\'confirm-modal\').style.display = \'none\'">No</button><button class="buttonTab submitTab" id="submit-btn2" onclick="document.getElementById(\'confirm-modal\').style.display = \'none\';' + f + '(' + arg + ')">Yes</button><div id="error-label"></div>';
-}
-
 function submitForm() {
     var data = {};
     var errorMessage = '';
@@ -578,27 +572,6 @@ function color(n) {
     }
 }
 
-// fetch('/patients/' + id, {
-//   headers: {'x-access-token': localStorage.token,
-//     'Content-Type': 'application/json'},
-//   method: 'PUT',
-//   body: JSON.stringify({
-//     notes: document.getElementById('notes').value
-//   })
-// }).then(function(res) {
-//   if (!res.ok) throw new Error('There was an error sending this measure');
-//   document.getElementById('notesSuccess').innerHTML = 'Update Successful';
-// }).catch(function() {
-//   document.getElementById('notesSuccess').style.color = '#c1272d';
-//   document.getElementById('notesSuccess').innerHTML = 'Update Failed';
-// });
-
-fetch('/exercises/' + id + '/?token=' + localStorage.token, {
-  method: 'DELETE'
-}).then(function(res) {
-  if (!res.ok) return submitError(res);
-}).catch(submitError);
-
 function deletePatient(id) {
     if(id) {
         var btn = document.getElementById(id);
@@ -685,7 +658,7 @@ function loadPatients(patients) {
                         collapseContent += '<hr><div class="space"></div>'
                     } else
                     {
-                      collapseContent +='<a href="#" class="edit-exercise-btn" id="'+ psd[i].id +'" style="background-color:red" onclick="confirmSubmit2(deletePatient, ' + psd[i].id + ')">Delete</a>'
+                      collapseContent += '<a href="#" class="edit-exercise-btn" id="' + psd[i].id + '" style="background-color:red" onclick="confirmSubmit(\'deletePatient.bind(null, ' + psd[i].id + ')\')">Delete</a>'
                     }
 
 
