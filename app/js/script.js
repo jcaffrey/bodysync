@@ -1865,6 +1865,11 @@ function createGraph(id) {
             .orient("left")
             .tickFormat(function(d) { return d + "°"; });
 
+        // Define the div for the tooltip
+        var circleLab = d3.select("body").append("circleLab")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
         graph.append("svg:g")
             .attr("class", "x axis")
             .attr("transform", "translate(20," + h + ")")
@@ -1895,6 +1900,20 @@ function createGraph(id) {
             })
             .attr("r", 9)
             .attr("transform", "translate(18,0)")
+            .on("mouseover", function(d, i) {
+                console.log("over");
+                circleLab.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                circleLab.html(degreeValue[i])
+                    .style("left", (d3.event.x) - 25 + "px")
+                    .style("top", (d3.event.y - 30) + "px");
+            })
+            .on("mouseout", function(d) {
+                circleLab.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
         ;
 
         graph.selectAll(".point")
@@ -1909,6 +1928,7 @@ function createGraph(id) {
             })
             .attr("r", 9)
             .attr("transform", "translate(18,0)")
+
         ;
     }, 1000);
 }
