@@ -128,6 +128,12 @@ router.get('/patients/:id', function(req, res, next) {
     }).pipe(res);
 });
 
+router.delete('/patients/:id', function(req, res, next) {
+  request.delete(config.apiUrl + '/patients/' + req.params.id + '/?token=' + req.query.token, {
+    headers: { 'x-access-token': req.query.token }
+  }).pipe(res);
+});
+
 // get a specific patient's injuries
 router.get('/patients/:id/injuries', function(req, res, next) {
     request.get(config.apiUrl + '/patients/' + req.params.id + '/injuries', {
