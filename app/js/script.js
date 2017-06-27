@@ -1901,13 +1901,13 @@ function createGraph(id) {
             .attr("r", 9)
             .attr("transform", "translate(18,0)")
             .on("mouseover", function(d, i) {
-                console.log("over");
                 circleLab.transition()
                     .duration(200)
-                    .style("opacity", .9);
+                    .style("opacity", .9)
+                    .style("color", "#2e3192");
                 circleLab.html(degreeValue[i])
-                    .style("left", (d3.event.x) - 25 + "px")
-                    .style("top", (d3.event.y - 30) + "px");
+                    .style("left", (d3.event.x) - 22 + "px")
+                    .style("top", (d3.event.y - 50) + "px")
             })
             .on("mouseout", function(d) {
                 circleLab.transition()
@@ -1928,7 +1928,21 @@ function createGraph(id) {
             })
             .attr("r", 9)
             .attr("transform", "translate(18,0)")
-
+                        .on("mouseover", function(d, i) {
+                console.log("over");
+                circleLab.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                circleLab.html(next_weeks_goal)
+                    .style("left", (d3.event.x) - 20 + "px")
+                    .style("top", (d3.event.y - 40) + "px")
+                    .style("color", "#00a136");
+            })
+            .on("mouseout", function(d) {
+                circleLab.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
         ;
     }, 1000);
 }
