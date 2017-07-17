@@ -1573,7 +1573,7 @@ Date.prototype.toMysqlFormat = function() {
 };
 
 function submitMeasure (id, i, lastMeasure, last) {
-    if (form[(2 * i) + 1].value && form[2 * i].value) {
+    if (form[(3 * i) + 1].value && form[(3 * i) + 2].value) {
         fetch('/romMetrics/' + id + '/?token=' + localStorage.token, {
             method: 'GET'
         }).then(function (res) {
@@ -1585,8 +1585,8 @@ function submitMeasure (id, i, lastMeasure, last) {
                 var data = {
                     dayMeasured: d.toMysqlFormat(),
                     dayOfNextGoal: d1.toMysqlFormat(),
-                    nextGoal: form[(2 * i) + 1].value,
-                    degreeValue: form[2 * i].value,
+                    nextGoal: form[(3 * i) + 2].value,
+                    degreeValue: form[(3 * i) + 1].value,
                     name: 'name' + id,
                     endRangeGoal: data.endRangeGoal
                 };
