@@ -710,7 +710,7 @@ function loadPatients(patients) {
                     else {
                         // collapseContent += '<div class="space"></div><a href="/patient-status-patient" class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + '); ">View Progress</a>';
                         // TODO CHECK IF PATIENT IS ABLE TO ACCESS ROM
-                        collapseContent += '<div class="space"></div><a class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + '); window.location=\'/patient-status\'; ">View Progress</a>';
+                        collapseContent += '<div class="space"></div><a class="inspect1" id= "inspect-btn' + i + '" onclick="focusPatient(' + psd[i].id + '); window.location=\'/patient-status-patient\'; ">View Progress</a>';
 
                     }
 
