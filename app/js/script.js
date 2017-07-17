@@ -933,7 +933,7 @@ function loadFocusPatient () {
 
                     // adding delete and edit buttons for pts
                     if (!isPatient){
-                        outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
+                        outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn edit-exercise-btn-right" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';
                     }
                     outBoxHTML += '</div><br>';
                 }
@@ -1089,7 +1089,7 @@ function loadFocusPatient () {
                     // old vv
                   // outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a href="/edit-exercise-set" class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + ')">Edit</a>';   onclick="window.location=\'/admin\'"
 
-                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a class="edit-exercise-btn" onclick="focusExercise(' + pfp.exercises[j].id + '); window.location=\'/edit-exercise-set\';  ">Edit</a>';
+                  outBoxHTML += '<a href="#" class="edit-exercise-btn" style="background-color:red" onclick="deleteExercise(' + pfp.exercises[j].id + ')">Delete</a><a class="edit-exercise-btn edit-exercise-btn-right" onclick="focusExercise(' + pfp.exercises[j].id + '); window.location=\'/edit-exercise-set\';  ">Edit</a>';
                 }
                 outBoxHTML += '</div><br>';
             }
